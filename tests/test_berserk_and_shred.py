@@ -31,6 +31,8 @@ from __future__ import annotations
 
 import copy
 import sys
+
+import pytest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -174,3 +176,56 @@ def test_shred_does_nothing_off_a_non_assassin_attack():
     run_ability(get_card("shred_yellow").abilities[0], src, None, st)
 
     assert a.defense == 3, "it fired off a Guardian attack"
+
+# --- the siblings -----------------------------------------------------------
+
+SIBLINGS = [
+    # slug, defender types that qualify, the modifier, the printed clause
+    ("reinforce_the_line_blue", ["Action", "Attack"], +2),
+    ("dramatic_pause_blue", ["Action"], +1),
+]
+
+
+@pytest.mark.parametrize("slug,types,delta", SIBLINGS)
+def test_a_targeted_defense_bonus_lands_on_one_card(slug, types, delta):
+    """Same defect as Shred, on the cards the first pass did not sweep for.
+
+    "TARGET defending <X> card gets +N{d}" with no target in the effect's own
+    params takes the untargeted branch and shifts combat.total_defense -- the
+    whole block. One defender hides it; two do not.
+    """
+    st = _state()
+    a = _action("defender_a", 2)
+    a.raw_defense = a.defense = 3
+    a.types, a.subtypes = list(types), list(types)
+    b = _action("defender_b", 2)
+    b.raw_defense = b.defense = 3
+    b.types, b.subtypes = list(types), list(types)
+    _combat_with_defenders(st, [a, b], attack_classes=("Assassin",))
+    src = copy.deepcopy(DB.get(slug))
+    src.owner = src.controller = 1
+
+    run_ability(get_card(slug).abilities[0], src, None, st)
+
+    moved = [c for c in (a, b) if c.defense != 3]
+    assert len(moved) == 1, (
+        f"{delta:+}{{d}} reached {len(moved)} defenders; the card targets one")
+    assert moved[0].defense == 3 + delta
+
+
+@pytest.mark.parametrize("slug,types,delta", SIBLINGS)
+def test_it_skips_a_defender_of_the_wrong_type(slug, types, delta):
+    """The filter is the half that only matters when the block is mixed --
+    exactly where the untargeted version was wrong."""
+    st = _state()
+    equip = _action("an_equipment", 2)
+    equip.raw_defense = equip.defense = 3
+    equip.types, equip.subtypes = ["Equipment"], ["Chest"]
+    _combat_with_defenders(st, [equip], attack_classes=("Assassin",))
+    src = copy.deepcopy(DB.get(slug))
+    src.owner = src.controller = 1
+
+    run_ability(get_card(slug).abilities[0], src, None, st)
+
+    assert equip.defense == 3, (
+        "the bonus landed on equipment; the card names an action card")

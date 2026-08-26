@@ -5,12 +5,36 @@
       "ability_type": "ATTACK_REACTION",
       "choose": 1,
       "choose_max": 2,
-      "_comment": "Choose 1 or both; * Target dagger attack gets +3{p}. * Target card defending an attack with stealth gets -3{d} this turn. Was a single unconditional +3.",
+      "_comment": "Choose 1 or both; * Target dagger attack gets +3{p}. * Target card defending an attack with stealth gets -3{d} this turn. Was a single unconditional +3. MODIFY_DEFENSE_VALUE reads a target in its OWN params; with none it shifts combat.total_defense -- the whole block -- where 'TARGET card defending' is one card. The stealth test is about the ATTACK so it stays a condition on the mode; the target picks WHICH defending card. It also authored amount -3 with no mod, and mod defaults to ADD: the same number either way here, but the pair only agreed by accident. Same defect as shred_yellow.",
       "modes": [
-        {"type": "MODIFY_ATTACK", "amount": 3, "mod": "add",
-         "conditions": [{"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Dagger"]}]},
-        {"type": "MODIFY_DEFENSE_VALUE", "amount": -3,
-         "conditions": [{"type": "ATTACK_HAS_KEYWORD", "keyword": "stealth"}]}
+        {
+          "type": "MODIFY_ATTACK",
+          "amount": 3,
+          "mod": "add",
+          "conditions": [
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Dagger"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "subtract",
+          "amount": 3,
+          "target": {
+            "zone": "DEFENDING",
+            "amount": 1
+          },
+          "conditions": [
+            {
+              "type": "ATTACK_HAS_KEYWORD",
+              "keyword": "stealth"
+            }
+          ]
+        }
       ]
     }
   ]

@@ -2060,6 +2060,14 @@ def test_tarantula_toxin_choose_one_or_both_modes():
         atk = _card(attack_slug, 1)
         st.combat = CombatState(attacker_id=1, link_id=1, attack_power=5,
                                 base_attack_power=5, attack_card=atk, keywords=keywords)
+        # A REAL DEFENDING CARD, because the card says "target card DEFENDING".
+        # This fixture used to set combat.total_defense = 6 and populate no
+        # defenders at all, which is unreachable in a game -- and it only
+        # passed because the effect was untargeted and shifted the aggregate.
+        # The card targets ONE defending card, so there has to be one.
+        defender = _card("kiss_of_death_red", 2)
+        defender.raw_defense = defender.defense = 6
+        st.combat.defending_cards = [defender]
         st.combat.total_defense = 6
         seq = iter(picks)
         def agent(state, options, context="", **kw):
@@ -2069,11 +2077,11 @@ def test_tarantula_toxin_choose_one_or_both_modes():
                 return options[0]
         st.player_agents[1] = agent
         dispatch(st, "ON_PLAY", "tarantula_toxin_red", card=tar, event=None)
-        return st.combat.attack_power, st.combat.total_defense
+        return st.combat.attack_power, defender.defense
 
     # mode 0 only (dagger +3), decline the second
     assert run(["0", "done"], "kiss_of_death_red", ["Stealth"]) == (8, 6)
-    # both modes: +3 power and -3 defense
+    # both modes: +3 power, and the -3 lands on the defending card
     assert run(["0", "1"], "kiss_of_death_red", ["Stealth"]) == (8, 3)
     # mode 0 on a non-dagger attack → the +3 is gated off
     assert run(["0", "done"], "big_bully_red", ["Stealth"]) == (5, 6)

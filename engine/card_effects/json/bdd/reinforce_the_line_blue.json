@@ -7,9 +7,24 @@
         {
           "type": "MODIFY_DEFENSE_VALUE",
           "mod": "add",
-          "amount": 2
+          "amount": 2,
+          "target": {
+            "zone": "DEFENDING",
+            "amount": 1,
+            "filter": [
+              {
+                "type": "CARD_IS_TYPE",
+                "card_type": "Action"
+              },
+              {
+                "type": "CARD_IS_TYPE",
+                "subtype": "Attack"
+              }
+            ]
+          }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "MODIFY_DEFENSE_VALUE reads a target in its OWN params; with none it takes the untargeted branch and shifts combat.total_defense, i.e. the whole block. 'TARGET <card> gets N{d}' is one card. With a single defender the two agree, which is why this looked right; they part company exactly where the card is restrictive -- a bonus meant for a defending ACTION card applied to a block made entirely of equipment. Same defect fixed on shred_yellow; these are its siblings. Here the target is restricted to a defending ATTACK ACTION card."
 }
