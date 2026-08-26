@@ -13,20 +13,15 @@
           "type": "CREATE_TOKEN",
           "token": "crouching_tiger",
           "zone": "BANISHED",
-          "effects": [
-            {
-              "type": "MODIFY_ATTACK",
-              "mod": "add",
-              "amount": 3
-            },
-            {
-              "type": "SET_FLAG",
-              "flag": "PLAYABLE_THIS_TURN"
-            }
-          ]
+          "record_as": "created_tiger"
+        },
+        {
+          "type": "GRANT_PLAY_FROM_BANISHED",
+          "ref": "created_tiger",
+          "power_mod": 3
         }
       ]
     }
   ],
-  "_comment": "Was a REF effect handed a 'target'. DESTROY_REF/BANISH_REF act on get_ref(ref), the handler does not read 'target', and no earlier effect in the ability sets a ref -- so it aimed at no object and returned. The card destroys ITSELF, which DESTROY_PERMANENT does directly -- destroy() resolves the card's own zone."
+  "_comment": "Was a REF effect handed a 'target'. DESTROY_REF/BANISH_REF act on get_ref(ref), the handler does not read 'target', and no earlier effect in the ability sets a ref -- so it aimed at no object and returned. The card destroys ITSELF, which DESTROY_PERMANENT does directly -- destroy() resolves the card's own zone. TWO PRINTED CLAUSES WERE SILENTLY DROPPED: '+3{p} and you may play it this turn' was nested inside the CREATE_TOKEN node under an `effects` key, and CREATE_TOKEN reads token/count/player/destination/counters and nothing else -- so neither half ran. GRANT_PLAY_FROM_BANISHED already does both (it takes a ref and a power_mod); CREATE_TOKEN now records what it made so the next effect can name it. Per the release notes the +3 is turn-scoped: 'if you do not play Crouching Tiger the turn it was created, it remains in the banished zone and loses the +3/2/1{p} effect.'"
 }

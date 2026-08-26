@@ -1978,7 +1978,14 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # counters were dropped, so the token arrived bare and any ability
         # reading them saw none.
         counters = params.get("counters")
+        # Name the created token so a LATER effect in the same ability can act
+        # on it. Without this a card could create a token and never refer to
+        # it again: Blessing of Qi nested its "+3{p} and you may play it this
+        # turn" INSIDE the CREATE_TOKEN node, under an `effects` key this
+        # handler does not read, so both printed clauses were dropped.
+        record_as = _first(params, "record_as", "into", "store_as")
         def _fn(card, event, state, _tok=token, _cnt=count, _pt=player_target,
+                _rec=record_as,
                 _dest=destination, _counters=counters):
             from engine.effect_keywords import create_token as _ek_create_token
             from engine.card_effects.ability_keywords import _controller_id
@@ -2003,7 +2010,27 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 return
             if _cnt <= 0:
                 return
+            # Which objects exist BEFORE, so the ones created can be named
+            # afterwards. create_token returns its event and keeps the Card
+            # objects local, and the destination zone is not knowable here --
+            # a Gold with no explicit destination lands in `permanents`, not
+            # `tokens` -- so identity diffing is the only way that cannot be
+            # wrong about where to look.
+            _before = set()
+            if _rec:
+                for _z in state.players[tid].all_zones():
+                    _before.update(id(c) for c in getattr(_z, "cards", None) or [])
             _ek_create_token(state, tid, _tok, _cnt, destination=_dest)
+            if _rec:
+                from engine.context import set_ref
+                _made = []
+                for _z in state.players[tid].all_zones():
+                    for c in getattr(_z, "cards", None) or []:
+                        if id(c) not in _before:
+                            _made.append(c)
+                if _made:
+                    set_ref(_rec, _made[0] if len(_made) == 1 else _made)
+                    set_ref(_rec + "_owner", tid)
             if _counters:
                 # Cards author this as {"steam": 2} or [{"type":"steam","amount":2}].
                 pairs = []
