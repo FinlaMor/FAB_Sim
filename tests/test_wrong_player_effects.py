@@ -27,6 +27,21 @@ DB = CardDB()
 FILLER = "wounded_bull_red"
 
 
+
+def _card_json(root, name):
+    """The implemented card file called `name`, ignoring pipeline artifacts.
+
+    rglob walks EVERYTHING under the json tree, and in the pipeline worktree
+    that tree also holds .drafts/, .review/ and .triage/ results filed under
+    the same slug. Taking the first match there picked up a review verdict --
+    a JSON object with no "abilities" -- so tests that pass here failed in the
+    worktree for a reason that had nothing to do with the card.
+    """
+    hits = [p for p in root.rglob(name)
+            if not any(part.startswith(".") for part in p.parts)]
+    assert hits, f"no implemented card file for {name}"
+    return hits[0]
+
 def _state():
     st = _make_state()
     st.card_db = DB
@@ -56,7 +71,7 @@ def _run_type(slug, etype, card, st):
     from engine.context import push_refs, pop_refs
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob(f"{slug}.json")).read_text(encoding="utf-8"))
+    raw = json.loads(_card_json(root, f"{slug}.json").read_text(encoding="utf-8"))
     found = []
 
     def walk(node):
@@ -162,7 +177,7 @@ def test_winters_bite_has_no_invented_life_cost():
     from pathlib import Path
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob("winters_bite_yellow.json")).read_text(encoding="utf-8"))
+    raw = json.loads(_card_json(root, "winters_bite_yellow.json").read_text(encoding="utf-8"))
     for ability in raw.get("abilities") or []:
         for cost in ability.get("additional_cost") or []:
             assert cost.get("type") != "PAY_LIFE", raw

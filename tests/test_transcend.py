@@ -27,6 +27,21 @@ DB = CardDB()
 MARKER = f"{TURN_EVENT_MARKER}transcend"
 
 
+
+def _card_json(root, name):
+    """The implemented card file called `name`, ignoring pipeline artifacts.
+
+    rglob walks EVERYTHING under the json tree, and in the pipeline worktree
+    that tree also holds .drafts/, .review/ and .triage/ results filed under
+    the same slug. Taking the first match there picked up a review verdict --
+    a JSON object with no "abilities" -- so tests that pass here failed in the
+    worktree for a reason that had nothing to do with the card.
+    """
+    hits = [p for p in root.rglob(name)
+            if not any(part.startswith(".") for part in p.parts)]
+    assert hits, f"no implemented card file for {name}"
+    return hits[0]
+
 def _state():
     st = _make_state()
     st.card_db = DB
@@ -120,7 +135,7 @@ def test_no_misspelled_transcend_flag_remains(slug):
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parents[1] / "engine" / "card_effects" / "json"
-    path = [p for p in root.rglob(f"{slug}.json") if ".quarantine" not in p.parts][0]
+    path = _card_json(root, f"{slug}.json")
     abilities = json.dumps(json.loads(path.read_text(encoding="utf-8"))["abilities"])
     assert "FLAG_SET" not in abilities, f"{slug} still reads an invented flag"
     for misspelling in ("TRANSCEDED", "TRANSCENDED", "TRANSCEND_THIS_TURN"):
@@ -166,7 +181,7 @@ def test_drop_in_the_ocean_no_longer_uses_the_arakni_transform():
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parents[1] / "engine" / "card_effects" / "json"
-    path = [p for p in root.rglob("a_drop_in_the_ocean_blue.json") if ".quarantine" not in p.parts][0]
+    path = _card_json(root, "a_drop_in_the_ocean_blue.json")
     abilities = json.dumps(json.loads(path.read_text(encoding="utf-8"))["abilities"])
     assert "TRANSFORM_HERO" not in abilities
     assert "TRANSCEND" in abilities
