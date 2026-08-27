@@ -6,27 +6,49 @@
       "trigger": "START_OF_TURN_IN_GRAVEYARD",
       "_comment": "While this is in your graveyard, at the start of your turn, you may destroy 2 Silvers you control. If you do, equip this.",
       "effects": [
-        {"type": "MAY_DESTROY_SILVERS_TO_EQUIP", "amount": 2}
+        {
+          "type": "MAY_DESTROY_SILVERS_TO_EQUIP",
+          "amount": 2
+        }
       ]
     },
     {
       "ability_type": "ATTACK_REACTION",
-      "cost": [{"type": "DESTROY_SELF"}],
+      "cost": [
+        {
+          "type": "DESTROY_SELF"
+        }
+      ],
       "_comment": "Attack Reaction - Destroy this: Target Assassin attack action card gains 'When this hits a hero, it gains go again.' Battleworn is an engine keyword.",
       "effects": [
         {
           "type": "INJECT_TRIGGER",
-          "trigger": "ON_HIT",
-          "effects": [
-            {"type": "GO_AGAIN"}
-          ]
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              }
+            ],
+            "effects": [
+              {
+                "type": "GO_AGAIN"
+              }
+            ]
+          }
         }
       ],
       "target": {
         "filter": [
-          {"type": "ATTACK_CLASS_IN", "classes": ["assassin"]}
+          {
+            "type": "ATTACK_CLASS_IN",
+            "classes": [
+              "assassin"
+            ]
+          }
         ]
       }
     }
-  ]
+  ],
+  "_comment": "The granted trigger reads 'When this hits A HERO', which is a FIRE-time condition on the injected trigger -- and it was absent, so the trigger fired on any hit, including one on an ally. It cannot be added in the string form: the loader POPS `conditions` at effect level to build the effect's own gate (loader.py:87), so an inner condition written there is silently consumed and evaluated when the trigger is INJECTED rather than when it FIRES. The dict form carries conditions through to the trigger untouched. Any condition that gates WHETHER THE TRIGGER IS GRANTED (stealth, non-weapon) correctly stays at effect level."
 }

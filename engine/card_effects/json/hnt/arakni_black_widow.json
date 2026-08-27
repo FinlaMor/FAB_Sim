@@ -5,35 +5,77 @@
     {
       "ability_type": "ATTACK_REACTION",
       "conditions": [
-        {"type": "NOT", "inner_type": "FLAG_SET", "flag": "black_widow_ar_used"}
+        {
+          "type": "NOT",
+          "inner_type": "FLAG_SET",
+          "flag": "black_widow_ar_used"
+        }
       ],
       "cost": [
-        {"type": "DISCARD_CARD", "class_filter": "Assassin", "amount": 1}
+        {
+          "type": "DISCARD_CARD",
+          "class_filter": "Assassin",
+          "amount": 1
+        }
       ],
       "target": {
         "filter": [
-          {"type": "ATTACK_CLASS_IN", "classes": ["Assassin"]}
+          {
+            "type": "ATTACK_CLASS_IN",
+            "classes": [
+              "Assassin"
+            ]
+          }
         ]
       },
       "effects": [
-        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3},
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        },
         {
           "type": "INJECT_TRIGGER",
-          "conditions": [{"type": "ATTACK_HAS_KEYWORD", "keyword": "stealth"}],
-          "trigger": "ON_HIT",
-          "effects": [
-            {"type": "BANISH", "from_zone": "HAND", "player": "OPPONENT", "amount": 1}
-          ]
+          "conditions": [
+            {
+              "type": "ATTACK_HAS_KEYWORD",
+              "keyword": "stealth"
+            }
+          ],
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              }
+            ],
+            "effects": [
+              {
+                "type": "BANISH",
+                "from_zone": "HAND",
+                "player": "OPPONENT",
+                "amount": 1
+              }
+            ]
+          }
         },
-        {"type": "SET_FLAG", "flag": "black_widow_ar_used", "scope": "CURRENT"}
+        {
+          "type": "SET_FLAG",
+          "flag": "black_widow_ar_used",
+          "scope": "CURRENT"
+        }
       ]
     },
     {
       "ability_type": "STATIC_TRIGGERED",
       "trigger": "END_OF_TURN",
       "effects": [
-        {"type": "TRANSFORM_HERO", "mode": "return_to_brood"}
+        {
+          "type": "TRANSFORM_HERO",
+          "mode": "return_to_brood"
+        }
       ]
     }
-  ]
+  ],
+  "_comment": "The granted trigger reads 'When this hits A HERO', which is a FIRE-time condition on the injected trigger -- and it was absent, so the trigger fired on any hit, including one on an ally. It cannot be added in the string form: the loader POPS `conditions` at effect level to build the effect's own gate (loader.py:87), so an inner condition written there is silently consumed and evaluated when the trigger is INJECTED rather than when it FIRES. The dict form carries conditions through to the trigger untouched. Any condition that gates WHETHER THE TRIGGER IS GRANTED (stealth, non-weapon) correctly stays at effect level."
 }
