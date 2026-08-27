@@ -8,9 +8,11 @@
         {
           "type": "CREATE_TOKEN",
           "token_type": "Vigor",
-          "token": "vigor"
+          "token": "vigor",
+          "player": "OPPONENT"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'under another hero's control'. The release notes are explicit: \"You may not choose yourself to create the Vigor token for.\" CREATE_TOKEN defaults to the ability's own controller, so without player the card did the one thing it is forbidden to do. In a two-player game 'another hero' is the opponent."
 }
