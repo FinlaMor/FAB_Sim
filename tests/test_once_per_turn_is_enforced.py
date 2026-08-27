@@ -61,6 +61,12 @@ def _implemented_slugs_saying_per_turn():
             raw = json.loads(path.read_text(encoding="utf-8"))
         except Exception:
             continue
+        # A card file is a JSON OBJECT. The pipeline worktree keeps list-shaped
+        # queue files inside this tree, and this walk ran at import time, so a
+        # bare raw.get() there raised during COLLECTION and took the entire
+        # suite down with it rather than failing one test.
+        if not isinstance(raw, dict):
+            continue
         slug = raw.get("slug")
         text = idx.get(slug, {}).get("functionalText") or ""
         m = PHRASE.search(text)

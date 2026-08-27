@@ -53,7 +53,34 @@ FIXED = ["aggressive_pounce_red", "aggressive_pounce_blue",
 
 #: The count of cards still carrying an unconditional printed go again their
 #: text gates. Lower it as they are fixed; it must never rise.
-UNFIXED_LIMIT = 48
+#:
+#: This was 48 before the two carve-outs below were applied. Six of those were
+#: never defects: three print go again on its own line and three hand it to
+#: another card. Luminaris was one of them -- counted in the backlog by the very
+#: file that documents why it must never be converted.
+UNFIXED_LIMIT = 42
+
+
+def _prints_go_again_outright(text):
+    """A line that IS the keyword is an unconditional printed go again, and a
+    gated sentence elsewhere on the card is about something else. Channel the
+    Thunder Steppe prints go again AND grants it to action cards you play."""
+    for line in text.splitlines():
+        if line.replace("*", "").replace("-", "").strip().lower() == "go again":
+            return True
+    return False
+
+
+def _go_again_is_about_itself(text, name):
+    """Luminaris's distinction, applied to the printed text rather than to the
+    JSON: "the attack gets go again" hands the keyword to ANOTHER card, and the
+    DB lists it here only because it flattens the sentence. Only a card that
+    gives ITSELF go again can have its printed keyword stripped."""
+    low = text.lower()
+    subjects = ["this get", "this gain", "it get", "it gain"]
+    if name:
+        subjects += [name.lower() + " get", name.lower() + " gain"]
+    return any(sub in low for sub in subjects)
 
 
 def _unstripped():
@@ -75,6 +102,13 @@ def _unstripped():
         kws = [str(k).lower() for k in (entry.get("keywords") or [])]
         text = entry.get("functionalText") or ""
         if "goagain" not in kws or not _COND.search(text):
+            continue
+        # Two shapes the sweep matches but that are not defects. Without them
+        # the backlog number is inflated and, worse, it moves for reasons that
+        # have nothing to do with cards being fixed.
+        if _prints_go_again_outright(text):
+            continue
+        if not _go_again_is_about_itself(text, entry.get("name") or ""):
             continue
         if "goagain" not in conditional_keywords(slug):
             out.append(slug)
@@ -103,6 +137,22 @@ def test_the_unfixed_count_does_not_grow():
     assert len(left) <= UNFIXED_LIMIT, (
         f"{len(left)} cards print go again unconditionally while their text "
         f"gates it (limit {UNFIXED_LIMIT}):\n  " + "\n  ".join(left))
+
+
+#: Matched by the sweep, but not defects. Kept by name because the whole value
+#: of the ratchet is that its number moves only when a card is actually fixed.
+NOT_DEFECTS = ["luminaris", "bonds_of_ancestry_red", "current_funnel_blue",
+               "knife_through_butter_blue", "painful_passage_red",
+               "quick_succession_red"]
+
+
+@pytest.mark.parametrize("slug", NOT_DEFECTS)
+def test_a_false_positive_stays_out_of_the_backlog(slug):
+    """These print go again outright, or grant it to another card. Counting
+    them made the backlog look six cards worse than it is, and would have sent
+    someone to 'fix' a correct card."""
+    assert slug not in _unstripped(), (
+        f"{slug} is being counted as a gated-go-again defect again")
 
 
 def test_luminaris_is_not_converted():
