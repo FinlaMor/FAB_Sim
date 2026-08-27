@@ -24,7 +24,7 @@ import engine.engine as E
 from engine.card import CardDB
 from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import load_all_cards, get_card
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state, card_json_files
 
 load_all_cards()
 DB = CardDB()
@@ -62,7 +62,7 @@ def _run_type(slug, etype, card, st):
     from engine.context import push_refs, pop_refs
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob(f"{slug}.json")).read_text(encoding="utf-8"))
+    raw = json.loads(_card_json(root, f"{slug}.json").read_text(encoding="utf-8"))
     found = []
 
     def walk(node):
@@ -202,7 +202,7 @@ def test_bite_does_not_borrow_flick_knives_restriction():
     for slug in ("bite_blue", "bite_red"):
         # Check the ABILITIES, not the file text: the _comment explains why this
         # type was not used and would match a naive substring search.
-        raw = json.loads(next(root.rglob(f"{slug}.json")).read_text(encoding="utf-8"))
+        raw = json.loads(_card_json(root, f"{slug}.json").read_text(encoding="utf-8"))
         types = []
 
         def walk(node):
@@ -232,7 +232,7 @@ def test_no_ref_effect_is_left_pointing_at_a_ref_nobody_sets():
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
     offenders = []
-    for path in root.rglob("*.json"):
+    for path in card_json_files(root):
         if path.stem.endswith("_work_queue") or any(
                 p.startswith(".") for p in path.parts):
             continue

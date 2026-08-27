@@ -36,6 +36,7 @@ sys.path.insert(0, str(ROOT))
 
 from engine.card import CardDB
 from engine.card_effects.dsl.loader import load_all_cards
+from tests.conftest import card_json_files
 
 load_all_cards()
 DB = CardDB()
@@ -51,7 +52,7 @@ def _implemented_slugs_saying_per_turn():
     idx = json.load(open(ROOT / "card_data" / "slug_index.json",
                          encoding="utf-8"))["by_slug"]
     out = []
-    for path in JSON_ROOT.rglob("*.json"):
+    for path in card_json_files(JSON_ROOT):
         rel = path.relative_to(JSON_ROOT)
         if (path.stem.endswith("_work_queue")
                 or any(p.startswith(".") or p == "needs_review"

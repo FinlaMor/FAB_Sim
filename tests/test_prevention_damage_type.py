@@ -32,6 +32,7 @@ from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import get_card, load_all_cards
 from engine.effect_keywords import DamageType, deal_damage
 from tests.conftest import _make_state
+from tests.conftest import card_json_files
 
 load_all_cards()
 DB = CardDB()
@@ -129,7 +130,7 @@ def test_no_typed_prevention_omits_its_damage_type():
     idx = json.load(open(ROOT / "card_data" / "slug_index.json",
                          encoding="utf-8"))["by_slug"]
     bad = []
-    for path in JSON_ROOT.rglob("*.json"):
+    for path in card_json_files(JSON_ROOT):
         rel = path.relative_to(JSON_ROOT)
         if (path.stem.endswith("_work_queue")
                 or path.name in ("review_queue.json", "triage_queue.json")

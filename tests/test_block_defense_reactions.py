@@ -35,7 +35,7 @@ from engine.card_effects.dsl.effect_types import compile_effect
 from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import get_card, load_all_cards
 from engine.state import CombatState
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state
 
 load_all_cards()
 DB = CardDB()
@@ -122,7 +122,7 @@ def test_no_card_still_writes_a_dead_flag(slug):
     from pathlib import Path
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
     blob = json.dumps(json.loads(
-        next(root.rglob(f"{slug}.json")).read_text(encoding="utf-8")))
+        _card_json(root, f"{slug}.json").read_text(encoding="utf-8")))
     for flag in ("DEFENSE_REACTION_BLOCKED", "command_and_conquer_no_dr"):
         assert flag not in blob, f"{slug} still sets the dead flag {flag}"
 

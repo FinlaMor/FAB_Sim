@@ -22,6 +22,7 @@ from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import get_card, load_all_cards
 from engine.state import CombatState
 from tests.conftest import _make_state
+from tests.conftest import _card_json
 
 load_all_cards()
 DB = CardDB()
@@ -137,7 +138,7 @@ def test_nock_is_not_gated_on_controlling_an_azalea_token():
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob("nock_the_deathwhistle_blue.json"))
+    raw = json.loads(_card_json(root, "nock_the_deathwhistle_blue.json")
                      .read_text(encoding="utf-8"))
     blob = json.dumps(raw.get("abilities", []))
     assert "CONTROLS_TOKEN_TYPE" not in blob, blob
@@ -208,7 +209,7 @@ def test_unwinding_finality_no_longer_tutors_from_the_deck():
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob("unwinding_finality_red.json"))
+    raw = json.loads(_card_json(root, "unwinding_finality_red.json")
                      .read_text(encoding="utf-8"))
     blob = json.dumps(raw.get("abilities", []))
     assert "SEARCH_DECK" not in blob, blob

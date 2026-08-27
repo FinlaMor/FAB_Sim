@@ -17,7 +17,7 @@ from engine.card import Card, CardDB
 from engine.card_effects.dsl.condition_types import compile_condition
 from engine.card_effects.dsl.loader import load_all_cards
 from engine.effect_keywords import TURN_EVENT_MARKER
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state
 
 load_all_cards()
 DB = CardDB()
@@ -119,7 +119,7 @@ def test_comet_collision_no_longer_reads_an_invented_flag():
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parents[1] / "engine" / "card_effects" / "json"
-    path = [p for p in root.rglob("comet_collision_red.json") if ".quarantine" not in p.parts][0]
+    path = _card_json(root, "comet_collision_red.json")
     abilities = json.dumps(json.loads(path.read_text(encoding="utf-8"))["abilities"])
     assert "STARFALL_FLAG" not in abilities
     assert "EVENT_THIS_TURN" in abilities

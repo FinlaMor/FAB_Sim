@@ -41,6 +41,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from engine.card_effects.dsl.loader import conditional_keywords, load_all_cards
+from tests.conftest import card_json_files
 
 load_all_cards()
 
@@ -87,7 +88,7 @@ def _unstripped():
     idx = json.load(open(ROOT / "card_data" / "slug_index.json",
                          encoding="utf-8"))["by_slug"]
     out = []
-    for path in JSON_ROOT.rglob("*.json"):
+    for path in card_json_files(JSON_ROOT):
         rel = path.relative_to(JSON_ROOT)
         if (path.stem.endswith("_work_queue")
                 or any(p.startswith(".") or p == "needs_review"

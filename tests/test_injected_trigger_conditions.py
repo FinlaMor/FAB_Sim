@@ -48,6 +48,7 @@ from engine.card import Card, CardDB
 from engine.card_effects.dsl.loader import load_all_cards
 from engine.state import CombatState
 from tests.conftest import _make_state
+from tests.conftest import _card_json, card_json_files
 
 load_all_cards()
 DB = CardDB()
@@ -58,7 +59,7 @@ JSON_ROOT = ROOT / "engine" / "card_effects" / "json"
 
 
 def _nodes(slug, wanted="INJECT_TRIGGER"):
-    raw = json.loads(next(JSON_ROOT.rglob(f"{slug}.json")).read_text(
+    raw = json.loads(_card_json(JSON_ROOT, f"{slug}.json").read_text(
         encoding="utf-8"))
     found = []
 
@@ -148,7 +149,7 @@ def test_no_injected_trigger_hides_conditions_in_the_string_form():
     string-form INJECT_TRIGGER are consumed by the loader and never reach the
     trigger, which is silent."""
     bad = []
-    for path in JSON_ROOT.rglob("*.json"):
+    for path in card_json_files(JSON_ROOT):
         rel = path.relative_to(JSON_ROOT)
         if (path.stem.endswith("_work_queue")
                 or any(p.startswith(".") or p == "needs_review"

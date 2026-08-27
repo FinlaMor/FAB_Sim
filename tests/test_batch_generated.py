@@ -9,7 +9,7 @@ from engine.card import CardDB, Card
 from engine.card_effects.dsl import dispatch, get_card
 from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import load_all_cards
-from tests.conftest import _make_state as _base_make_state
+from tests.conftest import _card_json, _make_state as _base_make_state
 load_all_cards()
 DB = CardDB()
 def _make_state(*a, **k):
@@ -1151,7 +1151,7 @@ def test_fusion_records_the_marker_the_card_gates_on():
     import json as _json
     from pathlib import Path
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = _json.loads(next(root.rglob("inspire_lightning_yellow.json"))
+    raw = _json.loads(_card_json(root, "inspire_lightning_yellow.json")
                       .read_text(encoding="utf-8"))
     gates = [c.get("flag") for a in raw["abilities"] for c in a.get("conditions", [])]
     assert "fused_inspire_lightning_yellow" in gates, gates

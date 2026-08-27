@@ -27,6 +27,7 @@ import engine.engine as E
 from engine.card import CardDB
 from engine.card_effects.dsl.loader import load_all_cards, get_card
 from tests.conftest import _make_state
+from tests.conftest import _card_json, card_json_files
 
 load_all_cards()
 DB = CardDB()
@@ -145,7 +146,7 @@ def test_good_deeds_has_no_duplicated_abilities():
     from pathlib import Path
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob("good_deeds_dont_go_unnoticed_yellow.json"))
+    raw = json.loads(_card_json(root, "good_deeds_dont_go_unnoticed_yellow.json")
                      .read_text(encoding="utf-8"))
     seen = [json.dumps(a, sort_keys=True) for a in raw.get("abilities") or []]
     assert len(seen) == len(set(seen)), "duplicate abilities are back"
@@ -159,7 +160,7 @@ def test_no_ability_is_gated_on_a_flag_it_sets():
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
     offenders = []
-    for path in root.rglob("*.json"):
+    for path in card_json_files(root):
         if path.stem.endswith("_work_queue") or any(
                 p.startswith(".") for p in path.parts):
             continue

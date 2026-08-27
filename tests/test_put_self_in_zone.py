@@ -25,6 +25,7 @@ from engine.card import CardDB
 from engine.card_effects.dsl.effect_types import compile_effect
 from engine.card_effects.dsl.loader import load_all_cards, get_card
 from tests.conftest import _make_state
+from tests.conftest import card_json_files
 
 load_all_cards()
 DB = CardDB()
@@ -92,7 +93,7 @@ def test_no_card_asks_put_self_bottom_deck_for_another_zone():
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
     offenders = []
-    for path in root.rglob("*.json"):
+    for path in card_json_files(root):
         if path.stem.endswith("_work_queue") or any(
                 p.startswith(".") for p in path.parts):
             continue
@@ -155,7 +156,7 @@ def test_no_card_saying_soul_moves_itself_anywhere_else():
                          encoding="utf-8"))["by_slug"]
     soul = re.compile(r"into (your|their|its owner'?s?) (hero'?s? )?soul", re.I)
     bad = []
-    for path in root.rglob("*.json"):
+    for path in card_json_files(root):
         rel = path.relative_to(root)
         if (path.stem.endswith("_work_queue")
                 or path.name in ("review_queue.json", "triage_queue.json")

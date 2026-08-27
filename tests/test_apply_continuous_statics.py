@@ -25,6 +25,7 @@ from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import load_all_cards, get_card
 from engine.state import CombatState
 from tests.conftest import _make_state
+from tests.conftest import _card_json
 
 load_all_cards()
 DB = CardDB()
@@ -165,6 +166,6 @@ def test_neither_still_uses_a_dead_static(slug):
     from pathlib import Path
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob(f"{slug}.json")).read_text(encoding="utf-8"))
+    raw = json.loads(_card_json(root, f"{slug}.json").read_text(encoding="utf-8"))
     types = [(a.get("ability_type") or "").upper() for a in raw.get("abilities") or []]
     assert "STATIC" not in types, types

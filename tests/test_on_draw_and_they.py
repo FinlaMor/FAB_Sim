@@ -23,6 +23,7 @@ from engine.card import CardDB
 from engine.card_effects.dsl.effect_types import _effect_player_id, compile_effect
 from engine.card_effects.dsl.loader import load_all_cards
 from tests.conftest import _make_state
+from tests.conftest import _card_json
 
 load_all_cards()
 DB = CardDB()
@@ -124,7 +125,7 @@ def test_escalate_no_longer_destroys_itself_unconditionally():
     from pathlib import Path
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob("escalate_bloodshed_red.json"))
+    raw = json.loads(_card_json(root, "escalate_bloodshed_red.json")
                      .read_text(encoding="utf-8"))
     blob = json.dumps(raw.get("abilities", []))
     assert "DESTROY_PERMANENT" not in blob, (

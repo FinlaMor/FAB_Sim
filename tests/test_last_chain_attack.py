@@ -18,7 +18,7 @@ from engine.card import CardDB, Card
 from engine.card_effects.dsl import dispatch
 from engine.card_effects.dsl.loader import load_all_cards
 from engine.state import ChainLink, CombatState
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state
 import engine.engine as E
 
 load_all_cards()
@@ -159,7 +159,7 @@ def test_migrated_cards_keep_a_real_condition(slug):
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parents[1] / "engine" / "card_effects" / "json"
-    raw = next(root.rglob(f"{slug}.json")).read_text(encoding="utf-8")
+    raw = _card_json(root, f"{slug}.json").read_text(encoding="utf-8")
     assert "FLAG_SET" not in raw, f"{slug} still reads an invented flag"
     assert "LAST_CHAIN_ATTACK" in raw, f"{slug} lost its Combo gate entirely"
     json.loads(raw)
@@ -171,6 +171,6 @@ def test_vengeance_no_longer_banishes_the_hero():
     # wrong thing is worse than doing nothing.
     from pathlib import Path
     root = Path(__file__).resolve().parents[1] / "engine" / "card_effects" / "json"
-    raw = next(root.rglob("vengeance_never_rests_blue.json")).read_text(encoding="utf-8")
+    raw = _card_json(root, "vengeance_never_rests_blue.json").read_text(encoding="utf-8")
     assert '"target": "hero"' not in raw
     assert "NEEDS_NEW_DSL" in raw, "the unexpressible clause must stay documented"

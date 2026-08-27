@@ -46,6 +46,7 @@ from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import get_card, load_all_cards
 from engine.state import CombatState
 from tests.conftest import _make_state
+from tests.conftest import card_json_files
 
 load_all_cards()
 DB = CardDB()
@@ -175,7 +176,7 @@ def test_no_card_saying_target_weapon_attack_lacks_a_weapon_filter():
     idx = json.load(open(ROOT / "card_data" / "slug_index.json",
                          encoding="utf-8"))["by_slug"]
     bad = []
-    for path in JSON_ROOT.rglob("*.json"):
+    for path in card_json_files(JSON_ROOT):
         if (path.stem.endswith("_work_queue")
                 or any(p.startswith(".") or p == "needs_review"
                        for p in path.relative_to(JSON_ROOT).parts)):

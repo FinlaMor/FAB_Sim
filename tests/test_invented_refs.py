@@ -44,6 +44,7 @@ from engine.card import Card, CardDB
 from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import get_card, load_all_cards
 from tests.conftest import _make_state
+from tests.conftest import card_json_files
 
 load_all_cards()
 DB = CardDB()
@@ -249,7 +250,7 @@ KNOWN_UNFIXED = {
 def _offenders():
     root = ROOT / "engine" / "card_effects" / "json"
     bad = {}
-    for path in root.rglob("*.json"):
+    for path in card_json_files(root):
         rel = path.relative_to(root)
         if (path.stem.endswith("_work_queue")
                 or any(p.startswith(".") or p == "needs_review"

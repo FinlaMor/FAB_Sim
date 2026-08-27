@@ -37,6 +37,7 @@ from engine.card import Card
 from engine.card_effects.dsl import dispatch, load_all_cards
 from engine.card_effects.dsl.loader import get_card
 from engine.state import CombatState, Event, GameState, Player, Step
+from tests.conftest import card_json_files
 
 load_all_cards()
 
@@ -153,7 +154,7 @@ def test_no_crush_ability_is_gated_on_did_not_hit():
     carrying both resolves in no reachable state."""
     root = ROOT / "engine" / "card_effects" / "json"
     bad = []
-    for path in root.rglob("*.json"):
+    for path in card_json_files(root):
         rel = path.relative_to(root)
         if (path.stem.endswith("_work_queue")
                 or any(p.startswith(".") or p == "needs_review"

@@ -39,6 +39,7 @@ from engine.card import CardDB
 from engine.card_effects.ability_keywords import create_token
 from engine.card_effects.dsl.loader import get_card, load_all_cards
 from tests.conftest import _make_state
+from tests.conftest import card_json_files
 
 load_all_cards()
 DB = CardDB()
@@ -59,7 +60,7 @@ def _slugify(name):
 def _every_created_token():
     """(card slug, token name) for every CREATE_TOKEN in the corpus."""
     out = []
-    for path in JSON_ROOT.rglob("*.json"):
+    for path in card_json_files(JSON_ROOT):
         rel = path.relative_to(JSON_ROOT)
         if (path.stem.endswith("_work_queue")
                 or any(p.startswith(".") or p == "needs_review"

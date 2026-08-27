@@ -27,7 +27,7 @@ from engine.card_effects.dsl.cost_types import compile_cost
 from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import get_card, load_all_cards
 from engine.state import CombatState
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state
 
 load_all_cards()
 DB = CardDB()
@@ -87,7 +87,7 @@ def test_the_cost_is_on_the_ability_not_in_its_effects():
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob("v_for_valor_yellow.json"))
+    raw = json.loads(_card_json(root, "v_for_valor_yellow.json")
                      .read_text(encoding="utf-8"))
     ab = raw["abilities"][0]
     assert any(c.get("type") == "CHARGE" for c in ab.get("cost", [])), ab

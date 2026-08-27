@@ -33,7 +33,7 @@ from engine.card_effects.dsl.cost_types import compile_cost
 from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import get_card, load_all_cards
 from engine.state import CombatState
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state
 
 load_all_cards()
 DB = CardDB()
@@ -238,7 +238,7 @@ def test_every_charge_card_declares_the_cost_as_a_COST():
     for slug in ("beaming_bravado_red", "beaming_bravado_blue",
                  "beaming_bravado_yellow", "light_the_way_red",
                  "glaring_impact_blue"):
-        raw = json.loads(next(root.rglob(f"{slug}.json")).read_text(encoding="utf-8"))
+        raw = json.loads(_card_json(root, f"{slug}.json").read_text(encoding="utf-8"))
         play = raw["abilities"][0]
         # Cost and payoff live on ONE ability: an ability carrying only a cost
         # has an empty effects list, which resolves as a no-op and is caught by

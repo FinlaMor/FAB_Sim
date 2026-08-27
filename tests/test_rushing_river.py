@@ -20,7 +20,7 @@ from engine.card_effects.dsl import dispatch
 from engine.card_effects.dsl.effect_types import _resolve_amount
 from engine.card_effects.dsl.loader import load_all_cards
 from engine.state import ChainLink, CombatState
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state
 import engine.engine as E
 
 load_all_cards()
@@ -164,7 +164,7 @@ def test_no_dead_constructs_remain():
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parents[1] / "engine" / "card_effects" / "json"
-    path = [p for p in root.rglob("rushing_river_blue.json") if ".quarantine" not in p.parts][0]
+    path = _card_json(root, "rushing_river_blue.json")
     abilities = json.dumps(json.loads(path.read_text(encoding="utf-8"))["abilities"])
     assert "CHAIN_HIT_COUNT" not in abilities      # invented amount
     assert "REORDER_REF" not in abilities          # no-ops on hand cards

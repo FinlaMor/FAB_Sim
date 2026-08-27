@@ -152,3 +152,31 @@ def pytest_generate_tests(metafunc):
             slug_index = json.load(f)
         slugs = sorted(slug_index["by_slug"].keys())
         metafunc.parametrize("card_slug", slugs)
+
+
+def card_json_files(root):
+    """Every IMPLEMENTED card file under `root`.
+
+    rglob walks everything, and the card tree is not only cards. This repo
+    keeps `.quarantine/` there, and the pipeline worktree additionally keeps
+    `.drafts/`, `.review/`, `.triage/` and `.draft-review/` results filed under
+    the same slugs. A dot-directory under the card tree is never an implemented
+    card, which is the rule the loader already applies.
+    """
+    return [p for p in root.rglob("*.json")
+            if not any(part.startswith(".") for part in p.parts)]
+
+
+def _card_json(root, name):
+    """The implemented card file called `name`.
+
+    `next(root.rglob(name))` returns whatever the walk reaches first, and
+    ".review" sorts before every set directory -- so in the pipeline worktree
+    that first hit was a REVIEW VERDICT, an object with no "abilities". 77
+    tests failed there for a reason that had nothing to do with the card they
+    were testing, and each looked like a product bug.
+    """
+    hits = [p for p in root.rglob(name)
+            if not any(part.startswith(".") for part in p.parts)]
+    assert hits, f"no implemented card file for {name}"
+    return hits[0]

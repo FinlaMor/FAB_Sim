@@ -29,6 +29,7 @@ from engine.state import CombatState
 from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import load_all_cards, get_card
 from tests.conftest import _make_state
+from tests.conftest import card_json_files
 
 load_all_cards()
 DB = CardDB()
@@ -224,7 +225,7 @@ def test_no_card_still_triggers_on_the_nonexistent_on_banish():
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
     offenders = []
-    for path in root.rglob("*.json"):
+    for path in card_json_files(root):
         if path.stem.endswith("_work_queue") or any(
                 p.startswith(".") for p in path.parts):
             continue

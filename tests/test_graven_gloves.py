@@ -23,7 +23,7 @@ import engine.engine as E
 from engine.card import CardDB
 from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import load_all_cards, get_card
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state
 
 load_all_cards()
 DB = CardDB()
@@ -112,7 +112,7 @@ def test_the_graveyard_clause_uses_a_trigger_that_is_dispatched():
     from engine.card_effects.dsl.trigger_types import TRIGGER_TO_EVENT
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob("graven_gloves.json")).read_text(encoding="utf-8"))
+    raw = json.loads(_card_json(root, "graven_gloves.json").read_text(encoding="utf-8"))
     types = [(a.get("ability_type") or "").upper() for a in raw["abilities"]]
     assert "STATIC" not in types, types
 

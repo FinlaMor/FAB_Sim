@@ -29,6 +29,7 @@ from engine.card_effects.dsl.loader import get_card, load_all_cards
 from engine.effect_keywords import DamageType, deal_damage
 from engine.state import CombatState
 from tests.conftest import _make_state
+from tests.conftest import _card_json
 
 load_all_cards()
 DB = CardDB()
@@ -217,7 +218,7 @@ def test_step_between_no_longer_grants_ward():
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob("step_between_red.json"))
+    raw = json.loads(_card_json(root, "step_between_red.json")
                      .read_text(encoding="utf-8"))
     assert "WARD" not in json.dumps(raw.get("abilities", []))
 

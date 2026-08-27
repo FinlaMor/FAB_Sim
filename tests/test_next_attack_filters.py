@@ -24,6 +24,7 @@ import engine.engine as E
 from engine.card import Card
 from engine.card_effects.dsl import dispatch, load_all_cards
 from engine.state import CombatState, GameState, Player, Step
+from tests.conftest import _card_json
 
 load_all_cards()
 
@@ -172,6 +173,6 @@ def test_old_thump_condition_was_always_true():
 def test_no_invented_flag_remains(slug):
     import json
     root = ROOT / "engine" / "card_effects" / "json"
-    path = [p for p in root.rglob(f"{slug}.json") if ".quarantine" not in p.parts][0]
+    path = _card_json(root, f"{slug}.json")
     abilities = json.dumps(json.loads(path.read_text(encoding="utf-8"))["abilities"])
     assert "FLAG_SET" not in abilities, f"{slug} still reads an invented flag"

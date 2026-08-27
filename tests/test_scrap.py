@@ -21,7 +21,7 @@ from engine.card_effects.dsl.condition_types import compile_condition
 from engine.card_effects.dsl.cost_types import compile_cost
 from engine.card_effects.dsl.loader import load_all_cards
 from engine.effect_keywords import TURN_EVENT_MARKER
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state
 
 load_all_cards()
 DB = CardDB()
@@ -167,7 +167,7 @@ def test_scrap_cards_have_the_cost_and_no_invented_flag(slug):
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parents[1] / "engine" / "card_effects" / "json"
-    path = [p for p in root.rglob(f"{slug}.json") if ".quarantine" not in p.parts][0]
+    path = _card_json(root, f"{slug}.json")
     data = json.loads(path.read_text(encoding="utf-8"))
     # The cost lives at CARD level (a play-time additional cost), not inside an
     # ability: an ability existing only to carry a cost has no effects, which the

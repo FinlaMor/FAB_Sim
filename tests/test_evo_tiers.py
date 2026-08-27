@@ -22,6 +22,7 @@ from engine.card import CardDB
 from engine.card_effects.dsl.loader import load_all_cards
 from engine.state import CombatState
 from tests.conftest import _make_state
+from tests.conftest import _card_json
 
 load_all_cards()
 DB = CardDB()
@@ -133,7 +134,7 @@ def test_no_fabricated_power_penalty_remains(slug):
     from pathlib import Path
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob(f"{slug}.json")).read_text(encoding="utf-8"))
+    raw = json.loads(_card_json(root, f"{slug}.json").read_text(encoding="utf-8"))
 
     found = []
 

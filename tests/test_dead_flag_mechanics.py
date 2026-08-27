@@ -20,6 +20,7 @@ from engine.card_effects.dsl.loader import load_all_cards
 from engine.effect_keywords import TURN_EVENT_MARKER, roll
 from engine.state import CombatState
 from tests.conftest import _make_state
+from tests.conftest import _card_json
 
 load_all_cards()
 DB = CardDB()
@@ -328,8 +329,7 @@ def test_no_dead_flag_remains(slug):
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parents[1] / "engine" / "card_effects" / "json"
-    path = [p for p in root.rglob(f"{slug}.json")
-            if not any(part.startswith(".") for part in p.parts)][0]
+    path = _card_json(root, f"{slug}.json")
     raw = json.loads(path.read_text(encoding="utf-8"))
     abilities = json.dumps(raw.get("abilities", []))
     assert "FLAG_SET" not in abilities, (

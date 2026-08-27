@@ -16,7 +16,7 @@ from engine.card import CardDB
 from engine.card_effects.dsl.loader import load_all_cards
 from engine.engine import resolve_stack
 from engine.play import apply_action
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state
 
 load_all_cards()
 DB = CardDB()
@@ -137,7 +137,7 @@ def test_migrated_cards_keep_a_real_condition(slug):
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parents[1] / "engine" / "card_effects" / "json"
-    path = next(root.rglob(f"{slug}.json"))
+    path = _card_json(root, f"{slug}.json")
     raw = path.read_text(encoding="utf-8")
     assert "PLAYED_THIS_TURN" not in raw, f"{slug} still reads an invented flag"
     assert "EVENT_THIS_TURN" in raw, f"{slug} lost its condition entirely"

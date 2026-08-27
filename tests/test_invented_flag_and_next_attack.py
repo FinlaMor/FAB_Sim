@@ -25,6 +25,7 @@ from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import load_all_cards, get_card
 from engine.state import CombatState
 from tests.conftest import _make_state
+from tests.conftest import _card_json, card_json_files
 
 load_all_cards()
 DB = CardDB()
@@ -98,7 +99,7 @@ def test_quickening_sand_no_longer_regrants_a_printed_keyword():
     from pathlib import Path
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob("quickening_sand_blue.json"))
+    raw = json.loads(_card_json(root, "quickening_sand_blue.json")
                      .read_text(encoding="utf-8"))
     for ability in raw.get("abilities") or []:
         for eff in ability.get("effects") or []:
@@ -116,7 +117,7 @@ def test_no_card_reads_a_flag_named_after_a_keyword():
     KEYWORD_FLAGS = {"go_again", "goagain", "dominate", "overpower", "intimidate"}
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
     offenders = []
-    for path in root.rglob("*.json"):
+    for path in card_json_files(root):
         if path.stem.endswith("_work_queue") or any(
                 p.startswith(".") for p in path.parts):
             continue

@@ -42,7 +42,7 @@ from engine.card_effects.dsl.effect_types import compile_effect
 from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import get_card, load_all_cards
 from engine.state import CombatState
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state
 
 load_all_cards()
 DB = CardDB()
@@ -190,7 +190,7 @@ def test_hala_taps_and_does_not_pitch(slug):
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob(f"{slug}.json")).read_text(encoding="utf-8"))
+    raw = json.loads(_card_json(root, f"{slug}.json").read_text(encoding="utf-8"))
     ab = raw["abilities"][0]
     costs = [c.get("type") for c in ab.get("cost", [])]
     assert "TAP_SELF" in costs, f"{slug} never taps: {costs}"
@@ -249,7 +249,7 @@ def test_beckon_steel_uses_the_counter_kind_sharpen_writes():
     from pathlib import Path
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
     blob = json.dumps(json.loads(
-        next(root.rglob("beckon_steel_blue.json")).read_text(encoding="utf-8")))
+        _card_json(root, "beckon_steel_blue.json").read_text(encoding="utf-8")))
     assert '"SHARPEN"' not in blob.replace('"type": "SHARPEN"', ""), (
         "a counter kind named SHARPEN is still referenced")
 

@@ -43,6 +43,7 @@ from engine.card_effects.dsl.loader import get_card
 from engine.state import CombatState, Event, Player, Step
 
 from tests.conftest import _make_state
+from tests.conftest import card_json_files
 
 load_all_cards()
 DB = CardDB()
@@ -153,7 +154,7 @@ def test_every_hero_clause_carries_the_hero_gate():
     hits = re.compile(r"hits a hero", re.I)
     attacks = re.compile(r"attacks a hero", re.I)
     bad = []
-    for path in JSON_ROOT.rglob("*.json"):
+    for path in card_json_files(JSON_ROOT):
         rel = path.relative_to(JSON_ROOT)
         if (path.stem.endswith("_work_queue")
                 or any(p.startswith(".") or p == "needs_review"

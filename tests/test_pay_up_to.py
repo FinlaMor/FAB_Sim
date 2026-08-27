@@ -19,7 +19,7 @@ from engine.card_effects.dsl import dispatch
 from engine.card_effects.dsl.effect_types import _resolve_amount, compile_effect
 from engine.card_effects.dsl.loader import load_all_cards
 from engine.state import CombatState
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state
 
 load_all_cards()
 DB = CardDB()
@@ -140,7 +140,7 @@ def test_no_invented_payment_amount_remains(slug):
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parents[1] / "engine" / "card_effects" / "json"
-    path = [p for p in root.rglob(f"{slug}.json") if ".quarantine" not in p.parts][0]
+    path = _card_json(root, f"{slug}.json")
     abilities = json.dumps(json.loads(path.read_text(encoding="utf-8"))["abilities"])
     for invented in ("PAY_AMOUNT", "PAYMENT_AMOUNT", "UP_TO_3"):
         assert invented not in abilities, f"{slug} still carries {invented}"

@@ -18,7 +18,7 @@ from engine.card_effects.dsl.condition_types import compile_condition
 from engine.card_effects.dsl.effect_types import _resolve_amount
 from engine.card_effects.dsl.loader import load_all_cards
 from engine.state import ChainLink, CombatState
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state
 
 load_all_cards()
 DB = CardDB()
@@ -141,7 +141,7 @@ def test_migrated_cards_no_longer_carry_an_invented_amount(slug):
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parents[1] / "engine" / "card_effects" / "json"
-    path = [p for p in root.rglob(f"{slug}.json") if ".quarantine" not in p.parts][0]
+    path = _card_json(root, f"{slug}.json")
     data = json.loads(path.read_text(encoding="utf-8"))
     # Inspect the ABILITIES, not the raw file: `_comment` legitimately names the
     # old invented token to explain what was replaced, and matching raw text
@@ -253,7 +253,7 @@ def test_no_invented_amounts_remain(slug):
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parents[1] / "engine" / "card_effects" / "json"
-    path = [p for p in root.rglob(f"{slug}.json") if ".quarantine" not in p.parts][0]
+    path = _card_json(root, f"{slug}.json")
     abilities = json.dumps(json.loads(path.read_text(encoding="utf-8"))["abilities"])
     for invented in ("COUNT_CONTROLLERS", "CHAIN_HIT_COUNT_GTE", "BOOST_FLAG",
                      "EVO_COUNT", "BOOST_COUNT\"", "FLAG_SET"):

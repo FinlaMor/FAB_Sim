@@ -24,6 +24,7 @@ from engine.card import CardDB
 from engine.card_effects.dsl.effect_types import compile_effect
 from engine.card_effects.dsl.loader import load_all_cards, get_card
 from tests.conftest import _make_state
+from tests.conftest import _card_json
 
 load_all_cards()
 DB = CardDB()
@@ -163,7 +164,7 @@ def test_perch_grapplers_is_not_gated_on_the_flag_it_sets():
     from pathlib import Path
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob("perch_grapplers.json")).read_text(encoding="utf-8"))
+    raw = json.loads(_card_json(root, "perch_grapplers.json").read_text(encoding="utf-8"))
     for ability in raw.get("abilities") or []:
         set_flags = {e.get("flag") for e in ability.get("effects") or []
                      if e.get("type") == "SET_FLAG"}
@@ -179,7 +180,7 @@ def test_neither_card_still_uses_a_dead_static(slug):
     from pathlib import Path
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob(f"{slug}.json")).read_text(encoding="utf-8"))
+    raw = json.loads(_card_json(root, f"{slug}.json").read_text(encoding="utf-8"))
     types = [(a.get("ability_type") or "").upper() for a in raw.get("abilities") or []]
     assert "STATIC" not in types, types
 
@@ -256,7 +257,7 @@ def test_teklovossen_no_longer_grants_a_fabricated_defence_bonus():
     from pathlib import Path
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob("teklovossen_the_mechropotent.json"))
+    raw = json.loads(_card_json(root, "teklovossen_the_mechropotent.json")
                      .read_text(encoding="utf-8"))
 
     found = []

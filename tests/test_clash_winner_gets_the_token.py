@@ -20,6 +20,7 @@ import json
 from pathlib import Path
 
 import pytest
+from tests.conftest import _card_json
 
 JSON_ROOT = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
 
@@ -35,7 +36,7 @@ CLASH_CARDS = [
 
 
 def _raw(slug):
-    return json.loads(next(JSON_ROOT.rglob(f"{slug}.json")).read_text(encoding="utf-8"))
+    return json.loads(_card_json(JSON_ROOT, f"{slug}.json").read_text(encoding="utf-8"))
 
 
 def _nodes(raw, want):
@@ -114,7 +115,7 @@ def _behavioural_state():
     import engine.engine as E
     from engine.card import CardDB
     from engine.card_effects.dsl.loader import load_all_cards
-    from tests.conftest import _make_state
+    from tests.conftest import _card_json, _make_state
 
     load_all_cards()
     db = CardDB()

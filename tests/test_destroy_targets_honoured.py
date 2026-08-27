@@ -23,7 +23,7 @@ from engine.card import CardDB
 from engine.card_effects.dsl.loader import load_all_cards, get_card
 from engine.card_effects.dsl.interpreter import run_ability
 from engine.state import CombatState
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state, card_json_files
 
 load_all_cards()
 DB = CardDB()
@@ -81,7 +81,7 @@ def _run_nested(slug, etype, card, st):
     from engine.context import push_refs, pop_refs
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    path = next(p for p in root.rglob(f"{slug}.json"))
+    path = _card_json(root, f"{slug}.json")
     raw = json.loads(path.read_text(encoding="utf-8"))
 
     found = []
@@ -183,7 +183,7 @@ def test_aura_destroys_name_the_right_player(slug, player_key):
     from pathlib import Path
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob(f"{slug}.json")).read_text(encoding="utf-8"))
+    raw = json.loads(_card_json(root, f"{slug}.json").read_text(encoding="utf-8"))
     found = []
 
     def walk(node):
@@ -210,7 +210,7 @@ def test_no_card_still_uses_destroy_token_for_a_zone():
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
     offenders = []
-    for path in root.rglob("*.json"):
+    for path in card_json_files(root):
         if path.stem.endswith("_work_queue") or any(
                 p.startswith(".") for p in path.parts):
             continue

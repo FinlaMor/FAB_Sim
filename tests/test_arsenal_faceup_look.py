@@ -25,7 +25,7 @@ import engine.engine as E
 from engine.card import CardDB
 from engine.card_effects.dsl.interpreter import run_ability
 from engine.card_effects.dsl.loader import get_card, load_all_cards
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state
 
 load_all_cards()
 DB = CardDB()
@@ -110,7 +110,7 @@ def test_the_reorder_clause_is_implemented(slug):
     import json
     from pathlib import Path
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    walk(json.loads(next(root.rglob(f"{slug}.json")).read_text(encoding="utf-8"))
+    walk(json.loads(_card_json(root, f"{slug}.json").read_text(encoding="utf-8"))
          .get("abilities"))
     assert "REORDER_REF" in types, (
         f"{slug} looks at cards and never puts them back in any order: {types}")

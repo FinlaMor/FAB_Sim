@@ -22,7 +22,7 @@ import pytest
 import engine.engine as E
 from engine.card import CardDB
 from engine.card_effects.dsl.loader import load_all_cards, get_card
-from tests.conftest import _make_state
+from tests.conftest import _card_json, _make_state
 
 load_all_cards()
 DB = CardDB()
@@ -60,7 +60,7 @@ def _run_type(slug, etype, card, st):
     from engine.context import push_refs, pop_refs
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob(f"{slug}.json")).read_text(encoding="utf-8"))
+    raw = json.loads(_card_json(root, f"{slug}.json").read_text(encoding="utf-8"))
     found = []
 
     def walk(node):
@@ -207,7 +207,7 @@ def test_mutated_mass_has_no_fabricated_cost():
     from pathlib import Path
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob("mutated_mass_blue.json")).read_text(encoding="utf-8"))
+    raw = json.loads(_card_json(root, "mutated_mass_blue.json").read_text(encoding="utf-8"))
     for ability in raw.get("abilities") or []:
         for key in ("cost", "additional_cost", "alternative_cost"):
             for spec in ability.get(key) or []:
@@ -233,6 +233,6 @@ def test_pass_over_is_playable_with_an_empty_own_graveyard():
     from pathlib import Path
 
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
-    raw = json.loads(next(root.rglob("pass_over_blue.json")).read_text(encoding="utf-8"))
+    raw = json.loads(_card_json(root, "pass_over_blue.json").read_text(encoding="utf-8"))
     for ability in raw.get("abilities") or []:
         assert not (ability.get("cost") or ability.get("additional_cost")), ability

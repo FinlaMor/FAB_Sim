@@ -42,6 +42,7 @@ from engine.card_effects.dsl.cost_types import compile_cost
 from engine.card_effects.dsl.effect_types import _permanent_filter
 from engine.card_effects.dsl.loader import load_all_cards
 from tests.conftest import _make_state
+from tests.conftest import _card_json
 
 load_all_cards()
 DB = CardDB()
@@ -104,8 +105,8 @@ def test_a_directive_does_not_erase_a_real_filter():
 # --- the card ---------------------------------------------------------------
 
 def _chapeau_cost():
-    path = next((ROOT / "engine" / "card_effects" / "json").rglob(
-        "good_time_chapeau.json"))
+    path = _card_json(ROOT / "engine" / "card_effects" / "json",
+                      "good_time_chapeau.json")
     spec = json.loads(path.read_text(encoding="utf-8"))["abilities"][0]["cost"][0]
     return compile_cost("DESTROY_PERMANENT",
                         {k: v for k, v in spec.items() if k != "type"})
