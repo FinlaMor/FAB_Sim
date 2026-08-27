@@ -2,9 +2,11 @@
   "slug": "grow_wings_blue",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "LAST_CHAIN_ATTACK",
           "talent": "Draconic"
@@ -12,9 +14,11 @@
       ],
       "effects": [
         {
-          "type": "GO_AGAIN"
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The card PRINTS GoAgain, so the card DB grants it unconditionally and the gate here was decoration -- the attack always had go again, strictly stronger than printed. loader.conditional_keywords() strips a printed keyword only for an ability gated on SOURCE_IS_ATTACK that grants it, which is what separates 'THIS gains go again' from Luminaris's 'your Illusionist attacks get go again'. Converted to the WHILE_STATIC form for the same reason Aggressive Pounce is: CR 6.2.3d, a static-continuous effect conditional on being generated has its condition evaluated AT ALL TIMES, and go again is paid at the Resolution Step (8.3.5b), so what matters is whether the card has it THEN -- not whether the condition held when the card was played or the attack declared."
 }
