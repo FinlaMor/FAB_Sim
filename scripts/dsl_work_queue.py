@@ -80,7 +80,13 @@ def _queue_entry(slug: str, entry: dict, status: str) -> dict:
 
 def cmd_status() -> None:
     load_all_cards()
-    files = [p for p in JSON_ROOT.rglob("*.json") if not p.stem.endswith("_work_queue")]
+    # Dot-directories under the card tree are PIPELINE RESULTS -- .drafts,
+    # .review, .triage, .draft-review -- not implemented cards. They only exist
+    # in the pipeline worktree, where counting them reported 5530 implemented
+    # against a true 1010: the one number someone reads to judge progress.
+    files = [p for p in JSON_ROOT.rglob("*.json")
+             if not p.stem.endswith("_work_queue")
+             and not any(part.startswith(".") for part in p.parts)]
     per_set: dict[str, int] = {}
     for p in files:
         per_set[p.parent.name] = per_set.get(p.parent.name, 0) + 1
