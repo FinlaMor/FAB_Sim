@@ -1,0 +1,26 @@
+{
+  "slug": "cut_a_long_story_short_yellow",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "ATTACK_POWER_GT_BASE"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"},
+        {"type": "SELF_ATTACK_POWER_GTE", "amount": 13}
+      ],
+      "effects": [
+        {"type": "DISCARD", "player": "DEFENDING", "amount": "ALL"}
+      ]
+    }
+  ],
+  "_comment": "'If this has {p} greater than its base, it gets +1{p}. / **Tower** - If this has 13 or more {p}, it gets \"When this hits a hero, they discard their hand.\"' - Guardian Action - Attack.\n\nTOWER NOT AUTHORED AS A KEYWORD: it is in printed_keywords and is engine-side (ability_keywords.check_tower, CR 8.4.13), but check_tower is a condition check only - the granted trigger's gate AND payoff must be authored here. Authoring nothing leaves the whole clause dead; authoring a TOWER keyword grant would be the defect. Shape copied from .drafts/colossal_bearing_red.json, whose only printed text is the same Tower line.\n\nCLAUSE 1 (+1{p} WHEN ABOVE BASE): WHILE_STATIC fires ONLY on RECALC_ATTACK_POWER (interpreter.py:186-201) and its conditions gate each firing. engine._recalculate_attack_power re-derives combat.attack_power from base + staged effects + power_mods BEFORE emitting the event (engine.py:1932-1993), and MODIFY_ATTACK under a recalc event applies transiently in the stage-8 window WITHOUT accumulating into power_mods (effect_types.py:4137-4144). So the static's own +1 never feeds ATTACK_POWER_GT_BASE (condition_types.py:499-509, reads no params): pump above base with another effect -> next recalc sees power > base -> +1 appears; that effect goes away -> recalc re-derives below base -> +1 disappears. Release notes 1-2 ('always checking', 'not self-sustaining') fall out of this timing with no extra machinery.\n\nNOT FUNCTIONAL WHILE DEFENDING (note 3): the recalc event reaches the attack card, both heroes and in-play permanents/weapons - a defending card is none of those while defending, so neither clause runs then. Note 4 (no recalc during the damage step) is likewise engine timing, not JSON.\n\nGRANTED TRIGGER: TRIGGERED ON_HIT with ability-level conditions checked at resolution. ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977, no params here) is false when the attack was declared at a permanent/ally. SELF_ATTACK_POWER_GTE (condition_types.py:487-497) reads 'amount' and tests LIVE combat.attack_power when the hit resolves - power pumped before the damage step is already in combat.attack_power, so the trigger fires; pumping after the hit cannot retro-fire it (release note 7). DISCARD player DEFENDING amount \"ALL\": the handler treats ALL/HAND as the whole hand (effect_types.py:1269-1270) and DEFENDING resolves to the hit hero; spelling copied from shipped wtr/pummel_red's on-hit discard.\n\nRe-verified against handlers this session (trigger routing, recalc ordering, transient stage-8 application, condition params, DISCARD amount/player); no gaps found."
+}

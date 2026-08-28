@@ -1,0 +1,42 @@
+{
+  "slug": "drink_em_under_the_table_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Wager with the defending hero?",
+          "effects": [
+            {"type": "WAGER"}
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_WAGER_RESOLVED",
+      "effects": [
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "LAST_CHAIN_ATTACK", "hit": true}
+          ],
+          "then": [
+            {"type": "DRAW", "amount": 1},
+            {"type": "DISCARD", "player": "OPPONENT", "amount": 1}
+          ],
+          "else": [
+            {"type": "DRAW", "player": "OPPONENT", "amount": 1},
+            {"type": "DISCARD", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks a hero, you may wager with them. The winner draws a card, and the other hero discards a card.'\n\nPrinted keywords Specialization and Wager stay in the card DB - not authored here (the WAGER effect below is the card's unique triggered text, not the keyword).\n\nABILITY 1: TRIGGERED ON_ATTACK + ATTACK_TARGET_IS_HERO ('attacks a hero' - handler condition_types.py ~1960 reads combat.attack_target, None for hero attacks) gating a MAY whose acceptance registers the wager. WAGER with no prize param (handler effect_types.py ~5241 reads prize/token) calls add_wager(state, controller, None, source=card): no prize token, and the source is recorded so engine._resolve_wagers dispatches ON_WAGER_RESOLVED back to THIS card (ability_keywords.py ~1039, engine.py ~2196).\n\nDEVIATION FROM TRIAGE on the payoff: it named DRAW player=WAGER_WINNER / DISCARD player=WAGER_LOSER, but those role spellings are read ONLY by LOSE_LIFE (effect_types.py ~1163). _effect_player_id (~807), which DRAW uses, and DISCARD's own player mapping (~1264) both fall through to SELF for unknown roles - the triage spelling would compile and then silently make the CONTROLLER always draw and always discard, right only when this attack hits. The winner is exactly 'controller if this attack hit, else opponent' (engine._resolve_wagers, engine.py ~2184), and at ON_WAGER_RESOLVED dispatch time the just-closed link IS chain_links[-1] (appended engine.py:2163 before _resolve_wagers at 2166, hit=(net_damage>0)), so LAST_CHAIN_ATTACK {hit:true} branches the payoff correctly: hit -> I draw, they discard; miss -> they draw, I discard. DRAW/DISCARD player OPPONENT both map to 3-cid relative to this card's controller.\n\nResidual approximation: printed CR 8.5.46 wager timing is continuous on the attack; here registration happens when the ON_ATTACK trigger resolves (still inside the attack, before damage), which is when the engine can record it."
+}

@@ -1,0 +1,25 @@
+{
+  "slug": "gang_robbery_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "STEAL_AURA_TOKEN"}
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zone": "auras", "count_gte": 3}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}
+      ]
+    }
+  ],
+  "_comment": "'When this attacks a hero, **steal** an aura token they control. / If you control 3 or more auras, this gets +3{p}.' Reviled Action - Attack.\n\nCLAUSE 1: TRIGGERED ON_ATTACK is the documented shape for an Action - Attack card's on-attack trigger (an Action-Attack is NOT an ATTACK_REACTION); it fires when the card enters the combat chain, matching release note 1 ('triggers when it resolves on the stack and becomes an attacking card against a hero'). ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977) excludes attacks declared at permanents/allies. STEAL_AURA_TOKEN (effect_types.py:2972-2978, read this session) ignores its params and calls effect_steal_token(state, controller, opponent), which moves one aura token from the opposing player's auras zone to mine, asking me which when there are several (ability_keywords.py:905-937); no aura tokens -> steals nothing.\n\nSTEAL KEYWORD SPLIT - verified, not assumed: printed_keywords carries 'Steal', but build_keyword_triggers has NO steal branch (triggers.py:303's static list omits it; the effect_steal_token import at :47 is dead) and no other engine path reads a Steal keyword, so the DB keyword is INERT today and this authored clause is the card's only steal implementation. No double-fire now - but if the keyword ever gains an engine-side implementation, this card needs re-review for a double steal.\n\nREVILED TYPE LINE - deliberate deviation from the triage list, disclosed: the triage named REVEAL_REVILED_FROM_INVENTORY, but that effect implements Outside Interference's OWN printed text ('You may reveal a Reviled attack action card from your inventory...'); Gang Robbery's printed text has no such clause. 'Reviled' in the type line is a talent supertype the engine handles generically via engine._populate_reviled_inventory (engine.py:1284, called at :161), and both shipped Reviled-type precedents (.drafts/arrogant_showboating_blue.json, .drafts/concealed_object_blue.json) author nothing for it. Authoring the reveal here would let Gang Robbery pull a card from inventory - invented behaviour.\n\nCLAUSE 2: release notes call this a conditional continuous effect that is 'always checking' - a STATIC ability, not a triggered one (same reasoning the corpus applies to Aggressive Pounce). WHILE_STATIC re-evaluates on RECALC_ATTACK_POWER, which the engine dispatches to the attack card; Gang Robbery IS combat.attack_card while attacking, so the +3{p} tracks the live aura count at every recalculation. While defending, or before it becomes the attack card, no recalc reaches it - matching release note 3 ('not functional while defending, or on the stack'). CARD_IN_ZONE reads zone/count_gte/player (condition_types.py:844-973, read this session); player defaults to SELF = this card's controller = 'you control'. Release note 4 (a third aura gained during the damage step grants the +3 but damage is not recalculated) is engine recalc timing - nothing to author.\n\nNo GAIN-keyword grant anywhere, so the SOURCE_IS_ATTACK conditional-keyword strip does not apply; the printed Steal stays with the DB."
+}

@@ -1,0 +1,18 @@
+{
+  "slug": "hold_focus",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "AMP", "amount": 1},
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'Action - Destroy this: Amp 1. Go again.' Wizard Equipment - Arms (batch set label OscilioBlitzDeck - derive the json/<set>/ folder from setIdentifiers at adoption).\n\nWIRING: ACTIVATE maps to ON_ACTIVATE; play._add_hero_dsl_activations scans player.arms among its sources (play.py:262-264, read this session) and offers ACTIVATE abilities only in the action phase with an action point and an empty stack (play.py:284), checking ability costs before offering (play.py:311-313). The ability-level cost array compiles to AbilityDef.costs; DESTROY_SELF is a real cost type (cost_types.py:43-51, read this session: can_pay always True, pay routes through canonical destroy(), which resolves the arms slot zone). A cost, not an effect: destroying the source must be able to block/price the activation.\n\nAMP: effect type AMP (effect_types.py:1894-1899, read this session: reads amount, default 1) calls effect_amp -> canonical amp (effect_keywords.py:2853-2877, CR 8.5.47 'next arcane damage this turn deals +N', stored in player.class_counters['amp']).\n\nGO AGAIN authored deliberately despite printed_keywords carrying GoAgain: engine.py:2414-2430 (read this session) pays out a PRINTED go again only for layer_type == 'card', i.e. a played card - an equipment card is never played, so the DB keyword never self-fires here and authoring GAIN keyword GO_AGAIN is necessary, not a double-grant. GAIN with keyword GO_AGAIN (effect_types.py:4927-4941) normalises to 'Go Again' and routes through _grant_go_again (effect_types.py:423-458): outside combat it pays +1 action point directly to the controller (CR 8.3.5a) - the correct route for an action-phase activation, where state.combat is closed. Net effect of the activation as printed: spend 1 AP, destroy Hold Focus, amp 1, regain 1 AP.\n\nSame shape as sibling drafts edge_laden_plate / bruised_leather ('Instant - Destroy this:' chest equipment); this one is Action timing, hence ACTIVATE rather than INSTANT.\n\nactivation_cost 0 is the CARD-LEVEL field (the loader reads it only there); the printed text has no {r} of its own. No once-per-turn text, so no per_turn.",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

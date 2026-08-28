@@ -1,0 +1,14 @@
+{
+  "slug": "fruits_of_the_forest_blue",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [{"type": "DISCARD_SELF"}],
+      "effects": [
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - Discard this: Gain 2{h}' — the card's only functional text; its Action - Attack half (power etc.) comes from the card DB and is deliberately not authored.\n\nSHAPE: INSTANT ability + ability-level cost DISCARD_SELF is the shipped 'Instant - Discard this' spelling (hvy/ripple_away_blue.json, sup/outside_interference_blue.json). play._add_hand_instant_activations (play.py:341-368, read this session) offers exactly INSTANT abilities carrying a DISCARD_SELF cost, as a DISCARD_ACTIVATE action at instant speed; _apply_discard_activate (play.py:1318+) pays then resolves.\n\nRELEASE NOTE 1 ('only activate from hand; can't discard to pay if not in hand'): DISCARD_SELF's can_pay requires the card in the controller's hand (cost_types.py:57-60) and its pay moves it hand -> graveyard.\n\nRELEASE NOTE 2 ('counts as activating an instant ability, not playing an instant card'): holds structurally — DISCARD_ACTIVATE is an activation, not a card play; no ON_PLAY/ON_CARD_PLAYED machinery fires.\n\nGAIN: asset LIFE_POINTS amount 2 routes to effect_gain_life (effect_types.py:4890-4896); player defaults SELF = this card's controller.\n\nactivation_cost pinned to 0 explicitly (DSL-authoritative override): the ability has no resource component and the loader's printed-text fallback has nothing to misread here, but pinning documents that the {h} gain is not a cost."
+}

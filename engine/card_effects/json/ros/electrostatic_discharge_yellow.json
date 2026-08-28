@@ -1,0 +1,20 @@
+{
+  "slug": "electrostatic_discharge_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {"type": "ATTACK_COST_LTE", "cost": 1},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next attack action card you play this turn with cost 1 or less gets +2{p}.' Lightning Instant.\n\nABILITY TYPE: an Instant CARD whose effect happens when you play it is PLAY - INSTANT means an activated ability with instant timing and would never fire (DSL_REFERENCE 'INSTANT is not \"the card is an Instant\"').\n\nSHAPE: this card IS the DSL_REFERENCE MODIFY_NEXT_ATTACK example verbatim. Handler (effect_types.py:4592-4618) READS mod/amount/filter/scope - verified - and queues a one-shot entry on the CONTROLLER's dsl_queued_attack_mods; consumption (engine.py:1175-1236) compiles the filter specs against each incoming attack and applies+consumes on first match. A played attack that fails the filter leaves the entry queued, so it waits for the next qualifying one ('the next ... with cost 1 or less'); unused entries expire end of turn (engine.py:921-922), which is 'this turn'. Scope left at default TURN.\n\nFILTER, each key read out of its handler this session: ATTACK_COST_LTE reads 'cost' (or 'amount') at condition_types.py:261-263 and tests _attack_card_cost (:92-97), which returns the PRINTED resource cost - release note 1 ('Base cost is the printed cost value on a card') holds by construction, unaffected by any cost modifiers in play. ATTACK_TYPE_IN reads 'types' and unions the attack card's types AND subtypes (condition_types.py:273-294): an attack action card is types=['Action'], subtypes=['Attack'], so ['Action'] names exactly attack action cards; a weapon attack carries type Weapon and fails the test, so the buff cannot burn on a weapon attack.\n\nNo printed keywords (printed_keywords empty); no gaps - every clause expressible."
+}

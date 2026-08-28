@@ -1,0 +1,24 @@
+{
+  "slug": "blessing_of_deliverance_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zone": "PITCH", "cost_gte": 3, "count_gte": 1}
+      ],
+      "effects": [
+        {"type": "DRAW", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_ACTION_PHASE",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {"type": "REVEAL_TOP_DECK", "amount": 2, "gain_life": 1, "cost_gte": 3}
+      ]
+    }
+  ],
+  "_comment": "'Go again / When Blessing of Deliverance enters the arena, if you have a card with cost 3 or greater in your pitch zone, draw a card. / At the beginning of your action phase, destroy Blessing of Deliverance then reveal the top 2 cards of your deck. Gain 1{h} for each card with cost 3 or greater revealed this way.'\n\nIdentical shape to .drafts/blessing_of_deliverance_blue.json; the only printed difference is 'top 2 cards' -> REVEAL_TOP_DECK amount 2.\n\nGo again is a printed keyword (printed_keywords) and fires from the card DB keywords field - deliberately NOT authored here; authoring it again would be a defect.\n\nClause 1: TRIGGERED ON_ENTER_PLAY (dispatched from Zone.add on arena entry, state.py:309) + CARD_IN_ZONE + DRAW. The handler reads 'cost_gte' (condition_types.py:837), NOT the 'filter_cost_gte' named in DSL_REFERENCE.md's table and in this card's triage list - filter_cost_gte is unread and would silently drop the cost restriction. Zone resolves via getattr(player, zone) so 'PITCH' reaches player.pitch; count_gte 1 is the printed 'a card'.\n\nClause 2: START_OF_ACTION_PHASE reaches the active player's auras (engine.py:1514-1522, _dsl_permanent_zones at 1452-1459) = 'at the beginning of YOUR action phase'. DESTROY_SELF then REVEAL_TOP_DECK in order ('destroy ... THEN reveal'); REVEAL_TOP_DECK's gain_life/cost_gte pair implements 'gain 1{h} for each card with cost >= 3 revealed this way' directly (effect_types.py:2177-2204), so no COUNT_REF expression is needed despite the triage list naming one."
+}

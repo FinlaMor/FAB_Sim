@@ -1,0 +1,13 @@
+{
+  "slug": "golden_galea",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_EQUIP",
+      "effects": [
+        {"type": "GRANT_SUBTYPE", "subtype": "Gold"}
+      ]
+    }
+  ],
+  "_comment": "'This counts as a Gold.' + Legendary Olympia Specialization / Temper.\n\nSHAPE COPIED VERBATIM from shipped hvy/aurum_aegis.json, whose printed text is word-for-word this card's ('Victor Specialization / This counts as a Gold / Temper') - only the specialization name differs. GRANT_SUBTYPE (effect_types.py:4381-4393) reads 'subtype' and appends 'Gold' to card.subtypes on equip, so gold-count and destroy-a-Gold cost checks see the equipment - which is exactly what both release notes describe (Gold tokens AND objects that count as Gold contribute; CONTROLS_TOKEN_TYPE-style scans cover equipment slots).\n\nTEMPER / LEGENDARY / SPECIALIZATION NOT AUTHORED: all three are in printed_keywords and fire from the card DB keywords field (Temper is an engine keyword mechanic); re-authoring them would be a defect."
+}

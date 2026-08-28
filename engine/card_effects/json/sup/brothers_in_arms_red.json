@@ -1,0 +1,22 @@
+{
+  "slug": "brothers_in_arms_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Pay {r} to give Brothers in Arms +2{d}?",
+          "cost": [
+            {"type": "PAY_RESOURCES", "amount": 1}
+          ],
+          "effects": [
+            {"type": "MODIFY_DEFENSE_VALUE", "mod": "add", "amount": 2}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends, you may pay {r}. If you do, it gets +2{d}.'\n\n'When this defends' = TRIGGERED ON_DEFEND (trigger_types.py:9). No printed keywords, nothing else to author.\n\nOPTIONAL PAYMENT: one MAY block whose cost gates the OPTION - declining runs nothing, so 'if you do' needs no plumbing. The MAY handler documents exactly this wording ('You may PAY {r}. If you do, this gets +1{p}') and reads cost/costs through compile_cost (effect_types.py:3825-3836): can_pay makes the prompt unavailable with 0 resources and pay deducts via the canonical path. PAY_RESOURCES is a real cost type (cost_types.py:691-699). DEVIATION from the triage note disclosed: it suggested GAIN{asset RESOURCE_POINTS, amount -1} inside the MAY effects; a negative gain has no can_pay gate, so the prompt would be offered - and resources driven below zero - with nothing actually payable, which is the free-prompt defect the MAY cost support exists to prevent.\n\n+2{d} lands via MODIFY_DEFENSE_VALUE, NOT triage's MODIFY_DEFENSE - deviation disclosed: engine._recalculate_total_defense resets every declared defender to its base {d} first (engine.py:2046-2053) and runs again immediately before damage, so a per-card bump written at defend time is wiped before it matters; MODIFY_DEFENSE_VALUE records on combat.defense_mods, which the recalculation re-applies after the reset (engine.py:2069-2076; effect_types.py:2651-2668). This copies shipped evo/infuse_alloy_yellow.json, which implements Galvanize - the same 'when this defends, you may <pay>; if you do, +2{d}' sentence - as TRIGGERED ON_DEFEND -> MAY -> MODIFY_DEFENSE_VALUE 2. Since this card is a declared defender whenever its ON_DEFEND trigger fires, +2 to the defending total for the link IS 'it gets +2{d}'."
+}

@@ -1,0 +1,20 @@
+{
+  "slug": "flic_flak_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_DEFENSE",
+          "amount": 2,
+          "player": "SELF",
+          "scope": "TURN",
+          "filter": [
+            {"type": "HAS_KEYWORD", "keyword": "Combo"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If the next card you defend with this turn is a card with combo, it gains +2{d}.'\n\nability_type DEFENSE_REACTION maps to ON_PLAY (trigger_types.py ABILITY_TYPE_TO_EVENT), so the effect runs when the card is played in the reaction step -- correct for a Defense Reaction CARD whose text is a played effect, not an activated ability (same PLAY-vs-INSTANT distinction documented in DSL_REFERENCE, defense-side).\n\nMODIFY_NEXT_DEFENSE (effect_types.py:4634-4663) is the exact shape for 'the NEXT card you defend with': it queues a one-shot entry on dsl_queued_defense_mods, consumed by _apply_queued_defense_mods (play.py:646-674) inside _recalculate_total_defense, with the filter compiled and evaluated per declared defender -- the defense-side twin of MODIFY_NEXT_ATTACK. A turn-long flag-gated buff would strengthen EVERY block this turn and is wrong twice over; the queue expires unused entries at end of turn (engine.py:935-936), which is what 'this turn' means here, authored explicitly as scope TURN (the default). player SELF = your own next block ('you defend with').\n\nfilter HAS_KEYWORD reads 'keyword' singular (condition_types.py:824-842); the DB spells it 'Combo' (e.g. rising_knee_thrust_yellow keywords), and matching is normalisation-insensitive. amount 2 = +2{d}; consumption clamps at max(0, d+delta) (play.py:673).\n\nShape mirrors the already-drafted flic_flak_blue/flic_flak_yellow (.drafts/) and the prior review-batch draft (.draft-review/_batch0.json) -- same card, other colours.\n\nFLAGGED CORNER CASE for the family: the queue implements 'the next card you defend with THAT HAS combo' -- _apply_queued_defense_mods leaves a non-matching entry queued (play.py:669-670), so a non-combo block does not consume it and a later combo-card block in the same turn still gets +2{d}. The strict delayed-trigger reading ('the NEXT card you defend with, IF it has combo') would fizzle on a non-combo block. No DSL shape expresses expire-on-first-defend-regardless-of-condition; the queue is the closest form and all three colour variants share it."
+}

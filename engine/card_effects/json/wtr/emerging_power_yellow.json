@@ -1,0 +1,23 @@
+{
+  "slug": "emerging_power_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_ACTION_PHASE",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {"type": "ATTACK_CLASS_IN", "classes": ["Guardian"]},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Go again / At the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +2{p}.' Guardian Action - Aura (BravoHeroDeck).\n\nGO AGAIN NOT AUTHORED: GoAgain is in printed_keywords as an UNCONDITIONAL line of the text, so it fires from the card DB keywords field; re-authoring it would be a defect. No SOURCE_IS_ATTACK conditional-keyword machinery applies (nothing gates it).\n\nSHAPE copied from .drafts/crash_down_yellow.json, whose printed second sentence is IDENTICAL apart from the trigger wording and the number (+5{p}); the START_OF_ACTION_PHASE variant of the same clause family is proven by .drafts/draw_a_crowd_blue.json and embolden_red/blue.\n\nTRIGGER: START_OF_ACTION_PHASE, not START_OF_TURN - 'at the beginning of your ACTION PHASE' is CR 4.3.1 wording and trigger_types.py:58 maps exactly that name. Engine listener _dsl_start_of_action_phase_listener (engine.py:1514-1522) dispatches it to the ACTIVE player's permanent zones INCLUDING player.auras (_dsl_permanent_zones at :1452), so the aura fires on its controller's action phase only - 'your action phase'; no IS_ACTIVE_PLAYER gate needed, same as the siblings.\n\nEFFECT ORDER follows the printed sentence: DESTROY_SELF first (effect_types.py:2470 shares the DESTROY_PERMANENT branch; bare form destroys the source via canonical destroy(), which resolves the aura zone itself), then MODIFY_NEXT_ATTACK queues on the controller's dsl_queued_attack_mods (handler effect_types.py:4592-4618 READS mod/amount/filter/scope - verified). Destroying the aura first cannot unqueue the pump: the entry lives on the player, not the card. One-shot consumption by the first qualifying attack IS 'the next'; unused entries expire end of turn (engine.py:921-922), which is 'this turn' (scope left at default TURN).\n\nFILTER names 'Guardian attack action card', each key read out of its handler this session: ATTACK_CLASS_IN reads 'classes' and matches them against the attack card's classes AND talents via _card_traits (condition_types.py:204-216); ATTACK_TYPE_IN reads 'types' and tests types AND subtypes merged (:273-294); ATTACK_SUBTYPE_IN reads 'subtypes' (:296+). An attack action card is types=['Action'], subtypes=['Attack']; a weapon attack carries type Weapon and fails the Action test, so the buff cannot land on a weapon attack. Consumption ANDs all specs and applies+consumes on first match (engine.py:1180-1198). The triage list named only CLASS_IN/TYPE_IN; SUBTYPE_IN added for exactness with crash_down_yellow.\n\nNo printed play cost or conditions; no gaps."
+}

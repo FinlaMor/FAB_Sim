@@ -1,0 +1,20 @@
+{
+  "slug": "in_the_palm_of_your_hand_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {"type": "DRAW", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "effects": [
+        {"type": "DRAW", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Suspense** / When this enters or leaves the arena, draw a card.' Guardian Instant - Aura (Promos - derive the json/<set>/ folder from setIdentifiers at adoption).\n\nSUSPENSE NOT AUTHORED: it is in printed_keywords and is a CR 8 keyword that fires from the card DB keywords field (triggers/triggers.py builds the suspense keyword triggers; same reading recorded in .drafts/edge_of_their_seats_blue.json for the identical keyword line). Re-authoring it would be a defect.\n\nRELEASE NOTE FOLLOWED: the ability triggers on entering the arena (resolving on the stack, or being put there by another card's effect) AND on leaving it (destroyed, banished, etc.), drawing when the trigger resolves. That is two TRIGGERED abilities - ON_ENTER_PLAY and ON_LEAVE_PLAY both exist in trigger_types.py (lines 30-31, verified this session).\n\nON_ENTER_PLAY is dispatched from Zone.add on real arena entry from a non-arena zone (state.py:304-310), covering both release-note paths. ON_LEAVE_PLAY rides destroy()'s 'leaves_arena' event via engine._dsl_leaves_arena_listener (engine.py:1560-1576), so the dominant route for a Suspense aura - its own end-of-turn destruction, including Ward destruction - fires it.\n\nDISCLOSED ENGINE GAP, not fixable in JSON and already documented in the listener comment plus .drafts/edge_of_their_seats_red.json: leaving by BANISH or return-to-hand emits no leaves_arena event today, so those release-note routes do not fire the leave half. The JSON becomes fully correct with zero edits once the listener covers those routes.\n\nDRAW handler reads amount/player (effect_types.py:1222-1249); default SELF = controller draws. No other functional text - no play effect, no conditions."
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "arcanic_spike_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "EVENT_THIS_TURN", "event": "damage", "qualifier": "arcane"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "\"If you've dealt arcane damage this turn, this gets +2{p}.\" (red printing; siblings differ only in amount.)\n\nThe release notes settle WHEN this is checked - 'while this is attacking on the combat chain', re-checked up to damage calculation ('if you ... deal arcane damage before attack damage is dealt, this will have +2{p} during damage calculation') - so it is a continuously-evaluated static, NOT a TRIGGERED ON_ATTACK pump: a trigger would freeze the answer at attack declaration and miss arcane damage dealt between declaration and the damage step, which release note 2 explicitly counts. WHILE_STATIC fires on RECALC_ATTACK_POWER (the default trigger; interpreter.py 186-202), which the engine emits at every attack-power recalculation, and MODIFY_ATTACK under that event applies transiently in the stage-8 window without accumulating (effect_types.py 4059-4094), so each recalculation re-reads the condition live.\n\nThe gate EVENT_THIS_TURN(event=damage, qualifier=arcane) reads the did_this_turn:damage:arcane markers effect_keywords.deal_damage records against the DEALING player once the damage is final - past replacements/cancellation, amount > 0 (effect_keywords.py 503-509 and 599-621; reader at condition_types.py 1042-1084) - so fully-prevented arcane damage does not count, and 'you've' = this card's controller (player defaults to SELF).\n\nTiming is affirmative, not hoped-for: engine._resolve_damage runs _recalculate_attack_power before defence recalculation and damage application (engine.py 2079), so arcane damage dealt earlier on the chain (e.g. a Runechant trigger) yields +2{p} during damage calculation exactly as release note 2 requires; no recalculation happens after the damage step, which is why release note 3's no-retroactivity falls out.\n\nSOURCE_IS_ATTACK scopes the buff to this card's own attack (condition_types.py 367-373; the DOUBLE_BASE_POWER guidance and the blue sibling draft use the same guard). Strictly belt-and-braces today - an Action - Attack is only walked by the recalc listener as combat.attack_card - but MODIFY_ATTACK mutates state.combat.attack_power unconditionally, so the guard costs nothing and keeps the static correct if dispatch ever reaches this card while some other attack is live."
+}

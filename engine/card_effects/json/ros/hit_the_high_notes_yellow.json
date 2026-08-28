@@ -1,0 +1,23 @@
+{
+  "slug": "hit_the_high_notes_yellow",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {
+          "type": "OR",
+          "any": [
+            {"type": "EVENT_THIS_TURN", "event": "play", "qualifier": "aura"},
+            {"type": "EVENT_THIS_TURN", "event": "create", "qualifier": "aura"}
+          ]
+        }
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'If you've played or created an aura this turn, this gets +2{p}.' Lightning Runeblade Action - Attack (AuroraBlitzDeck; ROS141/AUA019, DB functionalText verified this session).\n\nABILITY TYPE - THE RELEASE NOTES MAKE THIS A STATIC, NOT A TRIGGER: 'checked while this is attacking on the combat chain'; an aura played or created AFTER declaration but before damage still yields +2{p} during damage calculation; nothing retroactive once the Damage step has passed. That is CR 6.2.3d always-checking behaviour, and it is exactly what WHILE_STATIC gives: re-evaluated on every RECALC_ATTACK_POWER dispatch (interpreter.py:182-202; DSL_REFERENCE 'Continuous attack-power statics'; same shape as shipped wtr/anothos.json per the destructive_fleetfoot/electryn_mindmeld draft precedents). The recalc listener dispatches to the ATTACK CARD itself, so this card hears its own attack. Its MODIFY_ATTACK applies transiently in the stage-8 static window because the handler sees event.type == 'recalculate_attack_power' (effect_types.py:4137-4144) - never accumulated onto power_mods, never double-applied. An ON_ATTACK trigger would snapshot the answer at declaration and contradict release note 2.\n\nSOURCE_IS_ATTACK (condition_types.py:381-387, no params) pins the buff to THIS card's own attack, so a recalc during the opponent's attack cannot leak +2{p} onto it.\n\nCONDITION PRODUCERS VERIFIED END TO END: (a) playing an aura - play.py:1085-1101 records a 'play' turn event carrying the played card's types AND subtypes among the qualifiers, so EVENT_THIS_TURN {event: play, qualifier: aura} matches playing any Aura card ('Aura' is a card type); (b) creating an aura - create_token records subtypes AND types of the created object alongside its slug (effect_keywords.py:411-421), whose own comment names 'an aura was created this turn' as the intended use of exactly this marker. EVENT_THIS_TURN (condition_types.py:1070-1112) reads those markers at evaluation time, i.e. freshly at every recalculation - which is what makes the bonus turn on mid-combat, per release note 2.\n\nOR (condition_types.py:1901-1915) compiles inner specs via compile_condition with the same (card, event, state) signature, so both arms are live inside WHILE_STATIC conditions; both arms authored explicitly since an empty combinator silently collapses (any([]) is False).\n\nNo printed keywords on this card (DB keywords []), so no conditional-keyword machinery applies. Set folder at adoption: Rosetta -> json/ros/ (ROS141 is the deck printing's set sibling; pick per setIdentifiers rule).",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

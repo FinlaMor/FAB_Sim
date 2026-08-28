@@ -1,0 +1,16 @@
+{
+  "slug": "helm_of_isens_peak",
+  "activation_cost": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "GAIN", "asset": "INTELLECT", "amount": 1, "duration": "END_OF_TURN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - {r}, destroy this: Your hero gains +1{i} this turn.' + printed **Battleworn**. Guardian Equipment - Head (BravoHeroDeck).\n\nBATTLEWORN NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field; re-authoring it would be a defect.\n\nABILITY SHAPE copied from .drafts/fish_fingers.json ('Action - {r}, destroy this: ...' equipment) following shipped dyn/blacktek_whisperers.json. ability_type ACTIVATE matches the printed **Action** marker; play._add_hero_dsl_activations walks the head/chest/arms/legs slots among its activation sources, so head equipment activations are offered.\n\n'{r}' is the card-level activation_cost field (1), DSL-authoritative per DSL_REFERENCE, and deliberately NOT also authored as a PAY_RESOURCES cost - that would double-charge.\n\n'destroy this' sits before the colon, so it is the ability-level COST, not an effect (a cost can gate the activation): DESTROY_SELF, handler verified at cost_types.py:43-51 - can_pay always true while offered, pay calls canonical destroy() on the source card. Precedents: blacktek_whisperers, fish_fingers, glacial_horns drafts.\n\n'+1{i} THIS TURN': GAIN asset INTELLECT amount 1 duration END_OF_TURN. Verified the GAIN handler (effect_types.py:4869-4926) reads asset/amount/duration; the INTELLECT branch increments player.intellect and, when duration is END_OF_TURN/THIS_TURN/TURN, queues dsl_pending_stat_restores for the end-phase cleanup. Without the duration param the gain would be permanent - a permanently larger draw-up every later turn - which is why 'this turn' is authored explicitly rather than left to the heuristic."
+}

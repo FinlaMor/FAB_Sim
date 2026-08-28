@@ -1,0 +1,19 @@
+{
+  "slug": "chest_puff_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "PAY_OR_ELSE",
+          "resources": 1,
+          "on_failure": [
+            {"type": "MODIFY_ATTACK", "mod": "add", "amount": -1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, it gets -1{p} unless you pay {r}.' Identical printed text to the drafted .drafts/bluster_buff_red.json - shape copied verbatim per the copy-an-existing-spelling rule, only the slug differs.\n\nTRIGGERED + ON_ATTACK is the documented shape for an Action - Attack card's on-attack pump (an Action-Attack is NOT an ATTACK_REACTION); ON_ATTACK fires even if the attack is later fully blocked, which matches 'when this attacks'. PAY_OR_ELSE (effect_types.py:3207-3257, re-read this session) reads 'resources' and 'player' - player defaults to SELF, which is the printed 'you' (the attacking card's controller) - and runs on_failure when unpaid; a controller who cannot afford {r} is not asked and simply suffers the -1. on_failure specs are compiled eagerly at load, so the nested MODIFY_ATTACK fails loudly if mistyped. MODIFY_ATTACK (effect_types.py:4123-4158) reads mod/amount, and its one-shot trigger path records on combat.power_mods so the -1 survives later recalculations - the handler's own comment cites this exact 'when this attacks' pattern. Negative amount with mod add is the DSL_REFERENCE spelling for subtraction. No conditions: the clause is unconditional. No printed keywords, so nothing else to author."
+}

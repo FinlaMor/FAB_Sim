@@ -1,0 +1,35 @@
+{
+  "slug": "cadaverous_tilling_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zone": "graveyard", "card_class": "Earth", "count_gte": 2},
+        {"type": "CARD_IN_ZONE", "zone": "graveyard", "filter_types": ["Action"], "count_gte": 1}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Decompose - banish 2 Earth cards and an action card from your graveyard?",
+          "effects": [
+            {
+              "type": "BANISH",
+              "from_zone": "GRAVEYARD",
+              "amount": 2,
+              "filter": [{"type": "CARD_IS_TALENT", "talent": "Earth"}]
+            },
+            {
+              "type": "BANISH",
+              "from_zone": "GRAVEYARD",
+              "amount": 1,
+              "filter": [{"type": "CARD_IS_TYPE", "card_type": "Action"}]
+            },
+            {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Same printed text as cadaverous_tilling_red (.drafts), mirrored. Decompose is spelled out in full on the card and the generic keyword machinery (ability_keywords.effect_decompose) has NO callers, so the whole clause is authored here - authoring nothing would leave the card inert, and the DB 'Decompose' keyword fires nothing so there is no double-application. Release notes honoured: the banish choice happens when the trigger resolves (MAY is asked during resolution), and there is no priority between choosing to banish and the +2{p} (one resolution; MODIFY_ATTACK runs inside the accepted block, so declining grants nothing). The two ability-level CARD_IN_ZONE conditions gate whether the option is offered at all: card_class reads classes+talents+color so 'Earth' matches the Earth talent, filter_types matches types OR subtypes so plain 'an action card' includes attack actions, as printed. Known gaps: (1) an Earth ACTION card counts toward both requirements in the gate (same leniency as the engine's own check_decompose), though the sequential BANISH prompts always remove three distinct cards when three exist; (2) if the gate passes but a pool drains early (e.g. only 2 Earth actions in the graveyard), accepting banishes fewer than 3 and still gains +2{p} - expressing 'only offer if payable' needs a count condition that can require 2 Earth AND 1 action disjointly, which CARD_IN_ZONE cannot say."
+}

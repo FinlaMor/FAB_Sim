@@ -1,0 +1,17 @@
+{
+  "slug": "darling_of_the_crowd_yellow",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "conditions": [
+        {"type": "IS_DEFENDING_CARD"},
+        {"type": "HAS_BEEN_CHEERED"}
+      ],
+      "effects": [
+        {"type": "MODIFY_DEFENSE", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'While this is defending, if you've been cheered this turn, it gets +1{d}.' - Revered Block.\n\nSHAPE: copied from the shipped defence statics (pen/basalt_boots.json et al.). The triage twin disdainful_delight_yellow has the IDENTICAL printed text with 'booed' in place of 'cheered' and was triaged to exactly this shape: WHILE_STATIC naming trigger RECALC_DEFENSE + IS_DEFENDING_CARD + HAS_BEEN_(BOO|CHEER)ED + MODIFY_DEFENSE add 1.\n\nNAMING THE TRIGGER MATTERS: interpreter.dispatch_event defaults WHILE_STATIC to RECALC_ATTACK_POWER (interpreter.py:186-201); on that event combat.defense_recalc_card is None and MODIFY_DEFENSE falls back to its own source card (effect_types.py:2695-2699), quietly changing the {d} of a card that is not defending anything. RECALC_DEFENSE is dispatched once per declared defender by engine._recalculate_total_defense, which resets each defender to its base {d} first and re-applies statics - so the bonus cannot stack across recalculations, and it survives into total_defense because MODIFY_DEFENSE moves the DEFENDING CARD's own {d} (effect_types.py:2678-2714).\n\nIS_DEFENDING_CARD (condition_types.py:564-604, self variant: combat.defense_recalc_card is this card) scopes the effect to THIS defender; without it the once-per-defender dispatch would let this static add +1{d} to every other defending card in turn - the documented .draft-review/beckon_applause defect.\n\nRELEASE NOTE ('always checking'; if the crowd cheers you later during the attack, it still gets +1{d}): HAS_BEEN_CHEERED (condition_types.py:1708-1715, reads no params) tests the shared cheer state for the whole turn and is re-evaluated at every defense recalculation, so a cheer arriving after this was declared as a defending card is picked up by the next recalc pass. No extra machinery.\n\nThe dispatch reaches the defender itself plus both heroes and all permanents/equipment zones of both players, so this card hears its own recalculation whether it defends from hand or sits in an arena slot."
+}

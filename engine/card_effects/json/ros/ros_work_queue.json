@@ -224,7 +224,7 @@
     ],
     "specializations": [],
     "functional_text": "**Meld**\n\nCreate a Runechant token. Create a Runechant token.\n\n**Go again**\n\n//\n\nGain 1{h}",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arcane_twining_blue",
@@ -293,7 +293,7 @@
     ],
     "specializations": [],
     "functional_text": "Deal 2 arcane damage to any target.\n\n**Instant** - Discard this: **Amp 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arcanic_spike_blue",
@@ -314,7 +314,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've dealt arcane damage this turn, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arcanic_spike_red",
@@ -335,7 +335,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've dealt arcane damage this turn, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arcanic_spike_yellow",
@@ -356,7 +356,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've dealt arcane damage this turn, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arcanite_fortress",
@@ -403,7 +403,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Instant** - {r}{r}: Create an Embodiment of Lightning token. Activate this only if you've played a Lightning card this turn.\n\n**Essence of Lightning**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "aurora_shooting_star",
@@ -447,7 +447,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, if there are 4 or more Earth cards in your banished zone, create an Embodiment of Earth token.\n\n**Temper**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blast_to_oblivion_blue",
@@ -556,7 +556,7 @@
     ],
     "specializations": [],
     "functional_text": "**Decompose** - When this attacks, you may banish 2 Earth cards and an action card from your graveyard. If you do, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blossoming_decay_red",
@@ -623,7 +623,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: Prevent the next 1 damage that would be dealt to you this turn. Activate this only if you've been dealt damage this turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "burn_up__shock_red",
@@ -693,7 +693,7 @@
     ],
     "specializations": [],
     "functional_text": "**Decompose** - When this attacks, you may banish 2 Earth cards and an action card from your graveyard. If you do, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cadaverous_tilling_yellow",
@@ -716,7 +716,7 @@
     ],
     "specializations": [],
     "functional_text": "**Decompose** - When this attacks, you may banish 2 Earth cards and an action card from your graveyard. If you do, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "call_to_the_grave_blue",
@@ -762,7 +762,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - {r}: destroy this: The next aura you play this turn costs {r}{r} less to play.\n\n**Arcane Barrier 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "calming_gesture",
@@ -785,7 +785,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - {r}, destroy this: Create a Spectral Shield token.\n\n**Arcane Barrier 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "channel_lightning_valley_yellow",
@@ -989,7 +989,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next Runeblade attack this turn gets +2{p}.\n\nYou may destroy an aura you control. If you do, each opponent destroys an aura permanent they control.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "count_your_blessings_blue",
@@ -1069,7 +1069,7 @@
     ],
     "specializations": [],
     "functional_text": "If the last action card you played this turn was Lightning, this and the next action card you play this turn get **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cut_through_the_facade_red",
@@ -1090,7 +1090,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "This can't be defended by auras.\n\nWhen this hits a hero, you may destroy an aura they control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "deadwood_dirge_blue",
@@ -1113,7 +1113,7 @@
     ],
     "specializations": [],
     "functional_text": "Destroy an aura you control. If you do, create a Runechant token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "deadwood_dirge_red",
@@ -1208,7 +1208,7 @@
       "Betsy"
     ],
     "functional_text": "**Betsy Specialization**\n\nWhen this attacks a hero, you may **wager** with them. The winner draws a card, and the other hero discards a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "dust_from_the_fertile_fields_red",
@@ -1233,7 +1233,7 @@
     ],
     "specializations": [],
     "functional_text": "**Material** - While this is under a permanent other than Ouvia, that permanent gets **phantasm**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "earth_form_blue",
@@ -1254,7 +1254,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, create an Embodiment of Earth token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "earth_form_red",
@@ -1296,7 +1296,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, create an Embodiment of Earth token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "earths_embrace_blue",
@@ -1320,7 +1320,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAt the beginning of your end phase, create an Embodiment of Earth token. Then, if you haven't banished an Earth card this turn, destroy this.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "eclectic_magnetism_red",
@@ -1341,7 +1341,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, you may play a non-attack action card this chain link as though it were an instant.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "electromagnetic_somersault_blue",
@@ -1417,7 +1417,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "The next attack action card you play this turn with cost 1 or less gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "electrostatic_discharge_red",
@@ -1455,7 +1455,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "The next attack action card you play this turn with cost 1 or less gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "etchings_of_arcana_blue",
@@ -1478,7 +1478,7 @@
     ],
     "specializations": [],
     "functional_text": "Deal 1 arcane damage to target hero.\n\n**Surge** - If this deals more than 1 damage, you may return an aura with Sigil in its name from your graveyard to your hand.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "etchings_of_arcana_red",
@@ -1524,7 +1524,7 @@
     ],
     "specializations": [],
     "functional_text": "Deal 2 arcane damage to target hero.\n\n**Surge** - If this deals more than 2 damage, you may return an aura with Sigil in its name from your graveyard to your hand.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "eternal_inferno_red",
@@ -1571,7 +1571,7 @@
     ],
     "specializations": [],
     "functional_text": "**Amp 1**\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "exploding_aether_red",
@@ -1665,7 +1665,7 @@
     ],
     "specializations": [],
     "functional_text": "If there are 4 or more Earth cards in your banished zone, this gets +4{p}.\n\n**Decompose** - When this attacks, you may banish 2 Earth cards and an action card from your graveyard. If you do, each hero puts a card from their hand on the bottom of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fertile_ground_blue",
@@ -1684,7 +1684,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Gain 2{h}\n\nIf there are 4 or more Earth cards in your banished zone, instead gain 3{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fertile_ground_red",
@@ -1703,7 +1703,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Gain 2{h}\n\nIf there are 4 or more Earth cards in your banished zone, instead gain 5{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fertile_ground_yellow",
@@ -1722,7 +1722,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Gain 2{h}\n\nIf there are 4 or more Earth cards in your banished zone, instead gain 4{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "flash_of_brilliance",
@@ -1745,7 +1745,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, you may discard a Lightning card. If you do, return an aura you control to its owner's hand.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "flittering_charge_blue",
@@ -1881,7 +1881,7 @@
     ],
     "specializations": [],
     "functional_text": "When this is destroyed, you may play your next aura this turn as though it were an instant.\n\n**Ward 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "four_finger_gloves",
@@ -1923,7 +1923,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Gain 2{h}",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fruits_of_the_forest_red",
@@ -1944,7 +1944,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Gain 2{h}",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fruits_of_the_forest_yellow",
@@ -1965,7 +1965,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Gain 2{h}",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fry_blue",
@@ -2011,7 +2011,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fry_yellow",
@@ -2173,7 +2173,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Surging Strike was the last attack this combat chain, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hand_behind_the_pen_red",
@@ -2194,7 +2194,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits a hero, turn a card in their arsenal face-up, then banish a non-attack action card from their arsenal.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "harvest_season_blue",
@@ -2218,7 +2218,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this, then gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "harvest_season_red",
@@ -2285,7 +2285,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Prevent the next 2 damage that would be dealt to you this turn. The first time you prevent damage this way, create a Runechant token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "heartbeat_of_candlehold_blue",
@@ -2311,7 +2311,7 @@
       "Verdance"
     ],
     "functional_text": "**Verdance Specialization**\n\nGain 1{h}. Gain 1{h}. Gain 1{h}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "helm_of_lignum_vitae",
@@ -2334,7 +2334,7 @@
     ],
     "specializations": [],
     "functional_text": "If there are 4 or more Earth cards in your banished zone, this gets +1{d}.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "high_voltage_blue",
@@ -2355,7 +2355,7 @@
     ],
     "specializations": [],
     "functional_text": "**Amp 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hit_the_high_notes_blue",
@@ -2376,7 +2376,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've played or created an aura this turn, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hit_the_high_notes_red",
@@ -2397,7 +2397,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've played or created an aura this turn, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hit_the_high_notes_yellow",
@@ -2418,7 +2418,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've played or created an aura this turn, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hocus_pocus_blue",
@@ -2439,7 +2439,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, create a Runechant token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hocus_pocus_red",
@@ -2481,7 +2481,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, create a Runechant token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hold_focus",
@@ -2505,7 +2505,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Destroy this: **Amp 1**. **Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hood_of_second_thoughts",
@@ -2526,7 +2526,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: Prevent the next 1 damage that would be dealt to you this turn. Activate this only if you've been dealt damage this turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ink_lined_cloak",
@@ -2547,7 +2547,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: Gain {r}. Activate this only if you control an aura permanent with Sigil in its name.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "lightning_form_blue",
@@ -2635,7 +2635,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - {r}, destroy this: Instant cards you play this turn get **go again**.\n\n**Arcane Barrier 1**\n\n**Battleworn**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "machinations_of_dominion_blue",
@@ -2818,7 +2818,7 @@
     ],
     "specializations": [],
     "functional_text": "Deal 3 arcane damage to target hero.\n\n**Surge** - If this deals more than 3 damage, draw 2 cards.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "open_the_flood_gates_yellow",
@@ -2885,7 +2885,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Instant** - Discard an instant: Draw a card.\n\n**Essence of Lightning**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "overflow_the_aetherwell_blue",
@@ -3295,7 +3295,7 @@
     ],
     "specializations": [],
     "functional_text": "**Decompose** - You may banish 2 Earth cards and an action card from your graveyard. If you do, this gets +1{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rootbound_carapace_red",
@@ -3359,7 +3359,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**\n\nIf you've played or created an aura this turn, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "runehold_release",
@@ -3405,7 +3405,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've played or created an aura this turn, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "runerager_swarm_red",
@@ -3470,7 +3470,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - {r}{r}: Prevent the next 1 damage that would be dealt to you this turn by a source of your choice. Destroy this at the beginning of the end phase.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "save_the_thought_blue",
@@ -3550,7 +3550,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if you've dealt damage this turn, this gets +1{p} and **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "second_strike_red",
@@ -3573,7 +3573,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if you've dealt damage this turn, this gets +1{p} and **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "second_strike_yellow",
@@ -3710,7 +3710,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this.\n\nWhen this leaves the arena, discard a card then draw a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sigil_of_deadwood_blue",
@@ -3847,7 +3847,7 @@
     ],
     "specializations": [],
     "functional_text": "**Arcane Shelter 1**\n\nWhen this leaves the arena, create an Embodiment of Earth token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sigil_of_temporal_manipulation_blue",
@@ -3868,7 +3868,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the beginning of your action phase, destroy this.\n\nWhen this leaves the arena, banish the top card of your deck. If it's a non-attack action card, you may play it this turn as though it were an instant.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sigil_of_the_arknight_blue",
@@ -3976,7 +3976,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks or hits, you may destroy an aura you control. If you do, create a Runechant token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "splintering_deadwood_red",
@@ -4088,7 +4088,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If there are 4 or more Earth cards in your banished zone, this gets +4{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "strength_of_four_seasons_red",
@@ -4154,7 +4154,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this, then your next attack this turn gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "strong_yield_red",
@@ -4338,7 +4338,7 @@
     ],
     "specializations": [],
     "functional_text": "**Meld**\n\nCreate X Runechant tokens, where X is the total {h} you've gained this turn.\n\n//\n\nGain 1{h}",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tongue_tied_red",
@@ -4603,7 +4603,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've played or created an aura this turn, this gets **overpower**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vantage_point_yellow",
@@ -4647,7 +4647,7 @@
     ],
     "specializations": [],
     "functional_text": "**Meld**\n\nDestroy an aura permanent with cost X or less and/or up to X aura tokens, where X is the total arcane damage you've dealt to opposing heroes this turn.\n\n//\n\nDeal 1 arcane damage to any target.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "verdance",
@@ -4715,7 +4715,7 @@
     ],
     "specializations": [],
     "functional_text": "If you control an aura permanent with Sigil in its name, this costs {r} less to activate.\n\n**Once per Turn Instant** - {r}: **Amp X**, where X is the number of Lightning cards you've played this turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "well_grounded",
@@ -4736,7 +4736,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: Prevent the next 2 damage that would be dealt to you this turn. Activate this only if there are 4 or more Earth cards in your banished zone.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "widow_back_abdomen",
@@ -4899,5 +4899,812 @@
     "specializations": [],
     "functional_text": "When this attacks or defends, if you have less {h} than an opposing hero, gain 1{h}.",
     "status": "pending"
+  },
+  {
+    "slug": "aether_quickening_blue",
+    "name": "Aether Quickening",
+    "type_text": "Wizard Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Surge"
+    ],
+    "specializations": [],
+    "functional_text": "Deal 2 arcane damage to target hero.\n\n**Surge** - If this deals more than 2 damage, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "aether_quickening_red",
+    "name": "Aether Quickening",
+    "type_text": "Wizard Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Surge"
+    ],
+    "specializations": [],
+    "functional_text": "Deal 4 arcane damage to target hero.\n\n**Surge** - If this deals more than 4 damage, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "aether_quickening_yellow",
+    "name": "Aether Quickening",
+    "type_text": "Wizard Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Surge"
+    ],
+    "specializations": [],
+    "functional_text": "Deal 3 arcane damage to target hero.\n\n**Surge** - If this deals more than 3 damage, it gets **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "autumns_touch_blue",
+    "name": "Autumn's Touch",
+    "type_text": "Earth Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "done"
+  },
+  {
+    "slug": "autumns_touch_red",
+    "name": "Autumn's Touch",
+    "type_text": "Earth Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "pending"
+  },
+  {
+    "slug": "autumns_touch_yellow",
+    "name": "Autumn's Touch",
+    "type_text": "Earth Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "pending"
+  },
+  {
+    "slug": "briar",
+    "name": "Briar",
+    "type_text": "Elemental Runeblade Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Essence"
+    ],
+    "specializations": [],
+    "functional_text": "**Essence of Earth and Lightning**\n\nThe first time an attack action card you control deals damage to an opposing hero, create an Embodiment of Earth token.\n\nWhenever you play your second 'non-attack' action card each turn, create an Embodiment of Lightning token.",
+    "status": "done"
+  },
+  {
+    "slug": "briar_warden_of_thorns",
+    "name": "Briar, Warden of Thorns",
+    "type_text": "Elemental Runeblade Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "Essence"
+    ],
+    "specializations": [],
+    "functional_text": "**Essence of Earth and Lightning**\n\nThe first time an attack action card you control deals damage to an opposing hero, create an Embodiment of Earth token.\n\nWhenever you play your second 'non-attack' action card each turn, create an Embodiment of Lightning token.",
+    "status": "pending"
+  },
+  {
+    "slug": "brush_off_blue",
+    "name": "Brush Off",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt 1 damage this turn, prevent it.",
+    "status": "pending"
+  },
+  {
+    "slug": "brush_off_red",
+    "name": "Brush Off",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt 3 or less damage this turn, prevent it.",
+    "status": "pending"
+  },
+  {
+    "slug": "brush_off_yellow",
+    "name": "Brush Off",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt 2 or less damage this turn, prevent it.",
+    "status": "pending"
+  },
+  {
+    "slug": "consuming_volition_blue",
+    "name": "Consuming Volition",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've dealt arcane damage this turn, this gets \"When this hits a hero, they discard a card.\"",
+    "status": "done"
+  },
+  {
+    "slug": "consuming_volition_red",
+    "name": "Consuming Volition",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've dealt arcane damage this turn, this gets \"When this hits a hero, they discard a card.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "consuming_volition_yellow",
+    "name": "Consuming Volition",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've dealt arcane damage this turn, this gets \"When this hits a hero, they discard a card.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "cracked_bauble_yellow",
+    "name": "Cracked Bauble",
+    "type_text": "Generic Resource",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "*(A player may add any number of Cracked Baubles to their card-pool in sealed deck or booster draft formats.)*",
+    "status": "pending"
+  },
+  {
+    "slug": "embodiment_of_earth",
+    "name": "Embodiment of Earth",
+    "type_text": "Elemental Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "'Non-attack' action cards you control have +1{d} while defending.\n\nAt the beginning of your action phase, destroy Embodiment of Earth.",
+    "status": "done"
+  },
+  {
+    "slug": "embodiment_of_lightning",
+    "name": "Embodiment of Lightning",
+    "type_text": "Elemental Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you play an attack action card, destroy this, then the attack gets **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "flash_blue",
+    "name": "Flash",
+    "type_text": "Lightning Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next action card you play this turn with cost 2 or greater gets **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "flash_red",
+    "name": "Flash",
+    "type_text": "Lightning Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next action card you play this turn with cost 0 or greater gets **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "flash_yellow",
+    "name": "Flash",
+    "type_text": "Lightning Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next action card you play this turn with cost 1 or greater gets **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "fyendals_fighting_spirit_red",
+    "name": "Fyendal's Fighting Spirit",
+    "type_text": "Generic Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks or defends, if you have less {h} than an opposing hero, gain 1{h}.",
+    "status": "done"
+  },
+  {
+    "slug": "heavens_claws_blue",
+    "name": "Heaven's Claws",
+    "type_text": "Lightning Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "pending"
+  },
+  {
+    "slug": "heavens_claws_red",
+    "name": "Heaven's Claws",
+    "type_text": "Lightning Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "pending"
+  },
+  {
+    "slug": "heavens_claws_yellow",
+    "name": "Heaven's Claws",
+    "type_text": "Lightning Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "pending"
+  },
+  {
+    "slug": "lightning_surge_blue",
+    "name": "Lightning Surge",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If this was played from arsenal, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "lightning_surge_red",
+    "name": "Lightning Surge",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If this was played from arsenal, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "lightning_surge_yellow",
+    "name": "Lightning Surge",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If this was played from arsenal, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "meat_and_greet_blue",
+    "name": "Meat and Greet",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Runechant token.\n\nIf you've dealt arcane damage to an opposing hero this turn, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "meat_and_greet_red",
+    "name": "Meat and Greet",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Runechant token.\n\nIf you've dealt arcane damage to an opposing hero this turn, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "meat_and_greet_yellow",
+    "name": "Meat and Greet",
+    "type_text": "Runeblade Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Runechant token.\n\nIf you've dealt arcane damage to an opposing hero this turn, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "oath_of_the_arknight_blue",
+    "name": "Oath of the Arknight",
+    "type_text": "Runeblade Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Runeblade attack this turn gains +1{p}.\n\nCreate a Runechant token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "oath_of_the_arknight_red",
+    "name": "Oath of the Arknight",
+    "type_text": "Runeblade Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Runeblade attack this turn gains +3{p}.\n\nCreate a Runechant token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "oath_of_the_arknight_yellow",
+    "name": "Oath of the Arknight",
+    "type_text": "Runeblade Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Runeblade attack this turn gains +2{p}.\n\nCreate a Runechant token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ponder",
+    "name": "Ponder",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your end phase, destroy Ponder and draw a card.",
+    "status": "done"
+  },
+  {
+    "slug": "rosetta_thorn",
+    "name": "Rosetta Thorn",
+    "type_text": "Runeblade Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nWhenever you attack with Rosetta Thorn, if you've played an attack action card and a 'non-attack' action card this turn, deal 2 arcane damage to target hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "runaways",
+    "name": "Runaways",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy Runaways: Prevent the next 1 damage that would be dealt to your hero this turn. Activate this ability only if your hero has been dealt damage this turn.",
+    "status": "done"
+  },
+  {
+    "slug": "runechant",
+    "name": "Runechant",
+    "type_text": "Runeblade Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you play an attack action card or activate a weapon attack, destroy this and deal 1 arcane damage to target opposing hero.",
+    "status": "done"
   }
 ]

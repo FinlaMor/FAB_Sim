@@ -1,0 +1,19 @@
+{
+  "slug": "arrogant_showboating_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {"type": "ATTACK_CONTROLLED_BY_YOU"}
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "might",
+          "amount": {"type": "COUNT_DEFENDING"}
+        }
+      ]
+    }
+  ],
+  "_comment": "'Create a Might token for each defending card controlled by an opponent on the combat chain.' Count = CREATE_TOKEN amount resolved through COUNT_DEFENDING (effect_types.py ~262), which counts every entry of combat.defending_cards with no filter — the release note explicitly includes equipment, block cards and defense reactions, and the handler's own docstring cites 'number of equipment defending it' as a supported reading, so unfiltered is the right form. The ATTACK_CONTROLLED_BY_YOU gate is load-bearing, not decoration: COUNT_DEFENDING has no controller filter, so if this instant were played while DEFENDING it would count my own defenders; the gate makes the count zero in that case, which is what 'controlled by an opponent' demands. Approximation inherent to placement: ability-level conditions are checked at resolution (interpreter.execute_ability), so the card can be played into a fizzle rather than being unplayable — play-time legality consults only target.filter. 'Reviled' in the type line is a card TYPE this set's engine already handles (engine._populate_reviled_inventory); nothing authored for it. tokens/might.json already exists."
+}

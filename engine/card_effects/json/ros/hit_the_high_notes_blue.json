@@ -1,0 +1,22 @@
+{
+  "slug": "hit_the_high_notes_blue",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {
+          "type": "OR",
+          "any": [
+            {"type": "EVENT_THIS_TURN", "event": "play", "qualifier": "aura"},
+            {"type": "EVENT_THIS_TURN", "event": "create", "qualifier": "aura"}
+          ]
+        }
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'If you've played or created an aura this turn, this gets +2{p}.' Runeblade Action - Attack (AuroraBlitzDeck); printed_keywords is empty.\n\nSHAPE COPIED FROM SIBLING .drafts/hit_the_high_notes_yellow.json - identical printed text and identical official_release_notes, only the slug differs. Every handler claim below re-verified against source this session rather than inherited.\n\nABILITY TYPE FOLLOWS THE RELEASE NOTES, not a one-shot read: note 1 ('checked while this is attacking') and note 2 ('played or created an aura before damage is dealt -> +2{p} during damage calculation') describe an always-checking property scoped to attacking, so WHILE_STATIC + SOURCE_IS_ATTACK + MODIFY_ATTACK. RECALC_ATTACK_POWER is dispatched only to the current attack card, so defending/discarded states never see it; SOURCE_IS_ATTACK (condition_types.py:381-387, no params, tests combat.attack_card IS the source) double-gates. Recalc runs at attack declaration AND again before damage, which is exactly notes 1-2; once damage has resolved no further recalculation occurs, which is note 3's 'no retroactive damage past the Damage step'. A TRIGGERED ON_ATTACK pump would freeze the answer at declaration and get note 2 wrong.\n\nBOTH AURA GATES VERIFIED AT THEIR PRODUCERS: EVENT_THIS_TURN (condition_types.py:1070-1112) reads event/qualifier/count/player/exact. EVENT_THIS_TURN {event: play, qualifier: aura} reads markers play.py:1085-1101 writes on every card played - types AND subtypes are recorded per qualifier, so an Aura card answers 'aura' whichever list carries it. EVENT_THIS_TURN {event: create, qualifier: aura} reads markers effect_keywords.py:411-421 writes per token created - slug, subtypes, types and permanent_subtype - whose comment names this exact question ('an aura was created this turn'). Both producers are live today. OR reads 'any'.\n\n+2{p}: MODIFY_ATTACK add 2 detects the recalculate_attack_power event and applies transiently in the stage-8 static window (effect_types.py:4137-4144), so repeated recalculations never stack the bonus.\n\nNo gaps."
+}

@@ -1,0 +1,34 @@
+{
+  "slug": "blessing_of_deliverance_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "conditions": [
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "pitch",
+          "cost_gte": 3,
+          "count_gte": 1
+        }
+      ],
+      "effects": [
+        {"type": "DRAW", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_ACTION_PHASE",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {
+          "type": "REVEAL_TOP_DECK",
+          "amount": 3,
+          "gain_life": 1,
+          "cost_gte": 3
+        }
+      ]
+    }
+  ],
+  "_comment": "Entry trigger: ON_ENTER_PLAY is dispatched from Zone.add on real arena entry (state.py:304-310), and the aura enters the auras zone when played. Ability-level conditions are checked at resolution, which is the printed 'if you have a card with cost 3 or greater in your pitch zone' gate; CARD_IN_ZONE (condition_types.py:816) reads zone/cost_gte/count_gte and defaults player to SELF = the aura's controller. Action-phase trigger: START_OF_ACTION_PHASE reaches only the ACTIVE player's permanent zones incl. auras (engine.py:1514-1522), so it fires on the controller's own action phase, matching 'At the beginning of your action phase'. The life gain uses REVEAL_TOP_DECK's built-in gain_life/cost_gte pair (effect_types.py:2177-2203) - hard-wired for exactly this wording ('gain 1{h} per revealed card with cost >= N') - rather than the triage pass's REVEAL_TOP_DECK-into-ref + GAIN{COUNT_REF} route; both are expressible, the built-in has fewer moving parts. Effects run in order, so DESTROY_SELF precedes the reveal as printed; the ability resolves fully even though the source left play. Printed Go again is an unconditional DB keyword, deliberately not authored."
+}

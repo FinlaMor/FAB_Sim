@@ -1,0 +1,16 @@
+{
+  "slug": "arcanic_spike_blue",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "EVENT_THIS_TURN", "event": "damage", "qualifier": "arcane"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "\"If you've dealt arcane damage this turn, this gets +2{p}.\"\n\nThe release notes govern the ability type: 'Whether you've dealt arcane damage this turn is checked while this is attacking on the combat chain' is an always-checking condition, so this is a WHILE_STATIC re-evaluated on RECALC_ATTACK_POWER - NOT a TRIGGERED ON_ATTACK pump (same lesson as Aggressive Pounce; the red sibling's triage reached the same conclusion). A TRIGGERED ON_ATTACK pump would freeze the answer at attack declaration and miss arcane damage dealt between declaration and damage calculation, which the second release note explicitly says must count.\n\nEVENT_THIS_TURN event=damage qualifier=arcane reads the markers deal_damage records against the DEALING player once damage is final - past replacements and cancellation, amount > 0 (effect_keywords.py ~503-509) - so fully-prevented arcane damage does not count. player defaults to SELF = this card's controller: 'YOU'VE dealt arcane damage'. This exact condition shape is documented for this wording at condition_types.py ~1047.\n\nWHILE_STATIC re-fires on every recalculation (declaration, after reactions, at damage calculation), so arcane damage dealt earlier in the turn or before the damage step yields +2{p} during damage calculation - matching release notes two and three. MODIFY_ATTACK under a recalc-type event applies transiently in the stage-8 window and does not accumulate across recalcs (effect_types.py ~4070-4080).\n\nSOURCE_IS_ATTACK scopes the buff to this card's own attack (Savage Claw pattern). Strictly belt-and-braces here - an Action - Attack is only walked by the recalc listener as combat.attack_card - but it guards against future dispatch broadening and costs nothing.\n\n+2{p} is the blue printing; red/yellow siblings differ only in the amount per family convention and are not in this batch."
+}

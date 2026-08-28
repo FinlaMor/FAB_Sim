@@ -1,0 +1,13 @@
+{
+  "slug": "helm_of_the_adored",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "CROWD_CHEER"}
+      ]
+    }
+  ],
+  "_comment": "'When this defends, the crowd cheers you.' + printed **Blade Break**. Revered Equipment - Head (SuperSlam).\n\nBLADE BREAK NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field; re-authoring it would be a defect.\n\nTRIGGER TIMING IS THE RELEASE NOTE: it 'triggers when it becomes a defending card on the combat chain' - ON_DEFEND, dispatched by _dsl_defend_listener to the ACTUAL defending card object (engine.py:1640-1646), so the defending equipment copy hears its own trigger. No ability-level conditions - the cheer is unconditional once it defends.\n\nCHEER: CROWD_CHEER reads an optional 'player' defaulting to SELF = 'the crowd cheers YOU' (effect_types.py:2812-2823), routed through effect_crowd_cheers so cheer-counting payoffs (IS_CHEERED / HAS_BEEN_CHEERED / ON_CHEER) see it - not a private flag.\n\nKNOWN DEFECT, DISCLOSED, NOT FIXABLE FROM JSON (same finding recorded for fight_from_behind_* and good_natured_brutality_yellow): printed_keywords carries TheCrowdCheers, and build_keyword_triggers normalises it to 'the crowd cheers' and registers an UNCONDITIONAL on-play effect_crowd_cheers (triggers/triggers.py:376-383). For THIS card that keyword trigger has the wrong timing entirely - it cheers when the helm is EQUIPPED/at play rather than when it defends. loader.conditional_keywords() cannot take the printed keyword away: it strips only keywords granted by an ability gated on SOURCE_IS_ATTACK, and only from its grantable set (go_again, dominate, ... blade_break ...) - 'the crowd cheers' is neither, and CROWD_CHEER is an effect, not a GAIN-keyword grant. Consequence: equipping this cheers once with no defend behind it, and each actual defend cheers once more from the authored trigger. Omitting the ON_DEFEND ability would leave ONLY the spurious equip-time cheer and none of the printed clause, so the trigger is authored regardless."
+}

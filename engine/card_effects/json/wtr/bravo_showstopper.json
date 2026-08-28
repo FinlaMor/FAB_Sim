@@ -1,0 +1,18 @@
+{
+  "slug": "bravo_showstopper",
+  "activation_cost": 2,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {"type": "GRANT_KEYWORD_TO_PLAYED", "keyword": "Dominate",
+         "filter": [
+           {"type": "CARD_IS_TYPE", "card_type": "Attack"},
+           {"type": "CARD_COST_GTE", "amount": 3}
+         ]},
+        {"type": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - {r}{r}: Until end of turn, your attack action cards with cost 3 or greater gains **dominate**. **Go again**'\n\nHero activated ability, offered by play._add_hero_dsl_activations (player.hero is a source; ACTIVATE timing = action phase + action point + empty stack, play.py:255/284). '{r}{r}' is card-level activation_cost 2 - DSL-authoritative, deliberately NOT re-modelled as a PAY_RESOURCES cost (double-charge). No per_turn: the printed text has no once-per-turn limit.\n\nTHE GRANT: GRANT_KEYWORD_TO_PLAYED (effect_types.py:4787 reads keyword/filter) queues a turn-scoped entry on player.dsl_play_keyword_grants - exactly its documented wording family ('until end of turn, <filtered> cards you play get <keyword>'). Consumption verified: during each attack's stage-6 keyword recalc the grants are matched against the attacking card via _cost_mod_matches (play.py:625-643 compiles the raw filter specs) and unioned into combat.keywords (engine.py:1917-1930), where the defend step enforces them by exact string 'Dominate' (engine.py:624-625, play.py:971-972); the list is cleared in the end phase (engine.py:931-932). Turn-scoped all-matching-cards semantics == 'until end of turn, your attack action cards ...' verbatim - no approximation, unlike the azalea family's narrower grant.\n\nFILTER SPELLING deviates from the triage list's CARD_IS_ATTACK on purpose: CARD_IS_ATTACK reads the c.is_attack runtime flag (condition_types.py:1451-1458), whereas CARD_IS_TYPE matches types AND subtypes ('Attack' is the attack action card's subtype; condition_types.py:1309-1325), which is flag-timing-independent and is what the shipped GRANT_KEYWORD_TO_PLAYED precedents filter on. CARD_COST_GTE reads 'amount' against the card's own cost (condition_types.py:1219-1255). The cost>=3 gate also excludes weapon attacks (weapons carry no 3+ cost), confining the grant to attack ACTION cards as printed.\n\nTRAILING 'GO AGAIN' IS AUTHORED, and this reverses .drafts/bravo.json (same printed text, different slug), which omits it citing the has_go_again layer-resolution refund. That refund runs only where a stack ENTRY resolves (engine.py:2322 and 2430-2439). Hero activations create no stack entry at all: play._apply_activate dispatches ON_ACTIVATE inline (play.py:1313-1315), so the hero's printed GoAgain DB keyword never pays out and without this effect the activation would silently cost an action point with no go again. The GO_AGAIN handler pays the controller directly outside combat (CR 8.3.5a; effect_types.py:4943-4963). No double-grant is possible for the same reason.\n\nPRINTED Dominate/GoAgain DB KEYWORDS on the hero are inert by construction - heroes neither attack as themselves nor resolve as card layers - so no SOURCE_IS_ATTACK conditional-keyword machinery is needed here."
+}

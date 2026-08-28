@@ -1,0 +1,18 @@
+{
+  "slug": "asking_for_trouble_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "vigor",
+          "amount": 1,
+          "player": "OPPONENT"
+        }
+      ]
+    }
+  ],
+  "_comment": "'Under the attacking hero's control': this card's controller is the defender, so the attacking hero is OPPONENT relative to it - CREATE_TOKEN resolves OPPONENT/DEFENDING/DEFENDER to 3-cid, i.e. the attacker. The release-note edge case ('if there is no attacking hero ... the token creation effect fails') is only approximated: outside combat the DSL would still place the token under the plain opponent, but ON_DEFEND only fires for defending cards in combat, so the case is unreachable in practice. The vigor token definition already exists at json/tokens/vigor.json."
+}

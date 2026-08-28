@@ -1,0 +1,13 @@
+{
+  "slug": "golden_gauntlets",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_EQUIP",
+      "effects": [
+        {"type": "GRANT_SUBTYPE", "subtype": "Gold"}
+      ]
+    }
+  ],
+  "_comment": "'**Legendary Olympia Specialization** / This counts as a Gold. / **Temper**' Warrior Equipment - Arms.\n\nSHAPE COPIED VERBATIM from shipped hvy/aurum_aegis.json, whose printed text is word-for-word this card's ('Victor Specialization / This counts as a Gold / Temper') - only the specialization name differs - and from sibling .drafts/golden_galea.json (same family, same text shape). GRANT_SUBTYPE (effect_types.py:4381-4393) reads 'subtype' and appends 'Gold' to card.subtypes on equip, so gold-count and destroy-a-Gold cost checks see the equipment. ON_EQUIP is a mapped trigger (trigger_types.py:84).\n\nTEMPER / LEGENDARY / SPECIALIZATION NOT AUTHORED: all three are in printed_keywords and fire from the card DB keywords field (Temper is an engine keyword mechanic, ability_keywords.temper); re-authoring them would be a defect."
+}

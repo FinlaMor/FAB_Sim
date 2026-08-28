@@ -1,0 +1,16 @@
+{
+  "slug": "flex_speed_yellow",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "SELF_ATTACK_POWER_GTE", "amount": 6}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'If this has 6 or more {p}, it gets go again.' Brute Action - Attack (SuperSlam). Yellow printing - identical printed text and threshold to the sibling .drafts/flex_speed_blue.json already in this directory; same shape, every claim re-verified against source this session.\n\nThe release notes settle the ability type: 'a conditional continuous effect that is always checking' - a WHILE_STATIC, re-evaluated on every RECALC_ATTACK_POWER dispatch, not a triggered ability. Go again is paid at the Resolution Step (CR 8.3.5b), so the card must HAVE the keyword at that moment; a static that flips on the instant power crosses 6 gives exactly note 2's case ('less than 6{p} and then has 6 or more {p} before the resolution step'). Note 3's no-retroactive-action-point rule needs nothing extra - it is inherent to WHEN go again is checked, not a second behaviour to model.\n\nTHE PRINTED KEYWORD IS THE REAL TRAP: printed_keywords carries GoAgain, and the engine applies every DB keyword unconditionally, so without an ability of exactly this shape the card would have go again at ANY power - strictly stronger than printed. loader.conditional_keywords (loader.py:255-296) strips the printed keyword only for an ability gated on SOURCE_IS_ATTACK whose direct effects grant it via GAIN (go_again is in _GRANTABLE_KEYWORDS, :243-246); this WHILE_STATIC is that ability. Both conditions are needed: SOURCE_IS_ATTACK makes the keyword conditional; SELF_ATTACK_POWER_GTE (condition_types.py:487-497, reads param 'amount', tests live combat.attack_power) is the actual gate.\n\nShape copied from shipped pen/aggressive_pounce_yellow.json - same sentence family ('if <condition>, this gets go again'), different condition; a dozen cards use this exact pattern. No gaps found."
+}

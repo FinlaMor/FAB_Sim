@@ -1,0 +1,16 @@
+{
+  "slug": "calming_gesture",
+  "activation_cost": 1,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "spectral_shield"}
+      ]
+    }
+  ],
+  "_comment": "'Instant - {r}, destroy this: Create a Spectral Shield token.' + printed Arcane Barrier 1.\n\nThe {r} is the card-level activation_cost (DSL-authoritative; play.py's shared affordability gate for DSL activated abilities reads it) - deliberately NOT also authored as a PAY_RESOURCES ability cost, which would double-charge per IMPLEMENTATION_GUIDE. 'destroy this' is the ability-level cost [{DESTROY_SELF}] (cost_types.py ~43, the 'Destroy <this>: ...' activation-cost shape); costs are paid before effects run, so the equipment is destroyed and then the token is created. INSTANT = activated ability with instant timing (maps to ON_ACTIVATE); equipment DSL activations are offered by play._add_dsl_activations at any priority window. Sentence shape copied from .drafts/calming_cloak.json (same 'Instant - {r}, destroy this:' pattern).\n\nCREATE_TOKEN handler reads 'token' (slug) first (effect_types.py ~1947); json/tokens/spectral_shield.json already exists, so no MissingCardImplementation.\n\nPrinted Arcane Barrier 1 fires from the card DB keywords field - deliberately NOT authored here (re-authoring a printed keyword is a defect).\n\nRelease note ('no priority when applying prevention effects; you cannot pay {r} for the barrier prevention and then activate this on the same damage event') is a rules-interaction ruling between two separate prevention effects - it requires no authoring here: the barrier prevention comes from the DB keyword and this activation is an ordinary instant-speed ability."
+}

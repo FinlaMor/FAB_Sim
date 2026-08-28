@@ -1,0 +1,25 @@
+{
+  "slug": "buckling_blow_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter_type": "minus_defense",
+          "amount": 1,
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "EQUIPMENT",
+            "amount": 1
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'Crush - When this deals 4 or more damage to a hero, put a -1{d} counter on an equipment they control.'\n\nCrush is a printed keyword (printed_keywords) and fires from the card DB keywords field - deliberately NOT authored here; authoring it again is a defect.\n\nTRIGGER: STATIC_TRIGGERED + ON_CRUSH, the shape of shipped wtr/disable_yellow.json and debilitate_yellow.json. The engine dispatches ON_CRUSH only when crush_check passes (hit-event damage >= 4, engine.py:1424-1428), so the printed 'deals 4 or more damage' half needs no authoring - and no ATTACK_POWER_GT_BASE-style gate either (that condition tests boosted-above-base, not the dealt total; see .review/smelting_of_the_old_ones_red). crush_check reads only the damage total, NOT the target, so ATTACK_TARGET_IS_HERO carries 'to a hero' (condition_types.py:1960-1977: combat.attack_target is set only for permanent/ally targets, None for a hero attack); combat still exists at crush time (inside the hit dispatch) so it resolves. Ability-level conditions are checked by the interpreter before effects run (interpreter.py:54-55).\n\nEFFECT: PUT_COUNTER with counter_type minus_defense - minus_defense is in DEFENSE_COUNTER_KINDS (ability_keywords.py:211), so the handler routes through _apply_defense_counter (effect_types.py:2041-2046) and the counter actually reduces {d} on recalc instead of being pure bookkeeping. The target dict is the canonical object-target shape read by _compile_object_target (effect_types.py:675+): controller OPPONENT + zone EQUIPMENT pools the body slots plus off-hand equipment in weapon zones, weapons excluded (_object_zone_cards, effect_types.py:465-480); with several equipment the attacking player is asked which one (_ask_player, effect_types.py:792-802); with none, no counter is placed - matching the printed text, which names no fallback. Outer amount 1 = one counter; inner target amount 1 = one object.\n\nTRIAGE CORRECTION: this colour's triage list named CARD_TYPE_IN, which does not exist anywhere in dsl/condition_types.py (grep verified) - and is not needed: the EQUIPMENT zone scoping does the work a card-type filter would have done.\n\nThe counter has no printed removal clause, matching _apply_defense_counter's permanent semantics."
+}

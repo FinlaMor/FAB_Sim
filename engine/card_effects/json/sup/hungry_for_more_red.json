@@ -1,0 +1,13 @@
+{
+  "slug": "hungry_for_more_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "effects": [
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 3}
+      ]
+    }
+  ],
+  "_comment": "'**Suspense** / When this leaves the arena, gain 3{h}.' Guardian Instant - Aura (Promos).\n\nSUSPENSE NOT AUTHORED: Suspense is in printed_keywords and is a CR 8 keyword that fires from the card DB keywords field (triggers/triggers.py ~292 builds the suspense_enter / suspense_remove_counter triggers); re-authoring it would be a defect. The triage note for this exact card concurs. Nothing here gates a printed keyword, so no SOURCE_IS_ATTACK machinery applies.\n\nSHAPE: TRIGGERED + ON_LEAVE_PLAY + GAIN asset LIFE_POINTS amount 3, copied from shipped aps/act_of_glory_blue.json whose clause is the same sentence family ('When this leaves the arena, ...') - that precedent proves both the trigger spelling and that TRIGGERED (not a static) is correct for leave-arena text on an aura. GAIN reads asset/amount/player (effect_types.py:4869-4896); player defaults SELF = the controller, which is the printed 'gain 3{h}' (no 'they' - the controller gains). LIFE_POINTS is the CR 1.13.1 asset name per DSL_REFERENCE; the handler routes it to effect_gain_life.\n\nTIMING per release note: triggers whenever it leaves the arena - destroyed, banished, etc. Engine listener _dsl_leaves_arena_listener dispatches ON_LEAVE_PLAY to the leaving card off destroy()'s 'leaves_arena' event, so every destruction route fires it - including Suspense's own end-phase destruction, which is the dominant route for this card. DISCLOSED ENGINE GAP, not fixable in JSON and identical to the one disclosed in sibling drafts .drafts/edge_of_their_seats_red|blue.json: leaving by BANISH or return-to-hand emits no leaves_arena event today, so those release-note routes do not fire the trigger; the listener comment already records this as a known gap.\n\nNo other functional text - no play effect, no conditions. No expressibility gaps beyond the disclosed engine-side timing hole. Adoption note: batch lists set Promos - file under json/promo/ at adoption time."
+}

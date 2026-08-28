@@ -1,0 +1,16 @@
+{
+  "slug": "escalate_violence_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "CONTROLS_TOKEN_TYPE", "token": "might", "amount": 1}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "might", "amount": 3}
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, if you control a Might token, create 3 more.' Reviled Action - Attack (SuperSlam).\n\nTRIGGER + TIMING: TRIGGERED ON_ATTACK is the documented shape for an Action - Attack self-trigger (DSL_REFERENCE 'Model the pump itself as TRIGGERED + ON_ATTACK'; same shape as shipped challenge_the_alpha_yellow). Official release note: 'triggers when it resolves on the stack and becomes an attacking card' - which is what ON_ATTACK dispatches on - and 'whether or not you control a Might token is checked when this triggered effect resolves'. Ability-level conditions are checked at resolution (interpreter run_ability), NOT at trigger registration, so authoring CONTROLS_TOKEN_TYPE in 'conditions' implements exactly the note's timing: tokens created between the attack landing and the layer resolving still count.\n\nCONDITION: CONTROLS_TOKEN_TYPE (condition_types.py:1725-1754, read this session) takes 'token' (slug) or 'token_type' (display name); 'might' is the slug of json/tokens/might.json (exists, verified by glob). Default threshold amount 1 made explicit. The handler scans permanents plus equipment/weapon slots, which covers where create_token puts a Might token.\n\nEFFECT: CREATE_TOKEN (effect_types.py:1942-2013, read this session) reads 'token'/'count'|'amount'; 'create 3 more' = amount 3 additional Might tokens, controller SELF default. Token definition exists, so no token JSON needed here.\n\nNOT AUTHORED: 'Reviled' is a talent on the type line, not behaviour; printed_keywords is empty so there is nothing conditional-keyword-shaped here."
+}

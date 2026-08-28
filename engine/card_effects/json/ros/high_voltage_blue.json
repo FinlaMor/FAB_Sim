@@ -1,0 +1,12 @@
+{
+  "slug": "high_voltage_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "AMP", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Amp 1**' - the whole printed text. Lightning Instant (Rosetta).\n\nAMP MUST BE AUTHORED, unlike Boost/Dominate-class printed keywords - a deliberate deviation from the keywords-only-text-means-empty-abilities rule, verified before deviating: the card DB carries keywords:['Amp'] for this slug, but nothing engine-side consumes it. Census read this session: build_keyword_triggers (triggers/triggers.py) imports amp at line 63 and has NO case that dispatches it (the single grep match is the import); card_keywords.py and registry.py KEYWORD_STATIC_ABILITIES have no amp handling at all. An empty stub would load clean and do nothing. The primitive exists (effect_keywords.amp, CR 8.5.47: the next time an event the player controls would deal arcane damage this turn, it deals that much plus N; stored in class_counters['amp'] and consumed by the arcane-damage path) but reaches the engine only through the DSL AMP effect type.\n\nABILITY TYPE PLAY, not INSTANT: per DSL_REFERENCE, INSTANT means an ACTIVATED ability with instant timing ('Instant - {t}: ...'); an Instant CARD whose effect happens when you play it is ability_type PLAY. High Voltage is played from hand for its effect. Shipped precedent with identical shape: ros/exploding_aether_blue.json (PLAY + AMP amount 1; also omn/arc_ramp_red.json, lgs/volzar_the_lightning_rod.json).\n\nHANDLER READ THIS SESSION: AMP (effect_types.py:1894-1899) reads 'amount' and routes effect_amp -> canonical amp(); default is 1, authored explicitly anyway. CR 8.5.47 makes the bonus turn-scoped inside the primitive itself, so no span/duration plumbing is needed or read.\n\nNo gaps; the single clause is expressible."
+}

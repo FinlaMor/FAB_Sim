@@ -1,0 +1,26 @@
+{
+  "slug": "fluster_fist_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "LAST_CHAIN_ATTACK",
+          "name": "Open the Center"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": {
+            "type": "COUNT_CHAIN_LINKS",
+            "hit": true
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'Combo - If Open the Center was the last attack this combat chain, Fluster Fist gains +1{p} for each attack that has hit this combat chain.'\n\nShape copied verbatim from shipped wtr/blackout_kick_blue.json (same Combo wording): TRIGGERED + ON_ATTACK + LAST_CHAIN_ATTACK by printed name - never the COMBO type, which reads a names LIST and gates on empty (DSL_REFERENCE). The name matches every colour printing of Open the Center (colour suffix stripped before compare, condition_types.py:1658-1670). An Action - Attack card is TRIGGERED/ON_ATTACK, never ATTACK_REACTION.\n\nAMOUNT: COUNT_CHAIN_LINKS with hit=true - the handler reads talent/class/subtype/hit (effect_types.py:205-224), and at ON_ATTACK time chain_links holds only PRIOR links (a link is appended after its damage resolves, per the LAST_CHAIN_ATTACK handler comment), so 'each attack that has hit this combat chain' counts exactly the earlier hits and correctly excludes Fluster Fist itself, which has not resolved yet.\n\nKNOWN APPROXIMATION: COUNT_CHAIN_LINKS counts only links whose attacker is this card's controller (effect_types.py:213 skips link.attacker_id != pid). The printed text counts ANY attack that has hit this combat chain, which would include an opponent's attack-reaction hit earlier in the chain; such a hit undercounts by one. Ninja chains are overwhelmingly your own links, so the practical divergence is narrow - flagged rather than worked around (no expression counts opposing links).\n\nCombo in printed_keywords fires from the card DB keywords field - deliberately NOT authored."
+}

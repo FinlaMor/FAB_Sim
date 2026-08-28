@@ -1,0 +1,13 @@
+{
+  "slug": "golden_gait",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_EQUIP",
+      "effects": [
+        {"type": "GRANT_SUBTYPE", "subtype": "Gold"}
+      ]
+    }
+  ],
+  "_comment": "'This counts as a Gold.' + printed Legendary Olympia Specialization / Temper.\n\nSHAPE copied verbatim from shipped hvy/aurum_aegis.json, whose printed text is word-for-word this card's ('<Hero> Specialization / This counts as a Gold / Temper') - only the specialization name differs; three sibling drafts (golden_galea, golden_gauntlets, golden_heart_plate) already carry the identical file. GRANT_SUBTYPE reads 'subtype' (effect_types.py:4381-4393) and appends 'Gold' to card.subtypes so subtype-aware gold checks (CONTROLS_TOKEN_TYPE family) see the equipment. ON_EQUIP is a real trigger (trigger_types.py:84) dispatched from the start-of-game listener to each equipped card (engine.py:1613-1618) - Golden Gait is Legs equipment that starts the game equipped, so the grant lands; this is the one ON_EQUIP case that is live today (mid-game equips fire nothing, but this card never equips mid-game).\n\nNOTHING ELSE AUTHORED: Legendary, Specialization and Temper are all in printed_keywords and fire from the card DB keywords field - re-authoring them would be a defect. The card has no other functional text.\n\nSET FOLDER AT ADOPTION: SuperSlam -> json/sup/ (SUP250)."
+}

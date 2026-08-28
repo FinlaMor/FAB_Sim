@@ -1,0 +1,26 @@
+{
+  "slug": "disperse_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "HAS_BEEN_CHEERED"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "toughness", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {"type": "DEFENSE_GTE", "amount": 6}
+      ],
+      "effects": [
+        {"type": "PUT_ARSENAL_BOTTOM", "player": "OPPONENT"}
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, if you have been cheered this turn, create a Toughness token. / When this defends, if it has 6 or more {d}, the attacking hero puts a card from their arsenal on the bottom of their deck.' Revered Action - Attack.\n\nABILITY 1: TRIGGERED + ON_ATTACK fires when this resolves and becomes an attacking card - release note 1's timing verbatim. HAS_BEEN_CHEERED (condition_types.py:1708-1715) reads the shared cheer state via has_been_cheered for the card's controller, so a cheer from ANY source counts, and ability-level conditions are checked at RESOLUTION (interpreter run_ability), which is exactly the note's 'checked when this triggered effect resolves'. CREATE_TOKEN reads token/count (effect_types.py:1947-1952); 'toughness' is a real token definition (json/tokens/toughness.json, slug confirmed) and being an Aura-subtype template it routes to the controller's auras view on creation (effect_keywords.py:352-379). No player key needed: controller default SELF is Disperse's own side, which is whose 'you' the text names.\n\nABILITY 2: TRIGGERED + ON_DEFEND is dispatched to the actual defending card object, so Disperse hears its own defend. The 6-or-more {d} test is DEFENSE_GTE (condition_types.py:1427-1449), which reads the CURRENT defence - counters and pumps included; its docstring cites this exact printed wording ('When this defends, IF IT HAS 6 OR MORE {d}') as the reason BASE_DEFENSE_GTE would be wrong here, and the triage list's BASE_DEFENSE_GTE is therefore deliberately not followed: the release note checks the value when the trigger resolves, i.e. after any defence manipulation, which is the current value. Checked at resolution like ability 1.\n\nTHE BOTTOMING: PUT_ARSENAL_BOTTOM (effect_types.py:2325-2377) with player OPPONENT - relative to Disperse's controller while defending, OPPONENT IS the attacking hero in this engine's two-player model. Handler moves the arsenal card to the bottom of that same player's deck (put_object position=None appends) and returns silently when the arsenal is empty - matching release note 3's 'the effect simply fails and nothing happens' (no attacking hero can only mean no combat in this engine, and an empty arsenal is the reachable form of the same failure). No card_type/face_up filter: the text says 'a card', unrestricted.\n\nNo printed keywords on this card, so nothing is left to the DB."
+}

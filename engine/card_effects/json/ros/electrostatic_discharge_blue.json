@@ -1,0 +1,21 @@
+{
+  "slug": "electrostatic_discharge_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "filter": [
+            {"type": "ATTACK_COST_LTE", "cost": 1},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next attack action card you play this turn with cost 1 or less gets +1{p}.' Lightning Instant.\n\nAbility type: an Instant CARD whose effect happens when you play it is PLAY, not INSTANT (INSTANT means an activated ability with instant timing - DSL_REFERENCE). This is the exact trap the reference warns about.\n\nEffect: MODIFY_NEXT_ATTACK add 1 with a filter - verbatim the DSL_REFERENCE example shape, and the same three-condition filter as shipped wtr/nimblism_yellow.json ('next attack with cost 1 or less'). Filter spelling verified against the handlers: ATTACK_COST_LTE reads 'cost' or 'amount' (condition_types.py ~261), ATTACK_TYPE_IN reads 'types' and matches types AND subtypes (~273), ATTACK_SUBTYPE_IN reads 'subtypes' (~296). An attack action card is types=['Action'], subtypes=['Attack']; weapon attacks carry type Weapon and do not match, so the three together name precisely 'attack action card'. MODIFY_NEXT_ATTACK itself reads mod/amount/filter/scope (effect_types.py ~4592) and queues a one-shot entry consumed by the first matching attack this turn; scope defaults to TURN, matching 'this turn'.\n\nRelease note followed: 'Base cost is the printed cost value on a card' - _attack_card_cost (condition_types.py ~92) reads exactly that printed cost, so ATTACK_COST_LTE 1 implements 'cost 1 or less' as intended.\n\nNo printed keywords. No gaps found."
+}

@@ -1,0 +1,20 @@
+{
+  "slug": "crippling_crush_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "DISCARD_RANDOM",
+          "amount": 2,
+          "player": "DEFENDING"
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Bravo Specialization** / **Crush** - If Crippling Crush deals 4 or more damage to a hero, they discard 2 random cards.' Guardian Action - Attack.\n\nNOT AUTHORED, deliberately: Crush is in printed_keywords and fires from the card DB keywords field - re-authoring it would be a defect. Bravo Specialization is a deck-construction restriction (legalHeroes), not runtime behaviour; the triage note concurs on both.\n\nTRIGGER: STATIC_TRIGGERED + ON_CRUSH, the shape of shipped wtr/disable_yellow.json and wtr/debilitate_yellow.json. The engine dispatches ON_CRUSH to the attack card only when crush_check passes (hit-event damage >= 4, engine.py:1424-1428), so the printed 'deals 4 or more damage' half needs no authoring.\n\n'TO A HERO' IS A REAL GATE HERE, not decoration: crush_check reads only the damage total, never the target - the documented defect class (.review/debilitate_red, spinal_crush_red, disable_blue all fired their crush payoff into allies/permanents). ATTACK_TARGET_IS_HERO carries it: combat.attack_target is set only for permanent/ally targets and stays None for a hero attack (condition_types.py:1960-1977, read this session); combat still exists at crush time (inside the hit dispatch) so the condition resolves. Ability-level conditions are checked by the interpreter before effects run.\n\nEFFECT: DISCARD_RANDOM reads amount and player (effect_types.py:5013-5021); 'they' = the hero that took the damage = the defender, so player DEFENDING (maps to the opposing player id). Amount 2 = two random cards.\n\nNo gaps; every clause expressible. Adoption note: batch lists set HistoryPack1 - file under that set's folder at adoption time."
+}

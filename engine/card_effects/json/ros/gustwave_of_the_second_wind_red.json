@@ -1,0 +1,16 @@
+{
+  "slug": "gustwave_of_the_second_wind_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "LAST_CHAIN_ATTACK", "name": "Surging Strike"}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'Combo - If Surging Strike was the last attack this combat chain, this gets go again.' Ninja Action - Attack (batch set label Rosetta).\n\nCONDITIONAL-KEYWORD SHAPE IS MANDATORY: GoAgain appears in printed_keywords, so the engine applies the DB keyword unconditionally and the card would have go again on EVERY attack without an ability of exactly this shape. loader.conditional_keywords() (loader.py:255-296, read this session) strips a printed keyword ONLY when an ability whose conditions include SOURCE_IS_ATTACK grants it via an UN-NESTED GAIN whose keyword is in _GRANTABLE_KEYWORDS (:243-246; go_again is) - this WHILE_STATIC is that ability, so the printed copy is suppressed and this static re-grants it whenever its conditions hold.\n\nABILITY TYPE: WHILE_STATIC, re-evaluated at every RECALC_ATTACK_POWER dispatch - go again is paid at the Resolution Step (CR 8.3.5b), so having the keyword flip on at any point while this is the attacking card gives exactly the release-note behaviour ('an attack named Surging Strike must be the last attack on the combat chain'). The triage list's ON_ATTACK trigger would ALSO leave the unconditional printed keyword live (a TRIGGERED ability does not qualify for the strip), which is why it is not used.\n\nSOURCE_IS_ATTACK (condition_types.py:381-387, no params): true exactly while THIS card is combat.attack_card, i.e. during Gustwave's own attack; it also keeps a defending copy from evaluating.\n\nLAST_CHAIN_ATTACK (condition_types.py:1619-1676, read this session), never COMBO: COMBO is a different, older condition reading a 'names' LIST via combo_check; authored with 'name' it would gate on an empty list and never fire. 'name': 'Surging Strike' is compared against the colour-stripped slug AND the resolved card name, so every surging_strike_red/yellow/blue printing counts. Timing is exact by construction: a ChainLink is appended AFTER its damage resolves, so during this attack links[-1] IS the previous attack.\n\nCOMBO KEYWORD NOT AUTHORED: printed_keywords carries Combo, but build_keyword_triggers explicitly passes it ('Card-specific - combo names vary per card', triggers/triggers.py:391-392, read this session), so there is no unconditional DB behaviour to strip - the gating clause IS the conditions above.\n\nGAIN keyword GO_AGAIN routes through _grant_go_again (effect_types.py:4927-4941 -> 423-458, read this session): with live combat it puts 'Go Again' on combat.keywords dedup-guarded per CR 8.3.5c, paid out at the Resolution Step. No gaps found."
+}

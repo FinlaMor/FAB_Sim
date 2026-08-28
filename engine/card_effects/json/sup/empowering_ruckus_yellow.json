@@ -1,0 +1,16 @@
+{
+  "slug": "empowering_ruckus_yellow",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "HAS_BEEN_CHEERED"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'If you've been cheered this turn, this gets +1{p}.' Revered Action - Attack (SuperSlam).\n\nWHILE_STATIC, NOT TRIGGERED/ON_ATTACK: official release note 1 says the ability 'generates a conditional continuous effect that is always checking' - if the crowd cheers you after this attacks, it still gets +1{p}. That is the Aggressive Pounce ruling shape: an always-checking condition is a static ability re-evaluated at every attack-power recalculation, and authoring the triage's TRIGGERED/ON_ATTACK would freeze the cheer test to a single moment before the attack. WHILE_STATIC defaults to RECALC_ATTACK_POWER (interpreter.py:186-201), fires only on that event so the MODIFY_ATTACK lands in the stage-8 static window without double-application, and its conditions gate each recalc.\n\nHAS_BEEN_CHEERED (condition_types.py:1708-1715) reads the shared cheer state via has_been_cheered for the card's controller - a cheer from ANY source counts - and takes no parameters. It is turn-scoped ('this turn') and re-evaluated on every recalculation, which is exactly note 1's always-checking behaviour. Note 3 (a cheer during the damage step marks the bonus active but does not recalculate damage) is engine recalc timing, not card JSON.\n\nSOURCE_IS_ATTACK (condition_types.py:381) scopes the +1{p} to THIS card while it is the attacking card; defending copies and other attacks fail it, matching release note 2 ('not functional while defending'). Same spelling as shipped sup/show_of_strength_red.json.\n\nNo printed keywords, so no conditional-keyword machinery is needed."
+}

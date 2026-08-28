@@ -1,0 +1,22 @@
+{
+  "slug": "calming_cloak",
+  "activation_cost": 1,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_CARD_COST",
+          "amount": 2,
+          "filter": [
+            {"type": "CARD_IS_TYPE", "card_type": "Aura"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Instant - {r}: destroy this: The next aura you play this turn costs {r}{r} less to play.'\n\nThe {r} is the card-level activation_cost (DSL-authoritative, read by play.py's shared affordability gate for DSL activated abilities) - deliberately NOT also authored as a PAY_RESOURCES ability cost, which would double-charge per IMPLEMENTATION_GUIDE. 'destroy this' is the ability-level cost [{DESTROY_SELF}] (cost_types.py ~43); INSTANT activations on equipment are offered by play._add_dsl_activations at any priority window, and paying costs precedes run_ability.\n\nThe discount: MODIFY_NEXT_CARD_COST queues a one-shot entry on the controller's dsl_queued_card_mods with amount/filter raw; _cost_mod_matches (play.py ~625) compiles the filter against the card being played, and CARD_IS_TYPE unions types and subtypes so 'Aura' matches however the card data types it. The queue is cleared at end of turn (engine.py ~933), so an unconsumed reduction expires - 'this turn' holds without extra fields; the handler reads no span/scope param and needs none.\n\nPrinted Arcane Barrier 1 fires from the card DB keywords field - deliberately NOT re-authored here."
+}

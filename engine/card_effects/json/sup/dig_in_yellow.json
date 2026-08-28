@@ -1,0 +1,14 @@
+{
+  "slug": "dig_in_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "PAY_UP_TO", "max": 3},
+        {"type": "CREATE_TOKEN", "token": "toughness", "amount": {"type": "PAID_AMOUNT"}}
+      ]
+    }
+  ],
+  "_comment": "'When this defends, you may pay up to {r}{r}{r}. Create that many Toughness tokens.' Revered Action - Attack.\n\nSame shape as the boots_to_the_boards draft in this directory (identical printed text; that card is equipment, this is an Action - Attack) - every handler claim re-verified by reading the code this pass.\n\n'WHEN THIS DEFENDS': engine._dsl_defend_listener dispatches ON_DEFEND to the actual defending card object, so the defending Action card itself hears it - no conditions array needed.\n\nPAY UP TO {r}{r}{r}: PAY_UP_TO (effect_types.py:1468-1499) reads max/asset. It caps the offer at available resources and offers choices cap..0 high-to-low, so paying 0 is declining - exactly release note 1's 'you choose to pay up to {r}{r}{r} when the triggered effect resolves'. It stores state._paid_amount.\n\n'THAT MANY' TOKENS: CREATE_TOKEN resolves the dict amount through _resolve_amount -> PAID_AMOUNT -> state._paid_amount (the handler comment at effect_types.py:1975 names this exact pairing), and an amount of 0 early-returns so declining creates nothing. json/tokens/toughness.json already exists.\n\nRelease note 2 ('no priority between any of the effects') is satisfied by sequential resolution within one ability execution."
+}

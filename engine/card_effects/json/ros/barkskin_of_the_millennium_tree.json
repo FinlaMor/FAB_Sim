@@ -1,0 +1,16 @@
+{
+  "slug": "barkskin_of_the_millennium_tree",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zones": ["banished"], "card_class": "Earth", "count_gte": 4}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "embodiment_of_earth"}
+      ]
+    }
+  ],
+  "_comment": "'When this defends, if there are 4 or more Earth cards in your banished zone, create an Embodiment of Earth token.'\n\nRelease note followed: 'The number of Earth cards in your banished zone is checked upon resolution of the trigger, not when the card is declared as defending.' Ability-level conditions are evaluated when the triggered ability executes (interpreter.py:54-55), i.e. at resolution after the defend declaration - exactly the required timing. Deliberately NOT placed in target.filter or any play-time gate.\n\n'When this defends' = TRIGGERED + ON_DEFEND; verified the engine dispatches ON_DEFEND to the actual defending card object (engine.py:1629-1635, _dsl_defend_listener), so this chest equipment receives it when it defends.\n\nCARD_IN_ZONE parameters read from the handler (condition_types.py:816-966): 'zones' is a list of player-zone attribute names ('banished' -> player.banished); 'card_class' is matched against classes + talents + colour via _card_traits (condition_types.py:49-54), and Earth is a talent, so it matches; 'count_gte': 4 is the >= threshold; 'player' defaults to SELF = the equipment's controller, i.e. 'your banished zone'.\n\nCREATE_TOKEN parameters read from the handler (effect_types.py:1890-1939): 'token' takes the slug; json/tokens/embodiment_of_earth.json already exists with the matching slug, and entry-zone routing derives from the token's card-DB template subtypes. No destination override - the default routing is correct for an Embodiment ally token.\n\nPrinted Temper keyword is deliberately NOT authored - it fires from the card DB keywords field; re-authoring a printed keyword is a defect. No known gaps in THIS card's text. (The token definition itself carries a pre-existing _comment that its own 'Non-attack action cards you control have +1{d} while defending' clause is not yet expressible - that is the token's gap, not part of Barkskin's printed text.)"
+}

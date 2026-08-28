@@ -1,0 +1,33 @@
+{
+  "slug": "concealed_object_blue",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {"type": "CROWD_BOO"}
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "TAP_SELF"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "BEGINNING_OF_END_PHASE",
+      "conditions": [
+        {"type": "IS_ACTIVE_PLAYER"}
+      ],
+      "effects": [
+        {"type": "DESTROY_SELF"}
+      ]
+    }
+  ],
+  "_comment": "'When this enters the arena, the crowd boos you. / Instant - {t}: Target attack gets +1{p}. / At the beginning of your end phase, destroy this.' Reviled Instant - Item.\n\n'Reviled' in the type line is a card TYPE the engine already handles (engine._populate_reviled_inventory) - nothing authored for it, per the arrogant_showboating_blue precedent.\n\nCLAUSE 1: TRIGGERED ON_ENTER_PLAY + CROWD_BOO. ON_ENTER_PLAY is dispatched from Zone.add on real arena entry from a non-arena zone (state.py ~293-310), which covers BOTH release-note paths - resolving on the stack when played AND being put into the arena by another card's effect. CROWD_BOO defaults player SELF = 'boos you' (effect_types.py:2803-2810), the spelling shipped mocking_blow_*.json uses. Deliberately authored despite TheCrowdBoos appearing in printed_keywords: build_keyword_triggers implements 'the crowd cheers' ONLY (triggers/triggers.py:376-383) and has NO boo branch - the sole caller of effect_crowd_boos is the DSL effect (per the .review/booze_blue finding) - so the DB keyword is inert and this trigger is the clause's only implementation; it cannot double-fire.\n\nCLAUSE 2: INSTANT + TAP_SELF cost + MODIFY_ATTACK add 1, copied from shipped sea/cogwerx_dovetail_red.json's instant ({t}: target attack +1{p}). Card-level activation_cost 0 is set explicitly because the card has an activated ability whose only cost is the tap ({t} is a non-resource cost carried by TAP_SELF); without it the loader falls back to parsing printed text. No target.filter, per the aqua_laps precedent: combat activations default to the active attack and any attack qualifies. MODIFY_ATTACK no-ops outside an open combat chain (handler returns early if state.combat is None) - correct, since there is no attack to target then - and appends to combat.power_mods so the pump survives later recalculations mid-chain.\n\nCLAUSE 3: TRIGGERED BEGINNING_OF_END_PHASE + IS_ACTIVE_PLAYER + DESTROY_SELF. BEGINNING_OF_END_PHASE is deliberately dispatched to BOTH players' permanent zones at EITHER hero's end phase (engine.py _dsl_start_of_end_phase_listener, ~1495-1503; items are in _dsl_permanent_zones), so the IS_ACTIVE_PLAYER gate (condition_types.py:811-821, value defaults True) is load-bearing: without it the item would also destroy itself on the OPPONENT's end phase - twice per round instead of once, the exact defect recorded in .review/channel_iceloch_glaze_blue.json. Release note 2 ('neither player receives priority during the end phase ... you will destroy it when the triggered effect resolves') needs no authoring: DESTROY_SELF resolves through canonical destroy() when the trigger fires.\n\nNo gaps; every clause expressible."
+}

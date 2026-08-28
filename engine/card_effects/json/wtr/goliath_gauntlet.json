@@ -1,0 +1,27 @@
+{
+  "slug": "goliath_gauntlet",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {"type": "ATTACK_COST_GTE", "amount": 2},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ]
+        },
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - Destroy this: The next attack action card with cost 2 or more you play this turn gets +2{p}. **Go again**' Generic Equipment - Arms.\n\nSHAPE: ability_type ACTIVATE with an ability-level cost is the 'Action - <cost>:' form on equipment; play._apply_activate pays the ability's own costs before running the effect (play.py:1269-1275, read this session), and play._add_hero_dsl_activations offers ACTIVATE abilities from the arms slot (same vehicle as the sibling drafts flight_path / fleet_foot_sandals for legs, braveforge_bracers for arms). DESTROY_SELF as a cost exists at cost_types.py:43-51 (can_pay True; pay routes canonical destroy(), which resolves the equipment zone itself) - same spelling the legs-equipment siblings use. activation_cost 0 declares the free activation explicitly rather than trusting the printed-text heuristic (the printed text carries no {r}).\n\nPUMP: MODIFY_NEXT_ATTACK (effect_types.py:4592-4618, reads mod/amount/filter/scope) queues a one-shot entry on the CONTROLLER's dsl_queued_attack_mods - it lives on the player, so destroying the gauntlet first cannot unqueue it. Consumption (engine.py:1175-1236) compiles each filter spec against each incoming attack and applies+consumes on FIRST match; a played attack failing the filter leaves the entry queued ('the NEXT ... with cost 2 or more'); unused entries expire end of turn ('this turn'; engine.py:921-922). Scope left at default TURN. Authored under 'filter', never 'conditions' - the loader would pop the latter as an effect-level gate evaluated now, when no attack exists. Filter keys read out of their handlers this session: ATTACK_COST_GTE reads 'amount' and tests the PRINTED cost (condition_types.py:250-258); ATTACK_TYPE_IN reads 'types' and unions the attack card's types AND subtypes (:273-294), so weapon attacks (type Weapon) fail and cannot burn the buff; ATTACK_SUBTYPE_IN reads 'subtypes' (:296-316). The three-term combination is the DSL_REFERENCE MODIFY_NEXT_ATTACK example verbatim (its 'attack action card' wording), with LTE/cost swapped for GTE/amount per this text.\n\nGO AGAIN - DEVIATION FROM THE TRIAGE LIST, verified against source this session: triage said 'GoAgain keyword from card DB', but the engine pays a DB go again ONLY when resolving a layer_type == 'card' entry (engine.py:2420-2444); an equipment activation resolves as an 'activated' layer (play.py:1250-1253 builds exactly that layer type), so following the triage literally leaves the printed Go again permanently unfired - dead text on an otherwise-live card. Authored GAIN{keyword:GO_AGAIN} instead: the GAIN-keyword branch normalises and routes to _grant_go_again (effect_types.py:4927-4941 -> :423-458), whose non-combat branch pays +1 action point to the controller directly (CR 8.3.5a) - correct for an action-phase activation, where state.combat is None. No double-grant risk: the layer_type=='card' payout structurally cannot see this resolution, and _grant_go_again's combat branch (with its CR 8.3.5c dedup) is not reached here.\n\nNo gaps; every clause expressible.",
+  "_known_deviation": null
+}

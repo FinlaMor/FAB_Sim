@@ -1,0 +1,29 @@
+{
+  "slug": "helm_of_hindsight",
+  "activation_cost": 3,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zone": "graveyard", "subtypes": ["Attack"], "count_gte": 1}
+      ],
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {
+          "type": "MOVE_MATCHING",
+          "to_zone": "deck",
+          "position": "top",
+          "target": {
+            "controller": "SELF",
+            "zone": "GRAVEYARD",
+            "amount": 1,
+            "filter": [{"type": "CARD_IS_ATTACK"}]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - {r}{r}{r}, destroy this: Put target attack action card from your graveyard on top of your deck.' Generic Equipment - Head.\n\nACTIVATION SHAPE: card-level activation_cost 3 (read by the loader, loader.py:153, and the cost pipeline); ability_type INSTANT (instant-speed activated ability -> ON_ACTIVATE, trigger_types.py:115). _add_hero_dsl_activations offers INSTANT abilities from equipment zones including head (play.py:238-339) and checks the ability's DSL costs - DESTROY_SELF cost exists (cost_types.py:43-51), pays via canonical destroy so the helm leaves the head zone as a cost BEFORE resolution.\n\nTHE PUT CLAUSE is MOVE_MATCHING, whose docstring names exactly this wording ('put target <card matching X> from <zone> on top of your deck', effect_types.py:3593-3612): embedded object target over zone GRAVEYARD (a supported _OBJECT_TARGET_ZONES entry, resolved by _object_zone_cards to player.graveyard.cards), controller SELF, amount 1 chosen by the player at resolution, filter CARD_IS_ATTACK (= Card.is_attack, 'Attack' in subtypes, card.py:351-353 - the corpus's established test for attack action cards; destroyed weapons carry no Attack subtype so they cannot be mis-picked). position 'top' reaches put_object with position='top'.\n\nWHY NOT the triage's exact primitives: SEARCH_GRAVEYARD defaults shuffle=True for deck destinations and passes no position, so it shuffles instead of putting on top; PUT_REF_TOP reads a ref that no preceding effect sets (SEARCH_GRAVEYARD stores none). CARD_TYPE_IN, also named by the triage, does not exist in condition_types.py despite being documented in DSL_REFERENCE.md.\n\nLEGALITY GATE: CR 1.8.5 makes a targeted ability illegal to play with no legal target. The engine's offer-time target_filter check evaluates conditions against the SOURCE card only (play.py:314-317), so an ability-level target declaration would wrongly demand the HELM be an attack. Instead the gate is ability-level CARD_IN_ZONE graveyard/subtype Attack/count>=1 (condition_types.py:844+, reads zone/subtypes/count_gte), checked both when offering (play.py:307) and at resolution. The player still chooses WHICH attack action card at resolution via MOVE_MATCHING's ask.\n\nNo unresolved gaps."
+}

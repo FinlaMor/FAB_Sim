@@ -1,0 +1,36 @@
+{
+  "slug": "hurricane_technique_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "LAST_CHAIN_ATTACK", "name": "Rising Knee Thrust"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "LAST_CHAIN_ATTACK", "name": "Rising Knee Thrust"}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "LAST_CHAIN_ATTACK", "name": "Rising Knee Thrust"}
+      ],
+      "effects": [
+        {"type": "RETURN_TO_HAND"}
+      ]
+    }
+  ],
+  "_comment": "'**Combo** - If Rising Knee Thrust was the last attack this combat chain, Hurricane Technique gains +1{p}, **go again**, and \"If Hurricane Technique hits, put it into your hand.\"' Ninja Action - Attack (batch set label WelcomeToRathe -> json/wtr/ on adoption).\n\nA prior draft of this file already existed in .drafts/; its structure was kept only after re-verifying every shape against the handlers this session.\n\nCOMBO KEYWORD NOT AUTHORED: printed_keywords carries Combo, but Combo here is not an unconditional engine keyword - it IS the gating clause, authored as ability-level conditions on each clause. No SOURCE_IS_ATTACK machinery applies to it (that shape is only for a PRINTED keyword like go again gated on a condition).\n\nTHE GATE IS LAST_CHAIN_ATTACK, never COMBO: COMBO is a different, older condition reading a 'names' LIST via combo_check - authored with 'name' it would reach that handler, find no 'names', and gate on an empty list, never firing. LAST_CHAIN_ATTACK (condition_types.py:1619-1676, read this session) reads chain_links[-1]; a link appends AFTER its damage resolves, so during this attack links[-1] IS Rising Knee Thrust's link. 'name' is matched against the colour-stripped slug AND the resolved card name, so every rising_knee_thrust printing counts; with no previous link every form is false, as printed.\n\nPUMP: TRIGGERED + ON_ATTACK + MODIFY_ATTACK add 1 - the mandated shape for an Action - Attack card (DSL_REFERENCE; ATTACK_REACTION never fires on one). Handler (effect_types.py:4123-4158, read this session) reads mod/amount and records on combat.power_mods so the buff survives later recalculations.\n\nGO AGAIN USES THE MANDATED CONDITIONAL-KEYWORD SHAPE: GoAgain appears in printed_keywords, so the engine applies the DB keyword unconditionally and loader.conditional_keywords() (loader.py:255-296, read this session) strips a printed keyword ONLY from an ability whose conditions include SOURCE_IS_ATTACK and which grants it via GAIN keyword - this WHILE_STATIC is that ability. SOURCE_IS_ATTACK (condition_types.py:381-387) takes no params and is true exactly while this card is combat.attack_card; GAIN keyword GO_AGAIN routes to _grant_go_again (effect_types.py:4927-4941).\n\nHIT CLAUSE DEVIATES FROM THE TRIAGE LIST (which named INJECT_TRIGGER), deliberately: a direct TRIGGERED ON_HIT ability gated by the same LAST_CHAIN_ATTACK condition is observationally identical here because the gate cannot change between the attack step and the damage step (chain_links grows only when a link closes, after damage resolves). INJECT_TRIGGER scope COMBAT (effect_types.py:2191-2198) would register the equivalent one-shot onto combat.injected_triggers; the direct form has one fewer moving part and matches the shipped endless_arrow_red idiom ('When this hits, put it into its owner's hand'). RETURN_TO_HAND with no ref/target/zone falls through to objects=[card] (effect_types.py:1547-1554) and defaults the destination to the CONTROLLER's hand - exactly 'your hand'; to_owner deliberately not set."
+}

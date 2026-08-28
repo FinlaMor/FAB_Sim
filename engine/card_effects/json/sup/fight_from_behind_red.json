@@ -1,0 +1,34 @@
+{
+  "slug": "fight_from_behind_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "HEALTH_LT_OPP"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CROWD_CHEER"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "HEALTH_LT_OPP"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CROWD_CHEER"
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks or defends, if you have less {h} than each other hero, the crowd cheers you.' Revered Action - Attack (SuperSlam).\n\nSHAPE: two TRIGGERED abilities, one per printed timing. Ability-level conditions are checked at RESOLUTION (interpreter.py:54-55), which is release note 1 verbatim ('whether or not you have less {h} ... is checked when this triggered effect resolves'). ON_ATTACK is dispatched to the attack card when it enters the chain; ON_DEFEND is dispatched to the actual defending card object (engine.py:1640-1646), so both timings reach this card. No ATTACK_TARGET_IS_HERO gate - unlike comeback_kid ('attacks a hero') this text restricts nothing about the target. comeback_kid_red.json ships the identical conditional-cheer shape.\n\n'less {h} than each other hero' is multiplayer phrasing; HEALTH_LT_OPP (condition_types.py:775-780) is its duel-case equivalent in this 2-player engine - there is no condition comparing against EVERY other hero.\n\nTHECROWDCHEERS KEYWORD - spurious play-time cheer, disclosed, not fixable from JSON: printed_keywords carries TheCrowdCheers and the card DB keywords field lists it, so build_keyword_triggers registers an UNCONDITIONAL on_play cheer (triggers/triggers.py:376-383) that fires whenever this is played, regardless of health or whether it ever attacks or defends. loader.conditional_keywords() cannot take it away: it strips only keywords granted by an ability gated on SOURCE_IS_ATTACK (this one is gated on attacks-OR-defends plus a health comparison) AND only from its 11-name grantable set (go_again, dominate, overpower, intimidate, piercing, stealth, blade_break, battleworn, temper, reprise, phantasm - loader.py:243-246); TheCrowdCheers is in neither. So the authored triggers give exactly the printed behaviour PLUS one spurious cheer at play - strictly closer than omitting them, which would leave ONLY the spurious play cheer and none of the real clause. Closing the gap needs conditional_keywords to cover more keywords/gates, or the DB keyword entry corrected - engine/DB work, not card JSON."
+}

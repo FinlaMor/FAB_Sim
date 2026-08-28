@@ -1,0 +1,17 @@
+{
+  "slug": "bravo",
+  "activation_cost": 2,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {"type": "GRANT_KEYWORD_TO_PLAYED", "keyword": "Dominate",
+         "filter": [
+           {"type": "CARD_IS_TYPE", "card_type": "Attack"},
+           {"type": "CARD_COST_GTE", "amount": 3}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - {r}{r}: Until end of turn, your attack action cards with cost 3 or more get **dominate**. **Go again**'\n\nHero activated ability, offered by play._add_hero_dsl_activations. '{r}{r}' is card-level activation_cost 2 (DSL-authoritative per DSL_REFERENCE; deliberately NOT a PAY_RESOURCES cost - that would double-charge). No once-per-turn limit in the text, so no per_turn.\n\nTHE GRANT: GRANT_KEYWORD_TO_PLAYED (effect_types.py:4787-4814 reads keyword/filter) queues a turn-scoped grant on player.dsl_play_keyword_grants - exactly its documented shape ('until end of turn, <filtered> cards you play get <keyword>'). Consumption verified at both sites: attacks at engine.py:1917-1929, where stage-6 keyword recalc unions every matching grant into combat.keywords for ANY keyword (so Dominate reaches attack action cards); non-attack layers at engine.py:2430-2438 handle only go-again grants, which is fine - an attack action card's dominate lives on the combat, not the layer. The filter is evaluated against the played/attacking card via _cost_mod_matches (play.py:625-643). CARD_IS_TYPE matches types AND subtypes ('Attack' is the subtype of an attack action card - condition_types.py:1309-1325), the spelling shipped azalea uses for the same 'attack action cards' phrase; CARD_COST_GTE reads 'amount' (condition_types.py:1219-1255). Spelling deviates from the triage list's CARD_IS_ATTACK alternative: both exist, but CARD_IS_ATTACK reads card.is_attack, which is not what the shipped precedent filters on.\n\nTRAILING 'GO AGAIN' IS DELIBERATELY NOT AUTHORED: engine.py:2322 refunds one action point at layer resolution when the resolved card has_go_again from the DB keywords field, and Bravo's DB entry carries GoAgain (printed_keywords). Authoring GAIN GO_AGAIN here would double-grant. Same treatment as .drafts/azalea.json, which documents this exact mechanism.\n\nPRINTED DOMINATE IN THE DB KEYWORDS is the database flattening this sentence; it belongs to your attack actions, not to Bravo, and a hero never attacks so an unconditional hero-side Dominate is inert. loader.conditional_keywords() deliberately does NOT strip it (it only strips SOURCE_IS_ATTACK-gated self-grants - the Luminaris 'your Illusionist attacks get go again' case, loader.py:266-272), so no conditional-keyword static belongs on this card.\n\nAdopter note: batch labels this card's set 'BravoHeroDeck' - pick the json/<set>/ folder from the card's setIdentifiers per IMPLEMENTATION_GUIDE step 4, not from that label."
+}

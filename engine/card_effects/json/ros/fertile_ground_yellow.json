@@ -1,0 +1,34 @@
+{
+  "slug": "fertile_ground_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "banished",
+              "talent": "Earth",
+              "count_gte": 4,
+              "face_up": true
+            }
+          ],
+          "then": [
+            {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 4}
+          ],
+          "else": [
+            {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 2}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Gain 2{h}. If there are 4 or more Earth cards in your banished zone, instead gain 4{h}.' Earth Instant (Rosetta).\n\nSHAPE: one PLAY ability (an Instant played from hand maps PLAY -> ON_PLAY) holding a single CONDITIONAL_EFFECT branch - the 'instead' wording is ONE bonus chosen by the test, never two gated gains (that would deal/gain both). The when-list is evaluated when the effect RUNS, i.e. when Fertile Ground's layer resolves on the stack - exactly the timing official_release_notes line 1 demands ('you must have 4 or more ... when its layer resolves').\n\nCONDITION PARAMS all read by the CARD_IN_ZONE handler (condition_types.py:844-996, read this session): zone 'banished' is the Player attribute lowercased (:935); 'talent' is an alias of card_class (:895-898) matched via _card_traits (:49-64), which unions classes+talents so 'earth' matches Earth cards; count_gte 4 is the >= threshold (:901, :989-993); player defaults SELF = your banished zone.\n\nface_up TRUE implements release-note line 2 ('face-down cards do not count'): the matcher skips cards whose is_public differs from face_up (:973), and banish() only sets is_public=False on explicit face_down banishes (effect_keywords.py:177-180) - normal banishes keep the zone default, so the bonus still fires in the common case.\n\nGAIN asset LIFE_POINTS routes to effect_gain_life (effect_types.py:4890-4896). Amounts 4/2 are this YELLOW printing; the note's '5/4/3' spread is red/yellow/blue and colour variants are separate JSON files.\n\nNo printed keywords, nothing else to author.",
+  "_verified_this_session": [
+    "effect_types.py:3697 CONDITIONAL_EFFECT reads when/then/else ('when', NOT 'conditions')",
+    "condition_types.py:844-996 CARD_IN_ZONE reads zone/talent/count_gte/face_up",
+    "effect_types.py:4869 GAIN reads asset LIFE_POINTS + amount"
+  ]
+}

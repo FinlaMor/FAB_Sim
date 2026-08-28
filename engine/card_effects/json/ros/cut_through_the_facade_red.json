@@ -1,0 +1,28 @@
+{
+  "slug": "cut_through_the_facade_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "RESTRICT_DEFENDERS", "subtype": "Aura"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Destroy an aura they control?",
+          "effects": [
+            {"type": "DESTROY_PERMANENT", "subtype": "Aura", "player": "OPPONENT"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'This can't be defended by auras.' + 'When this hits a hero, you may destroy an aura they control.' Generic Action - Attack. A prior draft of this file existed; every claim below was re-verified against source this session.\n\nDEFEND CLAUSE: RESTRICT_DEFENDERS on a PLAY ability - the shipped Action-Attack shape (evo/lay_waste_blue). The consumer _restriction_blocks (actions.py:861-932) reads the 'subtype' key via _as_list_restriction (:935-943) and tests it against the defending card's types UNION subtypes, lowercased; the defend pool is every legal hand card plus equipment (get_defendable_cards, actions.py:946+), and an Aura card in the defender's hand is exactly what 'defended by auras' means, so the restriction is live, not vacuous (the .triage note claiming vacuity is wrong on this point).\n\nHIT CLAUSE: TRIGGERED ON_HIT is dispatched to combat.attack_card, so it rides directly on this resolving attack; gated by ATTACK_TARGET_IS_HERO because the text says 'a hero' and that condition is false when the attack was declared at an ally/permanent (combat.attack_target stays None for hero attacks; condition_types.py:1960-1977). MAY reads prompt/effects (effect_types.py:3788-3805); declining runs nothing. Release note 1 (choose the aura at resolution, after damage) matches: ON_HIT resolves post-damage and DESTROY_PERMANENT asks via _ask_player when several candidates exist; there is no priority between choice and destruction to model. Release note 2 (ward prevention is not defending) needs no authoring - ward is engine-side damage prevention and RESTRICT_DEFENDERS only filters defend declarations.\n\nKNOWN DEAD POOL, DISCLOSED LOUDLY: DESTROY_PERMANENT pools ONLY state.players[pid].permanents.cards (effect_types.py:2552-2554). Aura tokens live in a SEPARATE player.auras zone (effect_keywords.py:377-379 routes every Aura-subtype token there; engine.py:1842-1846 has a dedicated destroy-aura helper reading that zone), and no object-target zone word reaches it: _OBJECT_TARGET_ZONES (effect_types.py:418) has no AURAS entry and ARENA maps to permanents.cards only (:463-464). So when the opponent's auras sit in player.auras - the normal case for created aura tokens - the candidate list is empty and this destroys nothing. It fails closed (never destroys a wrong object), but the clause is inert against real auras until the DSL gains an AURAS zone word or DESTROY_PERMANENT's pool is extended. Not expressible in JSON today; drafted in the closest live form."
+}

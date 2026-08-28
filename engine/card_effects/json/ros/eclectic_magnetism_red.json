@@ -1,0 +1,26 @@
+{
+  "slug": "eclectic_magnetism_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "GRANT_INSTANT_TIMING",
+          "filter": [
+            {"type": "CARD_IS_TYPE", "card_type": "Action"},
+            {"type": "CARD_IS_ATTACK", "value": false}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, you may play a non-attack action card this chain link as though it were an instant.' Lightning Action - Attack; no printed keywords.\n\nTrigger: TRIGGERED + ON_ATTACK ('When this attacks' = enters combat chain). Per DSL_REFERENCE an Action - Attack card is NOT an ATTACK_REACTION - that ability type never fires for it.\n\nGrant: GRANT_INSTANT_TIMING reads only 'filter' and queues one entry on player.dsl_instant_timing_grants. The consumer (_consume_instant_timing_grant, play.py:980) matches each queued grant's filter against the card being played via _cost_mod_matches (play.py:625 - compiles the raw condition specs against the played card), offers it in the legality path with check_only so asking does not spend it, and consumes it when a card is actually played (play.py:1105). Filter spelling is the corpus pair for 'non-attack action': CARD_IS_TYPE Action (reads card_type; matches types OR subtypes) + CARD_IS_ATTACK value:false (reads value, default True; is_attack is subtype-derived). Instant timing skips the action-speed restriction and the action point, which is release note 3; note 4 (go again paying out when an instant-played card resolves on your turn) is generic engine behaviour of playing cards, nothing to author here.\n\n'You may' needs no MAY wrapper: the grant is a permission sitting in a queue - if no matching card is ever played as an instant, nothing happens.\n\nGAP, fails open: 'this chain link' is not expressible. GRANT_INSTANT_TIMING has no scope parameter, and dsl_instant_timing_grants is cleared only at end of turn (engine.py:937-938) - there is no sweep at chain close or at the link step. So after Eclectic Magnetism attacks, the grant survives into later combat chains of the same turn, where the printed effect has expired (release notes 1-2: one use, this chain link only, dead once another attack is played or the chain closes). The one-use half IS correct: a single queued entry, consumed by the first matching play. Fixing the expiry needs either a scope param on GRANT_INSTANT_TIMING or clearing the queue when a combat chain closes - both engine-side, so flagged rather than worked around.",
+  "_verified_against": {
+    "effect_types.py": ["GRANT_INSTANT_TIMING:4620 reads filter only"],
+    "condition_types.py": ["CARD_IS_TYPE:1309 reads card_type", "CARD_IS_ATTACK:1451 reads value"],
+    "play.py": ["_cost_mod_matches:625 evaluates filter specs vs played card", "_consume_instant_timing_grant:980 check_only/consume", "consume-on-play:1105"],
+    "engine.py": ["dsl_instant_timing_grants cleared only at end of turn:937-938"],
+    "trigger_types.py": ["ON_ATTACK mapped:7"]
+  }
+}

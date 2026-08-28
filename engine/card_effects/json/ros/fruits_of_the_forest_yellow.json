@@ -1,0 +1,13 @@
+{
+  "slug": "fruits_of_the_forest_yellow",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [{"type": "DISCARD_SELF"}],
+      "effects": [
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - Discard this: Gain 2{h}' Earth Action - Attack.\n\nSHAPE: INSTANT ability whose cost is DISCARD_SELF is the shipped from-hand-instant form (sup/outside_interference_blue.json, hvy/ripple_away_blue.json). The cost handler (cost_types.py:53-67, read this session) makes can_pay require the card IN HAND and pay move it hand -> graveyard, which is what 'Discard this' means and covers release note 1 (only activatable from hand; cannot discard from anywhere else).\n\nOFFERING: play._add_hand_instant_activations (play.py:341-368, confirmed this session) offers exactly INSTANT abilities carrying a DISCARD_SELF cost as a DISCARD_ACTIVATE action at instant speed with no action point; _apply_discard_activate (play.py:1318+) checks then pays the costs and runs the effects. Because DISCARD_ACTIVATE is an activation rather than a card play, release note 2 ('counts as activating an instant ability, not playing an instant card') holds structurally.\n\nPAYOFF: GAIN reads asset/amount/player/duration (effect_types.py:4869+, read this session); asset LIFE_POINTS routes to effect_gain_life and player defaults to SELF, so the ACTIVATOR gains 2 life - correct here, since the activator is always the controller.\n\nThe attack half of this Action - Attack comes from the card DB (power/cost), not authored. No printed keywords."
+}

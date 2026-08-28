@@ -122,3 +122,19 @@ docs/semantic_audit_reaudit.md
 
 # Benchmark/run scratch output (logs, per-run JSON) — not project state
 scratchpad/
+
+# Pipeline results belong to the card-authoring worktree, never to this tree.
+# engine/card_effects/json holds CARDS. When .drafts/, .review/, .triage/ and
+# .draft-review/ were also kept there, every corpus sweep and every test that
+# located a card by rglob picked up a review verdict filed under the same slug
+# -- 77 tests failed for reasons unrelated to the cards they named, and ~48
+# test files carried the same latent bug. Keep them out of this repo entirely.
+engine/card_effects/json/.drafts/
+engine/card_effects/json/.review/
+engine/card_effects/json/.triage/
+engine/card_effects/json/.draft-review/
+engine/card_effects/json/.draft-notes/
+engine/card_effects/json/.modelbench/
+engine/card_effects/queues/
+engine/card_effects/json/review_queue.json
+engine/card_effects/json/triage_queue.json

@@ -1,0 +1,20 @@
+{
+  "slug": "flic_flak_yellow",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_DEFENSE",
+          "amount": 2,
+          "player": "SELF",
+          "scope": "TURN",
+          "filter": [
+            {"type": "HAS_KEYWORD", "keyword": "Combo"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If the next card you defend with this turn is a card with combo, it gains +2{d}.'\n\nability_type DEFENSE_REACTION maps to ON_PLAY (trigger_types.py ABILITY_TYPE_TO_EVENT), so the effect runs when the card is played in the reaction step -- correct for a Defense Reaction CARD whose text is a played effect, not an activated ability (same PLAY-vs-INSTANT distinction documented in DSL_REFERENCE, defense-side).\n\nMODIFY_NEXT_DEFENSE (effect_types.py:4634-4663) is the exact shape for 'the NEXT card you defend with': it queues a one-shot entry on dsl_queued_defense_mods, consumed by _apply_queued_defense_mods (play.py:646-674) inside _recalculate_total_defense, with the filter compiled and evaluated per declared defender -- the defense-side twin of MODIFY_NEXT_ATTACK. A turn-long flag-gated buff would strengthen EVERY block this turn and is wrong twice over; the queue expires unused entries at end of turn, which is what 'this turn' means here, authored explicitly as scope TURN (the default). player SELF = your own next block ('you defend with').\n\nfilter HAS_KEYWORD reads 'keyword' singular (condition_types.py:824-842); the DB spells it 'Combo' (e.g. rising_knee_thrust_yellow keywords), and matching is normalisation-insensitive. amount 2 = +2{d} (razor_ring_blue uses -1 for -1{d}, so sign convention is plain).\n\nShape mirrors razor_ring_blue (opponent-side -1{d}, chain scope) and matches the triage note already written for flic_flak_blue -- same card, other colour."
+}

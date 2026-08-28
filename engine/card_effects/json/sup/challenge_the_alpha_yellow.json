@@ -1,0 +1,33 @@
+{
+  "slug": "challenge_the_alpha_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "TARGET_HERO_CLASS_IN", "classes": ["Brute"]}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "TARGET_HERO_CLASS_IN", "classes": ["Brute"]}
+      ],
+      "effects": [
+        {"type": "DISCARD", "player": "OPPONENT", "amount": 1},
+        {"type": "CONDITIONAL",
+         "when": [
+           {"type": "REF_POWER_GTE", "ref": "discarded", "amount": 6}
+         ],
+         "then": [
+           {"type": "LOSE_LIFE", "player": "SELF", "amount": 2}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "'When this attacks a Brute hero, this gets +2{p}.' = TRIGGERED ON_ATTACK + TARGET_HERO_CLASS_IN + MODIFY_ATTACK. TARGET_HERO_CLASS_IN (condition_types.py:1517-1542) reads 'classes' and checks the DEFENDING hero's classes+talents via combat.attacker_id - exactly 'attacks a Brute hero'; ATTACK_CLASS_IN would wrongly ask whether the attack CARD is a Brute. MODIFY_ATTACK's one-shot trigger path appends to combat.power_mods and bumps live power (effect_types.py:4145-4157), surviving later recalcs; the release note confirms the trigger fires when it becomes the attacking card, which ON_ATTACK is.\n\n'When this hits a Brute hero, they discard a card.' = TRIGGERED ON_HIT, same gate, DISCARD player OPPONENT amount 1. The discarding player chooses which card (effect_discard, ability_keywords.py:1538-1573), and the effect stores what was discarded under ref 'discarded' when non-empty (effect_types.py:1282-1285).\n\n'If it has 6 or more {p}, you lose 2{h}.' = CONDITIONAL when REF_POWER_GTE(ref 'discarded', amount 6) then LOSE_LIFE player SELF amount 2. DELIBERATE DEVIATION from the triage list, which suggested DISCARDED_CARD_POWER_GTE: that handler reads event.power (condition_types.py:1046-1052), but CONDITIONAL passes the OUTER trigger event to its when-conditions (effect_types.py:3714-3721) - it would test the ON_HIT payload, find no power, and never fire. REF_POWER_GTE reads get_ref('discarded') instead (condition_types.py:2090-2118), which the preceding DISCARD just set. Empty hand -> no ref -> no life loss, matching 'if it has 6+ {p}'.\n\n'You lose 2{h}' is this card's CONTROLLER (SELF default resolved via _effect_player_id), not the defender - LOSE_LIFE reads player+amount (effect_types.py:1153-1175). Release note's 'no priority between any of the effects' matches one flat resolution sequence: discard, then test, then life loss."
+}

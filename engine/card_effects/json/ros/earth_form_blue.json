@@ -1,0 +1,16 @@
+{
+  "slug": "earth_form_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "embodiment_of_earth"
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits, create an Embodiment of Earth token.' Earth Action - Attack.\n\nShape copied from sibling drafts .drafts/earth_form_red.json and .drafts/earth_form_yellow.json after re-verifying every claim against the handlers myself.\n\nTrigger: ON_HIT is a real trigger name (trigger_types.py line 6 maps it to the engine's ON_HIT event) and it is dispatched to the attack card's own slug, so the attacking copy receives its own hit trigger - no hero routing needed. An attack action card is not an ATTACK_REACTION, so TRIGGERED + ON_HIT on the card itself is the shape.\n\nEffect: CREATE_TOKEN handler (effect_types.py ~1942) reads 'token' as a slug ('token_name'/'token_type' accepted interchangeably; the slug spelling is what shipped cards use), count/amount defaults to 1 - correct for 'an ... token' - and player defaults to SELF, i.e. the attack's controller. No destination override: entry-zone routing derives from the token's card-DB template subtypes, which is correct for an Embodiment ally. json/tokens/embodiment_of_earth.json exists with the matching slug, so resolution will not raise MissingCardImplementation.\n\nNo printed keywords on this card, so nothing is deliberately omitted. No gaps found."
+}

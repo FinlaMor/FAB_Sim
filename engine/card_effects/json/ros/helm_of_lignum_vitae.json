@@ -1,0 +1,17 @@
+{
+  "slug": "helm_of_lignum_vitae",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "conditions": [
+        {"type": "IS_DEFENDING_CARD"},
+        {"type": "CARD_IN_ZONE", "zone": "banished", "talent": "Earth", "count_gte": 4, "face_up": true}
+      ],
+      "effects": [
+        {"type": "MODIFY_DEFENSE", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'If there are 4 or more Earth cards in your banished zone, this gets +1{d}.' + printed **Blade Break** (Earth Equipment - Head).\n\nBLADE BREAK NOT AUTHORED: printed keyword (printed_keywords) - fires from the card DB keywords field; re-authoring it would be a defect.\n\nSHAPE: the shipped defence statics (pen/basalt_boots et al.), also named verbatim by .triage/limbs_of_lignum_vitae.json - the same sentence on the Legs printing of this equipment family. WHILE_STATIC naming trigger RECALC_DEFENSE + IS_DEFENDING_CARD + MODIFY_DEFENSE.\n\nNAMING THE TRIGGER MATTERS: interpreter.dispatch_event defaults WHILE_STATIC to RECALC_ATTACK_POWER (interpreter.py:186-201); there combat.defense_recalc_card is None and MODIFY_DEFENSE falls back to mutating its own source card's {d} while nothing is defended (effect_types.py:2695-2699). On RECALC_DEFENSE the recalculation resets each declared defender to base first and re-applies statics once per defender, so the bonus cannot stack across passes, and MODIFY_DEFENSE moves the DEFENDING CARD's own {d} (effect_types.py:2678-2714), which is what survives into total_defense.\n\nIS_DEFENDING_CARD IS MANDATORY, not decorative: the RECALC_DEFENSE dispatch reaches every source once per EVERY defender evaluated, and MODIFY_DEFENSE targets combat.defense_recalc_card - without the guard this helm would add +1{d} to whichever OTHER card was being evaluated whenever it itself is not the defender under recalc (the documented .draft-review/beckon_applause defect). With it, the static applies only when this helm is the defender being recalculated.\n\nTHE GATE: CARD_IN_ZONE reads zone/count_gte directly and 'talent' as an explicit alias for its class/talent/color filter (condition_types.py:895-898), matched against classes+talents+color via _card_traits (condition_types.py:49-64) - 'Earth' hits Earth-talent cards. player defaults SELF = the controller's own banished zone.\n\nRELEASE NOTE 2 ('Earth cards that are FACE-DOWN in your banished zone do not count'): carried by face_up:true - the handler filters on is_public when face_up is given (condition_types.py:973). Safe to add: the banished zone is public by default (Zone.is_public, state.py:202-204), so normal banishes enter public, and only face-down banishes (intimidate, effect_keywords.py:1289) pass is_public=False explicitly.\n\nRELEASE NOTE 1 ('static ability which CONSTANTLY checks ... banish an Earth card mid-defence and it gets +1{d}; remove one and it loses it'): falls out of the shape - the condition is re-evaluated at every defence recalculation, so a later banish or removal is picked up by the next recalc pass with no extra machinery."
+}

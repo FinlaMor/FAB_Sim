@@ -1,0 +1,18 @@
+{
+  "slug": "ink_lined_cloak",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zones": ["auras", "permanents"], "name": "Sigil"}
+      ],
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - Destroy this: Gain {r}. Activate this only if you control an aura permanent with Sigil in its name.' Wizard Equipment - Chest (batch set label OscilioBlitzDeck - derive the json/<set>/ folder from the card's own setIdentifiers at adoption).\n\nINSTANT is an ACTIVATED ability with instant timing (CR 1.7.4b), not 'the card is an Instant'. play._add_hero_dsl_activations (play.py:238-317, read this session) scans player.chest among its ability sources and offers INSTANT abilities in any priority window, checking ability conditions (:307-309) and cost check_fns (:311-313) before offering.\n\nCOST: DESTROY_SELF (cost_types.py:43-51, read this session) - the activation cost is destroying the source card, paid through canonical destroy() before effects run. It sits in the ability-level cost array because a cost must be able to gate the activation, which an effect cannot. No card-level activation_cost is authored: gaining {r} is the EFFECT of the ability, not a cost, and modelling it both ways would be wrong.\n\nCONDITION: CARD_IN_ZONE zones [auras, permanents] name Sigil (condition_types.py:844-996, read this session). The name test is SUBSTRING (_norm('Sigil') in name/slug, :975-977), which is what 'with Sigil in its name' asks; player defaults to the controller; with no count threshold the default is 'at least one'. Both zones listed because aura permanents live in player.auras while other permanents sit in player.permanents; every permanent named Sigil is an aura, so the union cannot over-match.\n\nRELEASE-NOTE TIMING: note 2 says once successfully activated the ability still resolves even if no Sigil aura remains. Ability-level conditions are checked at offer AND again at resolution; within this engine an instant activation resolves immediately after its cost is paid with no priority window in between, so no reachable state can remove the last Sigil aura between the two checks - behaviour matches the note everywhere it can be observed. If a future response window makes that interval real, the gate belongs at offer-time only and this file needs revisiting."
+}

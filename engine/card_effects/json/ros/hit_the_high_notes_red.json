@@ -1,0 +1,20 @@
+{
+  "slug": "hit_the_high_notes_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "OR", "any": [
+          {"type": "EVENT_THIS_TURN", "event": "play", "qualifier": "aura"},
+          {"type": "EVENT_THIS_TURN", "event": "create", "qualifier": "aura"}
+        ]}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'If you've played or created an aura this turn, this gets +2{p}.' Runeblade Action - Attack (batch set label AuroraBlitzDeck - derive the json/<set>/ folder from setIdentifiers at adoption). Red printing of .drafts/hit_the_high_notes_yellow.json (identical printed text and amount); shape copied verbatim from that sibling, whose gates were verified live at the producers and re-spot-checked this session.\n\nABILITY TYPE IS WHILE_STATIC, NOT TRIGGERED+ON_ATTACK: the release notes make the condition 'always checking' while attacking - note 2 says an aura played or created AFTER declaration but before damage still yields +2{p} during damage calculation. A one-shot ON_ATTACK evaluation would miss that; a WHILE_STATIC is re-evaluated on every RECALC_ATTACK_POWER (dispatched to the attack card, both heroes and all permanents/equipment), and the engine recalculates at attack declaration AND again before damage, so an aura arriving mid-combat is picked up at the next recalc. Shape copied from shipped bvo/barraging_brawnhide_blue ('if you have X this turn, this gets +N{p}' on an Action - Attack). SOURCE_IS_ATTACK (condition_types.py:381-387, read this session: no params, tests combat.attack_card is c) pins the buff to this card's own attack; MODIFY_ATTACK (effect_types.py:4123-4158, read this session) detects the recalculate_attack_power event and applies transiently in the stage-8 window instead of accumulating on power_mods, so re-evaluations never double-apply. Note 3 ('no retroactive damage once past the Damage step') holds for free: after damage there is no recalculation that matters.\n\nTRIAGE DIVERGENCE, resolved by reading the producer: the triage list named EVENT_THIS_TURN {event: token_created}; 'token_created' is the EventManager event TYPE emitted at effect_keywords.py:405 (the DSL ON_TOKEN_CREATED trigger mechanism), not a turn-event marker. The turn-event recorder call at effect_keywords.py:416-421 writes event name 'create' (slug, subtypes, types, permanent_subtype), AFTER aura routing appended 'Aura' to the token's types (:377-379) - so did_this_turn:create:aura is the live marker. Authored 'create'.\n\nGATES VERIFIED AT THE PRODUCERS THIS SESSION: (a) played - play.py:1085-1101 records _record_turn_event(..., 'play', slug, name, types, subtypes, classes, talents, colour, ...) for every card played from hand; an aura card's types carry 'Aura', writing did_this_turn:play:aura. (b) created - see above, did_this_turn:create:aura. Writer (_norm_ident) and reader (_norm, condition_types.py:1089-1090) both fold to lowercase alphanumerics, so authored qualifier 'aura' matches 'Aura'. OR reads 'any' (condition_types.py:1901-1905); both arms are documented EVENT_THIS_TURN vocabulary (condition_types.py:1070-1112).\n\nKNOWN GAP IN THE CREATE ARM, fails closed (inherited from the sibling): the 'create' turn event is recorded ONLY by create_token (effect_keywords.py:418). Auras entering via create_card (CR 8.5.40) emit no turn event, so an aura created through that path would not open the window. Aura tokens in this corpus route through create_token and count. Closing it needs a generic _record_turn_event inside create_card - an engine change, out of scope for a draft (never edit engine files).\n\nNo printed keywords; nothing else to author.",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

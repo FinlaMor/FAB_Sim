@@ -1,0 +1,20 @@
+{
+  "slug": "hold_firm",
+  "activation_cost": 2,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "conditions": [
+        {"type": "HEALTH_LT_OPP"}
+      ],
+      "cost": [
+        {"type": "DESTROY_PERMANENT", "target": "self"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "toughness", "amount": 3},
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - {r}{r}, destroy this: Create 3 Toughness tokens. Activate this only if you have less {h} than each other hero. **Go again**' + **Blade Break**, Revered Equipment - Arms (SuperSlam).\n\nBLADE BREAK NOT AUTHORED: printed keyword, fires from the card DB keywords field; re-authoring it would be a defect.\n\n'{r}{r}' IS THE CARD-LEVEL activation_cost FIELD (2), deliberately NOT a PAY_RESOURCES ability cost - that would double-charge (IMPLEMENTATION_GUIDE). Loader reads it at loader.py:153 into CardDef.activation_cost, applied to the runtime card (card.py:519-520) and charged by the activation affordability gate (play.py:1513-1524).\n\n'destroy this' SITS BEFORE THE COLON, so it is the ability-level COST. Spelling follows the SHIPPED hnt/misfire_dampener.json (same 'destroy this:' activation family): {\"type\": \"DESTROY_PERMANENT\", \"target\": \"self\"} - handler (cost_types.py:385-410) takes the target=='self' branch: can_pay always true, pay routes canonical destroy(), which resolves the card's actual zone (the arms slot). The triage list named DESTROY_SELF (cost_types.py:43-51), an equivalent branch with the same behaviour; the shipped-card spelling was preferred per copy-an-existing-card.\n\nACTIVATION GATE: 'Activate this only if you have less {h} than each other hero' is ability-level conditions [HEALTH_LT_OPP] (condition_types.py:775-780, no params: strictly controller.life < opponent.life). For activated abilities these conditions are checked WHEN THE ACTIVATION IS OFFERED (play.py:306-309), which is what 'Activate this only if' needs; they are also re-checked at resolution. Release-note semantics hold exactly in the 2-player sim: any hero at or below your life blocks the activation, and HEALTH_LT_OPP is strict.\n\nCREATE_TOKEN (effect_types.py:1942-1952) reads 'token' (slug) and 'amount'/'count'; amount 3, default SELF control and template-derived destination. json/tokens/toughness.json EXISTS (globbed this session), so resolution will not raise MissingCardImplementation.\n\nTRAILING GO AGAIN IS AUTHORED EXPLICITLY as GAIN keyword GO_AGAIN despite GoAgain appearing in printed_keywords: the printed-keyword payout fires only for layer_type=='card' stack layers (engine.py ~2420 via card.has_go_again), while DSL activations resolve as 'activated' layers - without the authored grant the ability would consume an action point (+2 resources and the equipment) and return none, ending the turn early (.drafts/cracker_jax.json documents this exact defect class for the same sentence family on Arms equipment). GAIN keyword GO_AGAIN routes through _grant_go_again (effect_types.py:4927-4941): outside combat it pays +1 action point directly (CR 8.3.5a). No double-grant risk: the card-layer payout never runs for activations, and no other path consumes this equipment's keywords.\n\nNo per_turn field: the text prints no once-per-turn limit.\n\nNo gaps."
+}

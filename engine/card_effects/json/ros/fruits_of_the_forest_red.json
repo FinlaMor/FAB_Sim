@@ -1,0 +1,13 @@
+{
+  "slug": "fruits_of_the_forest_red",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [{"type": "DISCARD_SELF"}],
+      "effects": [
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - Discard this: Gain 2{h}' (type_text says Earth Action - Attack; the attack half is offered by the engine from the card DB power/type data, so only the instant clause is authored).\n\nShape copied from shipped hvy/ripple_away_blue.json and sup/outside_interference_blue.json, the corpus's established 'Instant - Discard this' form: INSTANT ability whose ability-level cost is DISCARD_SELF.\n\nVerified against handlers this session: DISCARD_SELF (cost_types.py:53-67) can_pay requires the card to be IN HAND and pay moves it hand -> graveyard, which covers official release note 1 ('can only activate from hand; can't discard to pay from elsewhere'). The offer path is play._add_hand_instant_activations as a DISCARD_ACTIVATE action (play.py:341-368), which is an ability activation and not a card play - release note 2 ('counts as activating an instant ability, not playing an instant card') holds structurally. GAIN (effect_types.py:4869-4896) reads asset LIFE_POINTS and routes to effect_gain_life; amount 2 is read.\n\nNo uncertainties. Yellow/blue printings would share this shape."
+}

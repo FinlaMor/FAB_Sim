@@ -1,0 +1,41 @@
+{
+  "slug": "hand_behind_the_pen_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        { "type": "ATTACK_TARGET_IS_HERO" }
+      ],
+      "effects": [
+        {
+          "type": "FLIP_MATCHING",
+          "face_up": true,
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "ARSENAL",
+            "amount": 1,
+            "filter": [
+              { "type": "CARD_IS_FACE_DOWN" }
+            ],
+            "record_as": "flipped"
+          }
+        },
+        {
+          "type": "BANISH",
+          "amount": 1,
+          "player": "OPPONENT",
+          "from_zone": "ARSENAL",
+          "target": {
+            "filter": [
+              { "type": "SUBTYPE_IN", "subtypes": ["Action"] },
+              { "type": "NOT", "inner_type": "SUBTYPE_IN", "subtypes": ["Attack"] },
+              { "type": "CARD_IS_FACE_UP" }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits a hero' = TRIGGERED ON_HIT (an Action - Attack is not an ATTACK_REACTION) + ATTACK_TARGET_IS_HERO ('a hero').\n\nFlip half: FLIP_MATCHING with an object target - _compile_object_target filters the opponent's arsenal with CARD_IS_FACE_DOWN, asks the EFFECT CONTROLLER to choose 1 (mandatory-if-available: an empty pool returns [] without prompting, satisfying release note 1), and flips via is_public/face_down. record_as is informational; nothing downstream reads it.\n\nBanish half: BANISH from the opponent's ARSENAL with a filter riding the target dict (_hand_card_filter compiles raw DSL condition specs, ANDed): it IS an Action (SUBTYPE_IN 'Action'), is NOT an Attack (NOT around SUBTYPE_IN 'Attack' - Attack is a subtype, Action is a type, and 'non-attack action' is two claims about one card), and is face up (CARD_IS_FACE_UP), per release note 2. Mandatory-if-available: the handler breaks silently when no candidate matches. Exactly one is taken (amount 1). It runs unconditionally after the flip - release note 3 - and because the flip happens first and sets is_public, the just-flipped card legitimately joins the banish pool but does not have to be the one taken (release note 4).\n\nDEVIATION (handler-level, flagged not fixed): BANISH's choice prompt goes to _ask_player(state, tid) - the ZONE OWNER - whereas CR-wise the effect's controller chooses which of the opponent's arsenal cards is banished. Filtering is exact (only legal candidates are offered); only the chooser differs. Fixing it means teaching the shared BANISH handler a chooser param - a generic engine change, out of scope for a draft.\n\nThe triage list suggested LOOK_AT + SELECT_FROM_REF + FLIP_REF + BANISH_REF for this card. That path was rejected deliberately: LOOK_AT's zone filter supports only keyword/subtype/face_down (no card-type key), so the ref pool could not be narrowed to non-attack actions and SELECT_FROM_REF would offer illegal candidates. The object-target route reuses the full condition vocabulary instead."
+}

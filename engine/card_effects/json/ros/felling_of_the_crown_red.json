@@ -1,0 +1,47 @@
+{
+  "slug": "felling_of_the_crown_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zone": "banished", "card_class": "Earth", "count_gte": 4, "face_up": true}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 4}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zone": "graveyard", "card_class": "Earth", "count_gte": 2},
+        {"type": "CARD_IN_ZONE", "zone": "graveyard", "filter_types": ["Action"], "count_gte": 1}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Decompose - banish 2 Earth cards and an action card from your graveyard?",
+          "effects": [
+            {
+              "type": "BANISH",
+              "from_zone": "GRAVEYARD",
+              "player": "SELF",
+              "amount": 2,
+              "filter": [{"type": "CARD_IS_TALENT", "talent": "Earth"}]
+            },
+            {
+              "type": "BANISH",
+              "from_zone": "GRAVEYARD",
+              "player": "SELF",
+              "amount": 1,
+              "filter": [{"type": "CARD_IS_TYPE", "card_type": "Action"}]
+            },
+            {"type": "PUT_HAND_CARD_BOTTOM", "player": "SELF", "optional": false},
+            {"type": "PUT_HAND_CARD_BOTTOM", "player": "OPPONENT", "optional": false}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If there are 4 or more Earth cards in your banished zone, this gets +4{p}.' / '**Decompose** - When this attacks, you may banish 2 Earth cards and an action card from your graveyard. If you do, each hero puts a card from their hand on the bottom of their deck.' Earth Action - Attack (Promos).\n\nDECOMPOSE AUTHORED IN FULL, deliberately: the generic keyword machinery (ability_keywords.check_decompose / effect_decompose) has NO callers anywhere in engine/, so the DB 'Decompose' keyword fires nothing - authoring nothing would leave the card inert, and there is no double-application. Same finding as the .drafts/cadaverous_tilling_* siblings, whose verified trigger shape this copies (only the payoff differs).\n\nSTATIC: WHILE_STATIC re-fires on every RECALC_ATTACK_POWER, which is release note 1's 'constantly checks' verbatim - banish an Earth card mid-attack and the +4 appears; remove one and it disappears (stage-8 window, no accumulation). face_up: true implements release note 2 ('face-down Earth cards do not count'): CARD_IN_ZONE reads face_up and tests is_public (condition_types.py:876, 973-974); canonical banish() adds face-up unless face_down=True (effect_keywords.py:177-180), so only face-down banishes (Intimidate-style) are excluded. Release note 6 ('not active on defense') falls out of dispatch, not authoring: RECALC_ATTACK_POWER reaches the attack card, both heroes and in-play permanents/weapons - never the defending cards - so a defending Felling neither fires nor buffs the incoming attack.\n\nTRIGGER GATE: two ability-level CARD_IN_ZONE conditions gate whether the option is offered at all (checked at resolution). card_class is matched against classes+talents+colour via _card_traits (condition_types.py:49-64, 967) so 'Earth' matches the Earth talent; filter_types checks types OR subtypes (condition_types.py:944-948) so plain 'an action card' includes attack actions, as printed.\n\nBANISH filters go through _hand_card_filter's DSL-spec path with the CANDIDATE graveyard card as the condition argument (effect_types.py:526-563), so CARD_IS_TALENT/CARD_IS_TYPE filter individual cards. BANISH reads from_zone/player/amount/filter (effect_types.py:1301+).\n\nPAYOFF: 'If you do' = inside the accepted MAY block (declining grants nothing; release notes 3-4: the choice happens at resolution and there is no priority between banishing and the puts - one resolution, effects in order). PUT_HAND_CARD_BOTTOM reads player (SELF/OPPONENT) and optional (effect_types.py:1557+); optional false because 'each hero puts' is mandatory, and the handler returns early on an empty hand, which is release note 5 verbatim.\n\nResidual leniency (same as the cadaverous siblings): an Earth ACTION counts toward both gate requirements, though the sequential prompts always remove three distinct cards when three exist."
+}

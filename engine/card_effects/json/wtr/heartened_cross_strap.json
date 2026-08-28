@@ -1,0 +1,22 @@
+{
+  "slug": "heartened_cross_strap",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_CARD_COST",
+          "amount": 2,
+          "filter": [
+            {"type": "CARD_IS_TYPE", "subtypes": ["Attack"]}
+          ]
+        },
+        {"type": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'Action - Destroy this: The next attack action card you play this turn costs {r}{r} less to play. Go again' - Generic Equipment - Chest.\n\nCOST, NOT EFFECT: 'Destroy this' sits before the colon, so it is the ability-level cost (cost_types.py:43-51 DESTROY_SELF exists for exactly this wording; precedent blacktek_whisperers.json). As a cost it gates the activation and is paid before the effects run (play.py:1288-1296); as an effect it could not block anything. ACTIVATE is action-speed per DSL_REFERENCE, matching the printed **Action** marker - the activation consumes an action point, then go again hands one back.\n\nTHE FILTER IS CARD_IS_TYPE, NOT ATTACK_TYPE_IN: MODIFY_NEXT_CARD_COST's filter specs are evaluated by _cost_mod_matches (play.py:625-643) against THE CARD BEING PLAYED (fn(card, None, state)). ATTACK_TYPE_IN/ATTACK_SUBTYPE_IN ignore their card parameter and read s.combat.attack_card (condition_types.py:273-316) - outside combat that is None, so authoring them here would compile and then silently never match anything. CARD_IS_TYPE (condition_types.py:1309-1324) reads the passed card's types+subtypes union, and its own comment says it exists for this queue; attack action cards are types=['Action'], subtypes=['Attack'], so subtypes ['Attack'] matches exactly the printed 'attack action card'.\n\nONE-SHOT AND TURN-SCOPED FOR FREE: the handler enqueues on player.dsl_queued_card_mods (effect_types.py:4729-4742) with amount read raw at consume time (play.py:1447-1451) - consumed by the FIRST matching played card ('the next'), and the queue is cleared in the end phase (engine.py:933-934), which is the printed 'this turn'.\n\nGO AGAIN: the GO_AGAIN effect routes through _grant_go_again, whose non-combat branch (CR 8.3.5a) grants the action point when no chain link is active - the handler comment names activated equipment abilities as precisely this case, after 33 earlier cards silently dropped the AP into state.combat.keywords.\n\nPRINTED KEYWORD GoAgain: part of the activated ability's text, not a conditional card-level keyword, so the SOURCE_IS_ATTACK conditional-keyword strip shape does not apply (that machinery is only for 'if X, this gets go again'); authored inside the ability per the blacktek_whisperers precedent. CR 8.3.5c dedup in _grant_go_again means even a redundant DB-side grant could not double-pay."
+}

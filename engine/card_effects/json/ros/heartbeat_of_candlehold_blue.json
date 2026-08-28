@@ -1,0 +1,14 @@
+{
+  "slug": "heartbeat_of_candlehold_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1},
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1},
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Gain 1{h}. Gain 1{h}. Gain 1{h}.' / '**Go again**' Earth Wizard Action.\n\nTHREE separate GAIN effects, deliberately NOT one GAIN with amount 3: official_release_notes 1 says the card 'will generate three separate gain 1{h} events', and note 2 spells out the consequence - one 'replace the next time you would gain {h}' replacement applies only to the FIRST event, a second replacement to the second. A single amount-3 effect would be one event and both notes would be false. Each GAIN is compiled independently by effect_types.py:4869 and routes LIFE_POINTS through effect_gain_life, so each resolves as its own gain.\n\nability_type PLAY (triage's spelling): ABILITY_TYPE_TO_EVENT maps PLAY and ACTION to the same ON_PLAY event (trigger_types.py:109-110), so this is cosmetic; PLAY is the DSL_REFERENCE's canonical 'resolves when the card is played'.\n\nPrinted **Go again** and **Specialization** are in printed_keywords and fire from the card DB keywords field - deliberately NOT authored here; re-authoring a printed keyword is a defect. (Specialization is a deck-construction restriction plus the go-again rider; both are DB-side.)\n\nNo unresolved gaps."
+}

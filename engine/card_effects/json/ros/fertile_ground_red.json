@@ -1,0 +1,29 @@
+{
+  "slug": "fertile_ground_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "banished",
+              "card_class": "Earth",
+              "count_gte": 4,
+              "face_up": true
+            }
+          ],
+          "then": [
+            {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 5}
+          ],
+          "else": [
+            {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 2}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Gain 2{h} / If there are 4 or more Earth cards in your banished zone, instead gain 5{h}.' Earth Instant (Rosetta), red printing.\n\nSHAPE: one PLAY ability (an Instant CARD whose effect happens when you play it is PLAY, not the INSTANT activated-ability type). The 'instead' clause is ONE bonus chosen by a condition - authored as CONDITIONAL_EFFECT then/else, the documented shape (DSL_REFERENCE: 'instead replaces, it does not stack'; same precedent as .drafts/cosmic_suture_red.json's Starfall). Two separately-gated GAINs would deal both and gain 7.\n\nRELEASE NOTE 1 ('checked when the layer resolves on the stack'): CONDITIONAL_EFFECT compiles its when-list lazily and evaluates it at fire time (effect_types.py:3697-3724), i.e. at resolution - not at play declaration - so Earth cards banished after this was played but before it resolves count, exactly as the note requires.\n\nCOUNT SPELLING: CARD_IN_ZONE reads every parameter used here (condition_types.py:844-993): zone 'banished' resolves via getattr(player, 'banished'); player defaults SELF; count_gte 4 is the >= threshold; card_class 'Earth' is matched against classes + talents + pitch colour via _card_traits (condition_types.py:49-64) - Earth is a TALENT, so the talent arm is what fires.\n\nFACE-DOWN EXCLUSION (release note 2): face_up true requires card.is_public. effect_keywords.banish(face_down=True) adds with is_public=False (effect_keywords.py:177-178); any other add inherits the ZONE's visibility (state.py:244), and banished is a public zone by derivation (Zone.is_public, state.py:202-204). So ordinary banished cards count and explicitly face-down ones do not - matching the note with no over- or under-count from cards added by paths that never pass through banish().\n\nAMOUNTS: GAIN asset LIFE_POINTS (CR 1.13.1 name; handler effect_types.py:4869-4896 reads asset/amount/player) - 5 in then, 2 in else. Release notes give 5/4/3 across the three colours; this file is the red printing, which gains 5.\n\nNo printed keywords on the card; nothing else to author."
+}

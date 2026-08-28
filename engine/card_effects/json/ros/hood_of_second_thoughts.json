@@ -1,0 +1,18 @@
+{
+  "slug": "hood_of_second_thoughts",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {"type": "EVENT_THIS_TURN", "event": "damage_taken"}
+      ],
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "PREVENT_DAMAGE", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Instant - Destroy this: Prevent the next 1 damage that would be dealt to you this turn. Activate this only if you've been dealt damage this turn.' Generic Equipment - Head (Promos).\n\nSHAPE COPIED FROM THE SHIPPED TWIN: the release notes say this promo cycle is literally Runaways reprinted as equipment, and aua/runaways.json ships the identical ability (INSTANT + EVENT_THIS_TURN damage_taken gate + destroy-self cost + PREVENT_DAMAGE 1); .drafts/four_finger_gloves.json is the Arms sibling with the same 'you've been dealt damage' wording. Nothing novel here.\n\nABILITY TYPE: 'Instant - Destroy this:' is an ACTIVATED ability with instant timing -> INSTANT -> ON_ACTIVATE. Equipment is scanned by play._add_hero_dsl_activations (play.py:259-265 includes player.head) and INSTANT abilities are offered at any priority window, so the release-note rule that it cannot be used mid-resolution holds structurally - activations are only offered where players have priority.\n\nCOST NOT EFFECT: 'Destroy this' sits before the colon, so it is the activation cost - DESTROY_SELF (cost_types.py:43-51, whose own comment cites this exact wording; routes through canonical destroy). Not also authored as an effect, which would destroy twice.\n\nACTIVATION GATE: 'only if you've been dealt damage this turn' is an ability-level condition, checked both when the activation is offered (play.py:307) and at resolution. effect_keywords.py:516-519 records a 'damage_taken' turn marker against the VICTIM of every final damage event (bare marker plus dtype and hero/ally qualifiers), so {\"event\": \"damage_taken\"} with default player SELF and NO qualifier answers exactly 'you've been dealt damage this turn', any damage type. (runaways adds qualifier 'hero' because its text says 'your hero'; this card's text does not.) A hit fully absorbed by prevention records nothing, since the marker is written only when final amount > 0 - consistent with 'been dealt damage'.\n\nPREVENT_DAMAGE verified against the handler (effect_types.py:5254-5317): reads amount/damage_type/source_class only; registers a one-shot PREVENTION replacement on the controller gated on ev.target_player_id == controller, absorbs up to N of the next damage event targeting their hero, then is consumed. No damage_type authored: the release notes say it prevents ALL types ({p}, arcane, untyped) and the handler filters by type only when one is given. It intercepts hero-damage events, not life loss, matching the note that it does not prevent loss of life.\n\nKNOWN ENGINE IMPRECISION, stated rather than hidden: the printed shield expires at end of turn, but ReplacementEffect carries no duration and nothing clears unconsumed prevention replacements at end of turn, so an unused shield persists into later turns until consumed. Not expressible from JSON today (no span/expiry parameter is read by the PREVENT_DAMAGE handler); same caveat recorded on .drafts/four_finger_gloves.json."
+}

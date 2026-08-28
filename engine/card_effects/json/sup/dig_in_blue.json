@@ -1,0 +1,14 @@
+{
+  "slug": "dig_in_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "MAY_PAY_UP_TO", "max": 3},
+        {"type": "CREATE_TOKEN", "token": "toughness", "amount": {"type": "PAID_AMOUNT"}}
+      ]
+    }
+  ],
+  "_comment": "'When this defends, you may pay up to {r}{r}{r}. Create that many Toughness tokens.'\n\nTRIGGER: 'When this defends' = TRIGGERED + ON_DEFEND; _dsl_defend_listener dispatches ON_DEFEND to the DEFENDING CARD ITSELF (engine.py:1640-1646, one defend event per declared defender emitted at play.py:1374-1376), so the ability only ever hears Dig In's own defends and no source-scoping condition is needed (canopy_shelter_blue / brothers_in_arms precedent). Release note 1 confirms the timing: it triggers on BECOMING a defending card, and the pay choice is made when the triggered effect resolves - which is exactly when MAY_PAY_UP_TO asks.\n\nPAY UP TO THREE: MAY_PAY_UP_TO (effect_types.py:1468-1499) reads 'max' (or 'amount'), caps the offer at what the controller actually holds, offers cap..0 high-to-low so a default agent pays the most ('you MAY pay up to' is an upside), deducts through the canonical lose(), and publishes the paid count as state._paid_amount. Release note 2 (no priority between the payment and the creation) falls out of both effects sharing one ability resolution.\n\n'THAT MANY' TOKENS: CREATE_TOKEN resolves a dict amount through _resolve_amount (effect_types.py:1983-1984), and _resolve_amount reads PAID_AMOUNT off state._paid_amount (effect_types.py:66-67) - the exact pairing the MAY_PAY_UP_TO docstring describes. Paying 0 stores 0 and the handler early-returns on count <= 0, creating nothing. Player defaults to SELF, i.e. the defending player, who is who the tokens belong to.\n\njson/tokens/toughness.json exists. No printed keywords, so no conditional-keyword machinery applies."
+}

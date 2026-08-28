@@ -89,7 +89,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Barraging Brawnhide is defended by less than 2 non-equipment cards, it has +1{p}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "barraging_brawnhide_red",
@@ -155,7 +155,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nWhen Blessing of Deliverance enters the arena, if you have a card with cost 3 or greater in your pitch zone, draw a card.\n\nAt the beginning of your action phase, destroy Blessing of Deliverance then reveal the top card of your deck. Gain 1{h} for each card with cost 3 or greater revealed this way.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "blessing_of_deliverance_red",
@@ -179,7 +179,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nWhen Blessing of Deliverance enters the arena, if you have a card with cost 3 or greater in your pitch zone, draw a card.\n\nAt the beginning of your action phase, destroy Blessing of Deliverance then reveal the top 3 cards of your deck. Gain 1{h} for each card with cost 3 or greater revealed this way.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "blessing_of_deliverance_yellow",
@@ -203,7 +203,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nWhen Blessing of Deliverance enters the arena, if you have a card with cost 3 or greater in your pitch zone, draw a card.\n\nAt the beginning of your action phase, destroy Blessing of Deliverance then reveal the top 2 cards of your deck. Gain 1{h} for each card with cost 3 or greater revealed this way.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "bone_head_barrier_yellow",
@@ -269,7 +269,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}{r}: Until end of turn, your attack action cards with cost 3 or more get **dominate**. **Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "bravo_showstopper",
@@ -291,7 +291,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}{r}: Until end of turn, your attack action cards with cost 3 or greater gains **dominate**. **Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "breaking_scales",
@@ -314,7 +314,7 @@
     ],
     "specializations": [],
     "functional_text": "**Attack Reaction** - Destroy Breaking Scales: Target attack action card with **combo** gains +1{p}.\n\n**Battleworn**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "buckling_blow_blue",
@@ -337,7 +337,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on an equipment they control.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "buckling_blow_red",
@@ -406,7 +406,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first action during their next turn costs an additional {r} to play or activate.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "cartilage_crush_red",
@@ -544,7 +544,7 @@
       "Bravo"
     ],
     "functional_text": "**Bravo Specialization**\n\n**Crush** - If Crippling Crush deals 4 or more damage to a hero, they discard 2 random cards.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "crush_confidence_blue",
@@ -750,7 +750,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Demolition Crew, reveal a card in your hand with cost 2 or greater.\n\n**Dominate**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "demolition_crew_yellow",
@@ -993,7 +993,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +3{p}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "emerging_power_yellow",
@@ -1017,7 +1017,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +2{p}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "enlightened_strike_red",
@@ -1059,7 +1059,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If the next card you defend with this turn is a card with combo, it gains +2{d}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "flic_flak_red",
@@ -1078,7 +1078,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If the next card you defend with this turn is a card with combo, it gains +2{d}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "flic_flak_yellow",
@@ -1097,7 +1097,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If the next card you defend with this turn is a card with combo, it gains +2{d}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "flock_of_the_feather_walkers_blue",
@@ -1139,7 +1139,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Flock of the Feather Walkers, reveal a card in your hand with cost 1 or less.\n\nWhen you attack with Flock of the Feather Walkers, create a Quicken token.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "flock_of_the_feather_walkers_yellow",
@@ -1206,7 +1206,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Open the Center was the last attack this combat chain, Fluster Fist gains +1{p} for each attack that has hit this combat chain.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "fluster_fist_yellow",
@@ -1229,7 +1229,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Open the Center was the last attack this combat chain, Fluster Fist gains +1{p} for each attack that has hit this combat chain.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "forged_for_war_yellow",
@@ -1299,7 +1299,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Destroy this: The next attack action card with cost 2 or more you play this turn gets +2{p}. **Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "harmonized_kodachi",
@@ -1369,7 +1369,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "head_jab_yellow",
@@ -1415,7 +1415,7 @@
     ],
     "specializations": [],
     "functional_text": "**Legendary**\n\nWhen you pitch Heart of Fyendal, if you have less {h} than an opposing hero, gain 1{h}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "heartened_cross_strap",
@@ -1438,7 +1438,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Destroy this: The next attack action card you play this turn costs {r}{r} less to play. **Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "helm_of_isens_peak",
@@ -1461,7 +1461,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}, destroy this: Your hero gains +1{i} this turn.\n\n**Battleworn**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "hope_merchants_hood",
@@ -2027,7 +2027,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "raging_onslaught_yellow",
@@ -2487,7 +2487,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, **intimidate**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "smash_instinct_yellow",
@@ -2685,7 +2685,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nCards you control with cost 3 or more get +3{d} while defending.\n\nAt the beginning of your action phase, destroy this.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "surging_strike_blue",
@@ -2754,7 +2754,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "tectonic_plating",
@@ -2876,7 +2876,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "wounding_blow_red",
@@ -3123,7 +3123,7 @@
     ],
     "specializations": [],
     "functional_text": "Target weapon attack gains +3{p}.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, weapons you control gain +1{p} until end of turn",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "biting_blade_yellow",
@@ -3213,7 +3213,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Rising Knee Thrust was the last attack this combat chain, Blackout Kick gains +3{p}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "bloodrush_bellow_yellow",
@@ -3282,7 +3282,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Breakneck Battery, discard a random card.\n\nIf the discarded card has 6 or more {p}, Breakneck Battery gains **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "breakneck_battery_yellow",
@@ -3351,7 +3351,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +3{p} and **go again**.\n\n**Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "driving_blade_yellow",
@@ -3374,7 +3374,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +2{p} and **go again**.\n\n**Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "glint_the_quicksilver_blue",
@@ -3396,7 +3396,7 @@
     ],
     "specializations": [],
     "functional_text": "Target weapon attack gains **go again**.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, draw a card.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "hurricane_technique_yellow",
@@ -3420,7 +3420,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Rising Knee Thrust was the last attack this combat chain, Hurricane Technique gains +1{p}, **go again**, and \"If Hurricane Technique hits, put it into your hand.\"",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "ironsong_response_blue",
@@ -3441,7 +3441,7 @@
     ],
     "specializations": [],
     "functional_text": "**Reprise** - If the defending hero has defended with a card from their hand this chain link, target weapon attack gains +1{p}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "ironsong_response_red",
@@ -3506,7 +3506,7 @@
     ],
     "specializations": [],
     "functional_text": "When you play Last Ditch Effort, if you have no cards in your deck, it gains +4{p} and **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "natures_path_pilgrimage_blue",
@@ -3759,7 +3759,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Primeval Bellow, discard a random card.\n\nYour next Brute attack this turn gains +5{p}.\n\n**Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "primeval_bellow_yellow",
@@ -3863,7 +3863,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Leg Tap was the last attack this combat chain, Rising Knee Thrust gains +2{p} and **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "rising_knee_thrust_red",
@@ -4043,7 +4043,7 @@
     ],
     "specializations": [],
     "functional_text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card.\n\nIf Scour the Battlescape is played from arsenal, it gains **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "scour_the_battlescape_red",
@@ -4300,7 +4300,7 @@
     ],
     "specializations": [],
     "functional_text": "The next attack action card with cost 2 or greater you play this turn gains +4{p}.\n\n**Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "sloggism_red",
@@ -4409,7 +4409,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, draw a card.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "steelblade_shunt_blue",
@@ -4578,7 +4578,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +1{p} and \"If this hits, the attack gains **go again**.\"\n\n**Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "warriors_valor_yellow",
@@ -4601,7 +4601,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +2{p} and \"If this hits, the attack gains **go again**.\"\n\n**Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "whelming_gustwave_blue",
@@ -4649,7 +4649,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Surging Strike was the last attack this combat chain, Whelming Gustwave gains +1{p}, **go again**, and \"If this hits, draw a card.\"",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "whelming_gustwave_yellow",
@@ -4800,5 +4800,229 @@
     "specializations": [],
     "functional_text": "As an additional cost to play this, discard a random card.",
     "status": "needs_review"
+  },
+  {
+    "slug": "energy_potion_blue",
+    "name": "Energy Potion",
+    "type_text": "Generic Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Gain {r}{r}",
+    "status": "done"
+  },
+  {
+    "slug": "nimblism_blue",
+    "name": "Nimblism",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card with cost 1 or less you play this turn gains +1{p}.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "nimblism_red",
+    "name": "Nimblism",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card with cost 1 or less you play this turn gains +3{p}.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "nimblism_yellow",
+    "name": "Nimblism",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card with cost 1 or less you play this turn gains +2{p}.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "scar_for_a_scar_blue",
+    "name": "Scar for a Scar",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "scar_for_a_scar_red",
+    "name": "Scar for a Scar",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "scar_for_a_scar_yellow",
+    "name": "Scar for a Scar",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_solace_red",
+    "name": "Sigil of Solace",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Gain 3{h}",
+    "status": "done"
+  },
+  {
+    "slug": "timesnap_potion_blue",
+    "name": "Timesnap Potion",
+    "type_text": "Generic Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Gain 2 action points.",
+    "status": "pending"
+  },
+  {
+    "slug": "warriors_valor_red",
+    "name": "Warrior's Valor",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gets +3{p} and \"When this hits, it gets **go again**.\"\n\n**Go again**",
+    "status": "pending"
   }
 ]

@@ -1,0 +1,37 @@
+{
+  "slug": "cadaverous_tilling_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zone": "graveyard", "card_class": "Earth", "count_gte": 2},
+        {"type": "CARD_IN_ZONE", "zone": "graveyard", "filter_types": ["Action"], "count_gte": 1}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Decompose - banish 2 Earth cards and an action card from your graveyard?",
+          "effects": [
+            {
+              "type": "BANISH",
+              "from_zone": "GRAVEYARD",
+              "player": "SELF",
+              "amount": 2,
+              "filter": [{"type": "CARD_IS_TALENT", "talent": "Earth"}]
+            },
+            {
+              "type": "BANISH",
+              "from_zone": "GRAVEYARD",
+              "player": "SELF",
+              "amount": 1,
+              "filter": [{"type": "CARD_IS_TYPE", "card_type": "Action"}]
+            },
+            {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Decompose is spelled out in full on the card and the generic keyword machinery (ability_keywords.check_decompose / effect_decompose) has NO callers anywhere in engine/, so authoring nothing would leave the card inert - the whole clause is authored here. Release notes honoured: the banish choice happens when the trigger resolves (MAY prompts during resolution), and there is no priority between choosing to banish and the +2{p} (one resolution; MODIFY_ATTACK runs inside the accepted block, so declining grants nothing). The two ability-level CARD_IN_ZONE conditions gate whether the option is offered at all: card_class is matched against classes+talents+colour via _card_traits (condition_types.py:49-64, 967) so 'Earth' matches the Earth talent, and filter_types checks types OR subtypes (condition_types.py:944-948) so plain 'an action card' includes attack actions, as printed. The BANISH filters go through _hand_card_filter's DSL-spec path with the CANDIDATE card as the condition argument (effect_types.py:526-563), so CARD_IS_TALENT/CARD_IS_TYPE filter individual graveyard cards. LOOK_AT was rejected as the ref source: its zone map is DECK_TOP/ARSENAL/HAND only (effect_types.py:3390-3392), so a graveyard look silently stores an empty list. Why the sequential BANISHes cannot shortchange the player: the gate guarantees >=2 Earth-class and >=1 Action exist; the Earth banish removes only Earth cards, so if the second pool drains, every Action in the graveyard was Earth and was already banished - i.e. the banished set still contains 2 Earth cards including an action, which is exactly the printed cost ('an action card' may itself be Earth). Residual leniency: an Earth action counts toward both gate requirements while the prompts always remove three distinct cards when three exist. ON_ATTACK is dispatched to combat.attack_card at attack entry (engine.py:1529), so MODIFY_ATTACK lands while the combat exists. No known gaps."
+}

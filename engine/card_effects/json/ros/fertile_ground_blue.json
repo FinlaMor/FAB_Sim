@@ -1,0 +1,29 @@
+{
+  "slug": "fertile_ground_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "banished",
+              "card_class": "Earth",
+              "count_gte": 4,
+              "face_up": true
+            }
+          ],
+          "then": [
+            {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 3}
+          ],
+          "else": [
+            {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 2}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Gain 2{h}. If there are 4 or more Earth cards in your banished zone, instead gain 3{h}.' Earth Instant (Rosetta).\n\n'instead' is ONE branch chosen by the condition - CONDITIONAL_EFFECT with then/else (effect_types.py:3697-3724). Authoring two condition-gated GAINs would grant 2{h} AND 3{h}; the branch shape cannot double-pay. The test goes in 'when', never 'conditions' (the loader pops that key into an effect-level gate and the else branch becomes unreachable).\n\nTIMING: release note 1 - the count is checked 'when Fertile Ground's layer resolves on the stack'. PLAY effects run at layer resolution, and CARD_IN_ZONE is evaluated then.\n\n'Earth cards' = card_class 'Earth', which _card_traits matches against classes + talents + colour (condition_types.py:49-64); Earth cards carry the Earth talent. Zone name 'banished' resolves via getattr(player, 'banished'); player defaults to SELF (the controller's own zone).\n\nRelease note 2 - face-down banished Earth cards do not count: face_up true tests is_public (condition_types.py:973-974). banish() adds face-down cards with is_public=False and leaves every other entry at the zone's default public visibility, so only genuinely face-down banishments are excluded.\n\nBlue printing gains 3 instead of 2 per release note 1 ('you will gain 5/4/3{h}' across the colours); shape identical to sibling .drafts/fertile_ground_red.json (5) - re-verified against the handlers rather than copied blind. GAIN asset LIFE_POINTS routes to effect_gain_life (effect_types.py:4890-4896)."
+}

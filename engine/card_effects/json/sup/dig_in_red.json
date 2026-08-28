@@ -1,0 +1,18 @@
+{
+  "slug": "dig_in_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "PAY_UP_TO", "max": 3},
+        {
+          "type": "CREATE_TOKEN",
+          "token": "toughness",
+          "amount": {"type": "PAID_AMOUNT"}
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends, you may pay up to {r}{r}{r}. Create that many Toughness tokens.' Revered Action - Attack.\n\nDEFEND TRIGGER: TRIGGERED + ON_DEFEND; ON_DEFEND is a mapped engine event (trigger_types.py:9) bridged by engine._setup_dsl_listeners, and the triage corpus uses the same shape for other 'When this defends' cards (call_for_backup, base_of_the_mountain). Release note 1 confirms the trigger fires when it becomes a defending card - that is what ON_DEFEND dispatches on.\n\nOPTIONAL PAY-UP-TO: PAY_UP_TO / MAY_PAY_UP_TO (effect_types.py:1468-1499) reads max (3) and asset (default RESOURCES), caps the offer at what the player actually has, includes 0 among the choices so paying nothing is legal ('you MAY pay up to'), charges via the canonical lose(), and publishes the amount paid as state._paid_amount. CREATE_TOKEN then reads it back with amount {\"type\": \"PAID_AMOUNT\"} (_resolve_amount, effect_types.py:66-67; the CREATE_TOKEN handler resolves dict counts at effect_types.py:1983-1984) - 'create THAT MANY Toughness tokens'. Both effects run sequentially inside one ability resolution with no priority between them, matching release note 2. The toughness token definition already exists at json/tokens/toughness.json, so no token authoring here.\n\n'REVERED' IN THE TYPE TEXT has no corresponding primitive, keyword or printed_keywords entry in this batch, and the release notes are silent on it; if it carries rules meaning it belongs to the card DB, not this JSON. Flagging rather than guessing."
+}

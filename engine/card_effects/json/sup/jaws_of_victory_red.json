@@ -1,0 +1,41 @@
+{
+ "slug": "jaws_of_victory_red",
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_ATTACK",
+   "conditions": [
+    {
+     "type": "ATTACK_TARGET_IS_HERO"
+    },
+    {
+     "type": "HEALTH_LT_OPP"
+    }
+   ],
+   "effects": [
+    {
+     "type": "CROWD_CHEER"
+    }
+   ]
+  },
+  {
+   "ability_type": "WHILE_STATIC",
+   "trigger": "RECALC_ATTACK_POWER",
+   "conditions": [
+    {
+     "type": "SOURCE_IS_ATTACK"
+    },
+    {
+     "type": "HAS_BEEN_CHEERED"
+    }
+   ],
+   "effects": [
+    {
+     "type": "GAIN",
+     "keyword": "GO_AGAIN"
+    }
+   ]
+  }
+ ],
+ "_comment": "Revered Brute Action - Attack (SuperSlam). First ability: TRIGGERED ON_ATTACK gated by ATTACK_TARGET_IS_HERO + HEALTH_LT_OPP (life check at resolution per release note), effect CROWD_CHEER (routes through effect_crowd_cheers so cheer-counting payoffs see it). Second ability: conditional go again via WHILE_STATIC on RECALC_ATTACK_POWER with SOURCE_IS_ATTACK + HAS_BEEN_CHEERED granting GAIN GO_AGAIN â€” loader.conditional_keywords() strips the printed GoAgain keyword when this ability grants it conditionally. GoAgain and TheCrowdCheers are printed keywords from card DB; not re-authored. Release notes: first ability triggers when card resolves on stack and becomes attacking card against hero; cheer check at resolution. Second ability is a continuous effect always checking; if crowd cheers you after attack but before resolution step, go again applies. No retroactive action point if resolution step passed."
+}

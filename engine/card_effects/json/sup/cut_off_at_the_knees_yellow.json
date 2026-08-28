@@ -1,0 +1,28 @@
+{
+  "slug": "cut_off_at_the_knees_yellow",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "ATTACK_POWER_GT_BASE"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"},
+        {"type": "SELF_ATTACK_POWER_GTE", "amount": 13}
+      ],
+      "effects": [
+        {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "OPPONENT", "amount": 3, "into": "milled"},
+        {"type": "DESTROY_REF", "ref": "milled"}
+      ]
+    }
+  ],
+  "_comment": "'If this has {p} greater than its base, it gets +1{p}. / Tower - If this has 13 or more {p}, it gets \"When this hits a hero, destroy the top 3 cards of their deck.\"'\n\nCLAUSE 1: copied verbatim from the sibling draft .drafts/cut_a_long_story_short_yellow.json, which prints this exact sentence and itself copies shipped sup/small_problem_yellow.json. WHILE_STATIC re-evaluates on every RECALC_ATTACK_POWER dispatch - the release notes' 'conditional continuous effect that is always checking' (notes 1, 4); SOURCE_IS_ATTACK confines it to this card's own attack. The engine dispatches that event to the attack card, heroes and permanents/weapons - never to a defending action card - so 'not functional while defending' (note 3) falls out with no extra gating.\n\nSELF-SUSTAIN CAVEAT, carried unchanged from the sibling and flagged not fixed: release note 2 says the +1 must NOT keep itself alive (+3 then -3 lands back at base). Whether ATTACK_POWER_GT_BASE sees this static's own stage-8 contribution on a subsequent recalculation depends on engine evaluation order inside _recalculate_attack_power, which cannot be confirmed or changed from the JSON side. If a behavioral test finds the bonus sticky after a pump/debuff cancellation, the fix is engine-side (evaluate static conditions against pre-stage-8 power), not a different JSON shape - five shipped cards share this form.\n\nTOWER NOT AUTHORED, deliberately: 'Tower' is in printed_keywords and is engine-side (ability_keywords.check_tower, CR 8.4.13). Authoring a DB keyword is a defect; only the ability the Tower line GRANTS is authored.\n\nGRANTED TRIGGER: TRIGGERED ON_HIT with ability-level conditions, which the interpreter checks at resolution - exactly the timing the release notes describe. SELF_ATTACK_POWER_GTE (condition_types.py:487-497) reads 'amount' and tests LIVE combat.attack_power at the hit, so power pumped before the damage step qualifies (note 5's 'later it has 13{p} or more' case) and pumping after the hit cannot retroactively fire an already-resolved trigger (note 7). The live figure includes clause 1's +1, which is correct: 'has 13 or more {p}' counts every bonus. ATTACK_TARGET_IS_HERO (condition_types.py:1960+) reads no params.\n\nMILL ('destroy the top 3 cards of their deck'): composed exactly as the triage pass proposed. LOOK_AT (effect_types.py:3356-3415) reads zone/player/amount/into; DECK_TOP + OPPONENT + amount 3 stores up to the top 3 cards as a LIST under ref 'milled' without moving them. DESTROY_REF (effect_types.py:3417-3428) destroys each via canonical destroy() (effect_keywords.py:676+), which removes from the current zone - it searches by zone generically, so deck cards route to their owner's graveyard. A deck with fewer than 3 cards degrades safely (destroys what exists).\n\nNOTES 9-10 (milled cards trigger no 'when destroyed' effects and satisfy no destroyed-conditions): destroy() emits a DestroyEvent and records destroyed_this_turn (effect_keywords.py:703) but no leaves_arena for non-arena zones. Nothing here can fire a per-card destroy trigger from JSON's seat, but whether any generic listener could catch a deck-zone DestroyEvent is worth one behavioral assertion at test time - flagged, not resolvable differently in JSON.\n\nAdoption note: batch lists set SuperSlam - file under sup/ at adoption time."
+}

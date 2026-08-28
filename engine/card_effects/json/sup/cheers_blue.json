@@ -1,0 +1,20 @@
+{
+  "slug": "cheers_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "effects": [
+        {"type": "CROWD_CHEERS"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {"type": "DESTROY_SELF"}
+      ]
+    }
+  ],
+  "_comment": "'Go again / When this enters or leaves the arena, the crowd cheers you. / At the start of your turn, destroy this.'\n\nGoAgain and TheCrowdCheers are printed keywords (printed_keywords) firing from the card DB keywords field - deliberately NOT authored here.\n\nThe ENTER half of clause 1 is covered by the DB TheCrowdCheers keyword: build_keyword_triggers normalises it to 'the crowd cheers' and registers an on_play effect_crowd_cheers (triggers/triggers.py:376-383). Authoring TRIGGERED ON_ENTER_PLAY + CROWD_CHEERS on top would run effect_crowd_cheers a second time on every normal play - exactly the keyword-reimplemented/double-cheer defect recorded for heroic_pose_blue and shining_courage_red - so only the LEAVE half is authored in JSON. KNOWN GAP vs release note 1: entering the arena via another card's effect does not cheer (the DB keyword fires only at play). Not expressible without double-cheering the play path: loader.conditional_keywords() strips a printed keyword only for a SOURCE_IS_ATTACK-gated GAIN-keyword ability (loader.py:255-296), so TheCrowdCheers cannot be taken away to make room for a clean ON_ENTER_PLAY implementation.\n\nLeave half: TRIGGERED ON_LEAVE_PLAY + CROWD_CHEERS. ON_LEAVE_PLAY is dispatched to the leaving card itself off destroy()'s 'leaves_arena' event (_dsl_leaves_arena_listener, engine.py:1560-1576), so destruction by anyone - including this card's own start-of-turn self-destruct, matching release note 1's 'when it is destroyed' - cheers. Stated engine gap in that listener's own comment: banishing or returning to hand emits nothing, so those leave routes do not fire it, though release note 1 counts them ('destroyed, banished, etc.'). CROWD_CHEERS reads an optional 'player' defaulting to SELF = 'the crowd cheers YOU' (effect_types.py:2812-2823).\n\nClause 2: TRIGGERED START_OF_TURN + DESTROY_SELF. START_OF_TURN is dispatched only to the ACTIVE player's permanent zones, and _dsl_permanent_zones includes player.auras (engine.py:1452-1466), so this fires on the controller's own start phase and nowhere else - 'At the start of YOUR turn'. Release note 2's 'neither player receives priority during the start phase' is engine-side timing, nothing for the JSON to express. DESTROY_SELF resolves through canonical destroy() (effect_types.py:2470-2498), which is what emits the leaves_arena event the leave-half trigger above rides."
+}

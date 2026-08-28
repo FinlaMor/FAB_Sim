@@ -1,0 +1,24 @@
+{
+  "slug": "bark_obscenities_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 4,
+          "filter": [
+            {
+              "type": "TARGET_HERO_CLASS_IN",
+              "classes": [
+                "Guardian"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next attack that targets a Guardian hero this turn gets +4{p}. Go again.' MODIFY_NEXT_ATTACK queues a one-shot mod on the controller (effect_types.py:4511-4537); the engine consumes it on the first attack whose filter passes, compiling each filter spec via compile_condition against the live attack with state.combat set (engine.py:1175-1236) - so TARGET_HERO_CLASS_IN, which reads the defending hero's classes/talents off state.combat (condition_types.py:1489-1514), is evaluated at the right moment. This exact pairing is what this card's own .triage note specifies, with filter precedent in sup/mage_hunter_arrow_red.json and sea/walk_the_plank_blue.json. Go again is an UNCONDITIONAL printed keyword (its own sentence, not gated on anything), so it fires from the card-DB keywords field and is deliberately NOT authored here - authoring it would be a defect, and no SOURCE_IS_ATTACK conditional-keyword ability is needed since nothing gates it."
+}

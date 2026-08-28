@@ -1,0 +1,25 @@
+{
+  "slug": "aurora",
+  "activation_cost": 2,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "play",
+          "qualifier": "Lightning"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "embodiment_of_lightning",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'Once per Turn Instant - {r}{r}' is card-level activation_cost=2 + per_turn=1 (DSL-authoritative; not re-modelled as a PAY_RESOURCES cost). 'Activate this only if you've played a Lightning card this turn' is an ability-level EVENT_THIS_TURN gate on event=play qualifier=Lightning: play.py records one marker per talent on every hand play (_apply_play_card -> _record_turn_event), and _add_hero_dsl_activations checks ability conditions BEFORE offering the activation, so the ability is not even offered on a turn without a Lightning play - which matches 'Activate this only if'. CREATE_TOKEN reads token/amount/player/destination (handler confirmed); token definition already exists at json/tokens/embodiment_of_lightning.json, so no destination param is needed - zone routing derives from the template subtypes. 'Essence of Lightning' is in printed_keywords: it comes from the card DB and is deliberately NOT authored here."
+}

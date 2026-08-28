@@ -1,0 +1,13 @@
+{
+  "slug": "horns_of_the_despised",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "CROWD_BOO", "player": "SELF"}
+      ]
+    }
+  ],
+  "_comment": "'When this defends, the crowd boos you.' + printed **Blade Break**. Reviled Equipment - Head (SuperSlam).\n\nBLADE BREAK NOT AUTHORED: printed keyword (printed_keywords) - fires from the card DB keywords field (ability_keywords.blade_break); re-authoring it would be a defect.\n\nTRIGGER TIMING IS THE RELEASE NOTE: it 'triggers when it becomes a defending card on the combat chain' and 'the crowd boos you when the triggered effect resolves' - ON_DEFEND, dispatched by _dsl_defend_listener to the ACTUAL defending card object (engine.py:1640-1646), so the defending equipment copy hears its own trigger whether it defends from the arena or from hand. No ability-level conditions - the boo is unconditional once it defends.\n\nBOO: CROWD_BOO reads an optional 'player' defaulting to SELF = 'the crowd boos YOU' (effect_types.py:2803-2810, read this session), routed through effect_crowd_boos so boo-counting payoffs (IS_BOOED / has_been_booed / ON_BOO) see it - not a private flag.\n\nTheCrowdBoos IN printed_keywords IS INERT HERE (asymmetry with its cheer sibling, verified this session): build_keyword_triggers has a branch for 'the crowd cheers' that registers an unconditional on-play trigger (triggers/triggers.py:376-383) but NO 'the crowd boos' branch anywhere - so unlike helm_of_the_adored / fight_from_behind_*, this card gets no spurious play-time boo from the DB keyword, and the authored ON_DEFEND trigger is the whole implementation with nothing double-firing."
+}

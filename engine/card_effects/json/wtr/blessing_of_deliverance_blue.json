@@ -1,0 +1,24 @@
+{
+  "slug": "blessing_of_deliverance_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zone": "PITCH", "cost_gte": 3, "count_gte": 1}
+      ],
+      "effects": [
+        {"type": "DRAW", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_ACTION_PHASE",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {"type": "REVEAL_TOP_DECK", "amount": 1, "gain_life": 1, "cost_gte": 3}
+      ]
+    }
+  ],
+  "_comment": "'Go again / When Blessing of Deliverance enters the arena, if you have a card with cost 3 or greater in your pitch zone, draw a card. / At the beginning of your action phase, destroy Blessing of Deliverance then reveal the top card of your deck. Gain 1{h} for each card with cost 3 or greater revealed this way.'\n\nGo again is a printed keyword (printed_keywords) and fires from the card DB keywords field - deliberately NOT authored here; authoring it again would be a defect.\n\nClause 1: TRIGGERED ON_ENTER_PLAY (dispatched from Zone.add on arena entry, state.py:309 - an aura entering the permanents zone qualifies) + CARD_IN_ZONE + DRAW. NOTE the parameter spelling: the handler reads 'cost_gte' (condition_types.py:837), NOT the 'filter_cost_gte' named in DSL_REFERENCE.md's table and in the triage list - filter_cost_gte is unread and would silently drop the restriction, making the condition 'any card in pitch'. CARD_IN_ZONE resolves the zone via getattr(player, zone) so 'PITCH' reaches player.pitch; count_gte 1 makes it the printed 'if you have a card ...'. Ability-level conditions are checked at resolution, which is correct for a 'when ... if you have' trigger.\n\nClause 2: START_OF_ACTION_PHASE is dispatched to the ACTIVE player's permanent zones INCLUDING auras (engine.py:1514-1522, _dsl_permanent_zones at 1452-1459), which is exactly 'at the beginning of YOUR action phase'. Effects run in order: DESTROY_SELF first ('destroy ... THEN reveal'), then REVEAL_TOP_DECK. REVEAL_TOP_DECK's gain_life/cost_gte pair is the handler's hard-wired form of exactly this sentence (effect_types.py:2177-2204): reveals the top N, marks them public, and gains 1{h} per card with cost >= 3 via effect_gain_life - no separate GAIN/COUNT_REF plumbing needed (the triage list's COUNT_REF route would also work via 'into', but the built-in pair is simpler and proven). Revealed cards stay on top of the deck (the text says reveal only); if the aura survives to another turn it cannot - it destroyed itself - so no ordering concern about the revealed card being drawn first.\n\nBlue printing: reveal the top 1 card. The yellow printing (History Pack) reveals 2 and lives in its own file."
+}

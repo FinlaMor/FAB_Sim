@@ -1,0 +1,96 @@
+{
+  "slug": "beat_the_same_drum_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "EVENT_THIS_TURN",
+              "event": "create",
+              "qualifier": "agility"
+            }
+          ],
+          "then": [
+            {
+              "type": "CREATE_TOKEN",
+              "token": "agility",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "EVENT_THIS_TURN",
+              "event": "create",
+              "qualifier": "confidence"
+            }
+          ],
+          "then": [
+            {
+              "type": "CREATE_TOKEN",
+              "token": "confidence",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "EVENT_THIS_TURN",
+              "event": "create",
+              "qualifier": "might"
+            }
+          ],
+          "then": [
+            {
+              "type": "CREATE_TOKEN",
+              "token": "might",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "EVENT_THIS_TURN",
+              "event": "create",
+              "qualifier": "toughness"
+            }
+          ],
+          "then": [
+            {
+              "type": "CREATE_TOKEN",
+              "token": "toughness",
+              "amount": 1
+            }
+          ]
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "EVENT_THIS_TURN",
+              "event": "create",
+              "qualifier": "vigor"
+            }
+          ],
+          "then": [
+            {
+              "type": "CREATE_TOKEN",
+              "token": "vigor",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If you've controlled an Agility token this turn, create an Agility token, then repeat for Confidence, Might, Toughness, and Vigor.'\n\nGo again is NOT authored: it is an UNCONDITIONAL printed keyword (printed_keywords carries GoAgain and the text gates nothing on it), so it comes from the card DB - re-authoring a printed keyword is a defect. Note the contrast with Battlefield Blitz: because no GAIN GO_AGAIN ability exists here, loader.conditional_keywords() returns empty and the DB keyword stays unconditional, which is correct for this card.\n\nTHE GATE - why EVENT_THIS_TURN(create, <slug>) equals 'you've controlled an X token this turn': all five stat tokens destroy themselves at their controller's start of turn (agility/confidence/might/vigor trigger START_OF_TURN, toughness START_OF_ANY_TURN - read directly in json/tokens/*.json), so a token created on an earlier turn cannot survive into the action phase of this one. In every reachable state, 'controlled an X at some point this turn' therefore collapses to 'created an X this turn'. create_token writes did_this_turn:create:<slug> per token against the creating player, alongside subtype/type qualifiers (effect_keywords.py:411-421), and EVENT_THIS_TURN with qualifier reads exactly that marker for SELF (condition_types.py:1042-1084). This satisfies the release note 'regardless of if you currently control a token with that name' for free - the gate is creation-based, not current-state.\n\nRESIDUAL GAP, stated plainly: the printed condition also covers GAINING control of a matching token this turn without creating it. No condition reads that (CONTROLS_TOKEN_TYPE was considered as the current-control half of an OR and rejected on two counts: it answers only the present, and it scans permanents plus equipment slots while these Aura-subtype tokens live in the auras zone - condition_types.py:1728-1742 - so it could never see them). No control-change effect touches these tokens anywhere in the corpus, so the gap is unreachable today; if one is ever added, this gate needs revisiting.\n\nStructure: five independent CONDITIONAL_EFFECTs in printed order (Agility, Confidence, Might, Toughness, Vigor), each with its own gate - 'then repeat' makes each repetition self-gated, and effects in one ability resolve in order. The release note that replacement effects apply to EACH token creation holds automatically: each CREATE_TOKEN routes through the canonical create_token, where replacements intercept. No priority between the creations needs authoring - sequential resolution within one ability is the engine's behaviour.\n\nAll types/params verified against handlers: CONDITIONAL_EFFECT reads when/then (effect_types.py:3633-3660; 'when', never 'conditions'), CREATE_TOKEN reads token/amount (1890-1961), tokens exist as json/tokens/{agility,confidence,might,toughness,vigor}.json with slug-matching filenames. No known gaps beyond the control-change clause above."
+}

@@ -1,0 +1,21 @@
+{
+  "slug": "heart_of_fyendal_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PITCH",
+      "conditions": [
+        {"type": "HEALTH_LT_OPP"}
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "LIFE_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Legendary**\\n\\nWhen you pitch Heart of Fyendal, if you have less {h} than an opposing hero, gain 1{h}.' Generic Resource - Gem (promo printing; the slug carries the blue suffix though the name does not - file per setIdentifiers at adoption).\n\nLEGENDARY NOT AUTHORED: printed keyword, deck-construction/DB-carried; the triage note concurs ('Legendary fires from the card DB keywords field').\n\nTRIGGER: ON_PITCH is dispatched to the PITCHED CARD ITSELF - engine._dsl_pitch_listener (engine.py:1604-1609) takes event.data['card'] and dispatches ON_PITCH keyed on that card's slug - so this fires exactly when Heart of Fyendal is pitched, not when other cards are. Shipped precedents: blood_of_the_dracai_red, riches_of_tropal_dhani_yellow, arknight_shard_blue.\n\nCONDITION TIMING: ability-level conditions are checked at triggered-layer resolution (interpreter._run_ability), which matches the printed 'when you pitch ..., if you have less {h} ...' - one check, at that moment. HEALTH_LT_OPP (condition_types.py:775-780) tests controller.life < opponent.life; 'an opposing hero' is multiplayer phrasing and this is its 2-player reduction, correct in every game this engine can run (same disclosure as fight_from_behind / comeback_kid).\n\nEFFECT: GAIN asset LIFE_POINTS amount 1 routes effect_gain_life (effect_types.py:4890-4896) - CR 1.13.1 asset spelling, not GAIN_LIFE.",
+  "_source_batch": "_batch3.json"
+}

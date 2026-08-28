@@ -1,0 +1,17 @@
+{
+  "slug": "earth_form_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Embodiment of Earth"
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits, create an Embodiment of Earth token.' Earth Action - Attack (Rosetta).\n\nTRIGGER: TRIGGERED + ON_HIT is the standard hit trigger dispatched to the attack card itself; an attack ACTION card is not an ATTACK_REACTION, so the ability lives on the card's own ON_HIT. No conditions - the token is created on every hit, unconditionally.\n\nTOKEN: CREATE_TOKEN reads 'token'/'token_name'/'token_type'/'token_slug' interchangeably (effect_types.py:1942-1948) and create_token slugifies the display name, so 'Embodiment of Earth' -> embodiment_of_earth. The display-name spelling matches the SHIPPED pen/oath_of_oak_yellow.json, pen/laden_with_earth_red.json and flr/sigil_of_sanctuary_blue.json, which proves it compiles and routes. json/tokens/embodiment_of_earth.json already exists; no destination override because default zone routing (from the token template's subtypes) is correct for an Embodiment ally token. count defaults to 1 ('an ... token') and player defaults to SELF (the controller).\n\nNo printed keywords on this card, so nothing was deliberately left unauthored. Sibling colours earth_form_red/blue carry identical text and sit in other batches - same shape applies to them. No gaps found in this card's text.",
+  "_source_batch": "_batch3.json"
+}

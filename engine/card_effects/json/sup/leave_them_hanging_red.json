@@ -1,0 +1,55 @@
+{
+ "slug": "leave_them_hanging_red",
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_ENTER_PLAY",
+   "target": {
+    "filter": [
+     {
+      "type": "CARD_TYPE_IN",
+      "types": [
+       "Hero"
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "type": "INTIMIDATE"
+    }
+   ]
+  },
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_LEAVE_PLAY",
+   "target": {
+    "filter": [
+     {
+      "type": "CARD_TYPE_IN",
+      "types": [
+       "Hero"
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "type": "INTIMIDATE"
+    }
+   ]
+  },
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_LEAVE_PLAY",
+   "effects": [
+    {
+     "type": "MODIFY_NEXT_ATTACK",
+     "mod": "add",
+     "amount": 4
+    }
+   ]
+  }
+ ],
+ "_comment": "Suspense and Intimidate are printed keywords (printed_keywords) and fire from the card DB keywords field - NOT authored here. Two separate TRIGGERED abilities on ON_LEAVE_PLAY: one for the intimidate (targeted, per release note 1), one for the +4{p} pump (MODIFY_NEXT_ATTACK, not MODIFY_ATTACK, because no current attack exists when an aura leaves). ON_ENTER_PLAY and ON_LEAVE_PLAY are dispatched from Zone.add and destroy()'s leaves_arena event respectively. Known engine gap: leaving by BANISH or return-to-hand emits no leaves_arena event, so those routes don't fire the leave trigger today."
+}

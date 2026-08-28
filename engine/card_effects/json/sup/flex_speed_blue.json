@@ -1,0 +1,16 @@
+{
+  "slug": "flex_speed_blue",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "SELF_ATTACK_POWER_GTE", "amount": 6}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'If this has 6 or more {p}, it gets go again.'\n\nThe release notes settle the ability type: 'a conditional continuous effect that is always checking' -- a WHILE_STATIC, re-evaluated on every RECALC_ATTACK_POWER dispatch, not a triggered ability. Go again is paid at the Resolution Step (CR 8.3.5b), so the card must HAVE the keyword at that moment; a static that flips on the instant power crosses 6 gives exactly the notes' case ('less than 6{p} and then has 6 or more {p} before the resolution step'). The no-retroactive-action-point note needs nothing extra -- it is inherent to when go again is checked, not a second behaviour to model.\n\nTHE PRINTED KEYWORD IS THE REAL TRAP: the card DB lists GoAgain unconditionally, so without an ability of exactly this shape the card would have go again at ANY power -- strictly stronger than printed. loader.conditional_keywords strips the printed keyword only for an ability gated on SOURCE_IS_ATTACK that grants it, which is why SOURCE_IS_ATTACK sits in the condition list even though SELF_ATTACK_POWER_GTE alone already reads as 'this attack'. Both conditions are needed: SOURCE_IS_ATTACK makes the keyword conditional; SELF_ATTACK_POWER_GTE (condition_types.py:487-497, reads param 'amount', tests live combat.attack_power) is the actual gate.\n\nShape copied from aggressive_pounce_yellow -- same sentence family ('if <condition>, this gets go again'), different condition -- which follows vigor_rush_blue; a dozen cards use this exact pattern."
+}

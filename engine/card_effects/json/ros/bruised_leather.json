@@ -1,0 +1,19 @@
+{
+  "slug": "bruised_leather",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {"type": "EVENT_THIS_TURN", "event": "damage_taken", "qualifier": "hero", "player": "SELF"}
+      ],
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "PREVENT_DAMAGE", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Instant - Destroy this: Prevent the next 1 damage that would be dealt to you this turn. Activate this only if you have been dealt damage this turn.'\n\nWIRING: INSTANT maps to ON_ACTIVATE; play._add_hero_dsl_activations scans player.chest among its sources and offers INSTANT at any priority window, checking ability conditions BEFORE offering (play.py:306-309), so 'Activate this only if...' gates the offer itself rather than fizzling at resolution. The ability-level cost array compiles to AbilityDef.costs; DESTROY_SELF is a real cost type (cost_types.py:43-51) whose pay routes through canonical destroy(), which resolves the chest slot zone. activation_cost 0 is the CARD-LEVEL field (the loader reads it only there); the printed text has no {r}, so 0 is also what the printed-text heuristic would find.\n\nGATE SPELLING: EVENT_THIS_TURN event=damage_taken qualifier=hero. 'damage' is recorded against the DEALING player, 'damage_taken' against the victim's controller (effect_keywords.py:503-519 - asking 'damage' here would give the attacker's answer to the defender's question); _record_turn_event writes the bare marker plus one per qualifier, and the kind qualifier is 'hero' when the target was a hero, so the qualified form matches exactly. 'You have been dealt damage' means your hero took it - ally damage does not count - hence qualifier=hero. Precedent: shipped aua/runaways.json gates its identical restriction on this marker.\n\nKNOWN GAP, fails closed (same class disclosed on .drafts/blood_drop_brocade.json): those markers are written ONLY by effect_keywords.deal_damage (ability/effect damage). Combat attack damage is applied directly in engine._resolve_damage (engine.py:2085-2142) and records no turn marker - so being ATTACKED, the principal way a hero is dealt damage, does not open the activation window; only effect damage does. Closing it needs a generic engine-side _record_turn_event(state, defender_id, 'damage_taken', ...) in _resolve_damage - engine files are out of scope for a draft, so this ships the closest expressible behaviour. It cannot misfire in the other direction: the gate only ever blocks.\n\nEFFECT: PREVENT_DAMAGE amount 1 registers a one-shot PREVENTION replacement on the controller (effect_types.py:5254+) that absorbs up to 1 of the next damage event targeting them and is then consumed. Unlike the gate, the shield DOES cover combat damage - apply_replacements runs inside _resolve_damage (engine.py:2112-2114) with target_player_id set. No damage_type authored: the text says plain 'damage'. Shared imprecision documented across many siblings (moon_chakra_red, well_grounded reviews): an unused shield has no end-of-turn expiry; here the exposure is small since the shield can only be bought after damage was already taken that turn.\n\nNo printed keywords, so no conditional-keyword machinery applies."
+}

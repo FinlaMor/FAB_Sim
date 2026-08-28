@@ -1,0 +1,44 @@
+{
+  "slug": "flash_of_brilliance",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Discard a Lightning card?",
+          "conditions": [
+            {"type": "CARD_IN_ZONE", "zone": "hand", "talent": "Lightning", "count_gte": 1}
+          ],
+          "effects": [
+            {
+              "type": "DISCARD",
+              "player": "SELF",
+              "amount": 1,
+              "filter": [
+                {"type": "CARD_IS_CLASS", "classes": ["Lightning"]}
+              ]
+            },
+            {
+              "type": "RETURN_TO_HAND",
+              "to_owner": true,
+              "target": {
+                "controller": "SELF",
+                "zone": "ARENA",
+                "amount": 1,
+                "filter": [
+                  {"type": "CARD_IS_TYPE", "subtypes": ["Aura"]}
+                ]
+              },
+              "conditions": [
+                {"type": "REF_EXISTS", "ref": "discarded"}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends, you may discard a Lightning card. If you do, return an aura you control to its owner's hand.' Lightning Equipment - Head (batch set label AuroraBlitzDeck - pick the json/<set>/ folder from setIdentifiers at adoption).\n\nBLADE BREAK DELIBERATELY NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field; re-authoring a printed keyword is a defect.\n\nTRIGGER: TRIGGERED + ON_DEFEND (trigger_types.py maps the name; engine._dsl_defend_listener dispatches to the ACTUAL DEFENDING CARD OBJECT, so the defending equipment hears its own defend - same shape as .drafts/dig_in_yellow and disperse). Ability-level conditions would be checked at resolution; none needed.\n\nRELEASE-NOTE TIMING (all choices at resolution, no priority between them): one MAY block whose sub-effects resolve sequentially inside a single ability execution. MAY (effect_types.py:3788+) reads prompt/effects/conditions; its own conditions key is popped by the loader into an effect-level gate, so the prompt is OFFERED ONLY WHEN a Lightning card is in hand - CARD_IN_ZONE reads zone/talent/count_gte (condition_types.py:844+, talent tested against classes+talents+colour via _card_traits; Lightning is a TALENT, so a class_filter spelling would match nothing).\n\n'IF YOU DO' CHAINING: DISCARD (effect_types.py:1251-1286) stores the discarded card under ref 'discarded' ONLY when something was actually discarded (:1282-1285), and RETURN_TO_HAND carries an effect-level conditions gate [{REF_EXISTS ref discarded}] (condition_types.py:2212-2218) so declining-with-empty-result skips the return. Refs are scoped to ONE ability execution (context.py push_refs/pop_refs driven by run_ability), so no stale ref from an earlier ability can false-positive the gate. Accepting the prompt with zero eligible cards is impossible anyway because of the MAY-level gate - belt and braces.\n\nLIGHTNING FILTER SPELLING: DISCARD's 'filter' array takes ordinary DSL condition specs evaluated PER CANDIDATE HAND CARD (_hand_card_filter, effect_types.py:498-565). CARD_IS_CLASS (condition_types.py:1286-1307) reads 'classes'/talent keys and tests them against classes+talents+colour - deliberate choice over the cheaper class_filter key, which reads c.classes only and can never match a talent.\n\nAURA RETURN: RETURN_TO_HAND (effect_types.py:1501-1555) reads ref/target/to_owner/zone. Canonical object-target dict {controller SELF, zone ARENA, amount 1, filter CARD_IS_TYPE [Aura]}: ARENA resolves to player.permanents.cards (_object_zone_cards, :461-464) and player.auras is a SubZoneView over that SAME parent zone (state.py:869, add() delegates), so both played auras and aura tokens are found; CARD_IS_TYPE unions types AND subtypes (condition_types.py:1309-1325) so it matches however the DB stores Aura. amount 1 makes the handler ASK WHICH AURA when several are controlled (_ask_player) - release notes 1-2 verbatim (choose the aura when the trigger resolves; no priority between the choices). to_owner: true is release note 3 - an aura owned by the OPPONENT returns to THEIR hand (shipped spelling: hvy/send_packing_yellow.json). Controlling no aura -> empty pool -> nothing happens (fails closed).\n\nRESIDUAL RISK, DISCLOSED NOT ASSERTED: release note 4 says a TOKEN aura returned to hand ceases to exist instead. put_object moves it to the hand zone; whether the CR 3.0.12a token-cease-to-exist rule fires on HAND entry (vs the graveyard/banished routing I could confirm) is engine-side behaviour I did not verify. If it does not, a returned token aura would sit in hand as a card - a reviewer should drive one game to check before adoption."
+}

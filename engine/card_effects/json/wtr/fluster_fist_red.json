@@ -1,0 +1,16 @@
+{
+  "slug": "fluster_fist_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "LAST_CHAIN_ATTACK", "name": "Open the Center"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": {"type": "COUNT_CHAIN_LINKS", "hit": true}}
+      ]
+    }
+  ],
+  "_comment": "'Combo - If Open the Center was the last attack this combat chain, Fluster Fist gains +1{p} for each attack that has hit this combat chain.' Ninja Action - Attack.\n\nCOMBO KEYWORD NOT AUTHORED: printed_keywords carries Combo - it fires from the card DB keywords field; re-authoring it would be a defect. The authored part is the conditional pump clause only.\n\nTHE GATE IS LAST_CHAIN_ATTACK, never COMBO: COMBO is a different, older condition that reads a names LIST via combo_check - authored with 'name' it would reach that handler, find no 'names', and gate on an empty list, never firing (DSL_REFERENCE names this trap explicitly). LAST_CHAIN_ATTACK (condition_types.py:1619-1676) reads chain_links[-1], which during this attack IS the previous link (a link appends after its damage resolves), and matches 'Open the Center' against the slug with any colour suffix stripped plus the resolved card name, so it spans every open_the_center printing. With no previous link every form is false - as printed.\n\nPUMP SHAPE: TRIGGERED ON_ATTACK + MODIFY_ATTACK is the mandated shape for an Action - Attack card (DSL_REFERENCE; ATTACK_REACTION would never fire on one). ON_ATTACK is dispatched to combat.attack_card once this card IS the attack (_dsl_attacking_listener), and ability conditions evaluate at that resolution.\n\nAMOUNT: MODIFY_ATTACK resolves its amount through _resolve_amount (effect_types.py:4129), so the expression dict works. COUNT_CHAIN_LINKS (effect_types.py:205-224) counts chain links controlled by this card's controller filtered by hit:true - 'each attack that has hit this combat chain'. On your own combat chain every link's attacker_id is you, so the controller filter is invisible here. At ON_ATTACK time the current attack is not yet a link (links append after damage resolves), so Fluster Fist cannot count itself; Open the Center counts iff it hit. A total of 0 (+0{p}) is possible when Open the Center was last but missed - which matches the printed 'for each attack that has hit'.\n\nONE-SHOT: the amount is fixed at resolution and recorded on combat.power_mods (effect_types.py:4145-4151) so the buff survives later recalculations; no later link can change it mid-attack because links only append after this one closes.\n\nNo gaps; every clause expressible."
+}

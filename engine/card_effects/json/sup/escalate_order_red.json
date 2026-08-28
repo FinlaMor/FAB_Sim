@@ -1,0 +1,16 @@
+{
+  "slug": "escalate_order_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "CONTROLS_TOKEN_TYPE", "token": "toughness", "amount": 1}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "toughness", "amount": 3}
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, if you control a Toughness token, create 3 more.' Revered Action - Attack.\n\nTRIGGER: TRIGGERED + ON_ATTACK; engine._dsl_attacking_listener dispatches ON_ATTACK with card=combat.attack_card (engine.py:1524-1529), so the Action - Attack card hears its own attack becoming one - which is exactly official release note 1's timing ('triggers when it resolves on the stack and becomes an attacking card').\n\nCONDITION TIMING: ability-level conditions are checked at RESOLUTION (interpreter._run_ability), matching the note's 'whether or not you control a Toughness token is checked when this triggered effect resolves' - so a token created between the attack starting and the trigger resolving still counts.\n\nCONTROLS_TOKEN_TYPE (condition_types.py:1725-1747) reads token/amount; the slug equality branch ('toughness' == the token's slug) matches. Toughness tokens are Aura-subtype templates that create_token routes to controller.auras (effect_keywords.py:377-379), but auras is a SubZoneView whose add() delegates to the parent permanents Zone (state.py SubZoneView.add -> parent.add), so the tokens physically sit in player.permanents.cards and the condition's scan DOES see them - the beat_the_same_drum triage comment claiming otherwise predates the SubZoneView delegation and is wrong on this point.\n\nCREATE_TOKEN (effect_types.py:1942-1952) reads token/count|amount; amount 3 for 'create 3 more'. json/tokens/toughness.json already exists (.review/toughness.json status ok).\n\nprinted_keywords is empty, so no conditional-keyword machinery applies."
+}
