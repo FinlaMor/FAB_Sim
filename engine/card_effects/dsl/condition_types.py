@@ -1306,15 +1306,22 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return any(w in have for w in _w)
         return _is_class
 
-    if ctype in ("CARD_IS_TYPE", "SELF_IS_TYPE", "SUBTYPE_IN"):
+    if ctype in ("CARD_IS_TYPE", "SELF_IS_TYPE", "SUBTYPE_IN", "CARD_TYPE_IN"):
         # Types AND subtypes: "Attack" is a SUBTYPE while "Action" is a type, and
         # a card naming either means the same thing by it.
         # Plural spellings too (SUBTYPE_IN passes `subtypes`). Reading only the
         # singular left `want` empty, and an empty want returns False for every
         # card — a filter matching NOTHING rather than the named type.
+        #
+        # CARD_TYPE_IN + `types` is the spelling three separately-authored
+        # cards reached for, by analogy with ATTACK_TYPE_IN and WEAPON_SUBTYPE_IN
+        # which really do exist. It is the natural name, so it is an alias here
+        # rather than a correction in three card files: the next author will
+        # reach for the same word, and an unknown type does not fail quietly —
+        # the whole card refuses to load.
         wants = [_norm(v) for v in _as_list(
             params, "card_type", "type_name", "subtype", "subtypes",
-            "card_types", "filter_types") if v]
+            "card_types", "filter_types", "types") if v]
 
         def _is_type(c, e, s, _w=wants):
             if not _w:
