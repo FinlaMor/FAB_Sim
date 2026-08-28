@@ -257,6 +257,14 @@ def build_prompt(ref, slug, ttext, text, kws, want=None):
         f"Printed keywords: {kws}",
         f"Text:\n{text}",
     ]
+    if ORACLE and want:
+        # The real draft prompt carries primitives_the_triage_pass_identified.
+        # This stands in for a PERFECT triage pass, so it is an upper bound, not
+        # a fair arm -- it measures how much of the pipeline's quality is triage
+        # rather than drafting.
+        parts.append("\nA triage pass suggests these DSL types are relevant "
+                     "(it may be incomplete or wrong):")
+        parts.append("  " + ", ".join(sorted(want)))
     if WITH_NOTES and notes_for(slug):
         parts.append("\nOfficial release notes for this card:")
         parts.extend(f"- {n}" for n in notes_for(slug))
