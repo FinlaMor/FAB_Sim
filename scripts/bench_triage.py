@@ -89,6 +89,7 @@ SHOTS = (int(sys.argv[sys.argv.index("--shots") + 1])
 # shifts the window so the same k can be tried with different cards.
 SHOT_OFFSET = (int(sys.argv[sys.argv.index("--shot-offset") + 1])
                if "--shot-offset" in sys.argv else 0)
+DIVERSE = "--diverse" in sys.argv
 DESCRIBED = "--described" in sys.argv
 
 _CR = (ROOT / "docs" / "ref" / "en-fab-cr-comprehensive-rules.txt").read_text(
@@ -198,8 +199,25 @@ def examples(n_test, k=3, seed=11):
     reproducing.
     """
     pool = _pool(seed)
-    start = n_test + SHOT_OFFSET
-    return pool[start:start + k]
+    candidates = pool[n_test:]
+    if not DIVERSE:
+        start = SHOT_OFFSET
+        return candidates[start:start + k]
+    # Choose for COVERAGE rather than position: greedily take the card that
+    # demonstrates the most types not yet demonstrated. Example choice is worth
+    # about 4 points at a fixed k, so it is the knob that matters -- but
+    # "diverse" is a guess at WHY one set beats another, and it is measured
+    # here rather than assumed.
+    chosen, shown = [], set()
+    remaining = list(candidates)
+    while remaining and len(chosen) < k:
+        best = max(remaining, key=lambda c: len(c[3] - shown))
+        if not (best[3] - shown) and chosen:
+            break
+        chosen.append(best)
+        shown |= best[3]
+        remaining.remove(best)
+    return chosen
 
 
 def _pool(seed=11):
