@@ -63,10 +63,15 @@ def _src(slug, pid=1):
 def _combat(st, slug, power=None):
     """Set up a real attack with `slug` as the attacking card.
 
-    WHILE_STATIC is not dispatched by run_ability: the engine applies it during
-    _recalculate_attack_power, which is what emits recalculate_attack_power for
-    statics to react to. Calling run_ability on one measures nothing, which is
-    how three correct cards first looked broken here.
+    CORRECTION. An earlier version of this docstring said WHILE_STATIC "is not
+    dispatched by run_ability". That is wrong -- run_ability applies it fine.
+    The actual reason three correct cards looked broken here is the IDENTITY
+    trap: SOURCE_IS_ATTACK is `combat.attack_card is c`, and the test built
+    combat from one deepcopy while passing the ability a second. Equal, not
+    identical, so the condition was false and the static did nothing.
+
+    Hence this returns the card it installed, and the tests use THAT object.
+    conftest.assert_source_is_the_attack turns the mistake into a loud failure.
     """
     attack = copy.deepcopy(DB.get(slug))
     attack.owner = attack.controller = 1

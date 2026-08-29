@@ -180,3 +180,96 @@ def _card_json(root, name):
             if not any(part.startswith(".") for part in p.parts)]
     assert hits, f"no implemented card file for {name}"
     return hits[0]
+
+
+# --- card-behaviour helpers --------------------------------------------------
+#
+# Three separate false alarms in this suite came from tests rolling their own
+# versions of these and getting them subtly wrong. Each accused a CORRECT card:
+#
+#   1. `SOURCE_IS_ATTACK` compares IDENTITY -- `combat.attack_card is c`. A test
+#      that builds the attack from one deepcopy and passes the ability a second
+#      deepcopy has a card that is equal but not identical, so the condition is
+#      false and the static silently does nothing. That looks exactly like a
+#      missing buff.
+#   2. `auras` is a VIEW over the same objects `permanents` holds, so summing
+#      the zones counts every aura token twice. Three tokens looked like six.
+#   3. `discard()` decides whose hand a card left by reading the DISCARDED
+#      CARD's owner, so a filler card created without one resolves to player 0
+#      and raises KeyError deep in the engine.
+#
+# Use these rather than reimplementing them.
+
+def attack_with(state, card, power=None):
+    """Make `card` the active attack and return THE OBJECT now in combat.
+
+    Always use the returned card as the ability's source. Passing a different
+    copy is the identity trap above.
+    """
+    if power is None:
+        power = getattr(card, "base_power", None) or 0
+    state.combat = CombatState(attacker_id=getattr(card, "controller", 1) or 1,
+                               link_id=1, attack_power=power,
+                               attack_card=card, keywords=[])
+    state.combat.base_attack_power = power
+    return card
+
+
+def recalculate_attack(state):
+    """Run the real attack-power path and return the resulting power."""
+    import engine.engine as _E
+    _E._recalculate_attack_power(state)
+    return state.combat.attack_power
+
+
+def assert_source_is_the_attack(ability, card, state):
+    """Fail LOUDLY when an ability gated on SOURCE_IS_ATTACK is handed a card
+    that is not the one in combat.
+
+    Without this the condition is merely false and the test reports a working
+    card as broken -- which has now happened more than once.
+    """
+    conds = [str(getattr(c, "condition_type", "") or "").upper()
+             for c in (getattr(ability, "conditions", None) or [])]
+    if "SOURCE_IS_ATTACK" not in conds:
+        return
+    actual = getattr(getattr(state, "combat", None), "attack_card", None)
+    assert actual is card, (
+        "this ability is gated on SOURCE_IS_ATTACK, which compares IDENTITY: "
+        "the source card must BE state.combat.attack_card, not an equal copy. "
+        "Use `card = attack_with(state, card)` and pass that same object.")
+
+
+def tokens_controlled(state, pid, name=None):
+    """Tokens the player controls, counted ONCE.
+
+    `auras` overlaps `permanents`, so summing zones double-counts.
+    """
+    seen, out = set(), []
+    player = state.players[pid]
+    for attr in ("permanents", "tokens", "arena", "auras"):
+        zone = getattr(player, attr, None)
+        if zone is None:
+            continue
+        for c in list(getattr(zone, "cards", zone) or []):
+            if id(c) in seen:
+                continue
+            seen.add(id(c))
+            out.append(c)
+    if name is None:
+        return out
+    return [c for c in out if name in str(getattr(c, "slug", "")).lower()]
+
+
+def owned_card(pid, slug="filler", name=None, types=None, **kwargs):
+    """A card that KNOWS WHO OWNS IT.
+
+    Several engine paths resolve a player from the card rather than from an
+    argument -- discard() reads the discarded card's owner -- so an ownerless
+    card resolves to player 0.
+    """
+    card = _make_card(slug=slug, name=name or slug,
+                      types=types if types is not None else ["Action"],
+                      **kwargs)
+    card.owner = card.controller = pid
+    return card
