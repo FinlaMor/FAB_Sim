@@ -56,6 +56,20 @@ WITH_CR = "--cr" in sys.argv
 # is triage rather than drafting.
 ORACLE = "--oracle-primitives" in sys.argv
 THINK = "--think" in sys.argv
+# Few-shot is the ONLY intervention that improved TRIAGE (+11 recall,
+# F1 39 -> 49) where a bigger model, the release notes, the comprehensive
+# rules and parameter signatures were each worth zero. The drafter never
+# got the same arm, and the drafter is where the JSON is actually written.
+FEWSHOT = "--fewshot" in sys.argv
+SHOTS = (int(sys.argv[sys.argv.index("--shots") + 1])
+         if "--shots" in sys.argv else 2)
+# Vary WHICH examples, not just how many. A non-overlapping range once
+# looked like proof that example COUNT mattered for triage and turned out
+# to be one unhelpful example. Ranges prove two conditions differ, never
+# why, so the example set has to be varied before any effect is
+# attributed to few-shot as a category.
+SHOT_OFFSET = (int(sys.argv[sys.argv.index("--shot-offset") + 1])
+               if "--shot-offset" in sys.argv else 0)
 
 _RNRAW = json.loads(
     (REPO / "card_data" / "release_notes.json").read_text(encoding="utf-8"))
@@ -175,7 +189,7 @@ def types_in(node, out=None):
     return out
 
 
-def load_cards(n, seed=7):
+def _pool(seed=7):
     idx = json.loads(
         (REPO / "card_data" / "slug_index.json").read_text(encoding="utf-8"))["by_slug"]
     pool = []
@@ -199,7 +213,33 @@ def load_cards(n, seed=7):
         pool.append((raw["slug"], e.get("typeText") or "", text, want,
                      e.get("keywords") or [], details_in(raw.get("abilities"))))
     random.Random(seed).shuffle(pool)
-    return pool[:n]
+    return pool
+
+
+def load_cards(n, seed=7):
+    return _pool(seed)[:n]
+
+
+def draft_examples(n_test, k=2, seed=7):
+    """Whole worked implementations, drawn from BEYOND the scored slice.
+
+    Triage examples showed card text -> a list of type names. The drafter has
+    to produce a JSON OBJECT, so its examples are the accepted implementations
+    in full. Taken from indices n_test.. of the same shuffled pool, so they are
+    real reviewed cards and provably disjoint from the ones being scored.
+    """
+    out = []
+    start = n_test + SHOT_OFFSET
+    for slug, ttext, text, want, kws, want_d in _pool(seed)[start:start + k]:
+        path = [q for q in JSON_ROOT.rglob(f"{slug}.json")
+                if not any(x.startswith(".") for x in q.parts)]
+        if not path:
+            continue
+        raw = json.loads(path[0].read_text(encoding="utf-8"))
+        out.append((slug, ttext, text, kws,
+                    json.dumps({"slug": slug, "abilities": raw["abilities"]},
+                               indent=1)))
+    return out
 
 
 def ask(model, prompt, ctx, timeout=3600):
@@ -240,7 +280,7 @@ def extract(text):
     return None
 
 
-def build_prompt(ref, slug, ttext, text, kws, want=None):
+def build_prompt(ref, slug, ttext, text, kws, want=None, shots=()):
     parts = [
         "You author Flesh and Blood cards as JSON for a rules engine.",
         "The complete schema follows. Use ONLY types it defines.",
@@ -257,6 +297,14 @@ def build_prompt(ref, slug, ttext, text, kws, want=None):
         f"Printed keywords: {kws}",
         f"Text:\n{text}",
     ]
+    if FEWSHOT and shots:
+        block = ["", "Worked examples of accepted implementations:"]
+        for e_slug, e_tt, e_text, e_kw, e_json in shots:
+            block.append(f"Card: {e_slug} ({e_tt})")
+            block.append("Text: " + " ".join(e_text.split())[:160])
+            block.append(e_json)
+            block.append("")
+        parts[4:4] = block
     if ORACLE and want:
         # The real draft prompt carries primitives_the_triage_pass_identified.
         # This stands in for a PERFECT triage pass, so it is an upper bound, not
@@ -295,6 +343,7 @@ def main():
 
     ref = (JSON_ROOT / "DSL_REFERENCE.md").read_text(encoding="utf-8")
     cards = load_cards(n)
+    shots = draft_examples(n, SHOTS) if FEWSHOT else ()
     print(f"{len(cards)} real cards | ctx={ctx} | notes={WITH_NOTES} "
           f"cr={WITH_CR} think={THINK}\n")
 
@@ -303,7 +352,7 @@ def main():
         recalls, drecalls, exact, usable, secs = [], [], 0, 0, 0.0
         print(f"--- {m} ---")
         for slug, ttext, text, want, kws, want_d in cards:
-            prompt = build_prompt(ref, slug, ttext, text, kws, want)
+            prompt = build_prompt(ref, slug, ttext, text, kws, want, shots)
             t0 = time.time()
             try:
                 out = ask(m, prompt, ctx)
