@@ -2,15 +2,19 @@
   "slug": "blow_for_a_blow_red",
   "abilities": [
     {
-      "ability_type": "PLAY",
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "HEALTH_LT_OPP"
+        }
+      ],
       "effects": [
         {
-          "type": "GO_AGAIN",
-          "conditions": [
-            {
-              "type": "HEALTH_LT_OPP"
-            }
-          ]
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
         }
       ]
     },
@@ -24,5 +28,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'When this is played, if you have less {h} than an opposing hero, it gets go again.' Same shape and same fix as scar_for_a_scar_red: the printed GoAgain applied unconditionally, so the health gate never took it away. The ON_HIT clause is untouched."
 }
