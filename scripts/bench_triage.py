@@ -82,6 +82,13 @@ OLLAMA = "http://localhost:11434/api/generate"
 
 WITH_CR = "--cr" in sys.argv
 FEWSHOT = "--fewshot" in sys.argv
+SHOTS = (int(sys.argv[sys.argv.index("--shots") + 1])
+         if "--shots" in sys.argv else 3)
+# Which examples, not just how many: k=2 beat k=3 with non-overlapping
+# ranges, which is not what a "more context helps" story predicts. This
+# shifts the window so the same k can be tried with different cards.
+SHOT_OFFSET = (int(sys.argv[sys.argv.index("--shot-offset") + 1])
+               if "--shot-offset" in sys.argv else 0)
 DESCRIBED = "--described" in sys.argv
 
 _CR = (ROOT / "docs" / "ref" / "en-fab-cr-comprehensive-rules.txt").read_text(
@@ -191,7 +198,8 @@ def examples(n_test, k=3, seed=11):
     reproducing.
     """
     pool = _pool(seed)
-    return pool[n_test:n_test + k]
+    start = n_test + SHOT_OFFSET
+    return pool[start:start + k]
 
 
 def _pool(seed=11):
@@ -287,13 +295,17 @@ def main():
         i = argv.index("--n")
         n = int(argv[i + 1])
         skip.add(argv[i + 1])
+    if "--shots" in argv:
+        skip.add(argv[argv.index("--shots") + 1])
+    if "--shot-offset" in argv:
+        skip.add(argv[argv.index("--shot-offset") + 1])
     models = [a for a in argv if not a.startswith("--") and a not in skip]
 
     cat = catalogue(DESCRIBED)
     # names only, for scoring -- the described catalogue carries params too
     known = {c.split('(')[0] for c in cat}
     cards = load_cards(n)
-    shots = examples(n) if FEWSHOT else ()
+    shots = examples(n, SHOTS) if FEWSHOT else ()
     print(f"{len(cards)} real cards | catalogue {len(cat)} types | cr={WITH_CR}\n")
 
     for m in models:
