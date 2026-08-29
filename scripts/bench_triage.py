@@ -81,6 +81,7 @@ JSON_ROOT = ROOT / "engine" / "card_effects" / "json"
 OLLAMA = "http://localhost:11434/api/generate"
 
 WITH_CR = "--cr" in sys.argv
+FEWSHOT = "--fewshot" in sys.argv
 DESCRIBED = "--described" in sys.argv
 
 _CR = (ROOT / "docs" / "ref" / "en-fab-cr-comprehensive-rules.txt").read_text(
@@ -176,7 +177,24 @@ def catalogue(described=False):
     return out
 
 
-def load_cards(n, seed=11):
+def examples(n_test, k=3, seed=11):
+    """Worked examples drawn from BEYOND the scored slice.
+
+    Every "give it more reference material" arm has failed -- bigger model,
+    release notes, comprehensive rules, parameter signatures -- so this shows
+    the shape of a right answer instead of describing the vocabulary.
+
+    The examples are taken from indices n_test.. of the SAME shuffled pool, so
+    they are real implemented cards and provably disjoint from the ones being
+    scored. An example drawn from the test set would leak the answer and the
+    arm would measure nothing, which is the failure mode this effort keeps
+    reproducing.
+    """
+    pool = _pool(seed)
+    return pool[n_test:n_test + k]
+
+
+def _pool(seed=11):
     idx = json.loads(
         (ROOT / "card_data" / "slug_index.json").read_text(encoding="utf-8"))["by_slug"]
     pool = []
@@ -198,7 +216,11 @@ def load_cards(n, seed=11):
         pool.append((raw["slug"], e.get("typeText") or "", text, want,
                      e.get("keywords") or []))
     random.Random(seed).shuffle(pool)
-    return pool[:n]
+    return pool
+
+
+def load_cards(n, seed=11):
+    return _pool(seed)[:n]
 
 
 def ask(model, prompt, ctx=16384, timeout=3600):
@@ -222,7 +244,7 @@ def parse_types(text, known):
     return {t for t in found if t in known}
 
 
-def build_prompt(cat, slug, ttext, text, kws):
+def build_prompt(cat, slug, ttext, text, kws, shots=()):
     parts = [
         "You triage Flesh and Blood cards for a rules engine. You do NOT "
         "implement them.",
@@ -235,11 +257,20 @@ def build_prompt(cat, slug, ttext, text, kws):
         "Blade Break ...) fire automatically from the card database and need "
         "NO types at all. Do not name types for them.",
         "",
+        *( [""] if not FEWSHOT else [] ),
         f"Card: {slug}",
         f"Type: {ttext}",
         f"Printed keywords: {kws}",
         f"Text:\n{text}",
     ]
+    if FEWSHOT and shots:
+        block = ["", "Worked examples of the answer expected:"]
+        for e_slug, e_tt, e_text, e_want, e_kw in shots:
+            one = ' '.join(e_text.split())
+            block.append(f"  Card: {e_slug} ({e_tt})")
+            block.append(f"  Text: {one[:150]}")
+            block.append(f"  Types: {', '.join(sorted(e_want))}")
+        parts[4:4] = block
     if WITH_CR:
         ex = cr_excerpts(kws)
         if ex:
@@ -262,13 +293,14 @@ def main():
     # names only, for scoring -- the described catalogue carries params too
     known = {c.split('(')[0] for c in cat}
     cards = load_cards(n)
+    shots = examples(n) if FEWSHOT else ()
     print(f"{len(cards)} real cards | catalogue {len(cat)} types | cr={WITH_CR}\n")
 
     for m in models:
         recs, precs, secs = [], [], 0.0
         print(f"--- {m} ---")
         for slug, ttext, text, want, kws in cards:
-            prompt = build_prompt(cat, slug, ttext, text, kws)
+            prompt = build_prompt(cat, slug, ttext, text, kws, shots)
             t0 = time.time()
             try:
                 out = ask(m, prompt)
