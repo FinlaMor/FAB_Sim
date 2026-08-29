@@ -200,11 +200,24 @@ def _card_json(root, name):
 #
 # Use these rather than reimplementing them.
 
-def attack_with(state, card, power=None):
+def attack_with(state, card, power=None, wire=True):
     """Make `card` the active attack and return THE OBJECT now in combat.
 
     Always use the returned card as the ability's source. Passing a different
     copy is the identity trap above.
+
+    `wire` runs the two engine steps a real attack goes through, and both
+    matter:
+
+      _apply_turn_attack_effects       applies buffs QUEUED earlier in the turn,
+                                       which is how MODIFY_NEXT_ATTACK lands.
+                                       Without it, "your next attack gets +4"
+                                       silently does nothing and the card that
+                                       queued it looks broken.
+      _register_card_continuous_effects registers this card's own statics.
+
+    Pass wire=False only when testing the helper itself or a card with no
+    interest in either path.
     """
     if power is None:
         power = getattr(card, "base_power", None) or 0
@@ -212,6 +225,10 @@ def attack_with(state, card, power=None):
                                link_id=1, attack_power=power,
                                attack_card=card, keywords=[])
     state.combat.base_attack_power = power
+    if wire:
+        import engine.engine as _E
+        _E._apply_turn_attack_effects(state, card)
+        _E._register_card_continuous_effects(state, card)
     return card
 
 
@@ -267,9 +284,42 @@ def owned_card(pid, slug="filler", name=None, types=None, **kwargs):
     Several engine paths resolve a player from the card rather than from an
     argument -- discard() reads the discarded card's owner -- so an ownerless
     card resolves to player 0.
+
+    MIND THE TYPE. It defaults to "Action" because zone entry rules reject
+    types that cannot legally be there: put_object moving a ["Item"] or
+    ["Token"] card to hand comes back CANCELED and nothing moves. A fixture
+    typed unrealistically makes a working card look like it silently drops a
+    clause -- a real FAB aura is an Action with subtype Aura, not type Token.
     """
     card = _make_card(slug=slug, name=name or slug,
                       types=types if types is not None else ["Action"],
                       **kwargs)
     card.owner = card.controller = pid
+    return card
+
+
+def give_permanent(state, pid, card, subtype=None):
+    """Put `card` in the arena, in the SUB-ZONE the engine will look in.
+
+    `player.auras` is a SubZoneView matching `card.permanent_subtype`, and that
+    attribute is set by `auras.add()` -- NOT by the card having subtype "Aura".
+    So `permanents.add(token)` leaves `auras` empty, and a card counting auras
+    sees none. That looked like a broken card until the zone was inspected.
+
+        give_permanent(st, 1, owned_card(1, "vigor"), subtype="Aura")
+    """
+    if subtype is None:
+        state.players[pid].permanents.add(card)
+        return card
+    # TWO different notions of "aura" have to agree, and they are set in
+    # different places:
+    #   permanent_subtype  what SubZoneView matches, set by `auras.add()`
+    #   subtypes           what CARD_IS_TYPE / filters match
+    # A token with only the first is in the auras zone but invisible to any
+    # card that filters for an Aura by type -- which made a correct card look
+    # like it silently dropped its second clause.
+    existing = list(getattr(card, "subtypes", None) or [])
+    if subtype not in existing:
+        card.subtypes = existing + [subtype]
+    getattr(state.players[pid], subtype.lower() + "s").add(card)
     return card
