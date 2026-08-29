@@ -9,15 +9,18 @@
           "type": "EACH_HERO_ARSENAL_FROM_ZONE_THEN_DISCARD",
           "zone": "deck",
           "amount": 1,
-          "discard": false,
-          "face_down": true
+          "face_down": true,
+          "discard": false
         }
       ]
     },
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ENTER_PLAY",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "Was a TRIGGERED ability on ON_PLAY_ACTIVATE_ATTACK, which nothing dispatched -- and the wrong shape besides: 'if this was played from arsenal it gains go again' is a static on the card itself, not a reaction to playing some other attack. The card also PRINTS GoAgain, so it had go again unconditionally while the gate was dead.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "PLAYED_FROM_ARSENAL"
         }
@@ -30,5 +33,5 @@
       ]
     }
   ],
-  "_comment": "The effect type ends in THEN_DISCARD and made EACH HERO discard a card at random. This card's text says nothing about discarding -- it is purely \"each hero who doesn't have a card in their arsenal puts the top card of their deck face down into their arsenal\". A symmetric invented downside that hurt the caster too, so discard is off. The \"who doesn't have a card in their arsenal\" gate is the handler's own arsenal-limit check; the explicit `condition` spelling of it was redundant and is dropped."
+  "_comment": "Printed text is identical to promise_of_plenty_red, which was converted and verified, so the implementation is copied wholesale rather than re-derived. The card PRINTS GoAgain and the engine applies a printed keyword unconditionally, so the gate was decoration and the card always had go again. loader.conditional_keywords() strips the printed keyword only for a SOURCE_IS_ATTACK-gated grant, which is why the shape matters. WHILE_STATIC rather than TRIGGERED because CR 6.2.3d evaluates a conditional static-continuous effect at all times."
 }

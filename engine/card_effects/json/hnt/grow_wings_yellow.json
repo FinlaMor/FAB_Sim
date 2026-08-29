@@ -1,11 +1,13 @@
 {
   "slug": "grow_wings_yellow",
-  "_comment": "ATTACK_REACTION on an Action - Attack card never fires; it is TRIGGERED/ON_ATTACK. The condition also asked ATTACK_CLASS_IN about the CURRENT attack, but the text is about the LAST attack on the chain — LAST_CHAIN_ATTACK.",
+  "_comment": "Printed text is identical to grow_wings_red, which was converted and verified, so the implementation is copied wholesale rather than re-derived. The card PRINTS GoAgain and the engine applies a printed keyword unconditionally, so the gate was decoration and the card always had go again. loader.conditional_keywords() strips the printed keyword only for a SOURCE_IS_ATTACK-gated grant, which is why the shape matters. WHILE_STATIC rather than TRIGGERED because CR 6.2.3d evaluates a conditional static-continuous effect at all times.",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "LAST_CHAIN_ATTACK",
           "talent": "Draconic"
@@ -13,7 +15,8 @@
       ],
       "effects": [
         {
-          "type": "GO_AGAIN"
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
         }
       ]
     }

@@ -42,7 +42,9 @@ from tests.conftest import _card_json, _make_state, attack_with, recalculate_att
 load_all_cards()
 DB = CardDB()
 
-CONVERTED = ["grow_wings_red", "blow_for_a_blow_red"]
+CONVERTED = ["grow_wings_red", "blow_for_a_blow_red",
+             "grow_wings_yellow", "promise_of_plenty_blue",
+             "scar_for_a_scar_blue"]
 
 
 def _state():

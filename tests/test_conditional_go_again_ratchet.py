@@ -54,7 +54,13 @@ FIXED = ["aggressive_pounce_red", "aggressive_pounce_blue",
          # Converted from their already-fixed siblings, which is the safest
          # kind of conversion available here: identical printed text, a shape
          # already verified, and no new judgement about what the card means.
-         "grow_wings_red", "blow_for_a_blow_red"]
+         "grow_wings_red", "blow_for_a_blow_red",
+         # Copied wholesale from a sibling with IDENTICAL printed text that was
+         # already converted. 29 backlog cards have a sibling outside the
+         # backlog, but only these three had both identical text AND a sibling
+         # using the verified shape -- the rest are outside it for unrelated
+         # reasons, and copying to them would have been guesswork.
+         "grow_wings_yellow", "promise_of_plenty_blue", "scar_for_a_scar_blue"]
 
 #: The count of cards still carrying an unconditional printed go again their
 #: text gates. Lower it as they are fixed; it must never rise.
@@ -63,7 +69,7 @@ FIXED = ["aggressive_pounce_red", "aggressive_pounce_blue",
 #: never defects: three print go again on its own line and three hand it to
 #: another card. Luminaris was one of them -- counted in the backlog by the very
 #: file that documents why it must never be converted.
-UNFIXED_LIMIT = 40
+UNFIXED_LIMIT = 37
 
 
 def _prints_go_again_outright(text):
