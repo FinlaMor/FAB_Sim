@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Measure the TRIAGE pass, which is where card quality actually comes from.
 
+NOTE: the commit that added this file says triage "finds a quarter of the types
+a card needs". That number was measured while the machine was in use. It is
+34%, not 24.8% -- see RESULTS below.
+
 scripts/bench_local_models.py established that the drafter is not the lever:
 
     baseline                 type recall 40.2%
@@ -31,11 +35,33 @@ Both directions are reported, because they fail differently:
                sends the drafter looking for mechanics that are not there,
                and inflates the missing-mechanic backlog with phantom gaps.
 
-THE ARM UNDER TEST is --cr. Comprehensive-rules sections were fed to the
-DRAFTER and moved nothing, which is unsurprising in hindsight: by then the
-types are already chosen. Deciding WHICH types a card needs is exactly the
-judgement the rules inform, so this points the same retrieval at the stage
-where it might matter.
+RESULTS, measured on an IDLE machine, 20 cards, repeated:
+
+    baseline                 n=5   34.1%   sd 0.4
+    --described (params)     n=7   32.6%   sd 1.3     -1.5
+    --cr (rules sections)    n=3   34.1%   sd 0.5     +0.0
+    baseline, machine BUSY   n=2   24.1%   sd 0.7
+
+RUN THIS ON A QUIET MACHINE OR NOT AT ALL. The two contended runs sit ten
+points low and had sd 0.7 *among themselves*, so they looked perfectly stable
+and were reported as fact -- "real triage recall is 24.8%" and "the CR makes it
+slightly worse". Both were artefacts of load. Stability within a batch says
+nothing about whether the batch is biased.
+
+Idle, this benchmark has sd 0.4 and resolves differences of about a point,
+which makes --described's -1.5 likely a small REAL negative rather than noise.
+
+--described was the arm that should have worked. Triage's errors are near
+misses -- MODIFY_ATTACK for MODIFY_NEXT_ATTACK, and an invented
+GRANT_NEXT_ATTACK -- which is exactly what put CARD_TYPE_IN into a set
+directory and stopped a card loading. Giving each type the parameters its
+handler reads did not help. A first single run showed +10.4 and was reported
+before being repeated; that was noise.
+
+So every "give it more reference material" intervention has now failed: bigger
+model, release notes, comprehensive rules, parameter signatures. Only the
+oracle shortlist moves the number (+38.6), and it is two orders of magnitude
+outside the noise. Try few-shot examples next.
 
     python scripts/bench_triage.py --n 20 qwen2.5-coder:14b
     python scripts/bench_triage.py --n 20 --cr qwen2.5-coder:14b
