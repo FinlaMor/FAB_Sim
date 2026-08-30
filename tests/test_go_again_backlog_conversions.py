@@ -44,7 +44,10 @@ DB = CardDB()
 
 CONVERTED = ["grow_wings_red", "blow_for_a_blow_red",
              "grow_wings_yellow", "promise_of_plenty_blue",
-             "scar_for_a_scar_blue"]
+             "scar_for_a_scar_blue", "insult_to_injury_red",
+             "insult_to_injury_blue", "insult_to_injury_yellow",
+             "frontline_scout_red", "frontline_scout_yellow",
+             "fervent_forerunner_yellow"]
 
 
 def _state():

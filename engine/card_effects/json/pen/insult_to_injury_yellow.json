@@ -2,9 +2,11 @@
   "slug": "insult_to_injury_yellow",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "ATTACK_TARGET_IS_HERO"
         },
@@ -19,5 +21,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'When this attacks a hero, if you have more {h} than them, this gets go again.' The three printings had THREE DIFFERENT implementations for identical text: red wrapped its conditions in a redundant AND, yellow had them flat, and blue was a PLAY ability missing the ATTACK_TARGET_IS_HERO gate entirely and spelling the keyword 'go again' with a space, which an exact GO_AGAIN match skips. All three now use the one shape loader.conditional_keywords() recognises. Precedent: scar_for_a_scar_red. WHILE_STATIC rather than TRIGGERED because CR 6.2.3d evaluates a conditional static-continuous effect at all times."
 }

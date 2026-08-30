@@ -60,7 +60,16 @@ FIXED = ["aggressive_pounce_red", "aggressive_pounce_blue",
          # backlog, but only these three had both identical text AND a sibling
          # using the verified shape -- the rest are outside it for unrelated
          # reasons, and copying to them would have been guesswork.
-         "grow_wings_yellow", "promise_of_plenty_blue", "scar_for_a_scar_blue"]
+         "grow_wings_yellow", "promise_of_plenty_blue", "scar_for_a_scar_blue",
+         # These six had the RIGHT CONDITIONS already authored and only the
+         # wrong ability shape, so a TRIGGERED grant left the printed keyword
+         # in place. insult_to_injury is the cautionary one: three printings of
+         # identical text had three different implementations, and the blue
+         # printing also lacked the ATTACK_TARGET_IS_HERO gate and spelled the
+         # keyword "go again" with a space, which an exact GO_AGAIN match skips.
+         "insult_to_injury_red", "insult_to_injury_blue",
+         "insult_to_injury_yellow", "frontline_scout_red",
+         "frontline_scout_yellow", "fervent_forerunner_yellow"]
 
 #: The count of cards still carrying an unconditional printed go again their
 #: text gates. Lower it as they are fixed; it must never rise.
@@ -69,7 +78,7 @@ FIXED = ["aggressive_pounce_red", "aggressive_pounce_blue",
 #: never defects: three print go again on its own line and three hand it to
 #: another card. Luminaris was one of them -- counted in the backlog by the very
 #: file that documents why it must never be converted.
-UNFIXED_LIMIT = 37
+UNFIXED_LIMIT = 31
 
 
 def _prints_go_again_outright(text):

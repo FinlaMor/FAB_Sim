@@ -2,19 +2,11 @@
   "slug": "fervent_forerunner_yellow",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
-      "effects": [
-        {
-          "type": "OPT",
-          "amount": 2
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ENTER_PLAY",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "PLAYED_FROM_ARSENAL"
         }
@@ -25,6 +17,17 @@
           "keyword": "GO_AGAIN"
         }
       ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "OPT",
+          "amount": 2
+        }
+      ]
     }
-  ]
+  ],
+  "_comment": "'If this is played from arsenal, it gains go again.' Same shape and same fix as frontline_scout; the ON_HIT opt clause is untouched. Precedent: promise_of_plenty_red. WHILE_STATIC rather than TRIGGERED because CR 6.2.3d evaluates a conditional static-continuous effect at all times."
 }

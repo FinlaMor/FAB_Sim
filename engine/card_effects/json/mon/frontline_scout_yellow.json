@@ -2,17 +2,11 @@
   "slug": "frontline_scout_yellow",
   "abilities": [
     {
-      "ability_type": "PLAY",
-      "effects": [
-        {
-          "type": "LOOK_AT",
-          "target": "defending_hero_hand"
-        }
-      ]
-    },
-    {
-      "ability_type": "PLAY",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "PLAYED_FROM_ARSENAL"
         }
@@ -23,6 +17,16 @@
           "keyword": "GO_AGAIN"
         }
       ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "target": "defending_hero_hand"
+        }
+      ]
     }
-  ]
+  ],
+  "_comment": "'If this is played from arsenal, it gains go again.' The gate was already authored and correct; only the ability shape was wrong, so a TRIGGERED grant left the printed keyword in place and the card always had go again. Precedent: promise_of_plenty_red, converted and verified. WHILE_STATIC rather than TRIGGERED because CR 6.2.3d evaluates a conditional static-continuous effect at all times."
 }
