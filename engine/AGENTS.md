@@ -173,6 +173,27 @@ Additionally, each of these fails loudly or is harmless until a card needs it:
    `EffectManager`; do not build on the old class.
 4. **`actions.py` → `play.py` migration** — legal-action generation still
    partially lives in `actions.py`.
+5. **`Fragment` is not implemented** — 27 cards print it (Omens of the Third
+   Age / GEM) and 32 mention it in text. Nothing in the engine emits a fragment
+   event, so "whenever this fragments" cannot fire; the cards that have it are
+   currently authored against `ON_BECOME`, which is only emitted when a HERO
+   transforms (`ability_keywords`, the Arakni path), so those clauses are dead.
+
+   **Blocked on rules text, not on effort.** Fragment appears in neither
+   `docs/ref/en-fab-cr-comprehensive-rules.txt` nor any release notes in
+   `docs/ref/` — Omens of the Third Age has no notes there. Implementing a
+   keyword mechanic by inferring it from card text would put a guess where the
+   rules go, and every card printing it would then be wrong in the same way at
+   once.
+
+   Definition of done: OMN rules text in `docs/ref/`, a fragment event emitted
+   by a canonical keyword function, and `ON_FRAGMENT` in `dsl/trigger_types.py`.
+   Two cards are waiting on it — `ebbing_arcstride_red` / `_blue`, the last
+   entries in the gated-go-again backlog
+   (`tests/test_conditional_go_again_ratchet.py`). Do **not** declare their
+   `conditional_keywords` before the trigger works: that would strip the printed
+   go again with nothing to grant it back, turning a fail-open bug into a
+   fail-closed one.
 
 ## Adding a New Card
 
