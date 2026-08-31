@@ -2,10 +2,12 @@
   "slug": "chain_of_brutality_red",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
-      "_comment": "If this has 6 or more {p}, it gets go again.",
+      "ability_type": "WHILE_STATIC",
+      "_comment": "'If this has 6 or more {p}, it gets go again.' WHILE_STATIC is not just the shape conditional_keywords needs, it is the RIGHT reading: the condition is about this card's CURRENT power, which a pump can change after the attack is declared, and go again is paid at the Resolution Step (CR 8.3.5b). An ON_ATTACK trigger froze the answer at declaration; it also left the printed GoAgain unconditional, so a 4-power Chain of Brutality had go again anyway.",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "SELF_ATTACK_POWER_GTE",
           "amount": 6
@@ -14,7 +16,7 @@
       "effects": [
         {
           "type": "GAIN",
-          "keyword": "go again"
+          "keyword": "GO_AGAIN"
         }
       ]
     },

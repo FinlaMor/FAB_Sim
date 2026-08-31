@@ -1,32 +1,24 @@
 {
   "slug": "scour_the_battlescape_blue",
+  "_comment": "'If Scour the Battlescape is played from arsenal, it gains go again.' Same sentence and same fix as frontline_scout_red and promise_of_plenty_red, both already converted and verified: the PLAYED_FROM_ARSENAL gate was authored correctly but hung off a PLAY ability, which conditional_keywords cannot see, so the printed GoAgain applied unconditionally and the card had go again from hand. The put-a-card-back/draw clause is a separate ability and is untouched.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "additional_cost": [
-        {
-          "type": "PUT_HAND_CARD_BOTTOM"
-        }
+        {"type": "PUT_HAND_CARD_BOTTOM"}
       ],
       "effects": [
-        {
-          "type": "DRAW",
-          "amount": 1
-        }
+        {"type": "DRAW", "amount": 1}
       ]
     },
     {
-      "ability_type": "PLAY",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
-        {
-          "type": "PLAYED_FROM_ARSENAL"
-        }
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "PLAYED_FROM_ARSENAL"}
       ],
       "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
       ]
     }
   ]

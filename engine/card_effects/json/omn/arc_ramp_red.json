@@ -33,5 +33,8 @@
       ]
     }
   ],
-  "_comment": "\"Amp 3. You may destroy a LIGHTNING FLOW you control. IF YOU DO, this gets go again.\" It was MAY_DESTROY_SILVERS_TO_EQUIP -- a bespoke effect for Blacktek Whisperers' graveyard static (\"destroy N Silvers you control, then EQUIP this from the graveyard\"), which reads neither the 'target' naming what to destroy nor the 'effects_if_destroyed' holding the payoff. So this card destroyed Silvers if it had any, tried to equip an Action card, and never granted go again. DESTROY_PERMANENT names the token by asset and records what it destroyed, which is what \"if you do\" reads."
+  "_comment": "'Amp 3. You may destroy a Lightning Flow you control. If you do, this gets go again.' The grant is already correctly gated -- MAY around the destroy, then CONDITIONAL on REF_EXISTS \"destroyed\", so declining or having nothing to destroy withholds it. Only the printed keyword was wrong: it applied unconditionally, so the player got go again whether or not they paid a Lightning Flow for it, which is the entire decision the card asks for. Declared rather than converted because \"if you DO\" is about a choice made at resolution, not a state a static could re-read.",
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ]
 }

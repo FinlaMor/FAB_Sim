@@ -1,21 +1,15 @@
 {
   "slug": "soul_cleaver_blue",
-  "_comment": "'If the defending hero has 1 or more cards in their soul' -> SOUL_COUNT_GTE (player.soul is a real zone). Was FLAG_SET 'BLOOD_DEBT_FLAG' — an invented flag, and Blood Debt is an unrelated keyword. ATTACK_REACTION on an Action - Attack never fires either.",
+  "_comment": "'If the defending hero has 1 or more cards in their soul, this gets go again.' The condition was already authored correctly (SOUL_COUNT_GTE against a real soul zone); only the SHAPE was wrong. A TRIGGERED grant is invisible to loader.conditional_keywords, which strips a printed keyword only for a SOURCE_IS_ATTACK-gated ability -- so the printed GoAgain stayed unconditional and the card had go again even against an empty soul. WHILE_STATIC per CR 6.2.3d: the condition is evaluated at all times, which matters here because a soul can be filled or emptied mid-chain and go again is paid at the Resolution Step (8.3.5b).",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
-        {
-          "type": "SOUL_COUNT_GTE",
-          "amount": 1,
-          "player": "DEFENDING"
-        }
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "SOUL_COUNT_GTE", "amount": 1, "player": "DEFENDING"}
       ],
       "effects": [
-        {
-          "type": "GO_AGAIN"
-        }
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
       ]
     }
   ]

@@ -11,5 +11,9 @@
         }
       ]
     }
-  ]
+  ],
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
+  "_comment": "'Dominate. If Overload hits, it gains go again.' The condition IS the hit, so the ON_HIT trigger is the correct timing and must not become a static -- there is no state to read, and a WHILE_STATIC would grant go again before the attack had hit anything. But the card PRINTS GoAgain, so without saying so the keyword applied unconditionally and Overload had go again whether it hit or was blocked. conditional_keywords is declared explicitly for exactly this case; see the note on CardDef.conditional_keywords for why the inference cannot simply be widened to triggered abilities."
 }

@@ -23,6 +23,7 @@ costs must be spelled exactly as implemented in `dsl/effect_types.py`,
   "per_turn": 1,
   "cost": { ... },
   "conditions": { ... },
+  "conditional_keywords": ["GO_AGAIN"],
   "abilities": [ ... ]
 }
 ```
@@ -32,9 +33,18 @@ costs must be spelled exactly as implemented in `dsl/effect_types.py`,
 | `slug` | Yes | Unique card identifier |
 | `activation_cost` | No | Resource ({r}) cost to **activate** the ability or make the weapon/ally **attack**. DSL-authoritative: overrides the loader's printed-text heuristic. Set it whenever the card has an activated ability or attacks for a resource cost (use `0` for free abilities). Do **not** also model this {r} as a `PAY_RESOURCES` cost — that double-charges. |
 | `per_turn` | No | Activations allowed per turn (e.g. `1` for "Once per Turn"). DSL-authoritative; omit for no limit. |
-| `cost` | No | Additional cost to **play** the card (play-time only) |
+| `cost` | No | Additional cost to **play** the card (play-time only). Prefer this over an ability-level `additional_cost` whenever the ability is dispatched more than once — `_run_ability` re-pays an ability's additional costs on **every** dispatch. |
+| `conditional_keywords` | No | Printed keywords this card only has **conditionally**. See below. |
 | `conditions` | No | Targeting or play restrictions (e.g. AR target must be Ninja) |
 | `abilities` | Yes | Array of ability objects |
+
+> **`conditional_keywords`** — the card DB has no way to mark a printed keyword conditional. Out Muscle ships as `"GoAgain"` although its text gates it, so the engine grants it unconditionally and the gate is decoration: the card plays as strictly stronger than printed. `loader.conditional_keywords()` normally **infers** the answer, recognising exactly one shape — a `WHILE_STATIC` gated on `SOURCE_IS_ATTACK` that grants the keyword. Use that shape when you can; it is what distinguishes "**this** gains go again" from Luminaris's "your Illusionist attacks get go again", where the printed keyword belongs to some other card.
+>
+> Declare the keyword here **only** when the grant must stay on a trigger — when the condition is a timed event ("if this **hits**", "if you **do**", "when this attacks, **if** …") rather than a state that can be re-read. A `WHILE_STATIC` re-evaluates its condition continuously (CR 6.2.3d), which for those cards answers at the wrong moment.
+>
+> The inference is deliberately not widened to cover conditional triggered grants, because it cannot be done safely: for `INTIMIDATE` and `OVERPOWER` the same DSL name is both a keyword a card *gains* and an effect a card *performs*, so Instill Fear ("when this attacks a hero, **intimidate them**") would lose the keyword it really has.
+>
+> Declaring without a working trigger turns a fail-**open** bug into a fail-**closed** one, so always test both directions: the keyword must appear once the trigger fires and be absent before it does.
 
 > `activation_cost` / `per_turn` are card-level because a weapon's attack cost isn't tied to a DSL ability (attacks are engine-offered). When omitted, the loader falls back to parsing the printed text — reliable, but prefer the explicit field for implemented cards. Non-resource activation costs (tap, destroy, discard, remove counters) still go in the ability-level `cost` array.
 

@@ -61,3 +61,14 @@ class CardDef:
     # (CR 5.1.6, e.g. "if the defending hero is marked, this costs {r} less").
     # Each: {"cond": ConditionDef | None, "delta": int}. cond None = always.
     cost_modifiers: list = field(default_factory=list)
+    # Printed keywords this card only has CONDITIONALLY, declared explicitly.
+    # The card DB cannot express "conditional keyword" -- Out Muscle ships as
+    # "GoAgain" though its text gates it -- and loader.conditional_keywords
+    # normally INFERS the answer from a SOURCE_IS_ATTACK-gated static. That
+    # inference cannot be widened to triggered abilities, because for keywords
+    # like Intimidate the same DSL name is both a keyword a card GAINS and an
+    # effect a card PERFORMS: "when this attacks a hero, intimidate them"
+    # (Instill Fear) would have its real printed keyword taken away. So a card
+    # whose grant must stay a trigger -- because its condition is a timed event
+    # rather than a readable state -- says so here instead of being guessed at.
+    conditional_keywords: list = field(default_factory=list)

@@ -157,9 +157,13 @@ def compile_card(raw: dict[str, Any]) -> CardDef:
         cond_raw = cm.get("condition")
         cond = _compile_condition(cond_raw) if isinstance(cond_raw, dict) else None
         cost_modifiers.append({"cond": cond, "delta": int(cm.get("delta", 0))})
+    declared = raw.get("conditional_keywords") or []
+    if isinstance(declared, str):
+        declared = [declared]
     return CardDef(slug=slug, abilities=abilities, play_cost=play_cost, setup=setup,
                    activation_cost=activation_cost, per_turn=per_turn,
-                   cost_modifiers=cost_modifiers)
+                   cost_modifiers=cost_modifiers,
+                   conditional_keywords=list(declared))
 
 
 def load_all_cards(json_dir: Path | None = None) -> int:
@@ -280,6 +284,19 @@ def conditional_keywords(slug: str) -> frozenset[str]:
     found: set[str] = set()
     card_def = get_card(slug)
     if card_def is not None:
+        # An EXPLICIT declaration, for cards whose grant has to stay a trigger.
+        # The inference below only recognises a SOURCE_IS_ATTACK-gated static,
+        # and widening it to triggered abilities is not possible: for Intimidate
+        # and Overpower the same DSL name is both a keyword a card GAINS and an
+        # effect a card PERFORMS, so "when this attacks a hero, intimidate them"
+        # would lose the printed keyword it really has. Cards whose condition is
+        # a timed event ("if this HITS", "if you DO") therefore keep the trigger
+        # -- which is the correct timing -- and declare the keyword conditional
+        # here rather than contorting into a shape that reads the condition at
+        # the wrong moment.
+        for name in (card_def.conditional_keywords or []):
+            if _kw_key(str(name)) in {_kw_key(k) for k in _GRANTABLE_KEYWORDS}:
+                found.add(_kw_key(str(name)))
         for ability in card_def.abilities:
             if not ability.conditions:
                 continue

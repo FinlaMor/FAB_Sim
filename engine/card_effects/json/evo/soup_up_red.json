@@ -1,42 +1,26 @@
 {
   "slug": "soup_up_red",
-  "_comment": "Generic destroyed-this-turn tracking: this read ITEM_DESTROYED_THIS_TURN, a flag nothing ever set, so the clause could never fire. effect_keywords.destroy now records \"destroyed_this_turn:<slug|type|subtype>\" for whatever was destroyed, and DESTROYED_THIS_TURN reads it by name.",
+  "_comment": "'If an item you control has been destroyed this turn, this gets go again.' plus a separate Galvanize defence trigger. The go again clause was hung off ON_DEFEND, which is the OTHER half of the card -- this half is not a defend trigger at all, so it fired at the wrong time and, being triggered, left the printed GoAgain unconditional. WHILE_STATIC + SOURCE_IS_ATTACK per CR 6.2.3d. The DESTROYED_THIS_TURN condition was already correct and is kept; Galvanize is untouched.",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
-        {
-          "type": "DESTROYED_THIS_TURN",
-          "name": "item"
-        }
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "DESTROYED_THIS_TURN", "name": "item"}
       ],
       "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ],
-      "trigger": "ON_DEFEND"
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
     },
     {
       "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
       "effects": [
-        {
-          "type": "MAY",
-          "effects": [
-            {
-              "type": "DESTROY_PERMANENT",
-              "target": "controlled_item"
-            },
-            {
-              "type": "MODIFY_DEFENSE_VALUE",
-              "mod": "add",
-              "amount": 2
-            }
-          ]
-        }
-      ],
-      "trigger": "ON_DEFEND"
+        {"type": "MAY", "effects": [
+          {"type": "DESTROY_PERMANENT", "target": "controlled_item"},
+          {"type": "MODIFY_DEFENSE_VALUE", "mod": "add", "amount": 2}
+        ]}
+      ]
     }
   ]
 }

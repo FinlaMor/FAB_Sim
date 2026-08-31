@@ -20,5 +20,9 @@
         }
       ]
     }
-  ]
+  ],
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
+  "_comment": "'When you play Last Ditch Effort, if you have no cards in your deck, it gains +4{p} and go again.' Kept as a PLAY ability, which is the correct timing -- \"when you play\" is answered once, as the card is played -- and the keyword is declared conditional so the printed GoAgain stops applying to a Last Ditch Effort played with a deck still in front of you. A WHILE_STATIC would re-read DECK_EMPTY continuously and hand go again to a card that was not entitled to it the moment the deck ran out mid-combat."
 }

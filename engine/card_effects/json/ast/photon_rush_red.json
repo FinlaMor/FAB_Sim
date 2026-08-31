@@ -1,20 +1,15 @@
 {
   "slug": "photon_rush_red",
-  "_comment": "Flag-name fix: this ability read a flag NOTHING ever set, so it could never fire. The engine records fusion as \"fused_<slug>\" (ability_keywords.fusion), boost as \"boosted_this_turn\", and a played Lightning card as \"played_lightning\" — all lowercase. Was: LIGHTNING_PLAYED_THIS_TURN.",
+  "_comment": "'Lightning Flow - If you've played a Lightning card this turn, this gets go again.' Word for word the Aggressive Pounce sentence with a different condition, so the same shape: WHILE_STATIC gated on SOURCE_IS_ATTACK (CR 6.2.3d, condition evaluated at all times; go again paid at the Resolution Step, CR 8.3.5b). It was an ACTIVATE with no cost, which is not a thing the player can ever do -- so the clause never ran AND the printed GoAgain applied unconditionally, making the Lightning Flow gate pure decoration. The flag name itself was fixed earlier: the engine records a played Lightning card as \"played_lightning\".",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
-        {
-          "type": "FLAG_SET",
-          "flag": "played_lightning"
-        }
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "FLAG_SET", "flag": "played_lightning"}
       ],
       "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
       ]
     }
   ]

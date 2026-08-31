@@ -8,6 +8,28 @@ import random
 from typing import Any, Callable
 
 
+def _stamp_discarded(card, discarded):
+    """Record on the card being played WHICH cards its discard cost took.
+
+    "If the DISCARDED CARD has 6 or more {p}, this gains go again" has to be
+    able to look at that card later, and nothing recorded it: the condition
+    read the discarded card off the EVENT, which is the play event and has no
+    power, so it answered 0 and the clause could never fire. The printed
+    keyword then applied unconditionally, which is why the card looked fine --
+    Breakneck Battery's gamble paid out every time.
+
+    Mirrors play.py's `pitched_for_this` stamp, and for the same reason: what
+    paid for a card is a fact about that card, settled when it is played, and
+    the effect asking about it runs much later.
+
+    Appended rather than assigned, so two discard costs on one card both count.
+    """
+    if card is None or not discarded:
+        return
+    existing = list(getattr(card, "discarded_for_this", None) or [])
+    card.discarded_for_this = existing + list(discarded)
+
+
 def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable]:
     """Return (check_fn, pay_fn).
 
@@ -74,7 +96,8 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             return len(state.players[_controller_id(card)].hand.cards) >= _a
         def pay(card, event, state, _a=amount):
             from engine.card_effects.ability_keywords import effect_discard, _controller_id
-            effect_discard(state, _controller_id(card), _a, random_discard=True)
+            _stamp_discarded(card, effect_discard(state, _controller_id(card),
+                                                  _a, random_discard=True))
         return can_pay, pay
 
     if ctype == "DISCARD_CARD":
@@ -110,8 +133,8 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             # card the player picks, but the corpus's unfiltered uses were
             # authored as random and changing that is a separate question.
             bound = None if _m is None else (lambda c, _s=state: _m(c, _s))
-            effect_discard(state, cid, _a, random_discard=(_m is None),
-                           matches=bound)
+            _stamp_discarded(card, effect_discard(
+                state, cid, _a, random_discard=(_m is None), matches=bound))
         return can_pay, pay
 
     if ctype == "REVEAL_CARD_COST_GTE":

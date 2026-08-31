@@ -1,6 +1,6 @@
 {
   "slug": "second_strike_red",
-  "_comment": "Turn-event tracking: read DAMAGE_DEALT_THIS_TURN — private flag(s) nothing ever set, so the clause could never fire. The canonical keyword functions now record what happened this turn and EVENT_THIS_TURN reads it.",
+  "_comment": "'When this attacks, if you've dealt damage this turn, this gets +1{p} and go again.' Kept as an ON_ATTACK trigger on purpose: \"when this attacks, if ...\" is checked when the attack is announced, and a WHILE_STATIC would keep re-reading it -- so an attack that was not entitled to go again would gain it the moment IT dealt damage. The keyword is declared conditional instead, which strips the printed GoAgain without moving the timing.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -23,5 +23,8 @@
         }
       ]
     }
+  ],
+  "conditional_keywords": [
+    "GO_AGAIN"
   ]
 }

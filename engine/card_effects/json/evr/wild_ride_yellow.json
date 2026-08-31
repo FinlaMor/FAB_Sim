@@ -30,5 +30,9 @@
         }
       ]
     }
-  ]
+  ],
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
+  "_comment": "'When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets go again.' The grant hangs off ON_DISCARD, which is right: the discarded card arrives as the event, which is what DISCARDED_CARD_POWER_GTE reads. The keyword is declared conditional because the trigger has to stay a trigger -- the discard is an event during the attack, not a state -- while the printed GoAgain would otherwise pay out whatever was discarded."
 }

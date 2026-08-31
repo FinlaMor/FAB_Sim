@@ -21,5 +21,9 @@
       ],
       "trigger": "ON_ATTACK"
     }
-  ]
+  ],
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
+  "_comment": "'When this attacks, you may destroy a Lightning Flow you control. If you do, this gets go again.' The grant stays on ON_ATTACK and the keyword is declared conditional, so the printed GoAgain no longer applies when there is no Lightning Flow to destroy.\n\nSTILL NOT EXACT: the destroy is written as mandatory, so a player who would rather keep the Lightning Flow has no choice, and the go again follows automatically whenever they control one. The printed text is 'you MAY'."
 }

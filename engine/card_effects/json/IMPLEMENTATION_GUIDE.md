@@ -52,6 +52,17 @@ JSON definition.
    re-implement Go Again, Dominate, Piercing, Ward, etc. in JSON. Only author
    the card's unique text.
 
+   **The exception is a keyword the card's own text GATES** ("if this hits, it
+   gains go again"). The card DB has no way to say a printed keyword is
+   conditional, so the engine grants it unconditionally and the gate becomes
+   decoration — the card plays as strictly stronger than printed, silently.
+   Either author the grant as a `WHILE_STATIC` gated on `SOURCE_IS_ATTACK`
+   (which `loader.conditional_keywords()` infers from), or, when the condition
+   is a timed event and must stay on a trigger, declare it in the card-level
+   `conditional_keywords` field. `DSL_REFERENCE.md` has the full rule. Test
+   BOTH directions: a declaration whose trigger never fires converts a
+   fail-open bug into a fail-closed one.
+
 4. **Author the JSON** in `json/<set>/<slug>.json` following
    `DSL_REFERENCE.md`. Type strings must exist in the `dsl/*_types.py`
    modules — an unknown type raises `ValueError` at load and the card counts

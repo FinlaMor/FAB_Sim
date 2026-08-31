@@ -30,5 +30,9 @@
         }
       ]
     }
-  ]
+  ],
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
+  "_comment": "'When this attacks a hero, deal 1 arcane damage to them. If damage is dealt this way, this gets go again. Instant - {r}: This gets go again.' The grant stays on the ON_ATTACK trigger -- it is an event, not a state -- and the keyword is declared conditional so the printed GoAgain stops applying to an attack that never targeted a hero.\n\nSTILL NOT EXACT: the grant fires whenever the arcane damage is DEALT-attempted, not only when damage actually lands, so a prevented or reduced-to-zero 1 arcane still grants go again. Expressing that needs the damage effect to report how much it dealt."
 }

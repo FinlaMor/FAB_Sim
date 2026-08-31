@@ -1,6 +1,6 @@
 {
   "slug": "arc_bending_red",
-  "_comment": "Repaired invalid condition types exposed when OR/AND stopped silently swallowing sub-conditions authored under \"conditions\": TalentContainsAny -> ATTACK_CLASS_IN. That repair walked only the ABILITY-level conditions and missed a SECOND TalentContainsAny nested in an effect's `filter` -- the same top-level-only trap that has now bitten this effort three times. The filter runs per attack against the attack card, so it is CARD_IS_CLASS over the talents.\n\n\"**Lightning Bond** - IF A LIGHTNING CARD WAS PITCHED TO PLAY THIS, this gets go again\" was an ACTIVATE ability with a PITCH cost: an ability you activate by pitching, which is not what a bond is. A bond is a condition ON PLAY about what paid for the card, which PITCHED_FOR_THIS now answers (play._pitch_for_cost stamps the cards it took onto the card being played).\n\nNOT implemented, and left as the closest available effect rather than silently wrong: the main clause is a DAMAGE REPLACEMENT (\"if a Lightning or Elemental attack WOULD DEAL DAMAGE this combat chain, INSTEAD it deals that much damage plus 1\"), and MODIFY_ATTACKS_THIS_TURN is a power modifier. The two differ wherever damage is not equal to power -- a pumped or prevented attack -- and the replacement also applies to arcane and non-attack damage. Definition of done: a damage-replacement primitive scoped to a class/talent exists.",
+  "_comment": "Repaired invalid condition types exposed when OR/AND stopped silently swallowing sub-conditions authored under \"conditions\": TalentContainsAny -> ATTACK_CLASS_IN. That repair walked only the ABILITY-level conditions and missed a SECOND TalentContainsAny nested in an effect's `filter` -- the same top-level-only trap that has now bitten this effort three times. The filter runs per attack against the attack card, so it is CARD_IS_CLASS over the talents.\n\n\"**Lightning Bond** - IF A LIGHTNING CARD WAS PITCHED TO PLAY THIS, this gets go again\" was an ACTIVATE ability with a PITCH cost: an ability you activate by pitching, which is not what a bond is. A bond is a condition ON PLAY about what paid for the card, which PITCHED_FOR_THIS now answers (play._pitch_for_cost stamps the cards it took onto the card being played).\n\nNOT implemented, and left as the closest available effect rather than silently wrong: the main clause is a DAMAGE REPLACEMENT (\"if a Lightning or Elemental attack WOULD DEAL DAMAGE this combat chain, INSTEAD it deals that much damage plus 1\"), and MODIFY_ATTACKS_THIS_TURN is a power modifier. The two differ wherever damage is not equal to power -- a pumped or prevented attack -- and the replacement also applies to arcane and non-attack damage. Definition of done: a damage-replacement primitive scoped to a class/talent exists.\n\nGATED GO AGAIN: the Lightning Bond clause was a PLAY ability, which loader.conditional_keywords cannot see, so the printed GoAgain applied unconditionally and the bond was decoration -- Arc Bending had go again however it was paid for. Now WHILE_STATIC gated on SOURCE_IS_ATTACK (CR 6.2.3d). What paid for a card is settled at the moment it is played and cannot change afterwards, so reading PITCHED_FOR_THIS continuously gives the same answer as reading it once.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -37,13 +37,17 @@
       ]
     },
     {
-      "ability_type": "PLAY",
+      "ability_type": "WHILE_STATIC",
       "effects": [
         {
-          "type": "GO_AGAIN"
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
         }
       ],
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "PITCHED_FOR_THIS",
           "card_class": "Lightning"

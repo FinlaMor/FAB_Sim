@@ -1,6 +1,6 @@
 {
   "slug": "rushing_river_blue",
-  "_comment": "Four defects, each independently fatal. (1) ability_type ATTACK_REACTION on a Ninja ACTION - Attack card, so nothing fired; it is TRIGGERED/ON_ATTACK. (2) amount 'CHAIN_HIT_COUNT' was an invented string resolving to 0, so the draw drew nothing; 'X is the number of attacks that have hit this combat chain' is COUNT_CHAIN_LINKS with hit:true. (3) REORDER_REF with ref HAND reorders cards ALREADY IN A DECK (it filters on `c in deck.cards`), so with hand cards it silently no-opped; putting cards from hand on top is PUT_HAND_CARD_TOP. (4) COMBO_CONTAINS is the looser substring variant; LAST_CHAIN_ATTACK matches the card name exactly.",
+  "_comment": "Combo go again, converted out of the gated-go-again backlog. The condition was already authored correctly (LAST_CHAIN_ATTACK against the named card) and only the SHAPE was wrong: a TRIGGERED grant is invisible to loader.conditional_keywords, which strips a printed keyword only for a SOURCE_IS_ATTACK-gated ability -- so the printed GoAgain applied unconditionally and the Combo gate was decoration. WHILE_STATIC per CR 6.2.3d. Combo is safe to read continuously: which card was the previous link is settled before this attack is announced and cannot change while it is on the chain, so the once-vs-continuously readings cannot disagree. Only the go again moved; the other clauses keep their triggers, because \"+1{p} on attack\" and \"draw if it hits\" really are timed events. Four earlier defects are unchanged by this and stay fixed: ATTACK_REACTION on an Action - Attack card never fired; amount 'CHAIN_HIT_COUNT' was an invented string resolving to 0; REORDER_REF with ref HAND only reorders cards already in a DECK, so it silently no-opped; and COMBO_CONTAINS is the looser substring variant where LAST_CHAIN_ATTACK matches the name exactly.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -16,9 +16,6 @@
           "type": "MODIFY_ATTACK",
           "mod": "add",
           "amount": 1
-        },
-        {
-          "type": "GO_AGAIN"
         },
         {
           "type": "INJECT_TRIGGER",
@@ -43,6 +40,24 @@
               }
             ]
           }
+        }
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "LAST_CHAIN_ATTACK",
+          "name": "Torrent of Tempo"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
         }
       ]
     }

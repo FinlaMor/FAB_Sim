@@ -1044,11 +1044,32 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _cgh
 
     if ctype == "DISCARDED_CARD_POWER_GTE":
-        # True when the discarded card (passed as event) has >= N base power.
+        # "If the discarded card has 6 or more {p}, this gains go again."
+        #
+        # It read the power off the EVENT, which works only where the discarded
+        # card IS the event -- an on-discard trigger. For the cards that
+        # actually use this condition the discard is an ADDITIONAL COST, so the
+        # event is the play event, which has no power: the answer was 0, the
+        # clause could never fire, and the printed keyword granted go again
+        # regardless. Breakneck Battery's whole gamble paid out every time.
+        #
+        # cost_types._stamp_discarded now records what a discard cost took on
+        # the card being played, the same way play.py stamps pitched_for_this,
+        # so the condition can still be asked long after the discard -- which
+        # a WHILE_STATIC re-evaluated on every recalculation must be able to do.
+        # The event is still consulted first so on-discard triggers keep
+        # working.
         amount = params.get("amount", 0)
+
         def _dcpg(c, e, s, _amt=amount):
             power = getattr(e, 'power', None) or getattr(e, 'base_power', None) or 0
-            return (power or 0) >= _amt
+            if (power or 0) >= _amt:
+                return True
+            for card in (getattr(c, 'discarded_for_this', None) or []):
+                if (getattr(card, 'power', None)
+                        or getattr(card, 'base_power', None) or 0) >= _amt:
+                    return True
+            return False
         return _dcpg
 
     if ctype == "CODEFENDER_POWER_GTE":

@@ -1,11 +1,13 @@
 {
   "slug": "vengeance_never_rests_blue",
-  "_comment": "NEEDS_NEW_DSL for the second clause: 'When this hits a hero, banish it. You may play it this turn' needs banish-self + a play grant from banished, and no effect expresses that (BANISH_OPP_TOP_GRANT_PLAY is the opponent's deck). The previous implementation used BANISH target 'hero', which banishes the HERO — actively wrong, so it is removed rather than kept. The go-again clause below is expressible and correct.",
+  "_comment": "Combo go again, converted out of the gated-go-again backlog. The condition was already authored correctly (LAST_CHAIN_ATTACK against the named card) and only the SHAPE was wrong: a TRIGGERED grant is invisible to loader.conditional_keywords, which strips a printed keyword only for a SOURCE_IS_ATTACK-gated ability -- so the printed GoAgain applied unconditionally and the Combo gate was decoration. WHILE_STATIC per CR 6.2.3d. Combo is safe to read continuously: which card was the previous link is settled before this attack is announced and cannot change while it is on the chain, so the once-vs-continuously readings cannot disagree. Only the go again moved; the other clauses keep their triggers, because \"+1{p} on attack\" and \"draw if it hits\" really are timed events. STILL NEEDS_NEW_DSL for the second clause: \"When this hits a hero, banish it. You may play it this turn\" needs banish-self plus a play grant from banished, and no effect expresses that (BANISH_OPP_TOP_GRANT_PLAY is the opponent's deck). A previous attempt used BANISH target 'hero', which banishes the HERO -- actively wrong, so it stays removed rather than kept.",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "LAST_CHAIN_ATTACK",
           "name": "Edge of Autumn"
@@ -13,7 +15,8 @@
       ],
       "effects": [
         {
-          "type": "GO_AGAIN"
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
         }
       ]
     }

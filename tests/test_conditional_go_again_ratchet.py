@@ -69,16 +69,86 @@ FIXED = ["aggressive_pounce_red", "aggressive_pounce_blue",
          # keyword "go again" with a space, which an exact GO_AGAIN match skips.
          "insult_to_injury_red", "insult_to_injury_blue",
          "insult_to_injury_yellow", "frontline_scout_red",
-         "frontline_scout_yellow", "fervent_forerunner_yellow"]
+         "frontline_scout_yellow", "fervent_forerunner_yellow",
+         # The condition is a CONTINUOUS STATE ("if the defending hero has a
+         # soul card", "if you've played a Lightning card this turn"), so the
+         # once-vs-continuously reading cannot disagree and the conversion
+         # needs no judgement about timing. Two of them -- photon_rush_red and
+         # runerager_swarm_blue -- were ACTIVATE abilities with no cost, so the
+         # gate was not merely mis-shaped but UNREACHABLE.
+         "soul_cleaver_blue", "soul_cleaver_yellow",
+         "scour_the_battlescape_blue", "photon_rush_red",
+         "runerager_swarm_blue", "soup_up_red",
+         # Combo ("if X was the last attack this combat chain"), Lightning Bond
+         # ("if a Lightning card was pitched to play this") and one that reads
+         # its own live power. All settled or continuously readable, so the
+         # once-vs-continuously reading cannot disagree -- and for Chain of
+         # Brutality continuous is the CORRECT reading, since a pump after
+         # declaration has to count.
+         "rising_knee_thrust_blue", "whelming_gustwave_red",
+         "vengeance_never_rests_blue", "rushing_river_blue",
+         "arc_bending_red", "chain_of_brutality_red",
+         # "if it is Draconic" (a state another effect puts the card in) and
+         # "if the discarded card has 6+ {p}". The latter needed an engine fix
+         # first: DISCARDED_CARD_POWER_GTE read the discarded card off the
+         # EVENT, which for an additional cost is the play event and has no
+         # power, so the clause could never fire under ANY ability shape.
+         "art_of_the_dragon_blood_red", "breakneck_battery_red",
+         # These six do NOT use the static shape and must not: their condition
+         # is a timed event ("if this HITS", "if you DO", "when this attacks,
+         # if ..."), so a static would read it at the wrong moment. They keep
+         # the trigger and DECLARE the keyword conditional instead -- see
+         # CardDef.conditional_keywords for why the inference cannot just be
+         # widened to cover them.
+         "overload_yellow", "wild_ride_yellow", "second_strike_red",
+         "second_strike_blue", "path_of_same_ends_red", "stellar_glide_blue",
+         "last_ditch_effort_blue", "arc_ramp_red", "light_the_way_red"]
 
 #: The count of cards still carrying an unconditional printed go again their
 #: text gates. Lower it as they are fixed; it must never rise.
 #:
-#: This was 48 before the two carve-outs below were applied. Six of those were
-#: never defects: three print go again on its own line and three hand it to
+#: THE SEVEN THAT ARE LEFT ARE NOT WAITING ON JUDGEMENT. Each was read and each
+#: is blocked on something specific, so nobody needs to re-derive it:
+#:
+#:   ram_raider_yellow      "banish a random card FROM YOUR HAND" -- there is no
+#:   shadow_of_ursur_blue   hand-banish cost type. Both are currently authored
+#:                          against the wrong zone (DISCARD_RANDOM,
+#:                          BANISH_FROM_GRAVEYARD), and converting them would
+#:                          pin a wrong cost inside the shape that also strips
+#:                          the printed keyword -- turning a visible gap into an
+#:                          invisible one.
+#:
+#:   ebbing_arcstride_red   "Whenever this FRAGMENTS" -- Fragment is not
+#:   ebbing_arcstride_blue  implemented anywhere in the engine. The clause hangs
+#:                          off ON_BECOME, which is emitted only when a HERO
+#:                          transforms, so it can never fire. Declaring the
+#:                          keyword conditional would turn a fail-OPEN bug into
+#:                          a fail-CLOSED one.
+#:
+#:   aether_quickening_yellow  "Surge - if this deals MORE THAN 3 DAMAGE".
+#:                          Authored as ON_CLASH_WIN_REVEALED + CHAIN_HIT_COUNT
+#:                          -- a clash trigger and a count of chain hits, both
+#:                          unrelated to the printed text. Needs the damage
+#:                          effect to report how much it actually dealt.
+#:
+#:   sonata_galaxia_red     "If X is 2 or more" (X = the searched aura's cost).
+#:                          Authored as CHAIN_HIT_COUNT_GTE 2, which counts
+#:                          something else entirely. It also carries a PAY_LIFE
+#:                          additional cost that appears nowhere in its text.
+#:
+#:   man_overboard_yellow   "you may discard an ALLY. If you do, +1{p} and go
+#:                          again." Authored as OPT (look at the top card of
+#:                          your deck) followed by an UNCONDITIONAL +1{p} and go
+#:                          again -- no discard, no ally, no gate.
+#:
+#: The last three need re-authoring, not a shape change, so they stay here
+#: rather than being converted into something that merely looks finished.
+#:
+#: This was 48 before the two carve-outs below were applied. Seven of those
+#: were never defects: three print go again on its own line and four hand it to
 #: another card. Luminaris was one of them -- counted in the backlog by the very
 #: file that documents why it must never be converted.
-UNFIXED_LIMIT = 31
+UNFIXED_LIMIT = 7
 
 
 def _prints_go_again_outright(text):
@@ -91,16 +161,48 @@ def _prints_go_again_outright(text):
     return False
 
 
+#: "Target <x> attack", which introduces ANOTHER attack for a later pronoun to
+#: refer to. Deliberately requires the word "attack": "target hero" leaves no
+#: attack for "it" to mean, and Aether Quickening -- whose go again really is
+#: its own -- opens with exactly that.
+_TARGET_ATTACK = re.compile(r"target[^.]{0,40}\battack\b", re.I)
+
+
 def _go_again_is_about_itself(text, name):
     """Luminaris's distinction, applied to the printed text rather than to the
     JSON: "the attack gets go again" hands the keyword to ANOTHER card, and the
     DB lists it here only because it flattens the sentence. Only a card that
-    gives ITSELF go again can have its printed keyword stripped."""
+    gives ITSELF go again can have its printed keyword stripped.
+
+    THE PRONOUN IS THE HARD PART. "It gets go again" is about the card itself on
+    most cards and about someone else on Arakni, Redback -- "Target Assassin
+    attack gets +3{p}. If it has stealth, it gets go again" -- where the
+    referent was introduced a sentence earlier. Naming the card, or saying
+    "this", settles it; a BARE PRONOUN has to be resolved by looking back.
+
+    Scoped to the go again sentence and the one before it, because a card can
+    do both. Tigrine Reflex gives ITSELF go again in one sentence and targets
+    another attack in an unrelated Attack Reaction, so any rule that reads the
+    whole card at once excuses it from a backlog it belongs in.
+    """
     low = text.lower()
-    subjects = ["this get", "this gain", "it get", "it gain"]
+    named = ["this get", "this gain"]
     if name:
-        subjects += [name.lower() + " get", name.lower() + " gain"]
-    return any(sub in low for sub in subjects)
+        named += [name.lower() + " get", name.lower() + " gain"]
+    if any(sub in low for sub in named):
+        return True
+    if not any(sub in low for sub in ["it get", "it gain"]):
+        return False
+    # Bare pronoun: resolve it against the sentence that precedes the one
+    # granting go again.
+    sentences = [s for s in re.split(r"(?<=[.!?])\s+|\n+", text) if s.strip()]
+    for i, sentence in enumerate(sentences):
+        if "go again" not in sentence.lower():
+            continue
+        window = " ".join(sentences[max(0, i - 1):i + 1])
+        if _TARGET_ATTACK.search(window):
+            return False
+    return True
 
 
 def _unstripped():
@@ -163,7 +265,14 @@ def test_the_unfixed_count_does_not_grow():
 #: of the ratchet is that its number moves only when a card is actually fixed.
 NOT_DEFECTS = ["luminaris", "bonds_of_ancestry_red", "current_funnel_blue",
                "knife_through_butter_blue", "painful_passage_red",
-               "quick_succession_red"]
+               "quick_succession_red",
+               # Luminaris's shape reached through a pronoun. "Target Assassin
+               # attack gets +3{p}. If IT has stealth, IT gets go again" is
+               # about the TARGET, but _go_again_is_about_itself only looks for
+               # the words "it gets", so a sentence with a target reads exactly
+               # like one about the card itself. A hero is never an attack, so
+               # the SOURCE_IS_ATTACK form would be a lie about what it does.
+               "arakni_redback"]
 
 
 @pytest.mark.parametrize("slug", NOT_DEFECTS)

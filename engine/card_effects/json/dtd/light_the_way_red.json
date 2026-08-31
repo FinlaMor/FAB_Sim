@@ -1,6 +1,6 @@
 {
   "slug": "light_the_way_red",
-  "_comment": "\"As an additional cost to play this, you MAY charge your hero's soul. If a YELLOW card is charged this way, ...\" -- 27 cards share this shape. An optional additional cost must never block the play, and the payoff asks WHAT was charged, so the CHARGE cost stamps the charged card's colour on the card being played. A turn-scoped marker would leak to the next card played this turn; \"this way\" is per-play. Cost and payoff sit on ONE ability: an ability carrying only a cost has an empty effects list, which compiles fine and resolves as a no-op.",
+  "_comment": "'As an additional cost to play this, you may charge your hero's soul. When this hits, if a yellow card was charged this way, this gets go again.' The implementation is already right: an optional CHARGE cost that stamps the charged card's colour, and an injected ON_HIT trigger gated on CHARGED_THIS_WAY yellow. Only the printed keyword was unconditional, so the card had go again without charging anything and without hitting. Declared rather than converted because the condition is a HIT -- there is no state for a static to read before the attack connects.",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -30,5 +30,8 @@
         }
       ]
     }
+  ],
+  "conditional_keywords": [
+    "GO_AGAIN"
   ]
 }

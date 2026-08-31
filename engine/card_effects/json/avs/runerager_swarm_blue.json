@@ -1,21 +1,18 @@
 {
   "slug": "runerager_swarm_blue",
-  "_comment": "Turn-event tracking: read AURA_PLAYED_OR_CREATED_THIS_TURN — private flag(s) nothing set. Attacks and token creation are now recorded by the engine and read via EVENT_THIS_TURN.",
+  "_comment": "'If you've played or created an aura this turn, this gets go again.' Two fixes. (1) SHAPE: it was an ACTIVATE with no cost -- unreachable -- so the printed GoAgain applied unconditionally and the gate was decoration; WHILE_STATIC + SOURCE_IS_ATTACK per CR 6.2.3d. (2) The condition only asked about CREATED auras, so a played aura -- the commoner half of the sentence, and the one a Runeblade deck actually does -- did not count. EVENT_THIS_TURN 'play' carries subtypes as qualifiers (play.py), so the OR expresses the printed text exactly.",
   "abilities": [
     {
-      "ability_type": "ACTIVATE",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
-        {
-          "type": "EVENT_THIS_TURN",
-          "event": "create",
-          "qualifier": "aura"
-        }
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "OR", "any": [
+          {"type": "EVENT_THIS_TURN", "event": "create", "qualifier": "aura"},
+          {"type": "EVENT_THIS_TURN", "event": "play", "qualifier": "aura"}
+        ]}
       ],
       "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
       ]
     }
   ]

@@ -1865,14 +1865,31 @@ def test_chain_of_brutality_six_power_gates_go_again_and_set_base():
         "≥6 power → queue 'next attack action has 6 base power'"
     assert not on_hit(4), "<6 power → no effect"
 
-    # go again is granted when it attacks with ≥6 power
-    st = _make_state(); st.card_db = DB
-    cob = _card("chain_of_brutality_red", 1)
-    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=6,
-                            base_attack_power=6, attack_card=cob, keywords=[])
-    dispatch(st, "ON_ATTACK", "chain_of_brutality_red", card=cob, event=None)
-    assert any(k.lower() == "go again" for k in (st.combat.keywords or [])), \
-        "≥6 power grants go again"
+    # go again is granted when it attacks with 6 or more power.
+    #
+    # This is now a WHILE_STATIC dispatched on RECALC_ATTACK_POWER rather than
+    # an ON_ATTACK trigger, and the change is the point rather than an
+    # incidental refactor. The card PRINTS GoAgain, so while the grant was a
+    # trigger the printed keyword applied unconditionally and a 4-power Chain
+    # of Brutality had go again anyway -- the gate this test was written to
+    # protect was decoration. loader.conditional_keywords strips a printed
+    # keyword only for a SOURCE_IS_ATTACK-gated static, and reading the power
+    # continuously is also the correct timing: a pump applied after declaration
+    # has to count, because go again is paid at the Resolution Step (CR 8.3.5b).
+    def go_again_at(power):
+        st = _make_state(); st.card_db = DB
+        cob = _card("chain_of_brutality_red", 1)
+        st.combat = CombatState(attacker_id=1, link_id=1, attack_power=power,
+                                base_attack_power=power, attack_card=cob,
+                                keywords=[])
+        dispatch(st, "RECALC_ATTACK_POWER", "chain_of_brutality_red",
+                 card=cob, event=None)
+        return any(k.lower().replace("_", " ") == "go again"
+                   for k in (st.combat.keywords or []))
+
+    assert go_again_at(6), "6 or more power grants go again"
+    assert not go_again_at(4), (
+        "below 6 power it still grants go again -- the gate is decoration")
 
     # the queued set_base sets a future attack ACTION's base to 6 (not a weapon)
     st = _make_state(); st.card_db = DB

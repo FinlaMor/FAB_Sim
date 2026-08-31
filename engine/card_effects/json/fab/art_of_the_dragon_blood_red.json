@@ -1,7 +1,25 @@
 {
   "slug": "art_of_the_dragon_blood_red",
-  "_comment": "'When this attacks, IF IT IS DRACONIC' \u2014 the condition is about this card, which can be made Draconic by another effect, so it is checked at attack time rather than assumed. Then go again plus the same three-use Draconic cost reduction as Blood of the Dracai.",
+  "_comment": "'When this attacks, IF IT IS DRACONIC, it gets go again and the next 3 Draconic cards you play this turn cost {r} less.' The condition is about this card, which another effect can make Draconic, so it is checked rather than assumed.\n\nTHE TWO HALVES ARE NOT THE SAME KIND OF EFFECT and are now shaped differently on purpose. The cost reduction is a one-shot handed out when the attack is announced, so it stays an ON_ATTACK trigger. The go again is a continuous grant to this card, so it is WHILE_STATIC gated on SOURCE_IS_ATTACK -- the only shape loader.conditional_keywords recognises, and while it was a trigger the printed GoAgain applied unconditionally and a non-Draconic Art of the Dragon Blood had go again anyway (CR 6.2.3d; go again is paid at the Resolution Step, CR 8.3.5b).",
   "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "CARD_IS_CLASS",
+          "card_class": "Draconic"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    },
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
@@ -12,9 +30,6 @@
         }
       ],
       "effects": [
-        {
-          "type": "GO_AGAIN"
-        },
         {
           "type": "MODIFY_NEXT_CARD_COST",
           "amount": 1,

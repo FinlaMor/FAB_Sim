@@ -1,14 +1,15 @@
 {
   "slug": "breakneck_battery_red",
+  "cost": {
+    "type": "DISCARD_RANDOM"
+  },
   "abilities": [
     {
-      "ability_type": "PLAY",
-      "additional_cost": [
-        {
-          "type": "DISCARD_RANDOM"
-        }
-      ],
+      "ability_type": "WHILE_STATIC",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "DISCARDED_CARD_POWER_GTE",
           "amount": 6
@@ -21,5 +22,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'As an additional cost to play Breakneck Battery, discard a random card. If the discarded card has 6 or more {p}, Breakneck Battery gains go again.'\n\nTHE COST IS CARD-LEVEL, NOT ON AN ABILITY, and that is load-bearing. interpreter._run_ability CHECKS AND PAYS an ability's additional_costs every time the ability is dispatched -- so an additional_cost on this WHILE_STATIC would discard a card on EVERY attack-power recalculation, and once the hand ran dry the unpayable cost would abort the ability and take the go again with it. The card-level `cost` is checked for legality and paid exactly once, when the card is played (play.py, _dsl_cd.play_cost).\n\nThe grant has to be a WHILE_STATIC gated on SOURCE_IS_ATTACK because that is the only shape loader.conditional_keywords infers from; while the printed GoAgain applied unconditionally, discarding a 1-power card still gave go again and the gamble the card is built around did nothing. It could not go on a separate effect-less PLAY ability either: an ability with no effects is a silent no-op the hygiene tests reject.\n\nWhich card was discarded is settled while paying for the card and cannot change afterwards, so reading the condition continuously (CR 6.2.3d) gives the same answer as reading it once. That condition needed an engine fix to answer at all: DISCARDED_CARD_POWER_GTE read the discarded card off the EVENT, which for an additional cost is the play event and has no power, so it returned 0 under any ability shape. cost_types._stamp_discarded now records what the cost took, the way play.py stamps pitched_for_this."
 }
