@@ -1,25 +1,32 @@
 {
   "slug": "ram_raider_yellow",
+  "cost": {
+    "type": "BANISH_FROM_HAND",
+    "amount": 1,
+    "random": true
+  },
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
   "abilities": [
     {
-      "ability_type": "PLAY",
-      "additional_cost": [
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
         {
-          "type": "DISCARD_RANDOM"
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "BANISHED_TO_PLAY_THIS",
+          "power_gte": 6
         }
       ],
       "effects": [
         {
-          "type": "GO_AGAIN",
-          "conditions": [
-            {
-              "type": "DISCARDED_CARD_POWER_GTE",
-              "amount": 6
-            }
-          ]
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
         }
       ]
     }
   ],
-  "_comment": "Deleted: a SET_FLAG naming a keyword the card PRINTS (Blood Debt). Printed keywords come from card data and already work; the flag was read by nothing, set by nothing, and duplicated a fact the engine already had."
+  "_comment": "'As an additional cost to play this, BANISH A RANDOM CARD FROM YOUR HAND. If a card with 6 or more {p} is banished this way, this gets go again. Blood Debt.'\n\nWas authored as DISCARD_RANDOM -- the wrong zone, and not a smaller version of the printed cost but a different one: a discarded card is in the graveyard, where this deck can get it back. There was no hand-banish cost type until now.\n\nThe cost is CARD-LEVEL rather than on the ability, because interpreter._run_ability re-checks and re-pays an ability's additional_costs on every dispatch -- on a WHILE_STATIC that would banish a card per attack-power recalculation and then abort the ability once the hand emptied.\n\nWhich card was banished is settled while paying and cannot change afterwards, so the WHILE_STATIC reading (CR 6.2.3d) gives the same answer as reading it once -- and that shape is what loader.conditional_keywords infers from, without which the printed GoAgain applied unconditionally and the 6-power gamble paid out every time. Blood Debt is a printed keyword and needs no JSON."
 }

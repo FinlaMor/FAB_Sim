@@ -1,17 +1,23 @@
 {
   "slug": "shadow_of_ursur_blue",
+  "cost": {
+    "type": "BANISH_FROM_HAND",
+    "amount": 1,
+    "optional": true,
+    "keyword": "blood debt"
+  },
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
   "abilities": [
     {
-      "ability_type": "PLAY",
-      "additional_cost": [
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
         {
-          "type": "BANISH_FROM_GRAVEYARD",
-          "conditions": [
-            {
-              "type": "HAS_KEYWORD",
-              "keyword": "BloodDebt"
-            }
-          ]
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "BANISHED_TO_PLAY_THIS"
         }
       ],
       "effects": [
@@ -21,5 +27,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'As an additional cost to play Shadow of Ursur, YOU MAY banish a card with blood debt FROM YOUR HAND. If you do, Shadow of Ursur gains go again.'\n\nTwo defects, both from there being no hand-banish cost type. It was BANISH_FROM_GRAVEYARD -- the wrong zone -- and MANDATORY, so an optional additional cost blocked the play: a hand with no blood-debt card could not cast the card at all, which is strictly worse than the free go again the printed keyword was handing out on the other side.\n\nOptional additional costs never block legality (can_pay returns True), and the payoff is gated on BANISHED_TO_PLAY_THIS -- whether anything was ACTUALLY banished -- so declining and having nothing eligible both withhold the go again.\n\nSTILL MISSING: 'You may play Shadow of Ursur from your BANISHED ZONE.' That is a permission to play from a zone the engine does not offer plays from for this card, and GRANT_PLAY_FROM_BANISHED grants it to a card an effect names rather than standing as a permanent property of this one. Flagged rather than approximated."
 }

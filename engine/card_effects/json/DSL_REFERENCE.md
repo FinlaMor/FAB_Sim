@@ -155,6 +155,21 @@ Array of effect objects representing extra costs paid when playing.
 ]
 ```
 
+`BANISH_FROM_HAND` — "banish a random card from your hand", "you may banish a
+card with blood debt from your hand". Fields: `amount`, `random`, `optional`,
+plus the shared hand filters (`keyword`, `card_type`, `card_name`, `color`,
+`class_filter`, `filter`). An `optional: true` cost never blocks the play
+(CR 5.1.6); gate the payoff on `BANISHED_TO_PLAY_THIS` instead. What it took is
+recorded on the card being played, so "this way" is answerable later.
+
+> **Put a cost on the CARD (`"cost"`), not on an ability, whenever the ability is
+> dispatched more than once.** `interpreter._run_ability` re-checks and re-pays
+> an ability's `additional_cost` on *every* dispatch — on a `WHILE_STATIC` that
+> means paying it once per attack-power recalculation, and once it can no longer
+> be paid the ability returns early and stops working. An ability holding only a
+> cost is not an option either: an ability with no effects is a silent no-op the
+> hygiene tests reject.
+
 ### Modal Abilities
 
 ```json
@@ -480,6 +495,7 @@ Conditions are arrays evaluated against the current game state.
 | `CARD_TYPE_IN` | `types: []` | Card type matches |
 | `CARD_SUBTYPE_IN` | `subtypes: []` | Card subtype matches |
 | `AMOUNT_GTE` / `AMOUNT_GT` / `AMOUNT_LTE` / `AMOUNT_LT` / `AMOUNT_EQ` | `amount`, `value` | Compare any resolvable **amount** against a number. See below. |
+| `BANISHED_TO_PLAY_THIS` | `power_gte` (optional) | Something was banished by this card's own cost. Bare = "if you do"; with `power_gte` = "if a card with N or more {p} is banished this way". |
 
 **`AMOUNT_*`** is the general comparison, for quantities that have no condition
 type of their own. Every other comparison here names one specific quantity

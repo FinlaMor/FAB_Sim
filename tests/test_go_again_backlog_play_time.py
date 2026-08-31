@@ -26,16 +26,16 @@ a separate effect-less PLAY ability: an ability with no effects is a silent
 no-op the hygiene tests reject, correctly. The card-level `cost` is checked for
 legality and paid exactly once, when the card is played.
 
-TWO CARDS IN THIS BACKLOG ARE BLOCKED, NOT DEFERRED, and the tests at the
-bottom record why so the next person does not re-derive it:
+TWO CARDS WERE BLOCKED HERE AND ARE NOW DONE. ram_raider_yellow and
+shadow_of_ursur_blue both banish from HAND as an additional cost, and no such
+cost type existed -- they were authored against DISCARD_RANDOM and
+BANISH_FROM_GRAVEYARD, the wrong zones. Converting them then would have pinned
+a wrong cost inside the shape that also strips their printed keyword, turning a
+visible gap into an invisible one, so they stayed in the backlog until
+BANISH_FROM_HAND was built. See tests/test_banish_from_hand_cost.py.
 
-    ram_raider_yellow    "banish a random card FROM YOUR HAND"
-    shadow_of_ursur_blue "you MAY banish a card with blood debt FROM YOUR HAND"
-
-There is no hand-banish cost type. Both are currently authored against the
-wrong zone -- DISCARD_RANDOM and BANISH_FROM_GRAVEYARD -- so converting them
-would pin a wrong cost in the shape that also strips their printed keyword,
-turning a visible gap into an invisible one. They stay in the backlog.
+The guard below is what noticed the block had lifted: it asserted the cost type
+did not exist, and failing was the signal to finish the cards.
 """
 from __future__ import annotations
 
@@ -62,7 +62,7 @@ DB = CardDB()
 JSON_ROOT = ROOT / "engine" / "card_effects" / "json"
 
 CONVERTED = ["art_of_the_dragon_blood_red", "breakneck_battery_red"]
-BLOCKED = ["ram_raider_yellow", "shadow_of_ursur_blue"]
+FORMERLY_BLOCKED = ["ram_raider_yellow", "shadow_of_ursur_blue"]
 
 
 def _state():
@@ -225,38 +225,23 @@ def test_breakneck_battery_declares_the_cost_as_a_cost():
         "block legality rather than run on resolution")
 
 
-# --- the two that are blocked ----------------------------------------------
+# --- the two that WERE blocked ---------------------------------------------
 
-@pytest.mark.parametrize("slug", BLOCKED)
-def test_a_blocked_card_is_still_in_the_backlog(slug):
-    """Not deferred out of caution -- BLOCKED. Converting one now would pin a
-    wrong cost inside the shape that also strips its printed keyword, so the
-    card would look finished while paying the wrong price."""
-    from tests.test_conditional_go_again_ratchet import _unstripped
-    assert slug in _unstripped(), (
-        slug + " left the backlog. If its hand-banish cost is now expressible, "
-        "delete this test; if it was converted with the wrong cost still in "
-        "place, put it back.")
-
-
-def test_the_hand_banish_cost_is_still_missing():
-    """The premise for calling those two blocked. When a hand-banish cost type
-    appears, this fails and they can be finished."""
+def test_the_hand_banish_cost_now_exists():
+    """This test used to assert the OPPOSITE -- that BANISH_FROM_HAND did not
+    exist -- as the premise for leaving two cards unfinished. Its failing is
+    what said the block had lifted."""
     source = (ROOT / "engine" / "card_effects" / "dsl" / "cost_types.py"
               ).read_text(encoding="utf-8")
-    assert "BANISH_FROM_HAND" not in source, (
-        "a hand-banish cost type now exists -- ram_raider_yellow and "
-        "shadow_of_ursur_blue can be authored against the right zone and "
-        "converted")
+    assert "BANISH_FROM_HAND" in source
 
 
-@pytest.mark.parametrize("slug", BLOCKED)
-def test_the_blocked_cards_still_say_hand(slug):
-    idx = json.loads((ROOT / "card_data" / "slug_index.json")
-                     .read_text(encoding="utf-8"))["by_slug"]
-    text = (idx[slug].get("functionalText") or "").lower()
-    assert "banish" in text and "from your hand" in text, (
-        "the printed cost changed; re-check whether this is still blocked")
+@pytest.mark.parametrize("slug", FORMERLY_BLOCKED)
+def test_a_formerly_blocked_card_is_out_of_the_backlog(slug):
+    from tests.test_conditional_go_again_ratchet import _unstripped
+    assert slug not in _unstripped(), (
+        slug + " is back in the backlog; its printed go again is unconditional "
+        "again")
 
 
 # --- premise ----------------------------------------------------------------

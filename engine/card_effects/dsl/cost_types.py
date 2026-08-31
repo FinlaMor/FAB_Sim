@@ -30,6 +30,21 @@ def _stamp_discarded(card, discarded):
     card.discarded_for_this = existing + list(discarded)
 
 
+def _stamp_banished(card, banished):
+    """Record on the card being played WHICH cards its banish cost took.
+
+    The banish sibling of _stamp_discarded, and needed for the same reason:
+    "if a card with 6 or more {p} is banished THIS WAY" and "if you DO banish a
+    card with blood debt" both ask, at resolution, about something that
+    happened while paying. Nothing else records it -- the banished zone holds
+    every card banished all game, so it cannot answer "this way".
+    """
+    if card is None or not banished:
+        return
+    existing = list(getattr(card, "banished_for_this", None) or [])
+    card.banished_for_this = existing + list(banished)
+
+
 def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable]:
     """Return (check_fn, pay_fn).
 
@@ -621,6 +636,82 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
                 remaining -= use
                 if remaining <= 0:
                     break
+        return can_pay, pay
+
+    if ctype == "BANISH_FROM_HAND":
+        # "As an additional cost to play this, banish a random card FROM YOUR
+        # HAND" (Ram Raider) / "you MAY banish a card with blood debt from your
+        # hand" (Shadow of Ursur).
+        #
+        # There was no hand-banish cost, so both cards were authored against
+        # the wrong zone -- DISCARD_RANDOM and BANISH_FROM_GRAVEYARD -- which is
+        # not a smaller version of the printed cost but a different one: it
+        # takes from the wrong place, and on Shadow of Ursur it made an OPTIONAL
+        # cost mandatory, so a hand with no blood-debt card could not play the
+        # card at all.
+        #
+        # Filters come from the shared hand vocabulary (_hand_card_filter), so
+        # "a card with blood debt" is {"keyword": "blood debt"} exactly as the
+        # DISCARD_CARD cost spells it.
+        from engine.card_effects.dsl.effect_types import _hand_card_filter
+        amount = int(params.get("amount", 1) or 1)
+        random_pick = bool(params.get("random"))
+        # An OPTIONAL additional cost must never block the play (CR 5.1.6); the
+        # payoff is gated on whether it was actually paid, which
+        # `banished_for_this` answers.
+        optional = bool(params.get("optional"))
+        matches = _hand_card_filter(params)
+        face_down = bool(params.get("face_down"))
+
+        def _pool(card, state, _m=matches):
+            from engine.card_effects.ability_keywords import _controller_id
+            hand = state.players[_controller_id(card)].hand.cards
+            if _m is None:
+                return list(hand)
+            return [c for c in hand if _m(c, state)]
+
+        def can_pay(card, event, state, _a=amount, _opt=optional):
+            if _opt:
+                return True
+            return len(_pool(card, state)) >= _a
+
+        def pay(card, event, state, _a=amount, _rand=random_pick,
+                _opt=optional, _fd=face_down):
+            import random as _random
+            from engine.card_effects.ability_keywords import (_controller_id,
+                                                              _ask_player,
+                                                              ask_optional)
+            from engine.effect_keywords import banish as _ek_banish
+            cid = _controller_id(card)
+            taken = []
+            for _ in range(_a):
+                pool = _pool(card, state)
+                if not pool:
+                    break
+                if _opt:
+                    pick = ask_optional(
+                        state, cid, [c.slug for c in pool],
+                        context="Banish a card from your hand as an "
+                                "additional cost?")
+                    if pick is None:
+                        break
+                    chosen = next((c for c in pool if c.slug == pick), pool[0])
+                elif _rand:
+                    chosen = _random.choice(pool)
+                elif len(pool) == 1:
+                    chosen = pool[0]
+                else:
+                    pick = _ask_player(state, cid, [c.slug for c in pool],
+                                       context="Choose a card to banish")
+                    chosen = next((c for c in pool if c.slug == pick), pool[0])
+                # Through the canonical keyword (CR 8.5.1) so the event fires
+                # and replacement effects can intercept it. origin_zone must be
+                # passed or banish leaves the card in hand while also adding it
+                # to the banished zone -- present in both at once.
+                _ek_banish(state, chosen, cid, origin_zone="hand",
+                           face_down=_fd)
+                taken.append(chosen)
+            _stamp_banished(card, taken)
         return can_pay, pay
 
     if ctype == "BANISH_FROM_GRAVEYARD":

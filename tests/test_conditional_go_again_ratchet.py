@@ -110,40 +110,36 @@ FIXED = ["aggressive_pounce_red", "aggressive_pounce_blue",
          # printed keyword paid out anyway. See
          # tests/test_reauthored_gated_go_again.py.
          "man_overboard_yellow", "sonata_galaxia_red",
-         "aether_quickening_yellow"]
+         "aether_quickening_yellow",
+         # Unblocked by building the BANISH_FROM_HAND cost type. Both banish
+         # from HAND as an additional cost and had been authored against the
+         # wrong zone (DISCARD_RANDOM, BANISH_FROM_GRAVEYARD); Shadow of Ursur's
+         # was also mandatory, so an OPTIONAL cost was blocking the play.
+         "ram_raider_yellow", "shadow_of_ursur_blue"]
 
 #: The count of cards still carrying an unconditional printed go again their
 #: text gates. Lower it as they are fixed; it must never rise.
 #:
-#: THE FOUR THAT ARE LEFT ARE BLOCKED ON MISSING ENGINE PRIMITIVES, not on
-#: judgement. Each was read; none can be finished without building something
-#: first, and each would fail CLOSED if declared conditional today -- the gate
-#: would strip the printed keyword and nothing would ever grant it back:
-#:
-#:   ram_raider_yellow      "banish a random card FROM YOUR HAND" / "you may
-#:   shadow_of_ursur_blue   banish a card with blood debt FROM YOUR HAND".
-#:                          There is no hand-banish cost type; both are
-#:                          currently authored against the wrong zone
-#:                          (DISCARD_RANDOM, BANISH_FROM_GRAVEYARD). Converting
-#:                          them would pin a wrong cost inside the shape that
-#:                          also strips the printed keyword -- turning a visible
-#:                          gap into an invisible one.
-#:                          Unblocked by: a BANISH_FROM_HAND cost type.
+#: THE TWO THAT ARE LEFT ARE BLOCKED ON A MECHANIC THAT DOES NOT EXIST:
 #:
 #:   ebbing_arcstride_red   "Whenever this FRAGMENTS, it gets go again."
 #:   ebbing_arcstride_blue  Fragment is not implemented anywhere in the engine.
 #:                          The clause hangs off ON_BECOME, which is emitted
 #:                          only when a HERO transforms, so it can never fire.
+#:                          Declaring the keyword conditional today would strip
+#:                          the printed one with nothing to grant it back --
+#:                          fail-OPEN becomes fail-CLOSED, which is quieter and
+#:                          no more correct.
 #:                          Unblocked by: the Fragment mechanic.
 #:
-#: Everything else that was here has been fixed. The three that needed
-#: RE-AUTHORING rather than a shape change are done and tested; the two engine
-#: gaps they exposed (AMOUNT_GTE/GT for "if X is 2 or more" and "if this deals
-#: more than 3 damage", and conditional keywords on the NON-ATTACK resolution
-#: path) are closed.
+#: Everything else is done. Four engine gaps were built along the way rather
+#: than worked around: an explicit `conditional_keywords` declaration for cards
+#: whose grant must stay a trigger, conditional keywords on the NON-ATTACK
+#: resolution path, AMOUNT_GTE/GT for "if X is 2 or more", and the
+#: BANISH_FROM_HAND cost.
 
 
-UNFIXED_LIMIT = 4
+UNFIXED_LIMIT = 2
 
 
 def _prints_go_again_outright(text):

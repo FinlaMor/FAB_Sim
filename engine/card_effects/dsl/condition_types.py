@@ -1043,6 +1043,43 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return len(getattr(s, 'chain_links', [])) >= _amt - 1
         return _cgh
 
+    if ctype == "BANISHED_TO_PLAY_THIS":
+        # "If a card with 6 or more {p} is banished THIS WAY, this gets go
+        # again" (Ram Raider) / "you may banish a card with blood debt from
+        # your hand. IF YOU DO, ..." (Shadow of Ursur).
+        #
+        # The banished ZONE cannot answer either question -- it holds every
+        # card banished all game, by anyone, for any reason. "This way" is
+        # about what THIS card's cost took, which cost_types._stamp_banished
+        # records on the card being played, the same way play.py stamps
+        # pitched_for_this.
+        #
+        #   {"type":"BANISHED_TO_PLAY_THIS"}                 "if you do"
+        #   {"type":"BANISHED_TO_PLAY_THIS","power_gte":6}   "with 6 or more {p}"
+        #
+        # A bare use asks only that SOMETHING was banished to pay for this,
+        # which is what an optional additional cost's "if you do" means.
+        want_power = params.get("power_gte", params.get("power"))
+
+        def _banished_to_play(c, e, s, _p=want_power):
+            banished = getattr(c, "banished_for_this", None) or []
+            if not banished:
+                return False
+            if _p is None:
+                return True
+            try:
+                need = int(_p)
+            except (TypeError, ValueError):
+                return True
+            for card in banished:
+                power = getattr(card, "power", None)
+                if power is None:
+                    power = getattr(card, "base_power", None)
+                if (power or 0) >= need:
+                    return True
+            return False
+        return _banished_to_play
+
     if ctype == "DISCARDED_CARD_POWER_GTE":
         # "If the discarded card has 6 or more {p}, this gains go again."
         #
