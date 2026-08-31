@@ -2118,6 +2118,35 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return (getattr(target, "pitch", None) or 0) == _w
         return _ref_pitch
 
+    if ctype == "REF_HAS_KEYWORD":
+        # "If THAT CARD has watery grave, this gets overpower" — a question
+        # about the card a previous effect stored, not about the source. The
+        # REF_* family could already ask a ref's type, cost, power, defense and
+        # counters, but not its keywords, so a card whose payoff turns on a
+        # printed keyword had no way to ask.
+        #
+        #   {"type":"REF_HAS_KEYWORD","ref":"burly_card","keyword":"watery grave"}
+        #
+        # Matching is normalised the way the engine compares keywords
+        # everywhere else, so the card DB's "WateryGrave" answers to the
+        # printed "watery grave".
+        from engine.card_effects.dsl.loader import _kw_key
+        ref = params.get("ref", "looked")
+        wanted = [_kw_key(str(k)) for k in _as_list(params, "keyword", "keywords")
+                  if str(k).strip()]
+
+        def _ref_has_kw(c, e, s, _r=ref, _w=wanted):
+            from engine.context import get_ref
+            target = get_ref(_r)
+            if not target or not _w:
+                return False
+            for obj in (target if isinstance(target, list) else [target]):
+                have = {_kw_key(str(k)) for k in (getattr(obj, "keywords", None) or [])}
+                if have & set(_w):
+                    return True
+            return False
+        return _ref_has_kw
+
     if ctype in ("REF_IS_TYPE", "REF_TYPE_IS"):
         # Test the TYPE of a card a previous effect stored under "ref" —
         # "whenever this banishes a REACTION or INSTANT card", "a NON-ATTACK

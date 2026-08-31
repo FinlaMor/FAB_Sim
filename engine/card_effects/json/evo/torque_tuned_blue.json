@@ -1,11 +1,12 @@
 {
   "slug": "torque_tuned_blue",
-  "_comment": "Generic destroyed-this-turn tracking: this read ITEM_DESTROYED_THIS_TURN, a flag nothing ever set, so the clause could never fire. effect_keywords.destroy now records \"destroyed_this_turn:<slug|type|subtype>\" for whatever was destroyed, and DESTROYED_THIS_TURN reads it by name.",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_DEFEND",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
         {
           "type": "DESTROYED_THIS_TURN",
           "name": "item"
@@ -20,6 +21,7 @@
     },
     {
       "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
       "effects": [
         {
           "type": "MAY",
@@ -35,8 +37,8 @@
             }
           ]
         }
-      ],
-      "trigger": "ON_DEFEND"
+      ]
     }
-  ]
+  ],
+  "_comment": "'If an item you control has been destroyed this turn, this gets OVERPOWER.' plus a separate Galvanize defence trigger.\n\nWORD FOR WORD THE SOUP UP SENTENCE with overpower in place of go again, and it had word for word the same defect: the clause was hung off ON_DEFEND, which is the OTHER half of the card, so it fired at the wrong time -- and being triggered it left the PRINTED Overpower unconditional, so the attack had overpower whether or not an item had been destroyed. loader.conditional_keywords strips a printed keyword only for a SOURCE_IS_ATTACK-gated static, and that is not go-again-specific: it covers every keyword in _GRANTABLE_KEYWORDS. WHILE_STATIC per CR 6.2.3d. The DESTROYED_THIS_TURN condition was already correct and is kept; Galvanize is untouched."
 }

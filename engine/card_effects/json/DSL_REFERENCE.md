@@ -277,6 +277,8 @@ Used in modal modes where the card gains a keyword as a base ability.
 `DRAW` and `DISCARD` default to `"SELF"`; pass `"player": "OPPONENT"` to target the
 other player (e.g. "each hero draws a card" = a SELF draw + an OPPONENT draw).
 
+`DISCARD` stores what it discarded under `into` (default `"discarded"`), so an "if you do" payoff has something to ask about. A filtered discard that finds no match, and an empty hand, both store nothing — which is what makes "if you do" fall out for free rather than needing its own gate.
+
 ### Counters
 
 ```json
@@ -496,6 +498,7 @@ Conditions are arrays evaluated against the current game state.
 | `CARD_SUBTYPE_IN` | `subtypes: []` | Card subtype matches |
 | `AMOUNT_GTE` / `AMOUNT_GT` / `AMOUNT_LTE` / `AMOUNT_LT` / `AMOUNT_EQ` | `amount`, `value` | Compare any resolvable **amount** against a number. See below. |
 | `BANISHED_TO_PLAY_THIS` | `power_gte` (optional) | Something was banished by this card's own cost. Bare = "if you do"; with `power_gte` = "if a card with N or more {p} is banished this way". |
+| `REF_HAS_KEYWORD` | `ref`, `keyword` / `keywords` | The card a previous effect stored has a printed keyword. Matching is normalised, so the DB's `"WateryGrave"` answers to `"watery grave"`. |
 
 **`AMOUNT_*`** is the general comparison, for quantities that have no condition
 type of their own. Every other comparison here names one specific quantity

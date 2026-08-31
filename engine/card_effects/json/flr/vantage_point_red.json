@@ -1,15 +1,26 @@
 {
   "slug": "vantage_point_red",
-  "_comment": "Turn-event tracking: read AURA_PLAYED_OR_CREATED_THIS_TURN — private flag(s) nothing set. Attacks and token creation are now recorded by the engine and read via EVENT_THIS_TURN.",
   "abilities": [
     {
-      "ability_type": "STATIC_TRIGGERED",
-      "trigger": "ON_PLAY",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
         {
-          "type": "EVENT_THIS_TURN",
-          "event": "create",
-          "qualifier": "aura"
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "OR",
+          "any": [
+            {
+              "type": "EVENT_THIS_TURN",
+              "event": "create",
+              "qualifier": "aura"
+            },
+            {
+              "type": "EVENT_THIS_TURN",
+              "event": "play",
+              "qualifier": "aura"
+            }
+          ]
         }
       ],
       "effects": [
@@ -19,5 +30,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'If you've played or created an aura this turn, this gets OVERPOWER.' The Runerager Swarm sentence with overpower in place of go again, and it carried both of Runerager Swarm's defects.\n\n(1) SHAPE: it was a STATIC_TRIGGERED on ON_PLAY, so the answer was frozen when the card was played -- and being triggered it left the printed Overpower unconditional, which is the defect that matters: the attack had overpower with no aura in sight. WHILE_STATIC gated on SOURCE_IS_ATTACK is the shape loader.conditional_keywords strips for (CR 6.2.3d).\n\n(2) The condition only asked about CREATED auras, so a PLAYED aura -- the half the sentence names first -- did not count. EVENT_THIS_TURN 'play' carries subtypes as qualifiers, so the OR says exactly what is printed."
 }

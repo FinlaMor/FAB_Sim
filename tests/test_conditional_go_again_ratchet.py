@@ -152,14 +152,28 @@ def _prints_go_again_outright(text):
     return False
 
 
-#: "Target <x> attack", which introduces ANOTHER attack for a later pronoun to
-#: refer to. Deliberately requires the word "attack": "target hero" leaves no
-#: attack for "it" to mean, and Aether Quickening -- whose go again really is
-#: its own -- opens with exactly that.
-_TARGET_ATTACK = re.compile(r"target[^.]{0,40}\battack\b", re.I)
+#: Phrases that introduce ANOTHER card for a later pronoun to refer to.
+#:
+#: "Target <x> attack" requires the word "attack" deliberately: "target hero"
+#: leaves no card for "it" to mean, and Aether Quickening -- whose go again
+#: really is its own -- opens with exactly that.
+#:
+#: "The next <x> card you play" is the second shape, and it was found only when
+#: the sweep was widened past go again to the other grantable keywords. Weave
+#: Ice reads "The next Ice or Elemental attack action card you play this turn
+#: gains +2{p}. If it's fused, IT GAINS DOMINATE" -- the dominate belongs to
+#: that next card, and Weave Ice prints the keyword only because the card DB
+#: flattens the sentence. Converting it would have been the Luminaris mistake
+#: wearing a different keyword.
+_OTHER_REFERENT = re.compile(
+    r"target[^.]{0,40}\battack\b"             # "Target Assassin attack gets ..."
+    r"|the next[^.]{0,60}\bcard you play\b",   # "The next Ice ... card you play"
+    re.I)
+#: Kept under the old name for the tests that pin the pattern itself.
+_TARGET_ATTACK = _OTHER_REFERENT
 
 
-def _go_again_is_about_itself(text, name):
+def _go_again_is_about_itself(text, name, word="go again"):
     """Luminaris's distinction, applied to the printed text rather than to the
     JSON: "the attack gets go again" hands the keyword to ANOTHER card, and the
     DB lists it here only because it flattens the sentence. Only a card that
@@ -188,10 +202,10 @@ def _go_again_is_about_itself(text, name):
     # granting go again.
     sentences = [s for s in re.split(r"(?<=[.!?])\s+|\n+", text) if s.strip()]
     for i, sentence in enumerate(sentences):
-        if "go again" not in sentence.lower():
+        if word not in sentence.lower():
             continue
         window = " ".join(sentences[max(0, i - 1):i + 1])
-        if _TARGET_ATTACK.search(window):
+        if _OTHER_REFERENT.search(window):
             return False
     return True
 

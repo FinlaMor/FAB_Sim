@@ -1272,8 +1272,11 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # whether it matched or not.
         matches = _hand_card_filter(params)
 
+        into = _first(params, "into", "store_as", "record_as",
+                      default="discarded")
+
         def _fn(card, event, state, _a=amt, _pt=player_target,
-                _rand=random_discard, _m=matches):
+                _rand=random_discard, _m=matches, _into=into):
             from engine.card_effects.ability_keywords import effect_discard, _controller_id
             cid = _controller_id(card)
             tid = (3 - cid) if _pt.upper() in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
@@ -1294,9 +1297,15 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                                        matches=bound)
             # "If you do, draw a card" — a filtered discard can find nothing,
             # and an empty hand discards nothing, so the payoff needs to know.
+            #
+            # `into` names the ref, defaulting to "discarded". Burly Bones is
+            # "discard a card OR destroy the top card of your deck. If THAT
+            # CARD has watery grave, ...", where the one question has to be
+            # asked of whichever branch ran -- so both branches store under the
+            # same name and a single condition reads it.
             if discarded:
                 from engine.context import set_ref
-                set_ref("discarded", discarded[0] if len(discarded) == 1
+                set_ref(_into, discarded[0] if len(discarded) == 1
                         else list(discarded))
         return _fn
 

@@ -2,21 +2,22 @@
   "slug": "hydraulic_press_blue",
   "abilities": [
     {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_ATTACK",
+      "ability_type": "WHILE_STATIC",
       "conditions": [
         {
-          "type": "HAS_KEYWORD",
-          "keyword": "Scrap"
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "SCRAPPED"
         }
       ],
       "effects": [
         {
           "type": "GAIN",
-          "keyword": "Overpower"
+          "keyword": "OVERPOWER"
         }
       ]
     }
   ],
-  "_comment": "'This gets **overpower**' was a SET_FLAG named OVERPOWER. SET_FLAG appends the string to current_turn_effects, and the defend path reads combat.keywords -- nothing anywhere reads a flag by that name, so the keyword was never granted. GAIN is the keyword grant, and effect_types.canonical_keyword title-cases it so it matches the exact 'Overpower' test in engine._defend_step."
+  "_comment": "'Scrap. When this attacks, IF IT SCRAPPED A CARD, this gets overpower.'\n\nTHE CONDITION WAS ALWAYS TRUE. It read HAS_KEYWORD \"Scrap\" -- whether the card PRINTS the keyword, which it always does -- rather than whether it actually scrapped anything when played. So the gate answered yes on every attack, and the printed Overpower applied unconditionally on top of it: two independent reasons the card always had overpower, neither visible to an audit, because both types are real and every parameter is read.\n\nSCRAPPED (CR 8.3.32) is the condition that asks what the text asks. It is keyed by the card's own slug, matching the printed \"IT scrapped\" rather than \"you scrapped\", so another Mechanologist card scrapping this turn does not satisfy it.\n\nWhether it scrapped is settled when the card is played and cannot change afterwards, so the WHILE_STATIC reading (CR 6.2.3d) gives the same answer as reading it once -- and that shape is what loader.conditional_keywords strips the printed keyword for."
 }

@@ -1748,6 +1748,18 @@ def effect_reload(state, player_id: int, source_card=None):
 
 
 def effect_dominate(state, player_id: int):
-    """Grant Dominate to the current attack (adds 'Dominate' to combat keywords)."""
+    """Grant Dominate to the current attack (CR 8.5.20).
+
+    Through CombatState.grant_keyword, which records the grant in
+    `keyword_effects` as well as in `keywords`. Appending to `keywords` alone
+    -- what this did -- does NOT survive: _recalculate_attack_power rebuilds
+    that list from scratch on every recalculation and unions back only
+    `keyword_effects`, so a granted Dominate was erased by the next
+    recalculation of the attack it was granted to. Nothing failed loudly; the
+    defending player simply got to block with as many cards as they liked.
+
+    grant_keyword also refuses a duplicate, so a card granting Dominate to an
+    attack that already prints it no longer lists the keyword twice.
+    """
     if state.combat is not None:
-        state.combat.keywords = list(state.combat.keywords or []) + ["Dominate"]
+        state.combat.grant_keyword("Dominate")

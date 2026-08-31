@@ -8,13 +8,26 @@
         {
           "type": "CHOOSE",
           "conditions": [
-            {"type": "CONTROLS_TOKEN_TYPE", "token": "gold"}
+            {
+              "type": "CONTROLS_TOKEN_TYPE",
+              "token": "gold"
+            }
           ],
           "options": [
             [
-              {"type": "DESTROY_TOKEN", "token": "gold"},
-              {"type": "MODIFY_ATTACK", "amount": 3, "mod": "add"},
-              {"type": "GAIN", "keyword": "overpower"}
+              {
+                "type": "DESTROY_TOKEN",
+                "token": "gold"
+              },
+              {
+                "type": "MODIFY_ATTACK",
+                "amount": 3,
+                "mod": "add"
+              },
+              {
+                "type": "GAIN",
+                "keyword": "overpower"
+              }
             ],
             []
           ]
@@ -25,8 +38,15 @@
       "ability_type": "STATIC_TRIGGERED",
       "trigger": "ON_CLASH_WIN_REVEALED",
       "effects": [
-        {"type": "CREATE_TOKEN", "token": "gold"}
+        {
+          "type": "CREATE_TOKEN",
+          "token": "gold"
+        }
       ]
     }
-  ]
+  ],
+  "conditional_keywords": [
+    "OVERPOWER"
+  ],
+  "_comment": "'Victor Specialization. As an additional cost to play this, you MAY destroy a Gold you control. If you do, this gets +3{p} and OVERPOWER. When you win a clash revealing this, create a Gold token.'\n\nThe choice was modelled correctly -- CHOOSE offers destroy-and-buff or decline, and is only offered while you control a Gold -- but the printed Overpower applied unconditionally, so a player who kept their Gold got the overpower anyway and the trade the card asks for was free.\n\nThe keyword is DECLARED conditional rather than converted to a WHILE_STATIC: \"if you DO\" is about a choice made at resolution, not a state a static could re-read."
 }

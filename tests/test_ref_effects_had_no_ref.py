@@ -86,11 +86,16 @@ def _run_type(slug, etype, card, st):
         pop_refs()
 
 
+#: burly_bones_red/blue were here. They were re-authored when the all-keyword
+#: sweep reached them -- the card offers "discard a card OR destroy the top card
+#: of your deck" and the old version did BOTH, mandatorily -- so their deck
+#: destruction is now LOOK_AT + DESTROY_REF inside a CHOOSE branch rather than a
+#: DESTROY_MATCHING node, and this test can no longer find it. The same
+#: property, that it destroys YOUR deck and spares the opponent's, is asserted
+#: through the real branch in test_conditional_overpower_and_dominate.py.
 @pytest.mark.parametrize("slug,victim,spared", [
     ("grind_them_down_blue", 2, 1),
     ("scrub_the_deck_blue", 2, 1),
-    ("burly_bones_blue", 1, 2),
-    ("burly_bones_red", 1, 2),
 ])
 def test_destroy_the_top_card_of_the_right_deck(slug, victim, spared):
     """"destroy the top card of their deck" / "of your deck"."""

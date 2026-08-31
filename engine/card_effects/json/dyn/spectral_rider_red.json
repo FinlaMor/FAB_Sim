@@ -1,5 +1,8 @@
 {
   "slug": "spectral_rider_red",
+  "conditional_keywords": [
+    "OVERPOWER"
+  ],
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -11,10 +14,11 @@
       ],
       "effects": [
         {
-          "type": "GRANT_SUBTYPE",
-          "subtype": "Overpower"
+          "type": "GAIN",
+          "keyword": "OVERPOWER"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'When you play Spectral Rider, if you control a Spectral Shield, this gains OVERPOWER. Phantasm.'\n\nTHE GRANT WAS THE WRONG PRIMITIVE. It was GRANT_SUBTYPE subtype \"Overpower\" -- which adds a SUBTYPE called Overpower to the card, not the keyword to the combat. Nothing reads a subtype by that name, so the clause did nothing at all, and the printed Overpower applied unconditionally on top: the card had overpower with no Spectral Shield anywhere, and the sentence that was supposed to earn it was inert. GAIN with a keyword is what reaches combat.keywords.\n\nKept as a PLAY ability rather than converted to a WHILE_STATIC, because \"WHEN YOU PLAY this, if ...\" is answered once, as the card is played -- a static would keep re-reading it and take the overpower away again if the Spectral Shield were destroyed later in the chain. The keyword is declared conditional instead, which strips the printed one without moving the timing.\n\nPhantasm is a printed keyword and needs no JSON."
 }

@@ -173,7 +173,28 @@ Additionally, each of these fails loudly or is harmless until a card needs it:
    `EffectManager`; do not build on the old class.
 4. **`actions.py` → `play.py` migration** — legal-action generation still
    partially lives in `actions.py`.
-5. **`Fragment` is not implemented** — 27 cards print it (Omens of the Third
+5. **A conditional keyword cannot gate a keyword TRIGGER** — `conditional_keywords`
+   is honoured on the two paths that read a keyword as a *value*
+   (`_recalculate_attack_power` for attacks, `resolve_stack` for non-attack
+   layers), but NOT by `triggers.build_keyword_triggers`, which registers
+   triggered-static keywords straight from the card DB's `keywords` list.
+
+   Live consequence: `gloves_of_azure_waves` reads "**High Tide** — if there
+   are 2 or more blue cards in your pitch zone, this gets +3{d} and **blade
+   break**", and Blade Break is "when the combat chain closes, if this
+   defended, destroy it" (CR 8.3.3). The trigger is registered unconditionally,
+   so the gloves are destroyed **every** time they defend, whether or not High
+   Tide is on — the player loses their Arms slot for a bonus they never got.
+   The +3{d} half is correctly gated; only the keyword is not.
+
+   Definition of done: `build_keyword_triggers` skips a keyword that
+   `conditional_keywords` reports for the card, and the card's own gating
+   ability re-registers it — which needs a way to say "gains a *triggered*
+   static keyword while X", since a `GAIN` of a keyword currently only reaches
+   `combat.keywords`. 27 cards print Blade Break; today only this one gates it,
+   which is why it is recorded rather than half-built.
+
+6. **`Fragment` is not implemented** — 27 cards print it (Omens of the Third
    Age / GEM) and 32 mention it in text. Nothing in the engine emits a fragment
    event, so "whenever this fragments" cannot fire; the cards that have it are
    currently authored against `ON_BECOME`, which is only emitted when a HERO

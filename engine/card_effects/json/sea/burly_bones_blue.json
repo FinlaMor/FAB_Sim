@@ -1,39 +1,60 @@
 {
   "slug": "burly_bones_blue",
+  "conditional_keywords": [
+    "OVERPOWER"
+  ],
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "effects": [
-        {
-          "type": "DISCARD_RANDOM"
-        },
-        {
-          "type": "DESTROY_MATCHING",
-          "target": {
-            "controller": "SELF",
-            "zone": "DECK_TOP",
-            "amount": 1
-          }
-        }
-      ],
-      "trigger": "ON_ATTACK"
-    },
-    {
-      "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
-      "conditions": [
-        {
-          "type": "REF_PITCH_IS",
-          "pitch": "watery_grave"
-        }
-      ],
       "effects": [
         {
-          "type": "GAIN",
-          "keyword": "Overpower"
+          "type": "MAY",
+          "prompt": "Discard a card or destroy the top card of your deck?",
+          "effects": [
+            {
+              "type": "CHOOSE",
+              "options": [
+                [
+                  {
+                    "type": "DISCARD",
+                    "amount": 1,
+                    "into": "burly_card"
+                  }
+                ],
+                [
+                  {
+                    "type": "LOOK_AT",
+                    "zone": "DECK_TOP",
+                    "player": "SELF",
+                    "amount": 1,
+                    "into": "burly_card"
+                  },
+                  {
+                    "type": "DESTROY_REF",
+                    "ref": "burly_card"
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "CONDITIONAL",
+              "condition": {
+                "type": "REF_HAS_KEYWORD",
+                "ref": "burly_card",
+                "keyword": "watery grave"
+              },
+              "effects": [
+                {
+                  "type": "GAIN",
+                  "keyword": "OVERPOWER"
+                }
+              ]
+            }
+          ]
         }
       ]
     }
   ],
-  "_comment": "Was a REF effect handed a 'target'. DESTROY_REF/BANISH_REF act on get_ref(ref), the handler does not read 'target', and no earlier effect in the ability sets a ref -- so it aimed at no object and returned. 'Destroy the top card of the deck' is a zone, and DECK_TOP is deliberately the top card only -- resolving it to the whole deck would turn it into a prompt to choose any card, a different effect and an information leak. 'This gets **overpower**' was a SET_FLAG named OVERPOWER. SET_FLAG appends the string to current_turn_effects, and the defend path reads combat.keywords -- nothing anywhere reads a flag by that name, so the keyword was never granted. GAIN is the keyword grant, and effect_types.canonical_keyword title-cases it so it matches the exact 'Overpower' test in engine._defend_step."
+  "_comment": "'When this attacks, you MAY discard a card OR destroy the top card of your deck. If THAT CARD has watery grave, this gets OVERPOWER.'\n\nRe-authored; almost none of the sentence was implemented. The old version did BOTH halves of the or, and did them MANDATORILY -- a discard AND a deck-top destruction on every attack, where the card offers a choice between them and lets you decline entirely. Its gate was REF_PITCH_IS pitch \"watery_grave\", which tests a stored card's PITCH VALUE against a keyword name, so it could never be true; the printed Overpower then applied unconditionally, which is why the card still looked like it worked.\n\nMAY supplies the decline, CHOOSE supplies the or, and both branches store the card they touched under the SAME ref so the one question -- \"if that card has watery grave\" -- can be asked of whichever branch ran. The discard branch names the ref via DISCARD's `into`; the destroy branch has to LOOK_AT the top card first, because the deck-top card must be identified before it is destroyed and DESTROY_REF needs something to destroy.\n\nTwo primitives were added for this and are generic: DISCARD `into` (the ref name was hard-coded to \"discarded\") and REF_HAS_KEYWORD (the REF_* family could ask a ref's type, cost, power, defense and counters, but not its keywords).\n\nThe keyword is DECLARED conditional rather than converted to a WHILE_STATIC: which card was discarded or destroyed is decided at resolution by a player choice, not a state a static could re-read."
 }

@@ -240,12 +240,26 @@ def test_every_charge_card_declares_the_cost_as_a_COST():
                  "glaring_impact_blue"):
         raw = json.loads(_card_json(root, f"{slug}.json").read_text(encoding="utf-8"))
         play = raw["abilities"][0]
-        # Cost and payoff live on ONE ability: an ability carrying only a cost
-        # has an empty effects list, which resolves as a no-op and is caught by
-        # test_card_json_hygiene::test_every_ability_has_effects.
+        # Cost and payoff usually live on ONE ability: an ability carrying only
+        # a cost has an empty effects list, which resolves as a no-op and is
+        # caught by test_card_json_hygiene::test_every_ability_has_effects.
         assert play.get("effects"), f"{slug}'s PLAY ability has no effects"
         costs = [c.get("type") for c in play.get("additional_cost", [])]
-        assert "CHARGE" in costs, f"{slug} does not declare CHARGE as a cost: {costs}"
+        # The cost may instead sit at CARD level, and which one is not a style
+        # choice. interpreter._run_ability re-checks and re-pays an ability's
+        # additional_costs on EVERY dispatch, so a payoff that has to be a
+        # WHILE_STATIC -- the only shape loader.conditional_keywords strips a
+        # printed keyword for -- cannot carry its cost, or the hero's soul is
+        # charged once per attack-power recalculation. glaring_impact_blue is
+        # exactly that case. What must never happen, and what this test is
+        # really for, is the cost becoming an EFFECT: that makes the card
+        # playable when it cannot pay.
+        if raw.get("cost", {}).get("type") == "CHARGE":
+            assert not costs, (
+                f"{slug} declares CHARGE at card level AND on an ability")
+        else:
+            assert "CHARGE" in costs, (
+                f"{slug} does not declare CHARGE as a cost: {costs}")
         # Keyed on the `type` FIELD, not a substring: "CHARGE" also occurs
         # inside "CHARGED_THIS_WAY", which is the gate, not a second charge.
         # The same substring-for-type slip cost two cards in the sharpen sweep.
