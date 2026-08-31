@@ -1,0 +1,44 @@
+{
+  "slug": "lay_to_rest_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO",
+          "hero_type": "Shadow"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "FLIP_MATCHING",
+          "face_up": false,
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "BANISHED",
+            "amount": 1
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "Implementation copied verbatim from lay_to_rest_blue, whose printed functional text is identical to this card's once each card's own name is substituted out. Everything that differs between them -- cost, pitch, power, colour -- comes from the card DB, not from this file, so the DSL is the same card twice.\n\nTHE COPY IS PINNED, not trusted: tests/test_copied_card_implementations.py asserts that these abilities still match lay_to_rest_blue's and that the two printed texts still agree, so a later edit to one cannot silently leave the other behind. That is the insult_to_injury failure -- three printings of one sentence with three different implementations, the blue one missing a gate the others had.",
+  "_copied_from": "lay_to_rest_blue"
+}

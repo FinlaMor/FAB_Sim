@@ -1,0 +1,22 @@
+{
+  "slug": "heavy_artillery_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "_comment": "Was a plain STATIC (dispatched by nothing) whose effect was RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT -- Headbutt's 'can't be defended by NON-HEAD EQUIPMENT'. The card restricts ATTACK ACTION CARDS by COST, where X is the number of Evos you have equipped -- nothing to do with equipment slots. The threshold is an expression resolved when the restriction is created, which is when the attack is played.",
+      "effects": [
+        {
+          "type": "RESTRICT_DEFENDERS",
+          "subtype": "Attack",
+          "cost_lt": {
+            "type": "COUNT_PERMANENT",
+            "subtype": "Evo",
+            "zone": "EQUIPMENT"
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "Implementation copied verbatim from heavy_artillery_red, whose printed functional text is identical to this card's once each card's own name is substituted out. Everything that differs between them -- cost, pitch, power, colour -- comes from the card DB, not from this file, so the DSL is the same card twice.\n\nTHE COPY IS PINNED, not trusted: tests/test_copied_card_implementations.py asserts that these abilities still match heavy_artillery_red's and that the two printed texts still agree, so a later edit to one cannot silently leave the other behind. That is the insult_to_injury failure -- three printings of one sentence with three different implementations, the blue one missing a gate the others had.",
+  "_copied_from": "heavy_artillery_red"
+}

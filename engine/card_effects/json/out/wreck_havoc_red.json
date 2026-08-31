@@ -1,0 +1,46 @@
+{
+  "slug": "wreck_havoc_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "FLIP_MATCHING",
+              "face_up": true,
+              "target": {
+                "controller": "OPPONENT",
+                "zone": "ARSENAL",
+                "amount": 1
+              }
+            }
+          ]
+        },
+        {
+          "type": "DESTROY_MATCHING",
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "ARSENAL",
+            "amount": 1,
+            "filter": [
+              {
+                "type": "CARD_IS_TYPE",
+                "card_type": "DefenseReaction"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "Implementation copied verbatim from wreck_havoc_blue, whose printed functional text is identical to this card's once each card's own name is substituted out. Everything that differs between them -- cost, pitch, power, colour -- comes from the card DB, not from this file, so the DSL is the same card twice.\n\nTHE COPY IS PINNED, not trusted: tests/test_copied_card_implementations.py asserts that these abilities still match wreck_havoc_blue's and that the two printed texts still agree, so a later edit to one cannot silently leave the other behind. That is the insult_to_injury failure -- three printings of one sentence with three different implementations, the blue one missing a gate the others had.",
+  "_copied_from": "wreck_havoc_blue"
+}

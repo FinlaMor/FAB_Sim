@@ -1,0 +1,22 @@
+{
+  "slug": "expedition_to_horizons_mantle_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "GOLD",
+          "target": {
+            "controller": "SELF",
+            "zone": "ARENA",
+            "name": "Treasure Island"
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "Implementation copied verbatim from expedition_to_azuro_keys_red, whose printed functional text is identical to this card's once each card's own name is substituted out. Everything that differs between them -- cost, pitch, power, colour -- comes from the card DB, not from this file, so the DSL is the same card twice.\n\nTHE COPY IS PINNED, not trusted: tests/test_copied_card_implementations.py asserts that these abilities still match expedition_to_azuro_keys_red's and that the two printed texts still agree, so a later edit to one cannot silently leave the other behind. That is the insult_to_injury failure -- three printings of one sentence with three different implementations, the blue one missing a gate the others had.",
+  "_copied_from": "expedition_to_azuro_keys_red"
+}

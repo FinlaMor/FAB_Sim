@@ -1,0 +1,37 @@
+{
+  "slug": "sharp_incline_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "SHARPEN",
+          "subtype": "Sword",
+          "amount": 1
+        },
+        {
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "REF_HAS_COUNTER",
+            "ref": "sharpened",
+            "counter": "power",
+            "amount": 1
+          },
+          "effects": [
+            {
+              "type": "MODIFY_NEXT_CARD_COST",
+              "amount": 1,
+              "uses": 1,
+              "object_ref": "sharpened"
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ],
+  "_comment": "Implementation copied verbatim from sharp_incline_red, whose printed functional text is identical to this card's once each card's own name is substituted out. Everything that differs between them -- cost, pitch, power, colour -- comes from the card DB, not from this file, so the DSL is the same card twice.\n\nTHE COPY IS PINNED, not trusted: tests/test_copied_card_implementations.py asserts that these abilities still match sharp_incline_red's and that the two printed texts still agree, so a later edit to one cannot silently leave the other behind. That is the insult_to_injury failure -- three printings of one sentence with three different implementations, the blue one missing a gate the others had.",
+  "_copied_from": "sharp_incline_red"
+}

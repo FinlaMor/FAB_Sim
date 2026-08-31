@@ -1,0 +1,27 @@
+{
+  "slug": "shroud_of_darkness",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "conditions": [
+        {
+          "type": "DURING_TURN",
+          "player": "self"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "target": "self"
+        },
+        {
+          "type": "DEAL_ARCANE",
+          "target": "opponent",
+          "amount": -2
+        }
+      ]
+    }
+  ],
+  "_comment": "Implementation copied verbatim from grasp_of_darkness, whose printed functional text is identical to this card's once each card's own name is substituted out. Everything that differs between them -- cost, pitch, power, colour -- comes from the card DB, not from this file, so the DSL is the same card twice.\n\nTHE COPY IS PINNED, not trusted: tests/test_copied_card_implementations.py asserts that these abilities still match grasp_of_darkness's and that the two printed texts still agree, so a later edit to one cannot silently leave the other behind. That is the insult_to_injury failure -- three printings of one sentence with three different implementations, the blue one missing a gate the others had.",
+  "_copied_from": "grasp_of_darkness"
+}

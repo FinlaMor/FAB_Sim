@@ -1,0 +1,37 @@
+{
+  "slug": "poisoned_blade_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "CHAIN",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_SUBTYPE_IN",
+                "subtypes": [
+                  "dagger"
+                ]
+              },
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              }
+            ],
+            "effects": [
+              {
+                "type": "LOSE_LIFE",
+                "amount": 1,
+                "player": "OPPONENT"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "Implementation copied verbatim from poisoned_blade_blue, whose printed functional text is identical to this card's once each card's own name is substituted out. Everything that differs between them -- cost, pitch, power, colour -- comes from the card DB, not from this file, so the DSL is the same card twice.\n\nTHE COPY IS PINNED, not trusted: tests/test_copied_card_implementations.py asserts that these abilities still match poisoned_blade_blue's and that the two printed texts still agree, so a later edit to one cannot silently leave the other behind. That is the insult_to_injury failure -- three printings of one sentence with three different implementations, the blue one missing a gate the others had.",
+  "_copied_from": "poisoned_blade_blue"
+}
