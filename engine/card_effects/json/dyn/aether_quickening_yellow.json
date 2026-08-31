@@ -1,30 +1,35 @@
 {
   "slug": "aether_quickening_yellow",
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
           "type": "DEAL_ARCANE",
-          "amount": 3
-        }
-      ]
-    },
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_CLASH_WIN_REVEALED",
-      "conditions": [
+          "amount": 3,
+          "target": "TARGET_HERO"
+        },
         {
-          "type": "CHAIN_HIT_COUNT_GTE",
-          "amount": 4
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "AMOUNT_GT",
+            "amount": {
+              "type": "LAST_DAMAGE_DEALT"
+            },
+            "value": 3
+          },
+          "effects": [
+            {
+              "type": "GAIN",
+              "keyword": "GO_AGAIN"
+            }
+          ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'Deal 3 arcane damage to target hero. Surge - If this deals MORE THAN 3 damage, it gets go again.' Re-authored: the Surge clause was authored as ON_CLASH_WIN_REVEALED + CHAIN_HIT_COUNT_GTE 4 -- a clash trigger and a count of chain hits, neither of which appears anywhere in this card. So it fired on the wrong games, and the printed GoAgain paid out on all of them regardless.\n\nSurge asks how much damage ACTUALLY landed, which the printed 3 does not answer: arcane damage can be amplified above it or prevented below it. effect_keywords publishes the amount as state._last_damage_dealt for exactly this, and the new AMOUNT_GT condition compares it. Strictly greater than 3, as printed -- dealing exactly 3 is the normal case and grants nothing.\n\nThis is a NON-ATTACK action, so the go again is paid by resolve_stack on the layer path, not from combat.keywords; the declaration is honoured there too."
 }

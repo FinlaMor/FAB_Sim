@@ -1212,6 +1212,51 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return bool(getattr(target, _attr, False))
         return _was
 
+    if ctype in ("AMOUNT_GTE", "AMOUNT_GT", "AMOUNT_LTE", "AMOUNT_LT",
+                 "AMOUNT_EQ"):
+        # Compare any resolvable AMOUNT against a number:
+        #
+        #   "If X is 2 or more, this gets go again"          (Sonata Galaxia)
+        #     {"type":"AMOUNT_GTE","amount":{"type":"X"},"value":2}
+        #   "If this deals MORE THAN 3 damage, it gets go again"  (Surge)
+        #     {"type":"AMOUNT_GT","amount":{"type":"LAST_DAMAGE_DEALT"},"value":3}
+        #
+        # Every existing comparison condition names one specific quantity
+        # (HAND_SIZE_GTE, SOUL_COUNT_GTE, CHAIN_HIT_COUNT_GTE, ...), so a card
+        # asking about a quantity without its own condition type had nowhere to
+        # go -- and both cards above were authored against CHAIN_HIT_COUNT_GTE,
+        # which counts something else entirely and made the gate fire on the
+        # wrong games. This reuses _resolve_amount, so it can ask about
+        # anything an effect can already use as a count.
+        #
+        # The source card is taken from current_effect_source() where there is
+        # one, for the reason CARD_COST_EQ documents: inside an object-target
+        # filter the CANDIDATE arrives as `c`, so reading X off it would give 0
+        # rather than what the playing card paid.
+        from engine.card_effects.dsl.effect_types import _resolve_amount as _ra
+        left = params.get("amount", params.get("left"))
+        right = params.get("value", params.get("amount2", params.get("right", 0)))
+        op = ctype.split("_", 1)[1]
+
+        def _amount_cmp(c, e, s, _l=left, _r=right, _op=op):
+            from engine.context import current_effect_source
+            source = current_effect_source() or c
+            try:
+                lhs = int(_ra(_l, s, source))
+                rhs = int(_ra(_r, s, source))
+            except (TypeError, ValueError):
+                return False
+            if _op == "GTE":
+                return lhs >= rhs
+            if _op == "GT":
+                return lhs > rhs
+            if _op == "LTE":
+                return lhs <= rhs
+            if _op == "LT":
+                return lhs < rhs
+            return lhs == rhs
+        return _amount_cmp
+
     if ctype in ("CARD_COST_EQ", "CARD_COST_IS"):
         # "target aura WITH COST X from your graveyard" — an EQUALITY, and one
         # whose right-hand side belongs to the SOURCE card, not the candidate.

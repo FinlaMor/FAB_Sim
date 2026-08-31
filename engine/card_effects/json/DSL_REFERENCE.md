@@ -479,6 +479,26 @@ Conditions are arrays evaluated against the current game state.
 | `ABILITY_TYPE_IN` | `types: []` | Ability type matches |
 | `CARD_TYPE_IN` | `types: []` | Card type matches |
 | `CARD_SUBTYPE_IN` | `subtypes: []` | Card subtype matches |
+| `AMOUNT_GTE` / `AMOUNT_GT` / `AMOUNT_LTE` / `AMOUNT_LT` / `AMOUNT_EQ` | `amount`, `value` | Compare any resolvable **amount** against a number. See below. |
+
+**`AMOUNT_*`** is the general comparison, for quantities that have no condition
+type of their own. Every other comparison here names one specific quantity
+(`HAND_SIZE_GTE`, `SOUL_COUNT_GTE`, `CHAIN_HIT_COUNT_GTE`, …), so a card asking
+about anything else had nowhere to go — and cards were being authored against
+whichever named condition happened to compile, which is how "if X is 2 or more"
+and "if this deals more than 3 damage" both ended up counting chain hits.
+
+`amount` takes the same expression forms an effect can use as a count
+(`{"type": "X"}`, `{"type": "LAST_DAMAGE_DEALT"}`, `{"type": "PAID_AMOUNT"}`, a
+literal, …), so:
+
+```json
+{"type": "AMOUNT_GTE", "amount": {"type": "X"}, "value": 2}
+{"type": "AMOUNT_GT",  "amount": {"type": "LAST_DAMAGE_DEALT"}, "value": 3}
+```
+
+Mind `GT` vs `GTE` — "more than 3 damage" excludes exactly 3, which is the
+common case on a card that prints 3.
 
 ### Boolean Logic
 

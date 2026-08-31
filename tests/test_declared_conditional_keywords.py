@@ -34,6 +34,17 @@ So the card declares it, and a human decides. The tests below check both halves
 for every declaring card, because a declaration with a trigger that does not
 actually fire converts a fail-OPEN bug (always had go again) into a fail-CLOSED
 one (never has it) -- quieter, and no more correct.
+
+ONE CARD HERE IS NOT AN ATTACK, and that matters more than it looks.
+arc_ramp_red is a non-attack action, so it never reaches
+_recalculate_attack_power -- and `recalculate_attack`, which the tests below
+use, exercises a path it does not take. Its assertions here were therefore true
+and MEANINGLESS when first written, and passing. Its real path is
+resolve_stack's action-point payout, which did not know about conditional
+keywords at all; on that path the card was taking a free action point, and two
+when its gate held. Covered in test_non_attack_conditional_keywords.py, which
+also guards against the next non-attack declarer being tested this way by
+accident.
 """
 from __future__ import annotations
 

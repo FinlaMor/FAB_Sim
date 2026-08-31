@@ -2419,15 +2419,35 @@ def resolve_stack(game_state: GameState) -> None:
     # Check both printed keywords AND any "Go Again" granted via continuous effects (CR 6.2).
     if card and not entry.is_attack and entry.layer_type == 'card':
         base_kws = set(card.keywords or [])
+        # A keyword the card grants ITSELF conditionally is not also printed on
+        # it unconditionally. _recalculate_attack_power has stripped these
+        # since the gated-go-again work, but this is the OTHER resolution path
+        # -- the one every non-attack action card takes -- and it did not, so a
+        # card whose text gates go again still gained the action point for
+        # free. Worse, when its gate DID hold it was paid TWICE: the DSL grant
+        # adds an action point directly (effect_types._grant_go_again, CR
+        # 8.3.5a) and this block then paid again for the printed keyword.
+        # Arc Ramp demonstrated both halves; 15 cards in the corpus have this
+        # shape and 12 of them are not authored yet.
+        from engine.card_effects.dsl.loader import (conditional_keywords
+                                                    as _cond_kws, _kw_key)
+        _conditional = _cond_kws(getattr(card, 'slug', '') or '')
+        if _conditional:
+            base_kws = {k for k in base_kws if _kw_key(k) not in _conditional}
         effective_kws = game_state.continuous_effect_manager.recalculate(
             game_state, card, 'keywords', base_kws)
         _ga_strings = {"Go Again", "Go again", "go again"}
+        # card.has_go_again is a second reading of the SAME printed keyword,
+        # straight off the card DB, so stripping only `base_kws` would leave
+        # the free action point coming in through the back door below.
+        _printed_go_again = (bool(getattr(card, 'has_go_again', False))
+                             and "goagain" not in _conditional)
         # "Instant cards you play this turn get go again" — a turn-scoped grant
         # to every matching card PLAYED, which is neither a printed keyword nor
         # a continuous effect on the card, so neither branch above sees it.
         # Cards using it had a SET_FLAG plus a flag-gated STATIC, and nothing
         # dispatches a plain STATIC: the flag was set and read by nothing.
-        if not (effective_kws & _ga_strings) and not card.has_go_again:
+        if not (effective_kws & _ga_strings) and not _printed_go_again:
             from engine.play import _cost_mod_matches
             for grant in getattr(game_state.players[entry.player_id],
                                  "dsl_play_keyword_grants", None) or []:
@@ -2436,7 +2456,8 @@ def resolve_stack(game_state: GameState) -> None:
                 if _cost_mod_matches(game_state, grant, card):
                     effective_kws = effective_kws | {"Go Again"}
                     break
-        has_effective_go_again = bool(effective_kws & _ga_strings) or card.has_go_again
+        has_effective_go_again = (bool(effective_kws & _ga_strings)
+                                  or _printed_go_again)
         # Spinal Crush (WTR): suppress go again for the affected player's
         # action cards / activated abilities this turn.
         if (has_effective_go_again and entry.player_id == game_state.active_player

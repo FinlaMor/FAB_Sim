@@ -102,53 +102,48 @@ FIXED = ["aggressive_pounce_red", "aggressive_pounce_blue",
          # widened to cover them.
          "overload_yellow", "wild_ride_yellow", "second_strike_red",
          "second_strike_blue", "path_of_same_ends_red", "stellar_glide_blue",
-         "last_ditch_effort_blue", "arc_ramp_red", "light_the_way_red"]
+         "last_ditch_effort_blue", "arc_ramp_red", "light_the_way_red",
+         # RE-AUTHORED, not reshaped. Each was implemented against something
+         # its text does not say -- OPT where the card says "discard an ally",
+         # CHAIN_HIT_COUNT where it says "if X is 2 or more", a clash trigger
+         # where it says "Surge" -- so the gate could not fire while the
+         # printed keyword paid out anyway. See
+         # tests/test_reauthored_gated_go_again.py.
+         "man_overboard_yellow", "sonata_galaxia_red",
+         "aether_quickening_yellow"]
 
 #: The count of cards still carrying an unconditional printed go again their
 #: text gates. Lower it as they are fixed; it must never rise.
 #:
-#: THE SEVEN THAT ARE LEFT ARE NOT WAITING ON JUDGEMENT. Each was read and each
-#: is blocked on something specific, so nobody needs to re-derive it:
+#: THE FOUR THAT ARE LEFT ARE BLOCKED ON MISSING ENGINE PRIMITIVES, not on
+#: judgement. Each was read; none can be finished without building something
+#: first, and each would fail CLOSED if declared conditional today -- the gate
+#: would strip the printed keyword and nothing would ever grant it back:
 #:
-#:   ram_raider_yellow      "banish a random card FROM YOUR HAND" -- there is no
-#:   shadow_of_ursur_blue   hand-banish cost type. Both are currently authored
-#:                          against the wrong zone (DISCARD_RANDOM,
-#:                          BANISH_FROM_GRAVEYARD), and converting them would
-#:                          pin a wrong cost inside the shape that also strips
-#:                          the printed keyword -- turning a visible gap into an
-#:                          invisible one.
+#:   ram_raider_yellow      "banish a random card FROM YOUR HAND" / "you may
+#:   shadow_of_ursur_blue   banish a card with blood debt FROM YOUR HAND".
+#:                          There is no hand-banish cost type; both are
+#:                          currently authored against the wrong zone
+#:                          (DISCARD_RANDOM, BANISH_FROM_GRAVEYARD). Converting
+#:                          them would pin a wrong cost inside the shape that
+#:                          also strips the printed keyword -- turning a visible
+#:                          gap into an invisible one.
+#:                          Unblocked by: a BANISH_FROM_HAND cost type.
 #:
-#:   ebbing_arcstride_red   "Whenever this FRAGMENTS" -- Fragment is not
-#:   ebbing_arcstride_blue  implemented anywhere in the engine. The clause hangs
-#:                          off ON_BECOME, which is emitted only when a HERO
-#:                          transforms, so it can never fire. Declaring the
-#:                          keyword conditional would turn a fail-OPEN bug into
-#:                          a fail-CLOSED one.
+#:   ebbing_arcstride_red   "Whenever this FRAGMENTS, it gets go again."
+#:   ebbing_arcstride_blue  Fragment is not implemented anywhere in the engine.
+#:                          The clause hangs off ON_BECOME, which is emitted
+#:                          only when a HERO transforms, so it can never fire.
+#:                          Unblocked by: the Fragment mechanic.
 #:
-#:   aether_quickening_yellow  "Surge - if this deals MORE THAN 3 DAMAGE".
-#:                          Authored as ON_CLASH_WIN_REVEALED + CHAIN_HIT_COUNT
-#:                          -- a clash trigger and a count of chain hits, both
-#:                          unrelated to the printed text. Needs the damage
-#:                          effect to report how much it actually dealt.
-#:
-#:   sonata_galaxia_red     "If X is 2 or more" (X = the searched aura's cost).
-#:                          Authored as CHAIN_HIT_COUNT_GTE 2, which counts
-#:                          something else entirely. It also carries a PAY_LIFE
-#:                          additional cost that appears nowhere in its text.
-#:
-#:   man_overboard_yellow   "you may discard an ALLY. If you do, +1{p} and go
-#:                          again." Authored as OPT (look at the top card of
-#:                          your deck) followed by an UNCONDITIONAL +1{p} and go
-#:                          again -- no discard, no ally, no gate.
-#:
-#: The last three need re-authoring, not a shape change, so they stay here
-#: rather than being converted into something that merely looks finished.
-#:
-#: This was 48 before the two carve-outs below were applied. Seven of those
-#: were never defects: three print go again on its own line and four hand it to
-#: another card. Luminaris was one of them -- counted in the backlog by the very
-#: file that documents why it must never be converted.
-UNFIXED_LIMIT = 7
+#: Everything else that was here has been fixed. The three that needed
+#: RE-AUTHORING rather than a shape change are done and tested; the two engine
+#: gaps they exposed (AMOUNT_GTE/GT for "if X is 2 or more" and "if this deals
+#: more than 3 damage", and conditional keywords on the NON-ATTACK resolution
+#: path) are closed.
+
+
+UNFIXED_LIMIT = 4
 
 
 def _prints_go_again_outright(text):

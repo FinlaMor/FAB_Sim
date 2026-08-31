@@ -1,36 +1,41 @@
 {
   "slug": "sonata_galaxia_red",
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
   "abilities": [
     {
       "ability_type": "PLAY",
-      "additional_cost": [
-        {
-          "type": "PAY_LIFE",
-          "amount": 1
-        }
-      ],
       "effects": [
         {
           "type": "SEARCH_DECK",
-          "max_cost": 2,
-          "put_into": "arena",
-          "shuffle": true,
           "subtype": "Aura",
           "card_class": "Runeblade",
-          "destination": "arena"
+          "max_cost": {
+            "type": "X"
+          },
+          "put_into": "arena",
+          "destination": "arena",
+          "shuffle": true
         },
         {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN",
-          "conditions": [
+          "type": "CONDITIONAL",
+          "condition": {
+            "type": "AMOUNT_GTE",
+            "amount": {
+              "type": "X"
+            },
+            "value": 2
+          },
+          "effects": [
             {
-              "type": "CHAIN_HIT_COUNT_GTE",
-              "amount": 2
+              "type": "GAIN",
+              "keyword": "GO_AGAIN"
             }
           ]
         }
       ]
     }
   ],
-  "_comment": "SEARCH_DECK's 'target' named 'Runeblade Aura', which is a description, not a card name -- and the key was unread, so the search matched ANY card in the deck and fetched whatever came first. It is a subtype plus a class. STILL SIMPLIFIED: 'with cost X or less' is hardcoded max_cost 2; X is the amount actually paid and there is no x-cost expression on this node."
+  "_comment": "'This costs {r} less to play for each Runechant you control. Search your deck for a Runeblade aura with cost X OR LESS, put it into the arena, then shuffle. If X IS 2 OR MORE, this gets go again.'\n\nRe-authored. Two defects. (1) The go again was gated on CHAIN_HIT_COUNT_GTE 2 -- the number of attacks that have HIT this combat chain, which has nothing to do with X and is normally 0 on a non-attack action played outside combat, so the clause never fired while the printed GoAgain paid out anyway. (2) It carried a PAY_LIFE 1 additional cost that appears NOWHERE in the printed text -- an invented cost, which is worse than a missing one because it silently makes the card unplayable at 1 life.\n\nX is the card's variable cost (specialCost 'XX'), which play.py stamps as card.x_paid when the card is played; the {\"type\":\"X\"} amount reads it back. The same X bounds the search and gates the go again, which is why both read the one expression rather than a literal.\n\nNOT MODELLED: 'costs {r} less for each Runechant you control'. cost_modifiers takes a condition and a flat delta, so it can say 'costs 1 less if you control a Runechant' but not a per-Runechant scale, and guessing a fixed number would be wrong in both directions. Flagged rather than approximated."
 }

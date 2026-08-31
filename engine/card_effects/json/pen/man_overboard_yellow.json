@@ -1,24 +1,43 @@
 {
   "slug": "man_overboard_yellow",
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
   "abilities": [
     {
       "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "effects": [
         {
-          "type": "OPT",
-          "amount": 1
-        },
-        {
-          "type": "MODIFY_ATTACK",
-          "mod": "add",
-          "amount": 1
-        },
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "DISCARD",
+              "amount": 1,
+              "card_type": "Ally"
+            },
+            {
+              "type": "CONDITIONAL",
+              "condition": {
+                "type": "REF_EXISTS",
+                "ref": "discarded"
+              },
+              "effects": [
+                {
+                  "type": "MODIFY_ATTACK",
+                  "mod": "add",
+                  "amount": 1
+                },
+                {
+                  "type": "GAIN",
+                  "keyword": "GO_AGAIN"
+                }
+              ]
+            }
+          ]
         }
-      ],
-      "trigger": "ON_ATTACK"
+      ]
     }
-  ]
+  ],
+  "_comment": "'When this attacks, you may discard an ALLY. If you do, this gets +1{p} and go again.' Re-authored: none of the sentence was implemented. It was OPT 1 -- look at the top card of your deck, an unrelated effect -- followed by an UNCONDITIONAL +1{p} and go again. So the card discarded nothing, never asked about an ally, and paid out in full every time it attacked; the printed GoAgain made the go again free on top of that.\n\nShape copied from arc_ramp_red, which is the same sentence with a different cost: MAY around the choice, then CONDITIONAL on the ref the action leaves behind. That matters for 'if you DO' -- a filtered discard with no matching card in hand discards nothing and sets no ref, so declining and being unable both correctly withhold the payoff. Refs are scoped to one ability execution (context.push_refs), so an earlier card's discard cannot satisfy this one.\n\nThe keyword is DECLARED conditional rather than converted to a WHILE_STATIC: 'if you do' is about a choice made at resolution, not a state a static could re-read."
 }
