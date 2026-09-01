@@ -81,6 +81,25 @@ roughly 3x the output tokens for the map and the three answered checks. On the
 per-card figures in the cost model that is still noise against the ~13.4k-token
 prompt, but it is not free.
 
+CORRECTION TO THE FIRST READING OF THESE NUMBERS. The commit that recorded them
+concluded "keep the static guards as the gate; they caught every defect class in
+this set deterministically". That is wrong, and measuring it says so plainly:
+
+    audit_params / dead-flag / no-abilities checks
+    on the same 27 defective versions ........... 0 caught
+
+ALL 27 ARE INVISIBLE TO PER-CARD STATIC ANALYSIS. The guards that do catch these
+classes -- the conditional-keyword ratchet and the sweeps -- are corpus-level
+counts written AFTER the defects were found, by reading cards against their text.
+A static guard can only be written for a class somebody has already named, which
+is precisely the step the auditor is supposed to help with.
+
+So the auditor's niche is real even though it is currently bad at it: its 8/27
+(4/22 decontaminated) is scored entirely on material no static check can reach.
+The honest read is not "the LLM adds nothing" but "the LLM adds a fifth of the
+one thing static analysis cannot do at all, and should be made better rather than
+switched off".
+
 RUN IT ON A QUIET MACHINE OR NOT AT ALL. bench_triage's two contended runs sat
 ten points low with sd 0.7 *among themselves*, so they looked stable and were
 reported as fact. Stability within a batch says nothing about whether the batch
