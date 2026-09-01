@@ -752,37 +752,151 @@ def build_dynamic_examples(card: dict, queue: list[dict], n: int = 3,
 # ---------------------------------------------------------------------------
 
 def build_verification_prompt(card: dict, json_content: str, dsl_ref: str) -> str:
+    """The auditor prompt.
+
+    WHY IT IS SHAPED LIKE THIS. The previous version was a closed six-item
+    checklist with a default-pass verdict ("output exactly: LOOKS_GOOD"). Two
+    things were wrong with that.
+
+    First, all six items were STRUCTURAL, and the pipeline already answers
+    structural questions deterministically and for free: the execution gate
+    fails a card with an invented type at load, audit_params.py finds keys the
+    compiler never reads, and the hygiene tests find abilities that resolve to
+    nothing. Paying ~12k tokens per card for a probabilistic re-run of static
+    analysis buys nothing.
+
+    Second, and worse, it could not see the defects that actually ship. Every
+    class found in the 2026-08 sweeps passes all six checks and returns
+    LOOKS_GOOD -- they are SEMANTIC, and the auditor was never asked whether the
+    JSON means what the card says. Two real examples, both drafted by this
+    pipeline and both passing the old checklist:
+
+        hydraulic_press_blue   gated on HAS_KEYWORD "Scrap" -- whether the card
+                               PRINTS the keyword, which it always does. A
+                               tautology, and a real condition type.
+        spectral_rider_red     granted a SUBTYPE called "Overpower" instead of
+                               the keyword. A real effect type; nothing reads a
+                               subtype by that name, so the clause was inert.
+
+    THE FRAMING IS DELIBERATELY NEITHER "is there a problem?" NOR "there IS a
+    problem, find it". Both were measured and both fail:
+
+        "is there a problem?"      invites acquiescence; LOOKS_GOOD is the path
+                                   of least resistance, which is what the old
+                                   prompt got.
+        "there IS a problem"       manufactures them. A sweep run in that spirit
+                                   produced 22 findings of which 7 were real --
+                                   a 68% false-positive rate, and every false
+                                   positive costs a real investigation.
+
+    Instead it asks for a FORCED ENUMERATION: quote the node implementing each
+    clause. That presupposes nothing, but an omission cannot be skipped over,
+    because the clause has to be listed with nothing beside it. The three named
+    checks that follow are the highest-yield questions from the defect taxonomy,
+    each with a worked example -- few-shot examples are the one intervention
+    that measurably helped (+11 points on the triage benchmark); model size,
+    added notes and appended rules text all scored ~0.
+    """
     return f"""\
-You are a strict validator for a card game DSL. Check this JSON against the DSL reference.
+You are auditing one card implementation against its printed text.
 
 {dsl_ref}
 
-{STRUCTURAL_RULES}
-
-Card text:
+Card:
   slug: {card["slug"]}
-  functional_text: {card.get("functional_text") or "(none)"}
+  printed text: {card.get("functional_text") or "(none)"}
+  printed keywords: {card.get("keywords") or []}
 
 Generated JSON:
 {json_content}
 
-VALIDATION CHECKS — fail if ANY of these are true:
-1. An effect type appears inside a "conditions" array.
-2. A trigger type is used that is NOT in the valid trigger list above.
-3. A COMBO condition is missing its "names" array.
-4. A card cost ("As an additional cost...") is modelled as an effect instead of additional_cost.
-5. An invented top-level key appears on an ability (anything other than: ability_type, trigger, conditions, effects, additional_cost, alternative_cost, optional).
-6. A condition type is used that is NOT in the valid condition list above.
+=== PART A: MAP EVERY CLAUSE ===
+Split the printed text into clauses (a clause is one sentence, or one half of an
+"X, and Y" / "X or Y"). For EACH clause, on its own line, write:
 
-If the JSON passes ALL checks, output exactly: LOOKS_GOOD
-If any check fails, output ONLY the corrected JSON object (no explanation, no markdown fences).
+    <clause text>  ->  <the JSON node that implements it, or NOTHING>
+
+List every clause, including ones you believe are handled by a printed keyword
+rather than by JSON -- write "printed keyword" as the node for those. Then list
+any JSON node that no clause accounts for.
+
+Do not skip this section. It is not a summary; it is the audit.
+
+=== PART B: THREE CHECKS ===
+Answer each with YES or NO and one line of evidence.
+
+B1. DOES THE CARD PRINT A KEYWORD ITS OWN TEXT GATES?
+    The card DB grants every printed keyword unconditionally, so a card reading
+    "if <x>, this gets <keyword>" HAS that keyword whatever the JSON says -- the
+    gate is decoration and the card plays stronger than printed.
+    Look at "printed keywords" above against the text. If a printed keyword
+    appears in a gated sentence, the JSON must either grant it from a
+    WHILE_STATIC gated on SOURCE_IS_ATTACK, or declare it in a card-level
+    "conditional_keywords" list.
+      WRONG  text "If an item you control has been destroyed this turn, this
+             gets overpower", keywords ["Overpower"], and the JSON grants
+             overpower from an ON_DEFEND trigger.        (torque_tuned_red)
+      RIGHT  {{"ability_type": "WHILE_STATIC",
+              "conditions": [{{"type": "SOURCE_IS_ATTACK"}}, ...],
+              "effects": [{{"type": "GAIN", "keyword": "OVERPOWER"}}]}}
+    NOT this check: a keyword the card gives to ANOTHER card ("your Illusionist
+    attacks get go again"). That one is printed unconditionally and correct.
+
+B2. IS ANY CONDITION ALWAYS TRUE, OR ALWAYS FALSE?
+    A tautology reads exactly like a working gate: real type, real parameter,
+    and it never fails. So does a gate that can never hold.
+      WRONG  {{"type": "HAS_KEYWORD", "keyword": "Scrap"}} to mean "if it
+             scrapped a card" -- it asks whether the card PRINTS Scrap, which it
+             always does.                                (hydraulic_press_blue)
+      WRONG  {{"type": "REF_PITCH_IS", "pitch": "watery_grave"}} to mean "if
+             that card has watery grave" -- it compares a PITCH VALUE against a
+             keyword name, so it is never true.          (burly_bones_red)
+    Ask of each condition: what state would make this false? If you cannot name
+    one, say YES.
+
+B3. DOES ANY EFFECT DELIVER A KEYWORD BY THE WRONG PRIMITIVE?
+    Granting a keyword means GAIN with a "keyword" field. Writing the keyword's
+    name into some other primitive compiles, validates, and does nothing.
+      WRONG  {{"type": "GRANT_SUBTYPE", "subtype": "Overpower"}} -- adds a
+             SUBTYPE named Overpower; nothing reads one.  (spectral_rider_red)
+      WRONG  {{"type": "SET_FLAG", "flag": "OVERPOWER"}} -- sets a flag nothing
+             reads.                                       (hydraulic_press_blue)
+      RIGHT  {{"type": "GAIN", "keyword": "OVERPOWER"}}
+    Note the reverse is also wrong: INTIMIDATE and DOMINATE are effects a card
+    PERFORMS as well as keywords it can gain. "Intimidate them" is the effect;
+    "this gains intimidate" is the keyword.
+
+=== PART C: COSTS ===
+C1. Does the text say "as an additional cost"? A cost must be an
+    "additional_cost" (or a card-level "cost"), NEVER an effect: an effect runs
+    on resolution, when the card is already played, so modelling a cost as one
+    makes the card playable when its price cannot be paid.
+    If the ability granting the payoff is a WHILE_STATIC, the cost must be
+    CARD-LEVEL: an ability's additional_cost is re-checked and re-paid on every
+    dispatch, and a static is dispatched on every attack-power recalculation.
+
+=== OUTPUT ===
+Part A, then Part B, then Part C. End with a final line, exactly one of:
+
+    VERDICT: LOOKS_GOOD
+    VERDICT: CORRECTED
+
+If CORRECTED, follow that line with the corrected JSON object and nothing else.
+Correct only what you can point at in Part A, B or C. A clause you cannot
+express with the available types is not a defect to invent around: leave it
+unimplemented and say so in the JSON's "_comment".
 """
 
 
 def run_verification_pass(card: dict, json_content: str, dsl_ref: str,
                           model: str | None, verbose: bool) -> str:
-    """Run a second claw-code call to validate and optionally correct the JSON.
-    Returns the final JSON string to write (may be same as input or corrected)."""
+    """Run the auditor and apply its correction, if it made one.
+
+    The verdict is read from a `VERDICT:` line rather than the first 40
+    characters, because the prompt now asks for the clause map BEFORE the
+    verdict -- and the map is the part that does the work. Reading the head of
+    the response would score every audit as a correction.
+    """
     prompt = build_verification_prompt(card, json_content, dsl_ref)
     output = run_llm(prompt, verbose=verbose, model=model)
 
@@ -790,32 +904,46 @@ def run_verification_pass(card: dict, json_content: str, dsl_ref: str,
         print(f"  [verify] claw-code failed, keeping original")
         return json_content
 
-    # Strip reasoning models' <think>...</think> before looking for the verdict/JSON.
+    # Strip reasoning models' <think>...</think> before looking for the verdict.
     cleaned = re.sub(r'<think>[\s\S]*?</think>', '', output, flags=re.IGNORECASE)
     cleaned = re.sub(r'```(?:json)?\s*', '', cleaned)
     cleaned = re.sub(r'```\s*', '', cleaned).strip()
 
-    if "LOOKS_GOOD" in cleaned.upper()[:40]:
+    verdicts = re.findall(r'VERDICT:\s*(LOOKS_GOOD|CORRECTED)', cleaned, re.I)
+    verdict = verdicts[-1].upper() if verdicts else None
+
+    if verdict == "LOOKS_GOOD":
         print(f"  [verify] LOOKS_GOOD")
         return json_content
 
-    match = re.search(r'\{[\s\S]+\}', cleaned)
-    if not match:
-        print(f"  [verify] no JSON in verification output, keeping original")
+    if verdict is None:
+        # No verdict line: an auditor that did not follow the contract has not
+        # audited anything, and its output is not a mandate to rewrite the card.
+        print(f"  [verify] no VERDICT line, keeping original")
         return json_content
 
+    # CORRECTED: the correction is the JSON that FOLLOWS the verdict line.
+    # Searching the whole response does not work: Part A quotes JSON nodes by
+    # design, so a greedy match runs from the map's first brace to the body's
+    # last one and yields something that parses as nothing. Slice first, match
+    # second.
+    tail = cleaned[cleaned.upper().rindex("VERDICT:"):]
+    match = re.search(r'\{[\s\S]+\}', tail)
+    if not match:
+        print(f"  [verify] CORRECTED but no JSON after the verdict, keeping original")
+        return json_content
     try:
         corrected = json.loads(match.group())
-        print(f"  [verify] corrections applied")
-        return json.dumps(corrected, indent=2, ensure_ascii=False)
     except json.JSONDecodeError:
         print(f"  [verify] corrected JSON invalid, keeping original")
         return json_content
-
-
-# ---------------------------------------------------------------------------
-# Prompt builders
-# ---------------------------------------------------------------------------
+    if corrected.get("slug") != card["slug"]:
+        # A correction for a different card is a hallucination, not a fix.
+        print(f"  [verify] corrected JSON is for {corrected.get('slug')!r}, "
+              f"keeping original")
+        return json_content
+    print(f"  [verify] corrections applied")
+    return json.dumps(corrected, indent=2, ensure_ascii=False)
 
 def _card_text_index() -> dict[str, str]:
     """slug -> printed functional text, from the canonical slug_index."""
