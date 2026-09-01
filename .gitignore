@@ -138,3 +138,4 @@ engine/card_effects/json/.modelbench/
 engine/card_effects/queues/
 engine/card_effects/json/review_queue.json
 engine/card_effects/json/triage_queue.json
+.bench/
