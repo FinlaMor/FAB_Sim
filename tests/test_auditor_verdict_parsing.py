@@ -131,7 +131,7 @@ def test_a_backend_failure_keeps_the_original(monkeypatch):
 
 def test_the_prompt_asks_the_three_checks_and_the_clause_map():
     prompt = AIW.build_verification_prompt(CARD, ORIGINAL, "(reference)")
-    for marker in ("PART A", "PART B", "B1.", "B2.", "B3.",
+    for marker in ("PART A", "PART B1", "PART B2", "PART B3",
                    "VERDICT: LOOKS_GOOD", "VERDICT: CORRECTED"):
         assert marker in prompt, marker
 
@@ -154,15 +154,71 @@ def test_the_prompt_does_not_presuppose_a_defect():
         assert banned not in lowered, banned
 
 
-def test_every_worked_example_names_a_real_card():
-    """The examples are few-shot anchors, and few-shot is the one intervention
-    that measurably helped (+11 on triage). An example naming a card that does
-    not exist is not an anchor, it is noise."""
-    from engine.card_effects.dsl.loader import get_card, load_all_cards
+def test_no_worked_example_names_a_card_that_could_be_audited():
+    """This test asserted the OPPOSITE until the auditor was measured.
+
+    It required the examples to name real corpus cards, on the reasoning that
+    few-shot anchors should be concrete. The benchmark showed that naming them
+    contaminates both the measurement and production: four of the eight catches
+    were the four cited cards, and excluding them recall fell 29.6% -> 18.2%.
+    The live hazard is worse than the measurement one -- auditing the ACCEPTED
+    version of a cited card produced the only false positive, because the model
+    read that card's old defect out of the instructions and reported it as
+    present in JSON that no longer contained it.
+
+    The examples are still concrete, still showing real JSON shapes; they just
+    describe cards that do not exist.
+    """
+    from engine.card_effects.dsl.loader import load_all_cards
+    import engine.card_effects.dsl.loader as loader
     load_all_cards()
     prompt = AIW.build_verification_prompt(CARD, ORIGINAL, "(reference)")
-    for slug in ("torque_tuned_red", "hydraulic_press_blue",
-                 "spectral_rider_red", "burly_bones_red"):
-        assert slug in prompt, slug + " is no longer cited as an example"
-        assert get_card(slug) is not None, (
-            slug + " is cited as a worked example but is not in the corpus")
+    instructions = prompt[prompt.index("=== PART A"):]
+    cited = [slug for slug in loader._CARDS
+             if len(slug) > 8 and slug in instructions]
+    assert not cited, (
+        "the instructions name real corpus cards, which the model reads back "
+        "as findings when it audits them: " + ", ".join(sorted(cited)))
+
+
+def test_the_examples_are_still_concrete():
+    """Decontaminating must not have flattened them into abstractions -- the
+    anchor is the JSON shape, not the card name."""
+    prompt = AIW.build_verification_prompt(CARD, ORIGINAL, "(reference)")
+    for shape in ('"GRANT_SUBTYPE"', '"SET_FLAG"', '"HAS_KEYWORD"',
+                  '"REF_PITCH_IS"', '"GAIN", "keyword"'):
+        assert shape in prompt, shape + " is no longer shown as a worked shape"
+
+
+def test_the_talishar_second_opinion_is_offered_when_available(monkeypatch):
+    """The auditor's weakness is semantic, and a reference implementation of the
+    same card is the cheapest outside evidence there is (~230 tokens median).
+    It must be labelled as non-authoritative: Talishar's own README disclaims
+    it, and a divergence is a signal to look, not proof of a defect."""
+    monkeypatch.setattr(AIW, "_talishar_reference",
+                        lambda slug: "if(count($theirSoul) > 0) GiveGoAgain();")
+    prompt = AIW.build_verification_prompt(CARD, ORIGINAL, "(reference)")
+    assert "GiveGoAgain" in prompt
+    assert "not authoritative" in prompt
+    assert "printed text decides" in " ".join(prompt.split())
+
+
+def test_no_talishar_block_when_there_is_no_reference(monkeypatch):
+    """Most cards have none. An empty block would be a heading with nothing
+    under it, which reads as 'Talishar implements this as nothing'."""
+    monkeypatch.setattr(AIW, "_talishar_reference", lambda slug: "")
+    prompt = AIW.build_verification_prompt(CARD, ORIGINAL, "(reference)")
+    assert "Talishar" not in prompt
+
+
+def test_b1_is_mechanical_not_a_judgement_call():
+    """B1 missed the class it was written for while Part A worked 54/54. The
+    difference is that Part A is an enumeration and B1 was a yes/no over a
+    conjunction. It is now a table with a syntactic rule."""
+    prompt = AIW.build_verification_prompt(CARD, ORIGINAL, "(reference)")
+    b1 = prompt[prompt.index("=== PART B1"):prompt.index("=== PART B2")]
+    assert "one row for EVERY keyword" in b1, "B1 is no longer an enumeration"
+    assert "GATED" in b1 and "PLAIN" in b1
+    assert '"if", "whenever", or "while"' in b1, (
+        "the syntactic rule is gone; without it GATED is a judgement again")
+    assert "do not decide which ones are interesting" in b1

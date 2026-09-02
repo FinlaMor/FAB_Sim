@@ -81,6 +81,39 @@ roughly 3x the output tokens for the map and the three answered checks. On the
 per-card figures in the cost model that is still noise against the ~13.4k-token
 prompt, but it is not free.
 
+v2, mechanical B1 + examples that name no real card, same 27 pairs, same model:
+
+                        recall    false-pos   discrimination
+    v1 (judgement B1)   29.6%        3.7%          0.26
+    v2 (mechanical B1)  37.0%        3.7%          0.33
+
+    like-for-like, on the 22 cards v1's prompt never cited:
+    v1 18.2%  ->  v2 31.8%
+
+The headline understates it because v1's examples named five cards in the
+benchmark and v2's name none; the like-for-like figure is the honest one. What
+makes the result credible is not the delta but WHICH cards moved: the gains are
+photon_rush_red, runerager_swarm_blue, soup_up_red and glaring_impact_blue --
+all gated-printed-keyword defects, the class judgement-phrased B1 was missing
+wholesale. Mechanism, not luck.
+
+CAVEAT, and it is a real one: 6 cards were newly caught and 4 were lost, for +2
+net. torque_tuned_red and torque_tuned_blue are byte-identical in abilities and
+printed text and have scored differently across runs, so a good part of that
+churn is sampling noise at n=27.
+
+THE v2 TALISHAR ARM DID NOT EXIST. It was reported as present and was not: this
+script put only ROOT on sys.path, so `import talishar_reference` failed
+silently, _talishar_reference returned "", and the block was omitted from all 54
+prompts. The tell was that ZERO replies mentioned Talishar. Fixed by adding
+ROOT/"scripts" to sys.path; v3 is the first run where the block is actually
+there. Anything that reaches a model through a silently-swallowed import is a
+variable you are not measuring.
+
+B1 fill rate: the keyword table was completed in 40/54 replies, against Part A's
+54/54. Enumeration beats judgement but is not free -- some remaining misses are
+probably skipped rows rather than wrong answers.
+
 CORRECTION TO THE FIRST READING OF THESE NUMBERS. The commit that recorded them
 concluded "keep the static guards as the gate; they caught every defect class in
 this set deterministically". That is wrong, and measuring it says so plainly:
@@ -121,6 +154,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
+# scripts/ too, or _talishar_reference cannot `import talishar_reference` and
+# silently returns "" -- which measured the Talishar arm as absent while
+# reporting it as present. The v2 run was invalidated by exactly this.
+sys.path.insert(0, str(ROOT / "scripts"))
 
 OLLAMA = "http://localhost:11434/api/generate"
 #: commits whose card-JSON changes are the labelled fixes

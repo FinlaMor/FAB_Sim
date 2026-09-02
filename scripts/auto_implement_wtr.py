@@ -754,49 +754,50 @@ def build_dynamic_examples(card: dict, queue: list[dict], n: int = 3,
 def build_verification_prompt(card: dict, json_content: str, dsl_ref: str) -> str:
     """The auditor prompt.
 
-    WHY IT IS SHAPED LIKE THIS. The previous version was a closed six-item
-    checklist with a default-pass verdict ("output exactly: LOOKS_GOOD"). Two
-    things were wrong with that.
+    Measured against 27 cards whose defects are known (scripts/bench_auditor.py).
+    Three changes since the first rewrite, each answering something the
+    measurement showed:
 
-    First, all six items were STRUCTURAL, and the pipeline already answers
-    structural questions deterministically and for free: the execution gate
-    fails a card with an invented type at load, audit_params.py finds keys the
-    compiler never reads, and the hygiene tests find abilities that resolve to
-    nothing. Paying ~12k tokens per card for a probabilistic re-run of static
-    analysis buys nothing.
+    B1 IS NOW MECHANICAL. Part A -- the forced clause map -- was produced in
+    54/54 replies, and B1 still missed the class it was written for: on a card
+    printing GoAgain whose own text gates it, a 14B answered "NO. The card does
+    not print a keyword that is gated by its own text", then rationalised the
+    next check by calling a GO_AGAIN node "correctly using the GAIN primitive".
+    B1 was a yes/no over a conjunction ("prints X" AND "text gates X"), which
+    gets answered as a gestalt. It is now a table to fill in: copy the keyword,
+    quote the sentence, apply a syntactic rule. Enumeration works where
+    judgement does not -- that is what Part A already demonstrated.
 
-    Second, and worse, it could not see the defects that actually ship. Every
-    class found in the 2026-08 sweeps passes all six checks and returns
-    LOOKS_GOOD -- they are SEMANTIC, and the auditor was never asked whether the
-    JSON means what the card says. Two real examples, both drafted by this
-    pipeline and both passing the old checklist:
+    THE WORKED EXAMPLES NO LONGER NAME REAL CARDS. The previous version cited
+    four corpus slugs, and four of its eight catches were those cards; excluding
+    them recall fell from 29.6% to 18.2%. Worse, it was a live hazard rather
+    than only a measurement artefact: auditing the ACCEPTED version of a cited
+    card produced the arm's only false positive, because the model read that
+    card's old defect out of the instructions and reported it as present in JSON
+    that no longer contained it. The examples below are synthetic -- structurally
+    identical to the real defects, matching no card's printed text.
 
-        hydraulic_press_blue   gated on HAS_KEYWORD "Scrap" -- whether the card
-                               PRINTS the keyword, which it always does. A
-                               tautology, and a real condition type.
-        spectral_rider_red     granted a SUBTYPE called "Overpower" instead of
-                               the keyword. A real effect type; nothing reads a
-                               subtype by that name, so the clause was inert.
+    TALISHAR IS A SECOND OPINION ON INTENT. The auditor's weakness is semantic
+    ("does this JSON mean what the card says"), and a reference implementation of
+    the same card is the cheapest outside evidence available -- median ~230
+    tokens. It is not authoritative and its README disclaims it; a divergence is
+    a review signal, not proof.
 
     THE FRAMING IS DELIBERATELY NEITHER "is there a problem?" NOR "there IS a
-    problem, find it". Both were measured and both fail:
-
-        "is there a problem?"      invites acquiescence; LOOKS_GOOD is the path
-                                   of least resistance, which is what the old
-                                   prompt got.
-        "there IS a problem"       manufactures them. A sweep run in that spirit
-                                   produced 22 findings of which 7 were real --
-                                   a 68% false-positive rate, and every false
-                                   positive costs a real investigation.
-
-    Instead it asks for a FORCED ENUMERATION: quote the node implementing each
-    clause. That presupposes nothing, but an omission cannot be skipped over,
-    because the clause has to be listed with nothing beside it. The three named
-    checks that follow are the highest-yield questions from the defect taxonomy,
-    each with a worked example -- few-shot examples are the one intervention
-    that measurably helped (+11 points on the triage benchmark); model size,
-    added notes and appended rules text all scored ~0.
+    problem, find it". Both were measured. The first invites acquiescence. The
+    second manufactures findings -- a sweep run that way produced 22 of which 7
+    were real, and the old checklist prompt objected to 70% of ACCEPTED
+    implementations, which in production meant rewriting correct cards.
     """
+    tal = _talishar_reference(card["slug"])
+    tal_block = f"""
+Talishar's implementation of this card (a SECOND OPINION on what the card is
+meant to do; it may have bugs and is not authoritative -- a divergence is a
+signal to look, not proof of a defect. Where it and our JSON disagree, the
+printed text decides):
+{tal}
+""" if tal else ""
+
     return f"""\
 You are auditing one card implementation against its printed text.
 
@@ -806,7 +807,7 @@ Card:
   slug: {card["slug"]}
   printed text: {card.get("functional_text") or "(none)"}
   printed keywords: {card.get("keywords") or []}
-
+{tal_block}
 Generated JSON:
 {json_content}
 
@@ -816,75 +817,82 @@ Split the printed text into clauses (a clause is one sentence, or one half of an
 
     <clause text>  ->  <the JSON node that implements it, or NOTHING>
 
-List every clause, including ones you believe are handled by a printed keyword
-rather than by JSON -- write "printed keyword" as the node for those. Then list
-any JSON node that no clause accounts for.
+List every clause, including ones handled by a printed keyword rather than by
+JSON -- write "printed keyword" as the node for those. Then list any JSON node
+that no clause accounts for.
 
 Do not skip this section. It is not a summary; it is the audit.
 
-=== PART B: THREE CHECKS ===
-Answer each with YES or NO and one line of evidence.
+=== PART B1: PRINTED KEYWORDS AGAINST THE TEXT ===
+Fill in one row for EVERY keyword in "printed keywords" above. Copy the list;
+do not decide which ones are interesting.
 
-B1. DOES THE CARD PRINT A KEYWORD ITS OWN TEXT GATES?
-    The card DB grants every printed keyword unconditionally, so a card reading
-    "if <x>, this gets <keyword>" HAS that keyword whatever the JSON says -- the
-    gate is decoration and the card plays stronger than printed.
-    Look at "printed keywords" above against the text. If a printed keyword
-    appears in a gated sentence, the JSON must either grant it from a
-    WHILE_STATIC gated on SOURCE_IS_ATTACK, or declare it in a card-level
-    "conditional_keywords" list.
-      WRONG  text "If an item you control has been destroyed this turn, this
-             gets overpower", keywords ["Overpower"], and the JSON grants
-             overpower from an ON_DEFEND trigger.        (torque_tuned_red)
-      RIGHT  {{"ability_type": "WHILE_STATIC",
-              "conditions": [{{"type": "SOURCE_IS_ATTACK"}}, ...],
-              "effects": [{{"type": "GAIN", "keyword": "OVERPOWER"}}]}}
-    NOT this check: a keyword the card gives to ANOTHER card ("your Illusionist
-    attacks get go again"). That one is printed unconditionally and correct.
+    <keyword> | <the sentence of the printed text that mentions it, or NOT MENTIONED> | <GATED or PLAIN>
 
-B2. IS ANY CONDITION ALWAYS TRUE, OR ALWAYS FALSE?
-    A tautology reads exactly like a working gate: real type, real parameter,
-    and it never fails. So does a gate that can never hold.
-      WRONG  {{"type": "HAS_KEYWORD", "keyword": "Scrap"}} to mean "if it
-             scrapped a card" -- it asks whether the card PRINTS Scrap, which it
-             always does.                                (hydraulic_press_blue)
-      WRONG  {{"type": "REF_PITCH_IS", "pitch": "watery_grave"}} to mean "if
-             that card has watery grave" -- it compares a PITCH VALUE against a
-             keyword name, so it is never true.          (burly_bones_red)
-    Ask of each condition: what state would make this false? If you cannot name
-    one, say YES.
+A sentence is GATED if it contains "if", "whenever", or "while". Otherwise PLAIN.
+Apply that rule to the words in front of you; do not reason about whether the
+card "really" gates the keyword.
 
-B3. DOES ANY EFFECT DELIVER A KEYWORD BY THE WRONG PRIMITIVE?
-    Granting a keyword means GAIN with a "keyword" field. Writing the keyword's
-    name into some other primitive compiles, validates, and does nothing.
-      WRONG  {{"type": "GRANT_SUBTYPE", "subtype": "Overpower"}} -- adds a
-             SUBTYPE named Overpower; nothing reads one.  (spectral_rider_red)
-      WRONG  {{"type": "SET_FLAG", "flag": "OVERPOWER"}} -- sets a flag nothing
-             reads.                                       (hydraulic_press_blue)
-      RIGHT  {{"type": "GAIN", "keyword": "OVERPOWER"}}
-    Note the reverse is also wrong: INTIMIDATE and DOMINATE are effects a card
-    PERFORMS as well as keywords it can gain. "Intimidate them" is the effect;
-    "this gains intimidate" is the keyword.
+Then, for each row marked GATED, write one line:
+
+    <keyword> -> WHILE_STATIC / DECLARED / NEITHER
+
+  WHILE_STATIC  the JSON grants it from an ability with "ability_type":
+                "WHILE_STATIC" whose conditions include SOURCE_IS_ATTACK
+  DECLARED      the keyword appears in a card-level "conditional_keywords" array
+  NEITHER       neither of those
+
+NEITHER is a defect: the card DB grants every printed keyword unconditionally,
+so the gate in the text does nothing and the card plays stronger than printed.
+    EXAMPLE  printed keywords ["Overpower"], text "If you control a Runechant,
+             this gets overpower", and the JSON grants overpower from an ON_HIT
+             trigger.  ->  Overpower | "If you control a Runechant..." | GATED,
+             then Overpower -> NEITHER.  A defect.
+EXCEPTION, and the only one: a keyword the card gives to ANOTHER card ("your
+Illusionist attacks get go again", "the next card you play gains dominate").
+That keyword is printed unconditionally and is correct. Mark it PLAIN.
+
+=== PART B2: IS ANY CONDITION ALWAYS TRUE, OR ALWAYS FALSE? ===
+Answer YES or NO with one line of evidence. For each condition in the JSON, name
+a game state that would make it FALSE. If you cannot name one, the answer is YES.
+    EXAMPLE  a card printing "Scrap" gated on {{"type": "HAS_KEYWORD",
+             "keyword": "Scrap"}} to mean "if it scrapped a card" -- that asks
+             whether the card PRINTS the keyword, which it always does.
+    EXAMPLE  {{"type": "REF_PITCH_IS", "pitch": "watery_grave"}} to mean "if that
+             card has watery grave" -- it compares a PITCH VALUE against a
+             keyword name, so nothing satisfies it.
+
+=== PART B3: DOES ANY EFFECT DELIVER A KEYWORD BY THE WRONG PRIMITIVE? ===
+Answer YES or NO with one line of evidence. Granting a keyword is GAIN with a
+"keyword" field. Writing the keyword's name into another primitive compiles,
+validates, and does nothing.
+    EXAMPLE  {{"type": "GRANT_SUBTYPE", "subtype": "Overpower"}} adds a SUBTYPE
+             named Overpower; nothing reads one.
+    EXAMPLE  {{"type": "SET_FLAG", "flag": "OVERPOWER"}} sets a flag nothing reads.
+    RIGHT    {{"type": "GAIN", "keyword": "OVERPOWER"}}
+The reverse is also wrong: INTIMIDATE and DOMINATE are effects a card PERFORMS as
+well as keywords it can gain. "Intimidate them" is the effect; "this gains
+intimidate" is the keyword.
 
 === PART C: COSTS ===
-C1. Does the text say "as an additional cost"? A cost must be an
-    "additional_cost" (or a card-level "cost"), NEVER an effect: an effect runs
-    on resolution, when the card is already played, so modelling a cost as one
-    makes the card playable when its price cannot be paid.
-    If the ability granting the payoff is a WHILE_STATIC, the cost must be
-    CARD-LEVEL: an ability's additional_cost is re-checked and re-paid on every
-    dispatch, and a static is dispatched on every attack-power recalculation.
+Does the text say "as an additional cost"? A cost must be an "additional_cost"
+or a card-level "cost", NEVER an effect: an effect runs on resolution, when the
+card is already played, so a cost modelled as one makes the card playable when
+its price cannot be paid. If the ability carrying the payoff is a WHILE_STATIC,
+the cost must be CARD-LEVEL -- an ability's additional_cost is re-checked and
+re-paid on every dispatch, and a static is dispatched on every attack-power
+recalculation.
 
 === OUTPUT ===
-Part A, then Part B, then Part C. End with a final line, exactly one of:
+Part A, then B1, B2, B3, then Part C. End with a final line, exactly one of:
 
     VERDICT: LOOKS_GOOD
     VERDICT: CORRECTED
 
 If CORRECTED, follow that line with the corrected JSON object and nothing else.
-Correct only what you can point at in Part A, B or C. A clause you cannot
-express with the available types is not a defect to invent around: leave it
-unimplemented and say so in the JSON's "_comment".
+Correct only what you can point at above. A clause you cannot express with the
+available types is not a defect to invent around: leave it unimplemented and say
+so in the JSON's "_comment".
 """
 
 
