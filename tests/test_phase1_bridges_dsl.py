@@ -167,13 +167,13 @@ def test_arakni_buff_absent_without_stealth():
 
 def test_arakni_hit_grants_go_again_when_stealth_and_marked():
     state = _arakni_state(marked=True, stealth=True)
-    dispatch(state, "ON_HIT", "arakni_marionette", card=state.players[1].hero,
+    dispatch(state, "ON_ANY_HIT", "arakni_marionette", card=state.players[1].hero,
              event=Event(type="ON_HIT", data={"damage": 4}))
     assert any(k.lower() == "go again" for k in state.combat.keywords)
 
 
 def test_arakni_hit_no_go_again_when_not_marked():
     state = _arakni_state(marked=False, stealth=True)
-    dispatch(state, "ON_HIT", "arakni_marionette", card=state.players[1].hero,
+    dispatch(state, "ON_ANY_HIT", "arakni_marionette", card=state.players[1].hero,
              event=Event(type="ON_HIT", data={"damage": 4}))
     assert not any(k.lower() == "go again" for k in state.combat.keywords)

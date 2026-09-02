@@ -2187,9 +2187,16 @@ def test_arakni_funnel_web_stealth_attack_banishes_arsenal_on_hit():
     run_ability(get_card("arakni_funnel_web").abilities[0], fw, None, st)
     assert st.combat.attack_power == 7, "target Assassin attack gets +3{p}"
 
+    # Fire the granted trigger the way the engine does. The grant is on the
+    # ATTACK, and for an attack ACTION CARD (Kiss of Death) that is the card
+    # itself -- a weapon's grant would sit on the combat instead, because its
+    # attack is a proxy object (CR 1.4.3). Driving only combat.injected_triggers
+    # tested one of the two storage locations.
     ev = Event(type="ON_HIT", data={"damage": 7})
+    from engine.card_effects.dsl import dispatch as _dsl_dispatch
     for td in list(getattr(st.combat, "injected_triggers", [])):
         if td.event_type == "ON_HIT" and (td.condition_fn is None or td.condition_fn(atk, ev, st)):
             td.effect_fn(atk, ev, st)
+    _dsl_dispatch(st, "ON_HIT", atk.slug, card=atk, event=ev)
     assert opp_ars in st.players[2].banished.cards, \
         "a stealth-buffed attack banishes a card from their arsenal on hit"

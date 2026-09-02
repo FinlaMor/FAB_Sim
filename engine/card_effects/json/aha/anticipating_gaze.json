@@ -1,10 +1,10 @@
 {
   "slug": "anticipating_gaze",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide). Three more. 'A SWORD attack' was ATTACK_CLASS_IN class 'Sword', and Sword is a weapon SUBTYPE, not a class -- the gate was false for every attack in the game, so the ability never fired. The CONTROLS_ATTACK_ACTION half of the gate asked whether the controller owned any attack action card at all, which is not what 'a sword attack YOU CONTROL' means and is nearly always true. And 'remove a +1{p} counter FROM THE SWORD' had no target -- so it aimed at this equipment -- and named the counter '+1{p}' where SHARPEN stores them under 'power'.",
+  "_comment": "Retriggered ON_HIT -> ON_ANY_HIT. ON_HIT now means \"when THIS hits\" and is dispatched only to the attack itself; this card's text is about an attack its CONTROLLER makes, so it needs the broadcast trigger. Before the split, ON_HIT was broadcast to every permanent the attacker controlled, which was right for this card and wrong for the seven weapons reading \"when THIS hits\" that fired on any attack at all.\n\nRemoved a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide). Three more. 'A SWORD attack' was ATTACK_CLASS_IN class 'Sword', and Sword is a weapon SUBTYPE, not a class -- the gate was false for every attack in the game, so the ability never fired. The CONTROLS_ATTACK_ACTION half of the gate asked whether the controller owned any attack action card at all, which is not what 'a sword attack YOU CONTROL' means and is nearly always true. And 'remove a +1{p} counter FROM THE SWORD' had no target -- so it aimed at this equipment -- and named the counter '+1{p}' where SHARPEN stores them under 'power'.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
+      "trigger": "ON_ANY_HIT",
       "conditions": [
         {
           "type": "ATTACK_SUBTYPE_IN",

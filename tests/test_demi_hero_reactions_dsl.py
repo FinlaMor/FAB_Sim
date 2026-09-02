@@ -120,7 +120,7 @@ def test_once_per_turn_flag_blocks_second_use():
 def test_black_widow_stealth_injects_on_hit_banish():
     st = _state("arakni_black_widow", stealth=True)
     _activate_hero(st)
-    assert len(st.combat.injected_triggers) == 1
+    assert len(_attached_on_hit_triggers(st)) == 1
 
 
 def test_black_widow_no_rider_without_stealth():
@@ -284,3 +284,20 @@ def test_become_trap_door_fires_on_become_search():
     become_agent_of_chaos(st, 1, choose=True)
     assert st.players[1].hero.slug == "arakni_trap_door"
     assert len(st.players[1].banished.cards) == 1   # on-become search fired
+
+
+def _attached_on_hit_triggers(state):
+    """Every ON_HIT ability granted to the current attack, wherever it lives.
+
+    A grant to an attack ACTION CARD attaches to the card (the attack IS the
+    card); a grant to a WEAPON's attack stays on the combat, because the attack
+    is a proxy object that dies with the chain link (CR 1.4.3c/e). Tests that
+    only knew about combat.injected_triggers were asserting the storage rather
+    than the behaviour.
+    """
+    out = [td for td in (getattr(state.combat, "injected_triggers", None) or [])
+           if td.event_type == "ON_HIT"]
+    attack = getattr(state.combat, "attack_card", None)
+    out += [g for g in (getattr(attack, "granted_abilities", None) or [])
+            if str(g.get("trigger", "")).upper() == "ON_HIT"]
+    return out

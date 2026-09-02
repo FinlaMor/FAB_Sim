@@ -2390,8 +2390,44 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                         state.combat.injected_triggers.append(td)
                 return
 
-            # Default COMBAT scope: one-shot into the current combat.
+            # Default COMBAT scope: the ability is granted to THE ATTACK. Where
+            # it lives depends on what the attack IS, and CR 1.4.3 makes that a
+            # real distinction rather than an implementation detail.
+            #
+            #   an attack ACTION CARD   the attack is the card. The grant is on
+            #                           the object and travels with it, so a
+            #                           later effect that makes that card "have
+            #                           hit" (Flick Knives) fires the granted
+            #                           trigger too.
+            #   a WEAPON                the attack is an attack-PROXY (1.4.3), a
+            #                           separate object that ceases to exist
+            #                           when the chain link changes (1.4.3c),
+            #                           and effects applying to it do not apply
+            #                           to the weapon (1.4.3e). The grant dies
+            #                           with the link and never reaches the
+            #                           weapon card.
+            #
+            # Concretely, with Scar Tissue ("target dagger attack gets +3{p} and
+            # 'when this hits a hero, mark them'"): play it on Kiss of Death, an
+            # attack action card, then flick that card later in the chain, and
+            # it marks. Play it on Hunter's Klaive, a weapon, then flick the
+            # Klaive, and it marks only from its OWN printed on-hit.
+            #
+            # This engine models the proxy as a flag on the action and leaves
+            # the weapon in combat.attack_card, so combat-scoped storage IS
+            # proxy lifetime -- correct for a weapon, and wrong for a card,
+            # which is why the card case is split out here.
             if not state.combat:
+                return
+            attack = getattr(state.combat, "attack_card", None)
+            is_proxy = bool(getattr(state.combat, "from_weapon", False)
+                            or getattr(attack, "is_weapon", False))
+            if attack is not None and not is_proxy:
+                granted = list(getattr(attack, "granted_abilities", None) or [])
+                granted.append({"ability_type": "TRIGGERED", "trigger": _trig,
+                                "conditions": list(_conds_raw),
+                                "effects": list(_effs_raw)})
+                attack.granted_abilities = granted
                 return
             td = TriggerDef(event_type=_trig, condition_fn=None,
                             effect_fn=_make_one_shot(), is_optional=False)
@@ -3152,9 +3188,40 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             cid = _controller_id(card)
             player = state.players[cid]
             active = state.combat.attack_card if state.combat else None
-            daggers = [d for zone in (player.weapon1, player.weapon2) for d in zone.cards
-                       if d is not active
-                       and 'dagger' in [s.lower() for s in (getattr(d, 'subtypes', None) or [])]]
+            # "Target dagger YOU CONTROL that isn't on the ACTIVE CHAIN LINK."
+            #
+            # Weapon zones were the whole search, which silently excluded every
+            # dagger that is an ATTACK ACTION CARD -- kiss_of_death_red is
+            # types ["Action"], subtypes ["Attack", "Dagger"], so it lives on the
+            # combat chain once played and could never be found here. That is
+            # the interesting half of this card: a dagger WEAPON attacks through
+            # an attack-proxy and hits by itself, while a dagger attack action
+            # card played on an earlier chain link is exactly what this ability
+            # reaches for.
+            #
+            # Excluded from the pool: the active attack, and anything currently
+            # defending -- both are "on the active chain link".
+            on_active_link = {id(active)} if active is not None else set()
+            for _d in (getattr(state.combat, "defending_cards", None) or []
+                       if state.combat else []):
+                on_active_link.add(id(_d))
+
+            def _is_dagger(obj):
+                return 'dagger' in [s.lower() for s
+                                    in (getattr(obj, 'subtypes', None) or [])]
+
+            candidates = [d for zone in (player.weapon1, player.weapon2)
+                          for d in zone.cards]
+            candidates += [c for c in getattr(state.combat_chain, "cards", [])
+                           if getattr(c, "controller", None) == cid]
+            seen_ids, daggers = set(), []
+            for d in candidates:
+                if id(d) in on_active_link or id(d) in seen_ids:
+                    continue
+                if not _is_dagger(d):
+                    continue
+                seen_ids.add(id(d))
+                daggers.append(d)
             if not daggers:
                 return
             from engine.card_effects.ability_keywords import ask_optional

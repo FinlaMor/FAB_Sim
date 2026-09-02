@@ -430,9 +430,7 @@ def test_dispatch_inject_trigger():
 
     dispatch(state, "ON_PLAY", "test-inject-card", card=card)
     assert state.combat.attack_power == 9  # 5 + 4
-    assert hasattr(state.combat, "injected_triggers")
-    assert len(state.combat.injected_triggers) == 1
-    assert state.combat.injected_triggers[0].event_type == "ON_HIT"
+    assert len(_attached_on_hit_triggers(state)) == 1
 
 
 # ---------------------------------------------------------------------------
@@ -588,9 +586,7 @@ def test_pummel_red_action_card_power_and_inject():
     pummel = _make_card("pummel_red", 1)
     dispatch(state, "ON_PLAY", "pummel_red", card=pummel)
     assert state.combat.attack_power == 9  # 5 + 4
-    assert hasattr(state.combat, "injected_triggers")
-    assert len(state.combat.injected_triggers) == 1
-    assert state.combat.injected_triggers[0].event_type == "ON_HIT"
+    assert len(_attached_on_hit_triggers(state)) == 1
 
 
 def test_pummel_red_hammer_weapon_power_no_inject():
@@ -859,3 +855,20 @@ def test_sink_below_red_no_crash_empty_hand():
     state = _make_state()
     card = _make_card("sink_below_red", 1)
     dispatch(state, "ON_PLAY", "sink_below_red", card=card)
+
+
+def _attached_on_hit_triggers(state):
+    """Every ON_HIT ability granted to the current attack, wherever it lives.
+
+    A grant to an attack ACTION CARD attaches to the card (the attack IS the
+    card); a grant to a WEAPON's attack stays on the combat, because the attack
+    is a proxy object that dies with the chain link (CR 1.4.3c/e). Tests that
+    only knew about combat.injected_triggers were asserting the storage rather
+    than the behaviour.
+    """
+    out = [td for td in (getattr(state.combat, "injected_triggers", None) or [])
+           if td.event_type == "ON_HIT"]
+    attack = getattr(state.combat, "attack_card", None)
+    out += [g for g in (getattr(attack, "granted_abilities", None) or [])
+            if str(g.get("trigger", "")).upper() == "ON_HIT"]
+    return out

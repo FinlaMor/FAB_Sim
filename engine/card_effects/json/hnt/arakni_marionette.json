@@ -4,35 +4,62 @@
     {
       "ability_type": "WHILE_STATIC",
       "conditions": [
-        {"type": "ATTACK_CONTROLLED_BY_YOU"},
-        {"type": "ATTACK_HAS_KEYWORD", "keyword": "stealth"},
-        {"type": "OPPONENT_IS_MARKED"}
+        {
+          "type": "ATTACK_CONTROLLED_BY_YOU"
+        },
+        {
+          "type": "ATTACK_HAS_KEYWORD",
+          "keyword": "stealth"
+        },
+        {
+          "type": "OPPONENT_IS_MARKED"
+        }
       ],
       "effects": [
-        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
       ]
     },
     {
       "ability_type": "STATIC_TRIGGERED",
-      "trigger": "ON_HIT",
+      "trigger": "ON_ANY_HIT",
       "conditions": [
-        {"type": "ATTACK_CONTROLLED_BY_YOU"},
-        {"type": "ATTACK_HAS_KEYWORD", "keyword": "stealth"},
-        {"type": "OPPONENT_IS_MARKED"}
+        {
+          "type": "ATTACK_CONTROLLED_BY_YOU"
+        },
+        {
+          "type": "ATTACK_HAS_KEYWORD",
+          "keyword": "stealth"
+        },
+        {
+          "type": "OPPONENT_IS_MARKED"
+        }
       ],
       "effects": [
-        {"type": "GAIN", "keyword": "go again"}
+        {
+          "type": "GAIN",
+          "keyword": "go again"
+        }
       ]
     },
     {
       "ability_type": "STATIC_TRIGGERED",
       "trigger": "END_OF_TURN",
       "conditions": [
-        {"type": "OPPONENT_IS_MARKED"}
+        {
+          "type": "OPPONENT_IS_MARKED"
+        }
       ],
       "effects": [
-        {"type": "TRANSFORM_HERO", "mode": "random_agent_of_chaos"}
+        {
+          "type": "TRANSFORM_HERO",
+          "mode": "random_agent_of_chaos"
+        }
       ]
     }
-  ]
+  ],
+  "_comment": "Retriggered ON_HIT -> ON_ANY_HIT. ON_HIT now means \"when THIS hits\" and is dispatched only to the attack itself; this card's text is about an attack its CONTROLLER makes, so it needs the broadcast trigger. Before the split, ON_HIT was broadcast to every permanent the attacker controlled, which was right for this card and wrong for the seven weapons reading \"when THIS hits\" that fired on any attack at all."
 }

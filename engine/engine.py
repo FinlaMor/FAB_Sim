@@ -1438,23 +1438,32 @@ def _setup_dsl_listeners(state: GameState) -> None:
         # context so _controller_id resolves to the hero's owner; ATTACK_*
         # conditions read state.combat directly, and keyword grants act on it.
         attacker = game_state.players[combat.attacker_id]
-        if attacker.hero is not None:
-            dispatch(game_state, "ON_HIT", attacker.hero.slug,
-                     card=attacker.hero, event=event)
-        # Equipment/permanents the attacker controls that react to "when an attack
-        # you control hits" (e.g. Aether Crackers: destroy this, deal 1 arcane).
-        # The attack card and hero fired above; dispatch to the rest so their
-        # ON_HIT abilities can trigger. dispatch() no-ops on cards without a
-        # matching ON_HIT ability, so this is safe to broadcast.
+        # "When AN ATTACK YOU CONTROL hits" — the hero and the attacker's
+        # permanents, on their OWN trigger.
+        #
+        # This used to broadcast ON_HIT to all of them, which conflated two
+        # different sentences. A weapon reading "when THIS hits a hero, mark
+        # them" (Hunter's Klaive) marked the opponent whenever ANY attack hit,
+        # because the Klaive was sitting in a weapon zone — seven weapons had
+        # that, against four cards that actually mean the broadcast.
+        #
+        # The weapon's own hit is already covered: a weapon attack puts the
+        # WEAPON itself in combat.attack_card (the attack-proxy is modelled as a
+        # flag on the action, CR 1.4.3), so the dispatch above fires it exactly
+        # once, and only when it is the attack.
+        #
+        # Same shape, and same fix, as START_OF_ANY_TURN vs START_OF_TURN.
         seen = {id(combat.attack_card)}
         if attacker.hero is not None:
             seen.add(id(attacker.hero))
+            dispatch(game_state, "ON_ANY_HIT", attacker.hero.slug,
+                     card=attacker.hero, event=event)
         for zone in _dsl_permanent_zones(attacker):
             for perm in list(zone.cards):
                 if id(perm) in seen:
                     continue
                 seen.add(id(perm))
-                dispatch(game_state, "ON_HIT", perm.slug, card=perm, event=event)
+                dispatch(game_state, "ON_ANY_HIT", perm.slug, card=perm, event=event)
 
     def _dsl_permanent_zones(player):
         # Permanents plus equipment/weapon slot zones and the hero, so

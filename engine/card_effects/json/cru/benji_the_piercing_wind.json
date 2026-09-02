@@ -25,7 +25,7 @@
     },
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
+      "trigger": "ON_ANY_HIT",
       "conditions": [
         {
           "type": "ATTACK_IS_NOT_WEAPON"
@@ -53,5 +53,5 @@
       ]
     }
   ],
-  "_comment": "The restriction was a RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT inside an APPLY_CONTINUOUS inside a plain STATIC -- dead three ways over, and naming the wrong restriction besides: the card says 'can't be defended by CARDS FROM HAND', which is close to the opposite of 'head equipment only'. Its power test was ATTACK_PITCH_POWER_LTE, which reads the attack's PITCH value, not its {p}. A restriction is created when a qualifying attack is declared, so it is an ON_ATTACK trigger rather than a continuous effect."
+  "_comment": "Retriggered ON_HIT -> ON_ANY_HIT. ON_HIT now means \"when THIS hits\" and is dispatched only to the attack itself; this card's text is about an attack its CONTROLLER makes, so it needs the broadcast trigger. Before the split, ON_HIT was broadcast to every permanent the attacker controlled, which was right for this card and wrong for the seven weapons reading \"when THIS hits\" that fired on any attack at all.\n\nThe restriction was a RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT inside an APPLY_CONTINUOUS inside a plain STATIC -- dead three ways over, and naming the wrong restriction besides: the card says 'can't be defended by CARDS FROM HAND', which is close to the opposite of 'head equipment only'. Its power test was ATTACK_PITCH_POWER_LTE, which reads the attack's PITCH value, not its {p}. A restriction is created when a qualifying attack is declared, so it is an ON_ATTACK trigger rather than a continuous effect."
 }

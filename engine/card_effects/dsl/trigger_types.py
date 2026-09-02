@@ -3,7 +3,19 @@
 # JSON trigger name → engine event name
 TRIGGER_TO_EVENT: dict[str, str] = {
     "ON_PLAY":                  "ON_PLAY",
+    # "When THIS hits" -- the object that hit. Dispatched ONLY to the attack
+    # itself (and to injected triggers riding on it).
     "ON_HIT":                   "ON_HIT",
+    # "When AN ATTACK YOU CONTROL hits" -- dispatched to the attacker's hero and
+    # permanents. A separate trigger for the same reason START_OF_ANY_TURN is
+    # separate from START_OF_TURN: ON_HIT used to be broadcast to every
+    # permanent its controller had, so a weapon reading "when THIS hits a hero,
+    # mark them" marked on any attack at all, just for sitting in a weapon zone.
+    # Seven weapons had that; four cards genuinely want the broadcast and now
+    # say so.
+    "ON_ANY_HIT":               "ON_ANY_HIT",
+    "ON_ATTACK_HIT":            "ON_ANY_HIT",
+    "WHEN_AN_ATTACK_HITS":      "ON_ANY_HIT",
     "ON_ATTACK":                "ON_ATTACK",
     "ON_CRUSH":                 "ON_CRUSH",
     "ON_DEFEND":                "ON_DEFEND",

@@ -3,7 +3,7 @@
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_HIT",
+      "trigger": "ON_ANY_HIT",
       "conditions": [
         {
           "type": "SOURCE_IS_ATTACK",
@@ -28,5 +28,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Retriggered ON_HIT -> ON_ANY_HIT. ON_HIT now means \"when THIS hits\" and is dispatched only to the attack itself; this card's text is about an attack its CONTROLLER makes, so it needs the broadcast trigger. Before the split, ON_HIT was broadcast to every permanent the attacker controlled, which was right for this card and wrong for the seven weapons reading \"when THIS hits\" that fired on any attack at all."
 }

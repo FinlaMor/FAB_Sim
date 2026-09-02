@@ -6,9 +6,9 @@
       "trigger": "ON_HIT",
       "effects": [
         {
-          "type": "DEAL_GENERIC",
+          "type": "LOSE_LIFE",
           "amount": 1,
-          "target": "OPPONENT"
+          "player": "OPPONENT"
         }
       ],
       "conditions": [
@@ -18,5 +18,5 @@
       ]
     }
   ],
-  "_comment": "Added the missing ATTACK_TARGET_IS_HERO gate: the DSL ON_HIT listener is wired to the generic 'hit' event, which fires for ANY damaged target, and ON_ATTACK fires on declaration whatever was attacked -- so 'when this hits/attacks A HERO' also fired against allies and permanents."
+  "_comment": "'When this hits a hero, THEY LOSE 1{h}.' Was DEAL_GENERIC 1 -- damage, which is not life loss. CR 7.5.5a draws the line explicitly: an attack-target losing life from anything except the active-attack's damage is NOT a hit. So modelling life loss as damage can make a second attack count as having hit, and exposes the loss to damage prevention and to every 'when this is dealt damage' trigger, none of which the card touches.\n\nAdded the missing ATTACK_TARGET_IS_HERO gate: the DSL ON_HIT listener is wired to the generic 'hit' event, which fires for ANY damaged target, and ON_ATTACK fires on declaration whatever was attacked -- so 'when this hits/attacks A HERO' also fired against allies and permanents."
 }
