@@ -5,38 +5,29 @@
       "ability_type": "DEFENSE_REACTION",
       "conditions": [
         {
-          "type": "AND",
-          "conditions": [
-            {
-              "type": "ATTACK_CLASS_IN",
-              "classes": [
-                "Guardian"
-              ]
-            },
-            {
-              "type": "ATTACK_SUBTYPE_IN",
-              "subtypes": [
-                "off-hand"
-              ]
-            },
-            {
-              "type": "ATTACK_PITCH_POWER_GTE",
-              "amount": 1
-            }
-          ]
+          "type": "DEFENDING_CARD_COUNT",
+          "amount": 1,
+          "comparison": "gte",
+          "card_class": "Guardian",
+          "types": ["OffHand"],
+          "defense_gte": 1
         }
       ],
       "effects": [
         {
-          "type": "PAY_OR_DAMAGE",
-          "amount": 1,
-          "cost": [
+          "type": "PAY_OR_ELSE",
+          "player": "OPPONENT",
+          "discard": 1,
+          "on_failure": [
             {
-              "type": "DISCARD_CARD"
+              "type": "DEAL_PHYSICAL",
+              "amount": 1,
+              "target": "OPPONENT"
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'If a Guardian off-hand with 1 or more {d} is DEFENDING this chain link, deal 1 damage to the attacking hero unless THEY discard a card.'\n\nEvery clause was read off the wrong object. The three conditions were ATTACK_CLASS_IN, ATTACK_SUBTYPE_IN and ATTACK_PITCH_POWER_GTE -- all about the ATTACK, on a card whose sentence is about the DEFENDER, and the third asked about pitch power rather than {d} as well. DEFENDING_CARD_COUNT reads combat.defending_cards and now filters on class and defence too.\n\nThe effect was PAY_OR_DAMAGE with amount 1 and an unread 'cost': [DISCARD_CARD]. PAY_OR_DAMAGE reads 'amount' as RESOURCES and defaults damage to 0, and it is entirely self-targeted -- so the card asked its own controller to pay a resource it never mentions, to avoid zero damage, and the discard was dropped. It did nothing at all.\n\nPAY_OR_ELSE is the effect for this sentence shape and already targets a player; it gained discarding as a third currency alongside resources and counters. The choice belongs to the ATTACKING hero, which is why this is not a MAY -- a MAY prompt always goes to the controller, which is how loan_shark_yellow can compose the same wording only because its version is self-targeted."
 }

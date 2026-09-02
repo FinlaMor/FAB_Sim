@@ -1178,6 +1178,13 @@ def _apply_turn_attack_effects(state: GameState, attack_card: Card) -> None:
         remaining = []
         for mod in queued:
             matches = True
+            # Pinned to ONE object ("it gets +3{p}"), not to whatever matches a
+            # property filter. Mirrors dsl_queued_card_mods, which has pinned by
+            # object_id since "your next attack WITH IT" needed it.
+            _want_id = mod.get('object_id')
+            if _want_id is not None and getattr(attack_card, 'object_id', None) != _want_id:
+                remaining.append(mod)
+                continue
             for spec in mod.get('filter', []):
                 fn = _cc(spec.get('type', 'none'), spec)
                 if fn is not None and not fn(attack_card, None, state):

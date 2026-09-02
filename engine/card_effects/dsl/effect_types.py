@@ -3415,10 +3415,25 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # The cost is normally resources, but "destroy this UNLESS you remove a
         # steam counter from it" pays in counters instead — set counter_type and
         # the amount comes from `amount` (the recurring Crank/steam pattern).
+        # A third currency: DISCARDING A CARD. "Deal 1 damage to the attacking
+        # hero UNLESS THEY DISCARD A CARD" (Shield Bash) is the same sentence
+        # shape as the resource and counter forms, and the choice belongs to the
+        # player named by `player` -- which is why it lives here rather than in
+        # a MAY, whose prompt always goes to the CONTROLLER. Composing it as
+        # MAY+else works only for the self-targeted wording (loan_shark_yellow).
+        #
+        #   {"type":"PAY_OR_ELSE","player":"OPPONENT","discard":1,
+        #    "on_failure":[{"type":"DEAL_PHYSICAL","amount":1,...}]}
+        discard_due = int(params.get("discard", 0) or 0)
         counter_type = params.get("counter_type") or params.get("counter")
         if counter_type:
             resources = 0
             counters_due = int(params.get("amount", 1) or 1)
+        elif discard_due:
+            # `amount` is the discard count when discarding is the currency; it
+            # must not double as a resource cost or the card charges both.
+            resources = 0
+            counters_due = 0
         else:
             resources = params.get("resources", params.get("amount", 0))
             counters_due = 0
@@ -3430,14 +3445,25 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                    for e in params.get("on_failure", [])]
 
         def _fn(card, event, state, _r=resources, _pt=player_target, _fail=on_fail,
-                _ct=counter_type, _cn=counters_due):
+                _ct=counter_type, _cn=counters_due, _dn=discard_due):
             from engine.card_effects.ability_keywords import (
-                _ask_player, _controller_id, effect_remove_counter)
+                _ask_player, _controller_id, effect_discard,
+                effect_remove_counter)
             cid = _controller_id(card)
             tid = (3 - cid) if _pt in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
             player = state.players[tid]
             paid = False
-            if _ct:
+            if _dn:
+                # An empty hand cannot pay, so the penalty simply happens --
+                # asked anyway, the prompt would be a choice with one outcome.
+                if len(player.hand.cards) >= _dn:
+                    choice = _ask_player(
+                        state, tid, ["pay", "decline"],
+                        context=f"Discard {_dn} card(s) to avoid the effect?")
+                    if str(choice) == "pay":
+                        effect_discard(state, tid, count=_dn)
+                        paid = True
+            elif _ct:
                 have = player.counters.get((card.slug, card.zone, _ct), 0)
                 if have >= _cn:
                     choice = _ask_player(
@@ -4819,20 +4845,39 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # "this turn" — a chain-scoped one-shot must not survive into the next
         # attack chain of the same turn. Cleared at chain close.
         scope = str(params.get("scope") or "TURN").upper()
+        # "IT gets +3{p}" — the card a preceding effect acted on, not the next
+        # attack that happens to match a filter. dsl_queued_card_mods already
+        # pins by object_id for exactly this reason; the attack queue matched on
+        # properties alone, so painful_passage_red's buff landed on whichever
+        # attack was played next instead of on the card it banished.
+        object_ref = params.get("object_ref")
 
         def _fn(card, event, state, _mod=mod, _a=amt, _filt=filter_specs,
-                _scope=scope):
+                _scope=scope, _oref=object_ref):
             # Queue on the card's controller, not the turn player — an
             # instant-speed card using this effect must buff its own controller.
             from engine.card_effects.ability_keywords import _controller_id
             player = state.players[_controller_id(card)]
             if not hasattr(player, 'dsl_queued_attack_mods'):
                 player.dsl_queued_attack_mods = []
+            object_id = None
+            if _oref:
+                from engine.context import get_ref
+                found = get_ref(_oref)
+                if isinstance(found, list):
+                    found = found[0] if found else None
+                if found is None:
+                    # The object this was about does not exist, so there is
+                    # nothing to buff. Queueing unpinned would silently widen it
+                    # to every attack the filter matches.
+                    return
+                object_id = getattr(found, "object_id", None)
             player.dsl_queued_attack_mods.append({
                 "mod": _mod,
                 "amount": _resolve_amount(_a, state, card),
                 "filter": _filt,
                 "scope": _scope,
+                "object_id": object_id,
             })
         return _fn
 

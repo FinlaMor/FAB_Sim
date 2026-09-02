@@ -657,12 +657,20 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # weapon is not a card that defends). ALL rather than ANY because every
         # phrasing that needs this names a compound card type.
         want_types = [str(t).lower() for t in (params.get("types") or [])]
+        # "If a GUARDIAN OFF-HAND WITH 1 OR MORE {d} is defending this chain
+        # link" (Shield Bash). Class and defence are properties of the
+        # DEFENDER; that card asked ATTACK_CLASS_IN / ATTACK_SUBTYPE_IN /
+        # ATTACK_PITCH_POWER_GTE instead, all three about the attack, so it read
+        # every clause off the wrong object.
+        want_class = _norm(params.get("card_class") or params.get("class") or "")
+        defense_gte = params.get("defense_gte")
         _OPS = {"gte": lambda a, b: a >= b, "gt": lambda a, b: a > b,
                 "lte": lambda a, b: a <= b, "lt": lambda a, b: a < b,
                 "eq": lambda a, b: a == b, "neq": lambda a, b: a != b}
 
         def _dcc(c, e, s, _n=need, _cmp=comparison, _eq=equipment,
-                 _vsp=vs_attack_power, _ty=want_types):
+                 _vsp=vs_attack_power, _ty=want_types, _cls=want_class,
+                 _dge=defense_gte):
             if not s.combat:
                 return False
             cards = getattr(s.combat, "defending_cards", None) or []
@@ -676,6 +684,18 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
                     return out
                 cards = [d for d in cards
                          if all(t in _traits(d) for t in _ty)]
+            if _cls:
+                cards = [d for d in cards if _cls in _card_traits(d)]
+            if _dge is not None:
+                try:
+                    need_d = int(_dge)
+                except (TypeError, ValueError):
+                    need_d = None
+                if need_d is not None:
+                    cards = [d for d in cards
+                             if (getattr(d, "defense", None)
+                                 if getattr(d, "defense", None) is not None
+                                 else getattr(d, "base_defense", None) or 0) >= need_d]
             if _vsp:
                 atk_power = getattr(s.combat, "attack_power", 0) or 0
                 cards = [d for d in cards
