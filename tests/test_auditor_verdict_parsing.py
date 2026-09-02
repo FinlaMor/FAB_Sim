@@ -222,3 +222,35 @@ def test_b1_is_mechanical_not_a_judgement_call():
     assert '"if", "whenever", or "while"' in b1, (
         "the syntactic rule is gone; without it GATED is a judgement again")
     assert "do not decide which ones are interesting" in b1
+
+
+def test_the_talishar_reference_is_compared_against_not_just_supplied(monkeypatch):
+    """v3 supplied Talishar's code and measured nothing: recall 37.0% -> 33.3%
+    (one card, noise), identical scores on the 12 cards with a substantive
+    reference, and 0 of 54 replies mentioning it at all. Parts A/B1/B2/B3/C are
+    all about the printed text and the JSON, so the block sat in context as
+    material the model was never asked to use.
+
+    The fix is the one that worked for B1: make it an enumeration. If Part D is
+    ever reduced back to "consider the reference", the block is ~400 tokens per
+    card buying nothing and should be deleted instead.
+    """
+    monkeypatch.setattr(AIW, "_talishar_reference",
+                        lambda slug: "if(count($theirSoul) > 0) GiveGoAgain();")
+    prompt = AIW.build_verification_prompt(CARD, ORIGINAL, "(reference)")
+    d = prompt[prompt.index("=== PART D"):prompt.index("=== PART C")]
+    assert "one line for EVERY behaviour" in d, "Part D is no longer an enumeration"
+    assert "MISSING" in d
+    assert "DIVERGENCE:" in d
+    assert "printed text decides" in " ".join(d.split()), (
+        "Part D must keep the printed text authoritative over Talishar")
+
+
+def test_part_d_is_absent_and_unreferenced_when_there_is_no_reference(monkeypatch):
+    """A heading with nothing under it reads as 'Talishar implements nothing',
+    and an output order naming a section that does not exist invites the model
+    to invent one."""
+    monkeypatch.setattr(AIW, "_talishar_reference", lambda slug: "")
+    prompt = AIW.build_verification_prompt(CARD, ORIGINAL, "(reference)")
+    assert "PART D" not in prompt
+    assert "Talishar" not in prompt

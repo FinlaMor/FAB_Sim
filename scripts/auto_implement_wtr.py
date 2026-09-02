@@ -777,6 +777,18 @@ def build_verification_prompt(card: dict, json_content: str, dsl_ref: str) -> st
     that no longer contained it. The examples below are synthetic -- structurally
     identical to the real defects, matching no card's printed text.
 
+    TALISHAR IS COMPARED AGAINST, NOT MERELY SUPPLIED. Version 3 of this
+    prompt included Talishar's implementation as reference material and measured
+    ZERO effect: recall 37.0% -> 33.3% (one card, noise at n=27), and on the 12
+    cards whose reference is substantive (>=400 chars) the two arms scored
+    identically, 5/12 both times. 0 of 54 replies mentioned it. The block was
+    ~400 tokens of context the model was never asked to use, and it used none of
+    it -- the finding was "unused context is ignored", not "a reference
+    implementation cannot help". Part D now forces the comparison as an
+    enumeration, which is the one thing that has reliably worked here: Part A is
+    produced 54/54 because it is a list that must be filled in, while B1 missed
+    the class it was written for for as long as it was a judgement call.
+
     TALISHAR IS A SECOND OPINION ON INTENT. The auditor's weakness is semantic
     ("does this JSON mean what the card says"), and a reference implementation of
     the same card is the cheapest outside evidence available -- median ~230
@@ -796,6 +808,22 @@ meant to do; it may have bugs and is not authoritative -- a divergence is a
 signal to look, not proof of a defect. Where it and our JSON disagree, the
 printed text decides):
 {tal}
+""" if tal else ""
+
+    tal_part = """
+=== PART D: AGAINST TALISHAR ===
+Write one line for EVERY behaviour Talishar's code above implements:
+
+    <behaviour, in a few words>  ->  <the JSON node that does the same, or MISSING>
+
+Then one final line:
+
+    DIVERGENCE: <the single behaviour that differs and matters most, or NONE>
+
+Do not skip this because the two are written in different languages; compare what
+they DO. Talishar may be wrong -- where it and the printed text disagree, the
+printed text decides, and the answer is NONE. But a behaviour that is MISSING
+from our JSON and present in both Talishar and the printed text is a defect.
 """ if tal else ""
 
     return f"""\
@@ -873,7 +901,7 @@ validates, and does nothing.
 The reverse is also wrong: INTIMIDATE and DOMINATE are effects a card PERFORMS as
 well as keywords it can gain. "Intimidate them" is the effect; "this gains
 intimidate" is the keyword.
-
+{tal_part}
 === PART C: COSTS ===
 Does the text say "as an additional cost"? A cost must be an "additional_cost"
 or a card-level "cost", NEVER an effect: an effect runs on resolution, when the
@@ -884,7 +912,7 @@ re-paid on every dispatch, and a static is dispatched on every attack-power
 recalculation.
 
 === OUTPUT ===
-Part A, then B1, B2, B3, then Part C. End with a final line, exactly one of:
+Part A, then B1, B2, B3, then Part D if it is present above, then Part C. End with a final line, exactly one of:
 
     VERDICT: LOOKS_GOOD
     VERDICT: CORRECTED
