@@ -1,6 +1,6 @@
 {
   "slug": "current_funnel_blue",
-  "_comment": "'THIS and the next action card you play this turn get go again' \u2014 two grants, one immediate and one queued on the play-time queue (the next action card need not attack). The gate is approximated: the text says the LAST action card played this turn was Lightning, and only 'a Lightning card was played this turn' is recorded, so a Lightning play followed by a non-Lightning one still passes. More permissive than printed; stated rather than hidden.",
+  "_comment": "'When this attacks, if the last action card you played this turn was Lightning, THIS and the next action card you play this turn get go again.' Go again is PRINTED, so the card had it whether or not a Lightning action preceded it. The ON_ATTACK trigger already grants it back under the right condition, and also hands one to the next action card; only the printed one needed stripping. Declared rather than converted because the grant is half of a two-target clause and a WHILE_STATIC covers only this card.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -29,5 +29,8 @@
         }
       ]
     }
+  ],
+  "conditional_keywords": [
+    "GO_AGAIN"
   ]
 }

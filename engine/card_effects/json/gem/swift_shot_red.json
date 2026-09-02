@@ -29,5 +29,8 @@
       ]
     }
   ],
-  "_comment": "\"When this is put FACE UP INTO YOUR ARSENAL, it gets go again this turn.\" Nothing about this worked. The trigger was ON_ENTER_PLAY -- an arsenal is not the arena, so it never fired; ON_PUT_FACEUP_IN_ARSENAL is new because the nearest existing trigger, ON_PUT_FACEUP_FROM_DECK, requires the card to have come from the deck and this one does not care. Its condition was CARD_IN_ZONE zone:arsenal card:\"swift_shot_red\" -- 'card' is not a key CARD_IN_ZONE reads, so it asked only whether the arsenal was NON-EMPTY, which is true whenever this card is there and just as true when it is not; a restriction on THIS card is SELF_IN_ZONE. And GAIN keyword grants to the CURRENT COMBAT, of which there is none while a card sits in arsenal, so the go again went nowhere. Approximation stated rather than hidden: the grant is scoped to a card of this NAME played from arsenal this turn rather than to this exact object, because per-object turn-scoped keyword grants do not exist. The arsenal holds one card, so in practice the two coincide."
+  "_comment": "'When this is put face-up into your arsenal, IT gets go again this turn.' Go again is PRINTED, so the card DB granted it unconditionally and Swift Shot had go again however it was played -- the gate is the whole card. The grant machinery was already here and correct (GRANT_KEYWORD_TO_PLAYED filtered to this card played from arsenal); only the strip was missing. Declared rather than converted to a WHILE_STATIC because the condition is an EVENT -- being put face-up into arsenal -- with no state a static could read at attack time.",
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ]
 }

@@ -501,11 +501,21 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # been pumped above its printed base power (e.g. Inertia Trap, which
         # reacts only to a boosted attack). Compares the live combat power to
         # the base recorded when the attack was declared.
-        def _atk_gt_base(c, e, s):
+        # "greater than TWICE its base" (Merciless Battleaxe) is the same
+        # comparison with a factor. That card had it as SELF_ATTACK_POWER_GTE 2
+        # -- "power is at least 2" -- which is true of nearly every attack, so
+        # the gate did nothing and the axe had overpower whenever it swung.
+        try:
+            multiple = float(params.get("multiple", params.get("times", 1)) or 1)
+        except (TypeError, ValueError):
+            multiple = 1.0
+
+        def _atk_gt_base(c, e, s, _m=multiple):
             combat = s.combat
             if combat is None:
                 return False
-            return (combat.attack_power or 0) > (getattr(combat, "base_attack_power", 0) or 0)
+            base = getattr(combat, "base_attack_power", 0) or 0
+            return (combat.attack_power or 0) > base * _m
         return _atk_gt_base
 
     if ctype in ("ATTACK_BASE_POWER_LTE", "ATTACK_BASE_POWER_GTE"):

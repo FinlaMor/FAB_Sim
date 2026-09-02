@@ -15,8 +15,8 @@
       "trigger": "ON_ATTACK",
       "conditions": [
         {
-          "type": "SELF_ATTACK_POWER_GTE",
-          "amount": 2
+          "type": "ATTACK_POWER_GT_BASE",
+          "multiple": 2
         }
       ],
       "effects": [
@@ -26,5 +26,9 @@
         }
       ]
     }
-  ]
+  ],
+  "conditional_keywords": [
+    "OVERPOWER"
+  ],
+  "_comment": "'When this attacks, if the attack's {p} is GREATER THAN TWICE ITS BASE, the attack gets overpower.' Two defects. Overpower is PRINTED and was granted unconditionally, so the axe had it on every swing. And the gate was SELF_ATTACK_POWER_GTE 2 -- 'power is at least 2' -- which is true of nearly every attack, so even a reader would have found it always satisfied. ATTACK_POWER_GT_BASE now takes a multiple, which is what 'twice its base' means; a fixed number cannot express it because the base varies by weapon."
 }

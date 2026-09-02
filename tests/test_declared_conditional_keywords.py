@@ -376,11 +376,31 @@ def test_an_effect_named_like_a_keyword_does_not_strip_it(slug):
         "read as a keyword it conditionally gains")
 
 
-@pytest.mark.parametrize("slug", ["arakni_web_of_deceit", "current_funnel_blue",
-                                  "merciless_battleaxe"])
+@pytest.mark.parametrize("slug", ["arakni_web_of_deceit", "luminaris"])
 def test_a_keyword_handed_to_another_card_does_not_strip(slug):
     """The Luminaris case. These grant the keyword to a DIFFERENT card, so the
-    printed listing is the DB flattening a sentence about someone else."""
+    printed listing is the DB flattening a sentence about someone else.
+
+    current_funnel_blue and merciless_battleaxe USED TO BE LISTED HERE and were
+    wrong. The discriminator is not "does the sentence mention another card" but
+    "is THIS card among the things it gives the keyword to":
+
+        luminaris             "your Illusionist ATTACKS get go again"   others
+        arakni_web_of_deceit  "your attacks with stealth ... get ..."   others
+        current_funnel_blue   "THIS and the next action card ... get"   both
+        merciless_battleaxe   "THE ATTACK gets overpower" -- a weapon's
+                              attack is the weapon, so: itself
+
+    A card that gives the keyword to itself AND to another is still gated for
+    itself, and leaving it unstripped means it always has the keyword. The
+    earlier reading stopped at "another card is mentioned".
+
+    Neither of these prints a standalone keyword line, which is the other half
+    of the evidence: weave_ice_yellow does print "**Go again**" on its own line,
+    so ITS listing is real and only the Dominate in its gated sentence is
+    flattened. Without a standalone line the listing came from the sentence, and
+    then the only question is whose keyword the sentence is about.
+    """
     assert not conditional_keywords(slug), (
         slug + " had a printed keyword stripped, but it grants that keyword to "
         "another card rather than to itself")

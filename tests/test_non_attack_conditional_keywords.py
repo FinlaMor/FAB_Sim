@@ -215,10 +215,29 @@ def _declaring_slugs():
 
 
 DECLARING = _declaring_slugs()
+def _never_enters_combat(slug):
+    """Cards that resolve as a non-attack LAYER, which is what this file is
+    about. A WEAPON is not an "Attack" subtype card and is not is_attack, so it
+    fell in here -- but a weapon attack puts the weapon on the combat chain, so
+    it takes the attack path and recalculate_attack is the right check for it,
+    not resolve_stack. merciless_battleaxe arriving here is what surfaced that.
+    """
+    card = DB.get(slug)
+    if card is None:
+        return False
+    if "Attack" in (card.subtypes or []) or card.is_attack:
+        return False
+    types = {str(t).lower() for t in (card.types or [])}
+    return not (types & {"weapon", "equipment"})
+
+
 NON_ATTACK_DECLARERS = [s for s in DECLARING
-                        if (DB.get(s) is not None
-                            and "Attack" not in (DB.get(s).subtypes or [])
-                            and not DB.get(s).is_attack)]
+                        if _never_enters_combat(s)
+                        # This file's check is about the ACTION POINT a go-again
+                        # layer returns; a card declaring some other keyword
+                        # conditional is a different question with a different
+                        # observable.
+                        and "goagain" in conditional_keywords(s)]
 
 
 def test_some_card_declares_a_conditional_keyword():
