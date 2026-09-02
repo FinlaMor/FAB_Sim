@@ -1915,6 +1915,81 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     _ek_shuffle(state, cid)
         return _fn
 
+    if etype in ("SEARCH_BANISHED", "SEARCH_BANISH"):
+        # "Put a Mechanologist item of the same color from your BANISHED zone on
+        # top of your deck." The banished zone is a public, ordered zone like
+        # the graveyard, so this is SEARCH_GRAVEYARD pointed at a different zone
+        # -- and there was no such effect, which is why prismatic_lens_yellow
+        # was authored as SEARCH_BANISH_FACE_DOWN: trap_door's effect, which
+        # searches your DECK, banishes a card FACE-DOWN and SHUFFLES. Every
+        # noun in that sentence is the wrong way round from this one, and its
+        # `destination` was unread, so the card milled and shuffled its own deck
+        # each activation instead of retrieving anything.
+        #
+        # `filter` takes ordinary DSL conditions, evaluated with each CANDIDATE
+        # as the subject, which is what lets a card say "of the same color" --
+        # a comparison against something a preceding effect stored, not a
+        # literal colour that could be baked into a parameter.
+        _raw_ft = _first(params, "filter_types", "card_types", "card_type",
+                         "types", "type", "subtypes", "subtype")
+        filter_types = ([_raw_ft] if isinstance(_raw_ft, str)
+                        else list(_raw_ft) if _raw_ft else None)
+        card_class = _norm_amt(_first(params, "card_class", "class", default="") or "")
+        filter_specs = [(f.get("type", "none"), f) for f in (params.get("filter") or [])]
+        destination = str(_first(params, "destination", "to_zone", "to",
+                                 default="hand")).lower()
+        shuffle = params.get("shuffle")
+        if shuffle is None:
+            # A card put ON TOP of the deck and then shuffled in is not on top
+            # of anything; only "into your deck" implies a shuffle.
+            shuffle = destination in ("deck", "deck_bottom")
+
+        def _fn(card, event, state, _ft=filter_types, _cc=card_class,
+                _fs=filter_specs, _dest=destination, _shuf=shuffle):
+            from engine.card_effects.ability_keywords import (
+                _controller_id, ask_optional, FAIL_TO_FIND)
+            from engine.card_effects.dsl.condition_types import compile_condition
+            from engine.effect_keywords import put_object
+            cid = _controller_id(card)
+            controller = state.players[cid]
+            eligible = list(controller.banished.cards)
+            if _ft:
+                eligible = [c for c in eligible
+                            if _matches_type_or_subtype(c, _ft)]
+            if _cc:
+                eligible = [c for c in eligible
+                            if _cc in {_norm_amt(x) for x in
+                                       (getattr(c, "classes", None) or [])}]
+            for ctype_, cparams in _fs:
+                fn = compile_condition(ctype_, cparams)
+                if fn is not None:
+                    eligible = [c for c in eligible if fn(c, event, state)]
+            if not eligible:
+                return
+            pick = ask_optional(state, cid, [c.slug for c in eligible],
+                                sentinel=FAIL_TO_FIND,
+                                context="Search your banished zone (or fail to find)")
+            if pick is None:
+                return
+            target = next((c for c in eligible if c.slug == pick), None)
+            if target is None:
+                return
+            target.owner = cid
+            target.controller = cid
+            _zone, _pos = _dest, None
+            if _dest in ("deck_top", "top_deck", "top"):
+                _zone, _pos = "deck", "top"
+            elif _dest == "deck_bottom":
+                _zone, _pos = "deck", None
+            elif _dest == "arena":
+                _zone = "permanents"
+            put_object(state, target, _zone, destination_player_id=cid,
+                       source_player_id=cid, is_public=True, position=_pos)
+            if _shuf:
+                from engine.effect_keywords import shuffle as _ek_shuffle
+                _ek_shuffle(state, cid)
+        return _fn
+
     if etype == "AMP":
         amt = params.get("amount", 1)
         def _fn(card, event, state, _a=amt):

@@ -1,6 +1,6 @@
 {
   "slug": "light_the_way_red",
-  "_comment": "'As an additional cost to play this, you may charge your hero's soul. When this hits, if a yellow card was charged this way, this gets go again.' The implementation is already right: an optional CHARGE cost that stamps the charged card's colour, and an injected ON_HIT trigger gated on CHARGED_THIS_WAY yellow. Only the printed keyword was unconditional, so the card had go again without charging anything and without hitting. Declared rather than converted because the condition is a HIT -- there is no state for a static to read before the attack connects.",
+  "_comment": "'As an additional cost to play this, you may charge your hero's soul. When this hits, if a yellow card was charged this way, this gets go again.' The shape is right: an optional CHARGE cost that stamps the charged card's colour, and an injected ON_HIT trigger gated on CHARGED_THIS_WAY yellow. The printed keyword is declared conditional rather than converted, because the condition is a HIT and there is no state for a static to read before the attack connects. The injected trigger now uses the NESTED form. In the string form the loader pops 'conditions' into an effect-level gate, so CHARGED_THIS_WAY was evaluated when the PLAY ability resolved and the trigger then fired unconditionally on any hit. Here that happened to give the right answer -- the charge is paid before the ability resolves, so the gate saw the truth -- but it was right by coincidence, and the same shape on rage_baiters was not. Since go again is stripped from this card by conditional_keywords, an injected trigger that fires when it should not is the difference between the printed card and a free extra action.",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -14,19 +14,21 @@
       "effects": [
         {
           "type": "INJECT_TRIGGER",
-          "trigger": "ON_HIT",
-          "conditions": [
-            {
-              "type": "CHARGED_THIS_WAY",
-              "color": "yellow"
-            }
-          ],
-          "effects": [
-            {
-              "type": "GAIN",
-              "keyword": "GO_AGAIN"
-            }
-          ]
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "CHARGED_THIS_WAY",
+                "color": "yellow"
+              }
+            ],
+            "effects": [
+              {
+                "type": "GAIN",
+                "keyword": "GO_AGAIN"
+              }
+            ]
+          }
         }
       ]
     }

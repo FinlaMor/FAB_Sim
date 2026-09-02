@@ -1,6 +1,6 @@
 {
   "slug": "prismatic_lens_yellow",
-  "_comment": "Crank. \"At the start of your turn, destroy this UNLESS you remove a steam counter from it\" — mutually exclusive, but the JSON ran DESTROY_PERMANENT and REMOVE_COUNTER unconditionally, so it destroyed itself every turn AND spent the counter. Now a PAY_OR_ELSE whose cost is the counter. STILL SIMPLIFIED: the activated ability's \"Mechanologist item OF THE SAME COLOR\" is hardcoded yellow, and its nested filter uses singular subtype/class keys that CARD_IN_ZONE does not read (it reads filter_types / card_class), so that search filter is inert. The 'put it on top of your deck' step was a nested PUT_TOP_DECK, which is not an effect type -- lazily compiled, so it raised ValueError whenever the ability was activated rather than failing at load. SEARCH_BANISH_FACE_DOWN already takes the destination, so it says deck_top directly.",
+  "_comment": "'Once per Turn Instant - 0: Reveal the top card of your deck. Put a Mechanologist item of the same color from your banished zone on top of your deck.'\n\nThe activated ability was SEARCH_BANISH_FACE_DOWN, which is trap_door's effect and runs the card BACKWARDS: it searches your DECK, banishes what it finds FACE-DOWN, and SHUFFLES. So a free activation milled a card out of the deck and shuffled it, where the card retrieves one INTO the deck and must not shuffle -- putting something on top and then shuffling is putting it nowhere. Its 'destination': 'deck_top' was read by nothing.\n\nSEARCH_BANISHED is the banished-zone twin of SEARCH_GRAVEYARD (same may-fail-to-find shape, same destination handling) and did not exist. 'Of the same color' is a comparison against the card just revealed, not a literal colour: REVEAL_TOP_DECK stores it under a ref and SAME_COLOR_AS reads it. The old version hard-coded color 'yellow' in an effect-level gate, which is both the wrong question and the wrong moment.\n\n'Once per Turn' needs no authoring: the card DB parses it from the printed text (has_per_turn_limit=True, activations=1) and play.py enforces it when the activation is OFFERED. A once_per_turn param here would be a second implementation of a rule already handled, which is how two copies of one rule end up disagreeing. Crank is printed. The enters-with-a-counter and the start-of-turn steam upkeep were already correct.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
@@ -42,20 +42,24 @@
       "activation_cost": 0,
       "effects": [
         {
-          "type": "REVEAL_TOP_DECK"
+          "type": "REVEAL_TOP_DECK",
+          "amount": 1,
+          "into": "revealed"
         },
         {
-          "type": "SEARCH_BANISH_FACE_DOWN",
-          "conditions": [
+          "type": "SEARCH_BANISHED",
+          "filter_types": [
+            "Item"
+          ],
+          "card_class": "Mechanologist",
+          "filter": [
             {
-              "type": "CARD_IN_ZONE",
-              "zone": "banished",
-              "subtype": "Item",
-              "class": "Mechanologist",
-              "color": "yellow"
+              "type": "SAME_COLOR_AS",
+              "ref": "revealed"
             }
           ],
-          "destination": "deck_top"
+          "destination": "deck_top",
+          "shuffle": false
         }
       ]
     }

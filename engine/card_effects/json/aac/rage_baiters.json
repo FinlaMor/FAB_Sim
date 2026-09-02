@@ -1,6 +1,5 @@
 {
   "slug": "rage_baiters",
-  "_comment": "Removed a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability: the card has no intimidate text. The generator hallucinated it from Blade Break equipment (27 cards corpus-wide).",
   "abilities": [
     {
       "ability_type": "ATTACK_REACTION",
@@ -14,22 +13,33 @@
           "amount": 1
         }
       ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_HAS_KEYWORD",
+            "keyword": "stealth"
+          }
+        ]
+      },
       "effects": [
         {
           "type": "INJECT_TRIGGER",
-          "trigger": "ON_HIT",
-          "conditions": [
-            {
-              "type": "ATTACK_TARGET_IS_HERO"
-            }
-          ],
-          "effects": [
-            {
-              "type": "MARK"
-            }
-          ]
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              }
+            ],
+            "effects": [
+              {
+                "type": "MARK"
+              }
+            ]
+          }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "Two fixes. (1) 'TARGET ATTACK WITH STEALTH' had no target filter at all, so the reaction could be played on any attack -- a restriction on legality, which is where it now lives. (2) The injected trigger used the STRING form with a top-level 'conditions', which the loader pops into an EFFECT-level gate: the condition was evaluated when the reaction RESOLVED rather than when the attack hit, and the injected trigger then fired unconditionally. The nested form keeps the conditions on the trigger, which is what 'when this hits a hero' means. Earlier note, still true: a fabricated STATIC_TRIGGERED ON_DEFEND -> INTIMIDATE ability was removed; the card has no intimidate text, and the generator hallucinated it from Blade Break equipment."
 }

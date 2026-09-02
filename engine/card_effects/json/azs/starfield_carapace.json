@@ -1,50 +1,5 @@
 {
   "slug": "starfield_carapace",
-  "abilities": [
-    {
-      "ability_type": "ACTIVATE",
-      "activation_cost": 0,
-      "cost": [
-        {
-          "type": "DESTROY_PERMANENT",
-          "target": "self"
-        }
-      ],
-      "effects": [
-        {
-          "type": "INJECT_TRIGGER",
-          "trigger": "ON_ACTIVATE",
-          "conditions": [
-            {
-              "type": "CONTROLS_TOKEN_TYPE",
-              "token_type": "Aphrodias"
-            }
-          ],
-          "effects": [
-            {
-              "type": "PAY_OR_DAMAGE",
-              "amount": -1
-            },
-            {
-              "type": "INJECT_TRIGGER",
-              "trigger": "ON_DEAL_DAMAGE",
-              "conditions": [
-                {
-                  "type": "ATTACK_TARGET_IS_HERO",
-                  "opponent": true
-                }
-              ],
-              "effects": [
-                {
-                  "type": "CREATE_TOKEN",
-                  "token_type": "Lightning Flow",
-                  "token": "lightning_flow"
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "abilities": [],
+  "_comment": "NOT IMPLEMENTED: 'Until end of turn, an Aphrodias you control costs {r} less to activate and gets \"Whenever this deals damage to an opposing hero, create a Lightning Flow token.\"' Both halves act on a TARGET PERMANENT for a turn, and neither exists: activation-cost deltas come only from the controller's hero (play._hero_activation_cost_delta) or from the queued 'your next attack with it' one-shots, and Card.granted_abilities -- which dsl.dispatch already fires -- is written in exactly one place, the queued-attack-mod consumption in play.py. The reader exists; the writer does not. Blade Break is printed and handled generically. What was here instead: an INJECT_TRIGGER on ON_ACTIVATE (a trigger this card has no reason to hang on) wrapping a PAY_OR_DAMAGE with amount -1 standing in for the cost reduction -- PAY_OR_DAMAGE is a player CHOICE to pay or take damage, not a cost modifier, so the clause was not merely unimplemented but replaced by an unrelated one. The nested trigger also passed 'opponent': true to ATTACK_TARGET_IS_HERO, which reads no such key, so 'an OPPOSING hero' was any hero. Definition of done: a targeted, duration-scoped ability grant that writes granted_abilities, and a per-object activation-cost delta."
 }

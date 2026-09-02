@@ -179,7 +179,16 @@ def test_no_injected_trigger_hides_conditions_in_the_string_form():
 
         walk(raw.get("abilities"))
     # Known and deliberate: these gate whether the trigger is GRANTED.
-    allowed = {"starfield_carapace", "light_the_way_red", "rage_baiters",
-               "arakni_black_widow", "arakni_funnel_web", "pummel_red"}
+    # These three gate whether the trigger is GRANTED, which is what an
+    # effect-level condition means and what their text says ("if it has
+    # stealth, it GETS ...").
+    #
+    # Three more used to be listed here and were not deliberate at all:
+    # rage_baiters and light_the_way_red wrote a FIRE-TIME condition in the
+    # string form (both now use the dict form), and starfield_carapace's whole
+    # ability was an INJECT_TRIGGER hung on an unrelated trigger, now declared
+    # unimplemented. An allowlist that mixes "deliberate" with "not yet looked
+    # at" stops being a statement about anything.
+    allowed = {"arakni_black_widow", "arakni_funnel_web", "pummel_red"}
     unexpected = [b for b in bad if b.split(":")[0] not in allowed]
     assert unexpected == [], unexpected

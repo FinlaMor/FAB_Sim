@@ -70,6 +70,15 @@ KNOWN_UNIMPLEMENTED: set[str] = {
     # ref, not on a card already in the zone, and reads no filter. Definition of
     # done: a target-selecting variant that records what it picked.
     "gate_to_iarathael",
+    # "Until end of turn, an Aphrodias you control costs {r} less to activate
+    # and gets <a quoted trigger>." Both halves act on a TARGET PERMANENT for a
+    # turn. Activation-cost deltas exist only for the controller's HERO and for
+    # the queued "your next attack with it" one-shots, and granted_abilities --
+    # which dsl.dispatch already fires -- is written in exactly one place, the
+    # queued-attack-mod consumption in play.py. The reader exists, the writer
+    # does not. Definition of done: a targeted duration-scoped ability grant,
+    # and a per-object activation-cost delta.
+    "starfield_carapace",
     # "Damage that would be dealt by Malign can't be prevented." Needs the
     # damage pipeline to skip prevention for a NAMED SOURCE, which no primitive
     # expresses. It had been authored as a STATIC granting WARD with
