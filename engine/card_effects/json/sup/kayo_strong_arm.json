@@ -1,20 +1,21 @@
 {
   "slug": "kayo_strong_arm",
+  "setup": {
+    "weapon_zones": 1
+  },
   "abilities": [
     {
       "ability_type": "INSTANT",
       "activation_cost": 4,
       "cost": [
         {
-          "type": "PITCH",
-          "amount": 1
+          "type": "TAP_SELF"
         }
       ],
       "effects": [
         {
           "type": "SET_BASE_POWER",
-          "amount": 6,
-          "target": "attack_action"
+          "amount": 6
         }
       ]
     },
@@ -29,5 +30,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'You start the game with 1 weapon zone.' was NOT IMPLEMENTED, so Kayo played with the default 2 -- a second weapon, on the hero whose whole cost is having one. deck.py reads hero_def.setup.weapon_zones and the OTHER printing (kayo_underhanded_cheat) declares it; this one was missed. Swept every hero whose text sets a weapon-zone count: these two are the only ones, and this was the only mismatch.\n\nThe activation cost was '{r}{r}{r}{r}, {t}' and was authored as activation_cost 4 plus a PITCH of 1. Pitching a card is not tapping: the ability charged a card it does not ask for, and -- because nothing tapped -- could be activated repeatedly in a turn. TAP_SELF is both halves of that fix, and it is checkable (can_pay is false while tapped).\n\nSET_BASE_POWER's 'target': 'attack_action' was unread and also redundant: the handler already restricts candidates to attack action cards the controller controls (controlled_attack_action_cards) and asks when several qualify. Removed so it does not read as a restriction that is doing work."
 }

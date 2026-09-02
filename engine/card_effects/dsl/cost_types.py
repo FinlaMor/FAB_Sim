@@ -714,6 +714,106 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             _stamp_banished(card, taken)
         return can_pay, pay
 
+    if ctype in ("BANISH_FROM_SOUL", "BANISH_SOUL"):
+        # "Banish 2 cards from your soul", "banish X cards from your soul".
+        #
+        # THE SOUL IS NOT THE GRAVEYARD. CR 3.11.5: a hero's soul is the
+        # collection of sub-objects under the hero card. Both implemented cards
+        # printing this cost paid it from somewhere else -- teklovossen from the
+        # GRAVEYARD, war_cry_of_themis from nowhere at all -- and the
+        # substitution is not a smaller version of the cost: the soul is a
+        # scarce, deliberately-fed resource that other cards count, while the
+        # graveyard fills up on its own. Paying from the graveyard is close to
+        # free.
+        #
+        # X IS CHOSEN BY THE PLAYER when paying, and stamped on the card so the
+        # payoff can read it -- `{"type": "X"}` resolves to card.x_paid, and
+        # play.py only stamps that for a card's PLAY cost, not for an activated
+        # ability's. Zero is a legal choice, so an X cost never blocks the
+        # activation.
+        # compile_cost flattens a non-numeric amount to 0 and keeps the original
+        # under "_amount_raw" for branches that can resolve it -- so reading
+        # "amount" here would see 0, not "X", and the ability would quietly cost
+        # a flat 1 card. That is the trap the preamble's own comment warns about.
+        raw_amount = params.get("_amount_raw", params.get("amount", 1))
+        is_x = str(raw_amount).strip().upper() == "X"
+        if is_x:
+            amount = 1
+        else:
+            try:
+                amount = int(raw_amount)
+            except (TypeError, ValueError):
+                amount = 1
+        optional = bool(params.get("optional"))
+
+        def _soul_pool(card, state):
+            from engine.card_effects.ability_keywords import _controller_id
+            player = state.players[_controller_id(card)]
+            soul = getattr(player, "soul", None)
+            return list(getattr(soul, "cards", []) or [])
+
+        def can_pay(card, event, state, _a=amount, _opt=optional, _x=is_x):
+            if _opt or _x:
+                return True
+            return len(_soul_pool(card, state)) >= _a
+
+        def pay(card, event, state, _a=amount, _opt=optional, _x=is_x):
+            from engine.card_effects.ability_keywords import (_controller_id,
+                                                              _ask_player,
+                                                              ask_optional)
+            from engine.effect_keywords import banish as _ek_banish
+            cid = _controller_id(card)
+            pool = _soul_pool(card, state)
+            if _x:
+                # Every count the soul can actually pay, zero included --
+                # LARGEST FIRST, following this file's decision convention that
+                # real options precede the opt-out so a default agent acts. For
+                # an X cost, paying 0 IS the opt-out: it makes the payoff do
+                # nothing, and a default agent that always chose it would never
+                # exercise the card in self-play.
+                choices = [str(n) for n in range(len(pool), -1, -1)]
+                pick = _ask_player(state, cid, choices,
+                                   context="Banish how many cards from your soul?")
+                try:
+                    want = int(pick)
+                except (TypeError, ValueError):
+                    want = 0
+                want = max(0, min(want, len(pool)))
+            else:
+                want = _a
+
+            taken = []
+            for _ in range(want):
+                pool = _soul_pool(card, state)
+                if not pool:
+                    break
+                if _opt:
+                    choice = ask_optional(
+                        state, cid, [c.slug for c in pool],
+                        context="Banish a card from your soul as an "
+                                "additional cost?")
+                    if choice is None:
+                        break
+                    chosen = next((c for c in pool if c.slug == choice), pool[0])
+                elif len(pool) == 1:
+                    chosen = pool[0]
+                else:
+                    choice = _ask_player(state, cid, [c.slug for c in pool],
+                                         context="Choose a card to banish from "
+                                                 "your soul")
+                    chosen = next((c for c in pool if c.slug == choice), pool[0])
+                # Through the canonical keyword so the event fires, and with
+                # origin_zone or the card sits in the soul and the banished zone
+                # at once.
+                _ek_banish(state, chosen, cid, origin_zone="soul")
+                taken.append(chosen)
+
+            # Publish what was actually paid, for "X" and for PAID_AMOUNT.
+            card.x_paid = len(taken)
+            state._paid_amount = len(taken)
+            _stamp_banished(card, taken)
+        return can_pay, pay
+
     if ctype == "BANISH_FROM_GRAVEYARD":
         # Scrap: banish N items/equipment from graveyard
         # Supports both card_type (str) and card_types (list) for backwards compat

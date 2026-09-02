@@ -6,7 +6,7 @@
       "activation_cost": 3,
       "cost": [
         {
-          "type": "BANISH_FROM_GRAVEYARD",
+          "type": "BANISH_FROM_SOUL",
           "amount": 2
         }
       ],
@@ -56,5 +56,5 @@
       ]
     }
   ],
-  "_comment": "Was a plain STATIC holding two clauses, neither of which ran.\n\n'Your Mechanologist attack action cards get go again' is a grant to cards you PLAY, which GRANT_KEYWORD_TO_PLAYED expresses; the grant list is turn-scoped and cleared in the end phase, so a hero's permanent static re-establishes it at the start of each of its controller's turns. Attack action cards are only playable on your own turn, so START_OF_TURN covers the whole window.\n\nNOT IMPLEMENTED: 'This counts as having 4 Evos equipped.' It was authored as MODIFY_DEFENSE_VALUE +4 -- a fabricated defence bonus with nothing to do with the text. It needs COUNT_PERMANENT(subtype=Evo, zone=EQUIPMENT) to report four more than are really there, which is what annihilator_engine_red and war_machine_red read for their Evo tiers. Removed rather than left granting +4{d} the card does not have."
+  "_comment": "'**Action** - {r}{r}{r}, BANISH 2 CARDS FROM YOUR SOUL: **Attack**' was paying from the GRAVEYARD. The soul is not the graveyard (CR 3.11.5: the collection of sub-objects under the hero card), and the substitution is not a smaller version of the cost -- the soul is a scarce resource this hero has to feed deliberately, while the graveyard fills up on its own, so the ability was close to free. Both implemented cards printing this cost paid it from somewhere else; BANISH_FROM_SOUL did not exist.\n\nWas a plain STATIC holding two clauses, neither of which ran.\n\n'Your Mechanologist attack action cards get go again' is a grant to cards you PLAY, which GRANT_KEYWORD_TO_PLAYED expresses; the grant list is turn-scoped and cleared in the end phase, so a hero's permanent static re-establishes it at the start of each of its controller's turns. Attack action cards are only playable on your own turn, so START_OF_TURN covers the whole window.\n\nNOT IMPLEMENTED: 'This counts as having 4 Evos equipped.' It was authored as MODIFY_DEFENSE_VALUE +4 -- a fabricated defence bonus with nothing to do with the text. It needs COUNT_PERMANENT(subtype=Evo, zone=EQUIPMENT) to report four more than are really there, which is what annihilator_engine_red and war_machine_red read for their Evo tiers. Removed rather than left granting +4{d} the card does not have."
 }

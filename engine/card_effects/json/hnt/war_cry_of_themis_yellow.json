@@ -1,6 +1,5 @@
 {
   "slug": "war_cry_of_themis_yellow",
-  "_comment": "Was a STATIC. A plain STATIC is dispatched by nothing and MODIFY_ATTACK buffs the CURRENT attack, of which there is none when a non-attack action resolves \u2014 so this did not merely apply too broadly, it did not run. MODIFY_NEXT_ATTACK is the one-shot: consumed by the first matching attack, expiring with the turn if unused. The second, unrelated INSTANT ability is preserved. 'Your next ANGEL attack' was filtered with ATTACK_CLASS_IN, and Angel is a SUBTYPE (10 cards carry it), not a class -- so the filter matched no attack and the +4 was never handed out.",
   "abilities": [
     {
       "ability_type": "PLAY",
@@ -12,14 +11,9 @@
           "filter": [
             {
               "type": "ATTACK_SUBTYPE_IN",
-              "subtypes": [
-                "Angel"
-              ]
+              "subtypes": ["Angel"]
             }
           ]
-        },
-        {
-          "type": "GO_AGAIN"
         }
       ]
     },
@@ -29,15 +23,26 @@
       "cost": [
         {
           "type": "DISCARD_SELF"
+        },
+        {
+          "type": "BANISH_FROM_SOUL",
+          "amount": "X"
         }
       ],
       "effects": [
         {
           "type": "FLIP_REF",
-          "ref": "banished",
-          "to_zone": "banished"
+          "face_up": false,
+          "target": {
+            "controller": "ANY",
+            "zone": "BANISHED",
+            "amount": {
+              "type": "X"
+            }
+          }
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'**Instant** - Discard this, BANISH X CARDS FROM YOUR SOUL: Turn X target cards in a banished zone FACE-DOWN.'\n\nThe X was absent entirely. The cost was DISCARD_SELF alone, so the ability was free, and the effect was a FLIP_REF on ref 'banished' -- a reference nothing in the ability ever set, since there was no banish to set it. Both halves of X were therefore missing: nothing was paid, and nothing was chosen to flip.\n\nIt also flipped the WRONG WAY. FLIP_REF defaults face_up to true, and the card says face-DOWN. Turning cards in a banished zone face UP is close to the opposite effect: face-down banished cards are hidden information, and revealing them helps the opponent as readily as it helps you.\n\nBANISH_FROM_SOUL is new. The soul is NOT the graveyard (CR 3.11.5: the collection of sub-objects under the hero card), and it is the scarce resource this cost is priced against. X is chosen by the player when paying, and stamped on the card as x_paid so the effect's target count can read it -- play.py stamps X only for a card's PLAY cost, never for an activated ability's.\n\nThe unread 'to_zone': 'banished' is gone: FLIP_REF does not move cards, and the cards named are already in a banished zone.\n\nAlso removed a GO_AGAIN effect on the PLAY ability. Go again is PRINTED here (has_go_again is already true from the card DB and conditional_keywords strips nothing), so the JSON was granting a second copy of a keyword CR 8.3.5b says an object cannot have twice."
 }
