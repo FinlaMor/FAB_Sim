@@ -65,18 +65,26 @@ def _stock(st, pid, zone, n=3):
 
 
 def _run_type(slug, etype, card, st):
+    """Run every node of the named type(s) from the card's real JSON.
+
+    `etype` may be a list, in which case the nodes run in DOCUMENT order inside
+    ONE reference scope -- which is what a card like Censor needs, because its
+    restriction reads a name a preceding NAME_A_CARD chose, and refs live for
+    exactly one ability execution.
+    """
     import json
     from pathlib import Path
     from engine.card_effects.dsl.effect_types import compile_effect
     from engine.context import push_refs, pop_refs
 
+    wanted = [etype] if isinstance(etype, str) else list(etype)
     root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
     raw = json.loads(_card_json(root, f"{slug}.json").read_text(encoding="utf-8"))
     found = []
 
     def walk(node):
         if isinstance(node, dict):
-            if node.get("type") == etype:
+            if node.get("type") in wanted:
                 found.append(node)
             for v in node.values():
                 walk(v)
@@ -85,12 +93,15 @@ def _run_type(slug, etype, card, st):
                 walk(v)
 
     walk(raw.get("abilities", []))
-    assert found, f"{slug} has no {etype} node"
+    for want in wanted:
+        assert any(n.get("type") == want for n in found), \
+            f"{slug} has no {want} node"
     push_refs()
     try:
         for spec in found:
-            compile_effect(etype, {k: v for k, v in spec.items()
-                                   if k not in ("type", "conditions")})(card, None, st)
+            compile_effect(spec["type"],
+                           {k: v for k, v in spec.items()
+                            if k not in ("type", "conditions")})(card, None, st)
     finally:
         pop_refs()
 
@@ -130,12 +141,22 @@ def test_mulch_bottoms_one_card_of_theirs_not_your_whole_hand(slug):
     assert len(st.players[1].arsenal.cards) == 1, "it emptied the caster's arsenal"
 
 
-@pytest.mark.parametrize("slug", ["censor_red", "fatigue_shot_red"])
-def test_the_restriction_lands_on_the_hero_it_names(slug):
+@pytest.mark.parametrize("slug,etypes", [
+    # Censor's restriction is no longer a SET_FLAG: a flag nothing reads cannot
+    # restrict anyone, whichever player it is written to. The effect type
+    # changed; what this test is for did not, so it now names the effect each
+    # card actually uses and asks the same question of it.
+    ("censor_red", ["NAME_A_CARD", "FORBID_PLAYING_NAMED"]),
+    ("fatigue_shot_red", ["SET_FLAG"]),
+])
+def test_the_restriction_lands_on_the_hero_it_names(slug, etypes):
     """These restrict what the HIT hero may do next turn, not the caster."""
     st = _state()
+    # NAME_A_CARD offers only names the namer can see, so the caster needs a
+    # hand for there to be anything to name.
+    _stock(st, 1, "hand", 2)
 
-    _run_type(slug, "SET_FLAG", _card(slug), st)
+    _run_type(slug, etypes, _card(slug), st)
 
     mine = list(st.players[1].current_turn_effects) + list(
         getattr(st.players[1], "next_turn_effects", []))

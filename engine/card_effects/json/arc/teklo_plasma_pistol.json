@@ -21,8 +21,7 @@
       "activation_cost": 1,
       "conditions": [
         {
-          "type": "COUNTER_GTE",
-          "target": "self",
+          "type": "COUNTER_EQ",
           "counter": "steam",
           "amount": 0
         }
@@ -40,5 +39,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The steam gate was COUNTER_GTE amount 0 -- 'at least zero counters', true for every card at all times -- so 'if there are NO steam counters' let you put a counter on whatever the count already was, and the pistol's attack ability could be recharged without limit. COUNTER_EQ exists precisely for this (it was added when Teklo Core was found destroying itself every turn for the same reason); this card was missed. The unread 'target': 'self' is dropped: the condition reads the card carrying it."
 }

@@ -52,5 +52,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "NOT IMPLEMENTED: 'if damage is dealt this way, the dagger HAS HIT'. 'Has hit' is the hit event, which the engine emits only for an attack that connects -- there is no way to say that an object which did not attack has hit, so a Dagger's own on-hit clauses cannot fire from here. The damage and the destroy are intact; the SET_FLAG between them is a placeholder nothing reads."
 }

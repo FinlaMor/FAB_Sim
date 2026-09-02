@@ -690,6 +690,130 @@ def _record_destroyed_this_turn(state: GameState, card) -> None:
             player.current_turn_effects.append(marker)
 
 
+ONLY_PLAY_FROM_ARSENAL = "only_play_from_arsenal"
+
+
+def restrict_plays_to_arsenal(state: GameState, player_id,
+                              through_next_turn: bool = False) -> None:
+    """"Until end of turn, you may only play cards from arsenal." (Three of a Kind)"""
+    player = state.players.get(player_id) if player_id is not None else None
+    if player is None:
+        return
+    if ONLY_PLAY_FROM_ARSENAL not in player.current_turn_effects:
+        player.current_turn_effects.append(ONLY_PLAY_FROM_ARSENAL)
+    if through_next_turn and ONLY_PLAY_FROM_ARSENAL not in player.next_turn_effects:
+        player.next_turn_effects.append(ONLY_PLAY_FROM_ARSENAL)
+
+
+def play_is_forbidden_by_zone(state: GameState, player_id, card) -> bool:
+    """True when a "you may only play cards from arsenal" restriction blocks this.
+
+    Restricted to PLAYING, which is what the card says. Activating an equipment
+    or weapon is not playing a card, so an arena permanent is never blocked --
+    the shared legality gate covers both, and a check written without this
+    distinction would silently switch the player's whole board off for a turn.
+    """
+    player = state.players.get(player_id) if player_id is not None else None
+    if player is None or card is None:
+        return False
+    if ONLY_PLAY_FROM_ARSENAL not in getattr(player, "current_turn_effects", []):
+        return False
+    for zone_name in ("hand", "banished"):
+        zone = getattr(player, zone_name, None)
+        if zone is not None and any(c is card for c in getattr(zone, "cards", [])):
+            return True
+    return False
+
+
+CANT_PLAY_NAMED_MARKER = "cant_play_named:"
+
+
+def forbid_playing_named(state: GameState, player_id, name,
+                         through_next_turn: bool = True) -> None:
+    """"Name a card. They can't play the named card until the end of their
+    next turn." (Censor)
+
+    Keyed on the normalised NAME rather than the slug, because that is what the
+    card says and what the player names: a named card must be unplayable in
+    every printing and every colour, and the three printings of one card share a
+    name but not a slug.
+    """
+    player = state.players.get(player_id) if player_id is not None else None
+    ident = _norm_ident(name) if name is not None else ""
+    if player is None or not ident:
+        return
+    marker = f"{CANT_PLAY_NAMED_MARKER}{ident}"
+    if marker not in player.current_turn_effects:
+        player.current_turn_effects.append(marker)
+    if through_next_turn and marker not in player.next_turn_effects:
+        player.next_turn_effects.append(marker)
+
+
+def play_is_forbidden_by_name(state: GameState, player_id, card) -> bool:
+    """True while this player has been forbidden from playing this card's name."""
+    player = state.players.get(player_id) if player_id is not None else None
+    if player is None or card is None:
+        return False
+    effects = getattr(player, "current_turn_effects", None)
+    if not effects:
+        return False
+    for value in (getattr(card, "name", None), getattr(card, "raw_name", None)):
+        ident = _norm_ident(value) if value else ""
+        if ident and f"{CANT_PLAY_NAMED_MARKER}{ident}" in effects:
+            return True
+    return False
+
+
+HERO_ABILITIES_DISABLED = "hero_abilities_disabled"
+
+
+def disable_hero_abilities(state: GameState, player_id, through_next_turn: bool = True) -> None:
+    """"They lose all hero card abilities until the end of their next turn."
+
+    A player's hero is a permanent in their hero zone (CR 8.1.5a), so losing its
+    abilities has to stop three different things: the hero's activated abilities
+    being OFFERED, its triggered abilities firing, and its statics applying. All
+    three funnel through the same two places -- the activation offer and
+    dispatch_event -- so the marker is read there rather than at each call site.
+
+    Written to BOTH current and next turn effects when the duration runs through
+    the target's next turn. The card that says this hits on its controller's
+    turn, so the victim's instant-speed hero abilities must already be gone for
+    the rest of THIS turn; `current_turn_effects` is rotated from
+    `next_turn_effects` at the start of that player's turn and cleared at the
+    end of it, which is exactly "until the end of their next turn".
+    """
+    player = state.players.get(player_id) if player_id is not None else None
+    if player is None:
+        return
+    if HERO_ABILITIES_DISABLED not in player.current_turn_effects:
+        player.current_turn_effects.append(HERO_ABILITIES_DISABLED)
+    if through_next_turn and HERO_ABILITIES_DISABLED not in player.next_turn_effects:
+        player.next_turn_effects.append(HERO_ABILITIES_DISABLED)
+
+
+def hero_abilities_are_disabled(state: GameState, player_id) -> bool:
+    """True while this player's hero card has lost its abilities."""
+    player = state.players.get(player_id) if player_id is not None else None
+    if player is None:
+        return False
+    return HERO_ABILITIES_DISABLED in getattr(player, "current_turn_effects", [])
+
+
+def hero_owner_with_abilities_disabled(state: GameState, card) -> bool:
+    """True when *card* is the hero card of a player whose hero abilities are off.
+
+    Identity, not slug: a hero card is a single object, and comparing slugs
+    would also silence a non-hero card that happened to share the name.
+    """
+    if card is None:
+        return False
+    for pid, player in state.players.items():
+        if getattr(player, "hero", None) is card:
+            return hero_abilities_are_disabled(state, pid)
+    return False
+
+
 def destroy(state: GameState, destroy_target: Card, destroy_source: Optional[Card] = None):
     """CR 8.5.4 Destroy is a discrete effect. To destroy an object, put it into its owner's graveyard.
 
@@ -2825,6 +2949,11 @@ def clash(state: GameState, player1_id: int, player2_id: int,
     retry = getattr(state, "clash_fail_retry", {})
     for pid in (event.player1_id, event.player2_id):
         if pid == winner or retry.get(pid) is None:
+            continue
+        # Registered once at game start, so the registration cannot know about
+        # a hero that later loses its abilities (Humble). Checked here, at the
+        # point of use, which is the only place that can see the current state.
+        if hero_abilities_are_disabled(state, pid):
             continue
         from engine.card_effects.replacement_abilities import REPLACEMENT_ABILITIES
         handler = REPLACEMENT_ABILITIES.get(retry[pid])

@@ -2123,6 +2123,82 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     # ── flags / misc ───────────────────────────────────────────────────────
+    if etype == "RESTRICT_PLAYS_TO_ARSENAL":
+        # "Until end of turn, you may only play cards from arsenal."
+        # (Three of a Kind). Was a SET_FLAG ONLY_PLAY_FROM_ARSENAL, and before
+        # that a RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT -- a DEFENDER restriction
+        # standing in for a PLAY restriction, which is a different rule about
+        # different cards at a different time.
+        player_target = str(params.get("player", "SELF")).upper()
+        scope = str(_first(params, "duration", "scope",
+                           default="END_OF_TURN")).upper()
+
+        def _fn(card, event, state, _pt=player_target, _s=scope):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import restrict_plays_to_arsenal
+            cid = _controller_id(card)
+            tid = (3 - cid) if _pt in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            restrict_plays_to_arsenal(state, tid,
+                                      through_next_turn=_s == "END_OF_NEXT_TURN")
+        return _fn
+
+    if etype == "FORBID_PLAYING_NAMED":
+        # "Name a card. They can't play the named card until the end of their
+        # next turn." (Censor) The name comes from a NAME_A_CARD effect earlier
+        # in the same ability, which stores it under a ref -- default
+        # "named_card", the same default NAME_A_CARD writes.
+        #
+        # censor_red was a SET_FLAG CENSOR_ACTIVE that named no card at all, so
+        # even a reader would have had nothing to enforce.
+        ref_name = _first(params, "ref", "name_ref", default="named_card")
+        player_target = str(params.get("player", "OPPONENT")).upper()
+        scope = str(_first(params, "duration", "scope",
+                           default="END_OF_NEXT_TURN")).upper()
+
+        def _fn(card, event, state, _ref=ref_name, _pt=player_target, _s=scope):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.context import get_ref
+            from engine.effect_keywords import forbid_playing_named
+            name = get_ref(_ref)
+            if name is None:
+                # The choice is also stamped on the object, which outlives the
+                # ability's reference scope.
+                name = (getattr(card, "dsl_chosen", None) or {}).get(_ref)
+            if name is None:
+                return
+            cid = _controller_id(card)
+            tid = (3 - cid) if _pt in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            forbid_playing_named(state, tid, name,
+                                 through_next_turn=_s != "END_OF_TURN")
+        return _fn
+
+    if etype == "DISABLE_HERO_ABILITIES":
+        # "They lose all hero card abilities until the end of their next turn."
+        #
+        # All three Humble printings wrote a dead SET_FLAG instead, under two
+        # different names (HUMBLE_ACTIVE on red and yellow, HERO_ABILITIES_DISABLED
+        # on blue), and all three set it on the CONTROLLER rather than the hero
+        # that was hit -- so the card that reached the game state most nearly
+        # was the one that would have disabled its own player's hero. Nothing
+        # read either name, so all three did nothing at all.
+        #
+        # Default player is OPPONENT: every printing of this text says "they",
+        # meaning the hero that was hit.
+        player_target = str(params.get("player", "OPPONENT")).upper()
+        # END_OF_NEXT_TURN is the printed duration; END_OF_TURN exists for
+        # "until end of turn" phrasings and stops at this turn's end.
+        scope = str(_first(params, "duration", "scope",
+                           default="END_OF_NEXT_TURN")).upper()
+
+        def _fn(card, event, state, _pt=player_target, _s=scope):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import disable_hero_abilities
+            cid = _controller_id(card)
+            tid = (3 - cid) if _pt in ("OPPONENT", "DEFENDING", "DEFENDER") else cid
+            disable_hero_abilities(state, tid,
+                                   through_next_turn=_s != "END_OF_TURN")
+        return _fn
+
     if etype == "SET_FLAG":
         flag = params.get("flag", "")
         # "duration" is the natural spelling of "scope" and was unread.

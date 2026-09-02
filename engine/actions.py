@@ -806,6 +806,12 @@ def _legal_action_step(state: GameState, card_db: CardDB) -> dict[Action, list[i
     hero_card = player.hero
     hero_slug = hero_card.slug if hero_card else None
     hero_cfg = HERO_ACTIVATION_CONDITIONS.get(hero_slug) if hero_slug else None
+    # Humble: a hero that has lost its abilities has no activation to offer.
+    # The live path is play.py; this mirrors it so the audit path does not
+    # report an action the game would not allow.
+    from engine.effect_keywords import hero_abilities_are_disabled
+    if hero_abilities_are_disabled(state, pp):
+        hero_cfg = None
     if hero_cfg is not None:
         hero_timing = hero_cfg.get("timing", "action")
         # Action-timing hero abilities require an action point

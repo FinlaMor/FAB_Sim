@@ -14,13 +14,19 @@
           "token_type": "Vigor",
           "conditions": [
             {
-              "type": "DURING_TURN",
-              "condition": "DEFENDED_BY_ATTACK_ACTION_CARD"
+              "type": "DEFENDING_CARD_COUNT",
+              "amount": 1,
+              "comparison": "gte",
+              "types": [
+                "Action",
+                "Attack"
+              ]
             }
           ],
           "token": "vigor"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'If it's defended by an attack action card' was authored as DURING_TURN with a condition:'DEFENDED_BY_ATTACK_ACTION_CARD' string. DURING_TURN reads phase and player and has no 'condition' parameter, so the gate was dropped and the Vigor token was created on EVERY resolution -- including against an undefended attack. Now a real count over the declared defenders: type Action AND subtype Attack, which is what an attack action card is."
 }

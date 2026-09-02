@@ -23,5 +23,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "NOT IMPLEMENTED: 'choose a card on the combat chain. This gets the chosen card's name'. Two gaps: SELECT_FROM_REF has no COMBAT_CHAIN source, and nothing in the engine changes an object's NAME -- which matters, because names are what Censor, Phantasmal Symbiosis and every 'cards with that name' effect read. Go again is printed and works."
 }

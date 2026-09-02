@@ -109,8 +109,8 @@ def test_dead_flag_count_does_not_grow():
     """
     dead = _dead_flags()
     cards = sorted({s for v in dead.values() for s in v})
-    assert len(cards) <= 19, (
-        f"{len(cards)} cards set a flag nothing reads (was 19):\n  "
+    assert len(cards) <= 8, (
+        f"{len(cards)} cards set a flag nothing reads (was 8):\n  "
         + "\n  ".join(f"{f}: {', '.join(s)}" for f, s in sorted(dead.items()))
         + "\n\nA clause the DSL cannot express should be left OUT with a "
           "_comment saying so, not written as a flag nobody reads."
@@ -119,11 +119,51 @@ def test_dead_flag_count_does_not_grow():
 
 def test_the_known_dead_flags_are_the_ones_we_think():
     """Pins the specific set, so a fixed card and a newly broken one cannot
-    cancel out and leave the count unchanged."""
+    cancel out and leave the count unchanged.
+
+    19 -> 8. What is left is not the same kind of problem as what was fixed.
+    humble_*, censor_red, three_of_a_kind_red, sigil_of_suffering_red and
+    grim_feast_red were flags standing in for effects the engine could already
+    express, or -- in Sigil's case -- for a record the engine was already
+    keeping. Each needed a named effect type and a reader, not new mechanics.
+
+    These eight need machinery that does not exist yet, which is why they are
+    still listed rather than quietly rewritten:
+
+        cartilage_crush_blue    a cost increase on the FIRST action of the
+        chokeslam_yellow        opponent's next turn / a ban on gaining {p} /
+        fatigue_shot_red        a halved BASE power -- all one-shot modifiers
+                                scoped to a future turn, with no hook to hang on
+        become_the_bottle_*     "this gets the chosen card's name" -- nothing
+                                changes an object's name, and SELECT_FROM_REF
+                                has no COMBAT_CHAIN source either
+        phantasmal_symbiosis_*  grant a SUBTYPE to every card with a named name
+        silver_talons_red       "the dagger has hit" -- a hit event for an
+                                object that did not attack
+        gallow_end_of_...       "effects controlled by opponents don't trigger
+                                when their attacks hit" -- trigger suppression
+
+    Leaving a flag in place is still wrong; it is only less wrong than
+    inventing a mechanic to hang it on. Each of these carries, or should carry,
+    a `_comment` saying which clause is unimplemented.
+    """
     dead = _dead_flags()
     cards = {s for v in dead.values() for s in v}
-    for expected in ("humble_red", "censor_red", "three_of_a_kind_red",
-                     "cartilage_crush_blue"):
+    for expected in ("cartilage_crush_blue", "chokeslam_yellow",
+                     "become_the_bottle_red", "silver_talons_red"):
         assert expected in cards, (
             f"{expected} was a known dead-flag card; if it was fixed, remove "
             f"it here and lower the ceiling")
+
+
+def test_the_flags_that_were_fixed_stay_fixed():
+    """The other half of the ratchet: these five were real dead flags and are
+    now real effects. A regression here would otherwise only show up as the
+    count drifting back up, which the ceiling above permits."""
+    dead = _dead_flags()
+    cards = {s for v in dead.values() for s in v}
+    for fixed in ("humble_red", "humble_blue", "humble_yellow", "censor_red",
+                  "three_of_a_kind_red", "sigil_of_suffering_red",
+                  "grim_feast_red"):
+        assert fixed not in cards, (
+            f"{fixed} is setting a flag nothing reads again")

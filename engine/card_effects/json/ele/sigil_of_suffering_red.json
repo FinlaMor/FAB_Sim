@@ -8,10 +8,6 @@
         {
           "type": "DEAL_ARCANE",
           "amount": 1
-        },
-        {
-          "type": "SET_FLAG",
-          "flag": "SIGIL_OF_SUFFERING_ARCANE_DEALT"
         }
       ]
     },
@@ -37,5 +33,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "The DEFENSE_REACTION carried a SET_FLAG SIGIL_OF_SUFFERING_ARCANE_DEALT that nothing read. Its job -- remembering 'you have dealt arcane damage this turn' -- is already done generically by effect_keywords.deal_damage, which records did_this_turn:damage:arcane for EVERY source. The WHILE_STATIC below reads that marker, so the private flag was a second, broken copy of a record that was already being kept correctly."
 }

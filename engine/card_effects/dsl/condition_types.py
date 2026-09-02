@@ -650,18 +650,32 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         comparison = _norm(params.get("comparison") or "gte")
         equipment = params.get("equipment")
         vs_attack_power = bool(params.get("power_gte_attack"))
+        # `types` counts only defenders carrying ALL of the listed traits, read
+        # from types and subtypes together — "defended by an ATTACK ACTION card"
+        # is type Action plus subtype Attack, and either half alone is a
+        # different set (an Attack Reaction is not an attack action card, and a
+        # weapon is not a card that defends). ALL rather than ANY because every
+        # phrasing that needs this names a compound card type.
+        want_types = [str(t).lower() for t in (params.get("types") or [])]
         _OPS = {"gte": lambda a, b: a >= b, "gt": lambda a, b: a > b,
                 "lte": lambda a, b: a <= b, "lt": lambda a, b: a < b,
                 "eq": lambda a, b: a == b, "neq": lambda a, b: a != b}
 
         def _dcc(c, e, s, _n=need, _cmp=comparison, _eq=equipment,
-                 _vsp=vs_attack_power):
+                 _vsp=vs_attack_power, _ty=want_types):
             if not s.combat:
                 return False
             cards = getattr(s.combat, "defending_cards", None) or []
             if _eq is not None:
                 cards = [d for d in cards
                          if bool(getattr(d, "is_equipment", False)) is bool(_eq)]
+            if _ty:
+                def _traits(d):
+                    out = [str(x).lower() for x in (getattr(d, "types", None) or [])]
+                    out += [str(x).lower() for x in (getattr(d, "subtypes", None) or [])]
+                    return out
+                cards = [d for d in cards
+                         if all(t in _traits(d) for t in _ty)]
             if _vsp:
                 atk_power = getattr(s.combat, "attack_power", 0) or 0
                 cards = [d for d in cards
@@ -773,10 +787,27 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _hgo
 
     if ctype == "HEALTH_LT_OPP":
-        def _hlo(c, e, s):
+        # "If you have less {h} than an OPPOSING SHADOW HERO" — the narrowing is
+        # part of the condition, not decoration. ray_of_hope_yellow passed
+        # `opponent_subtypes: ["shadow"]` into a handler that read no parameters
+        # at all, so it fired against any opponent whatsoever and the card put
+        # itself into the soul in matchups it says nothing about.
+        want = [_norm(t) for t in
+                (params.get("opponent_subtypes") or params.get("hero_type")
+                 or params.get("classes") or []) if t]
+
+        def _hlo(c, e, s, _want=want):
             from engine.card_effects.ability_keywords import _controller_id
             pid = _controller_id(c)
-            return s.players[pid].life < s.players[3 - pid].life
+            opp = s.players[3 - pid]
+            if _want:
+                hero = getattr(opp, "hero", None)
+                if hero is None:
+                    return False
+                traits = _card_traits(hero)
+                if not any(t in traits for t in _want):
+                    return False
+            return s.players[pid].life < opp.life
         return _hlo
 
     if ctype == "DECK_EMPTY":

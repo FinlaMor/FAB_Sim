@@ -40,5 +40,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "NOT IMPLEMENTED: 'until end of turn, effects controlled by opponents don't trigger when their attacks hit'. That is trigger SUPPRESSION scoped to a player -- the engine can add triggers and can gate them on conditions, but nothing can switch off a class of trigger belonging to someone else. The attack activation and Watery Grave are intact."
 }

@@ -11,12 +11,17 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "CENSOR_ACTIVE",
-          "player": "OPPONENT"
+          "type": "NAME_A_CARD",
+          "choice_type": "CARD_NAME",
+          "into": "named_card"
+        },
+        {
+          "type": "FORBID_PLAYING_NAMED",
+          "ref": "named_card",
+          "player": "OPPONENT",
+          "duration": "END_OF_NEXT_TURN"
         }
       ]
     }
-  ],
-  "_comment": "Named the OPPONENT under 'target', which the handler does not read, so it fell back to the CONTROLLER. SET_FLAG does read 'player', so the restriction was being applied to the caster instead of the hero it names."
+  ]
 }

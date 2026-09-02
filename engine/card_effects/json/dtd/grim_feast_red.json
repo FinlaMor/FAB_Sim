@@ -2,24 +2,32 @@
   "slug": "grim_feast_red",
   "abilities": [
     {
-      "ability_type": "PLAY",
-      "additional_cost": [
+      "ability_type": "STATIC",
+      "effects": [
         {
-          "type": "PAY_LIFE",
-          "amount": 2
+          "type": "PLAYABLE_FROM_BANISHED"
         }
-      ],
+      ]
+    },
+    {
+      "ability_type": "PLAY",
       "effects": [
         {
           "type": "GAIN",
           "asset": "HEALTH",
           "amount": 3
-        },
-        {
-          "type": "SET_FLAG",
-          "flag": "BLOOD_DEBT_FLAG"
         }
       ]
     }
-  ]
+  ],
+  "cost_modifiers": [
+    {
+      "condition": {
+        "type": "SELF_IN_ZONE",
+        "zone": "banished"
+      },
+      "delta": -2
+    }
+  ],
+  "_comment": "Blood Debt is PRINTED and handled generically (CR 8.3.11, ability_keywords.blood_debt via triggers.py) -- it is 'while this is in your banished zone, at the beginning of your end phase, lose 1{h}', NOT a cost to play. It had been authored as an additional_cost PAY_LIFE 2, which is wrong three times over: the wrong amount, the wrong timing, and -- because a cost blocks play legality -- it made the card unplayable at 2 or less life, which nothing about the card says. The SET_FLAG BLOOD_DEBT_FLAG beside it was read by nothing."
 }

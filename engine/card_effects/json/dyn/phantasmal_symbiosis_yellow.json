@@ -14,5 +14,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "NOT IMPLEMENTED: 'name a card. Cards with that name are Illusionist until end of turn'. NAME_A_CARD exists and would supply the name, but there is no way to grant a SUBTYPE to every card matching a name for a turn -- GRANT_SUBTYPE acts on one object. The SET_FLAG below also passes a 'params' key SET_FLAG does not read, so even the name was never recorded. Phantasm is printed and handled generically (CR 8.3.13)."
 }

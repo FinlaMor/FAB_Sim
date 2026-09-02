@@ -164,6 +164,16 @@ def dispatch_event(card_def, event_type: str, card, event, state) -> None:
     from engine.card_effects.dsl.trigger_types import (
         ABILITY_TYPE_TO_EVENT, TRIGGER_TO_EVENT, TRIGGER_EVENT_GATES)
 
+    # "They lose all hero card abilities until the end of their next turn."
+    # An object that has lost its abilities has none to fire, so this is the
+    # single funnel to stop them at: triggered, static and activated hero
+    # abilities all dispatch through here. Legality is handled separately (an
+    # ability that does not exist must not be OFFERED either), but this is what
+    # makes the loss real rather than cosmetic.
+    from engine.effect_keywords import hero_owner_with_abilities_disabled
+    if hero_owner_with_abilities_disabled(state, card):
+        return
+
     for ability in card_def.abilities:
         atype = ability.ability_type.upper()
 

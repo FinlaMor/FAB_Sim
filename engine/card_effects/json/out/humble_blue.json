@@ -11,9 +11,9 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "HERO_ABILITIES_DISABLED",
-          "duration": "END_OF_TURN"
+          "type": "DISABLE_HERO_ABILITIES",
+          "player": "OPPONENT",
+          "duration": "END_OF_NEXT_TURN"
         }
       ]
     }

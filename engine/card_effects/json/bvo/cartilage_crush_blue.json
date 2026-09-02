@@ -11,5 +11,6 @@
         }
       ]
     }
-  ]
+  ],
+  "_comment": "NOT IMPLEMENTED: 'their first action during their next turn costs an additional {r} to play or activate'. That is a one-shot cost increase scoped to a FUTURE turn and to the FIRST action taken in it, and there is no hook for either half -- cost modifiers are per-card (cost_modifiers) or queued one-shots on the controller (dsl_queued_card_mods), and neither can be aimed at the opponent's next turn. The Crush trigger is intact; the SET_FLAG below is a placeholder nothing reads."
 }

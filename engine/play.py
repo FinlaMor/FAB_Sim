@@ -257,7 +257,11 @@ def _add_hero_dsl_activations(state, player_id, affordable_actions) -> None:
 
     # Every source of activated abilities the player controls.
     sources = []
-    if player.hero is not None:
+    # ... except the hero, while it has lost its abilities (Humble). An ability
+    # the hero no longer has must not be offered, or the player spends an action
+    # point activating something that then declines to resolve.
+    from engine.effect_keywords import hero_abilities_are_disabled
+    if player.hero is not None and not hero_abilities_are_disabled(state, player_id):
         sources.append(player.hero)
     for zone in (player.head, player.chest, player.arms, player.legs,
                  player.weapon1, player.weapon2, player.items, player.auras,
@@ -381,6 +385,21 @@ def _legality_check(state, card, player_id) -> bool:
     # which is why it belongs here rather than in either caller.
     _counters = getattr(card, "counters", None) or {}
     if _counters.get("__frozen__", 0) > 0 or _counters.get(CONTINUOUS_FREEZE, 0) > 0:
+        return False
+
+    # "They can't play the named card until the end of their next turn."
+    # (Censor). Same shape as the freeze above and for the same reason: this is
+    # the one gate both playing and activating pass through, so a restriction
+    # written anywhere else would be enforced on one path and not the other.
+    from engine.effect_keywords import (play_is_forbidden_by_name,
+                                        play_is_forbidden_by_zone)
+    if play_is_forbidden_by_name(state, player_id, card):
+        return False
+
+    # "Until end of turn, you may only play cards from arsenal."
+    # (Three of a Kind). Blocks PLAYING from hand or banish; activating a
+    # permanent is not playing a card and is deliberately untouched.
+    if play_is_forbidden_by_zone(state, player_id, card):
         return False
 
     types = card.types or []
@@ -1539,6 +1558,12 @@ def _hero_activation_cost_delta(state: GameState, player_id, card) -> int:
         return 0
     hero = state.players[player_id].hero
     if hero is None:
+        return 0
+    # A hero that has lost its abilities has lost these too (Humble). This path
+    # reads the hero's DSL abilities DIRECTLY rather than through
+    # dispatch_event, so the guard there does not cover it.
+    from engine.effect_keywords import hero_abilities_are_disabled
+    if hero_abilities_are_disabled(state, player_id):
         return 0
     from engine.card_effects.dsl.loader import get_card as _dsl_get_card
     cd = _dsl_get_card(hero.slug)

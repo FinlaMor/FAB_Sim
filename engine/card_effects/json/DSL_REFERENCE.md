@@ -519,6 +519,38 @@ literal, …), so:
 Mind `GT` vs `GTE` — "more than 3 damage" excludes exactly 3, which is the
 common case on a card that prints 3.
 
+### Player restrictions ("they can't X until Y")
+
+A restriction on a PLAYER, not a card. All three take `player` (`"SELF"` or
+`"OPPONENT"`) and `duration` (`"END_OF_TURN"` or `"END_OF_NEXT_TURN"`).
+
+```json
+{"type": "DISABLE_HERO_ABILITIES", "player": "OPPONENT",
+ "duration": "END_OF_NEXT_TURN"}
+
+{"type": "NAME_A_CARD", "choice_type": "CARD_NAME", "into": "named_card"}
+{"type": "FORBID_PLAYING_NAMED", "ref": "named_card", "player": "OPPONENT",
+ "duration": "END_OF_NEXT_TURN"}
+
+{"type": "RESTRICT_PLAYS_TO_ARSENAL", "player": "SELF",
+ "duration": "END_OF_TURN"}
+```
+
+`FORBID_PLAYING_NAMED` reads a name a **previous effect in the same ability**
+chose, so it always follows a `NAME_A_CARD`. It is keyed on the NAME, so every
+printing of that card is forbidden — which is what naming a card means.
+
+**Do not write one of these as `SET_FLAG`.** `SET_FLAG` appends a string to
+`current_turn_effects` that only a matching `FLAG_SET` condition reads; used for
+a restriction the ENGINE must enforce, it compiles, validates, and does nothing.
+Thirteen cards in this corpus were written that way and every one of them was
+inert. A flag with no reader has no correct spelling either — the two printings
+of Humble picked two different names for the same effect, which is the tell.
+
+If the restriction you need is not in the table above, it needs a new effect
+type **and** a reader on the path that decides (usually `play._legality_check`);
+see `engine/AGENTS.md` § "Player-scoped restrictions".
+
 ### Boolean Logic
 
 ```json

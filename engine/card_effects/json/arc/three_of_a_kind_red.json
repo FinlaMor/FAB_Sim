@@ -9,15 +9,12 @@
           "amount": 3
         },
         {
-          "type": "SET_FLAG",
-          "flag": "ONLY_PLAY_FROM_ARSENAL"
-        },
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
+          "type": "RESTRICT_PLAYS_TO_ARSENAL",
+          "player": "SELF",
+          "duration": "END_OF_TURN"
         }
       ]
     }
   ],
-  "_comment": "'Until end of turn, you may only play cards from arsenal' is NOT implemented: it is a turn-scoped restriction on PLAY legality, and there is no hook for one. It was authored as RESTRICT_DEFENSE_TO_HEAD_EQUIPMENT, which restricts DEFENDERS -- an unrelated and wrong effect. The draw-3 half is intact."
+  "_comment": "Go again is PRINTED on this card and is granted by the card DB; the JSON also carried a GAIN GO_AGAIN, a second copy of a keyword CR 8.3.5b says an object cannot have twice."
 }

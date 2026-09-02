@@ -11,8 +11,9 @@
       ],
       "effects": [
         {
-          "type": "SET_FLAG",
-          "flag": "HUMBLE_ACTIVE"
+          "type": "DISABLE_HERO_ABILITIES",
+          "player": "OPPONENT",
+          "duration": "END_OF_NEXT_TURN"
         }
       ]
     }

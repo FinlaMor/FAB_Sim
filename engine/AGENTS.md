@@ -157,6 +157,39 @@ card alternate costs are DSL `alternative_cost` entries now.
 `loader.py`/`db.py` — CardDB init helpers. `generate_seed.py` is legacy seed
 data (unused by the DSL path).
 
+## Player-scoped restrictions ("they can't X until Y")
+
+A restriction on a PLAYER rather than a card is a string marker on
+`player.current_turn_effects`, with `player.next_turn_effects` for anything that
+outlives this turn — `engine.py` rotates next→current at that player's turn
+start and clears current at their turn end, which is exactly "until the end of
+their next turn".
+
+**Write the marker with a named effect type and read it somewhere real.** A
+`SET_FLAG` writes an arbitrary string that nothing consults, and a flag with no
+reader has no correct spelling: two printings of Humble invented two different
+names for the same effect, and both did nothing. If you find yourself adding a
+`SET_FLAG`, the effect is almost certainly not implemented.
+
+Existing pairs, each a writer in `effect_keywords.py` plus a reader on the path
+that actually decides:
+
+| effect type | marker | read by |
+|---|---|---|
+| `DISABLE_HERO_ABILITIES` | `hero_abilities_disabled` | `interpreter.dispatch_event`, `play._add_hero_dsl_activations`, `play._hero_activation_cost_delta`, the clash-retry site in `effect_keywords.clash`, `actions.py` ACTIVATE_HERO |
+| `FORBID_PLAYING_NAMED` | `cant_play_named:<name>` | `play._legality_check` |
+| `RESTRICT_PLAYS_TO_ARSENAL` | `only_play_from_arsenal` | `play._legality_check` |
+
+Two things to check when adding one:
+
+* **`play.py` is the live path; `actions.py` is the audit-only mirror.** A
+  reader in only one of them is enforced in only one of them.
+* **Ask what else reads the thing you are switching off.** "Loses all hero card
+  abilities" turned out to span five call sites, two of which never touch
+  `dispatch_event` — one reads the hero's DSL abilities directly for cost
+  deltas, and one is registered once at game start, so only a check at the point
+  of USE can see the restriction at all.
+
 ## Known engine limitations (the remaining engine-side work)
 
 A full CR audit lives in `docs/cr_audit_2026-07.md` (findings + fix status —
