@@ -3490,9 +3490,17 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # was mandatory.
         from_ref = _first(params, "ref", "target_ref", "cards")
         optional = bool(params.get("optional"))
+        # "Put an ICE CARD from your pitch zone on the bottom of your deck for
+        # each flow counter." Which cards are eligible is part of the price, and
+        # `filter` was unread -- so the upkeep could be paid with any card in
+        # the pitch zone and the permanent was cheaper to keep than printed.
+        # Ordinary DSL conditions, evaluated with each CANDIDATE as the subject.
+        pool_filter_specs = [(f.get("type", "none"), f)
+                             for f in (params.get("filter") or [])
+                             if isinstance(f, dict)]
 
         def _fn(card, event, state, _zones=from_zones, _w=who, _n=count,
-                _ref=from_ref, _opt=optional):
+                _ref=from_ref, _opt=optional, _pf=pool_filter_specs):
             from engine.card_effects.ability_keywords import (
                 DECLINE, _ask_player, _controller_id, ask_yes_no)
             cid = _controller_id(card)
@@ -3526,12 +3534,21 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     limit = max(0, int(_resolve_amount(_n, state, card)))
                 except (TypeError, ValueError):
                     limit = None
+            _pool_fns = None
+            if _pf:
+                from engine.card_effects.dsl.condition_types import compile_condition
+                _pool_fns = [compile_condition(ct, cp) for ct, cp in _pf]
+
             moved = 0
             for zone_name in _zones:
                 zone = getattr(player, zone_name, None)
                 if zone is None:
                     continue
                 pool = list(zone.cards)
+                if _pool_fns:
+                    pool = [c for c in pool
+                            if all(fn is None or fn(c, event, state)
+                                   for fn in _pool_fns)]
                 if limit is not None:
                     # The card's controller chooses which one moves, even when
                     # the cards belong to the opponent.
@@ -5445,12 +5462,29 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # attack hits, the controller wins and creates the prize token; otherwise
         # the opponent wins it. Resolves automatically at chain-link resolution
         # (engine._resolve_wagers), so this only registers the wager + prize.
-        prize = params.get("prize") or params.get("token")
-        def _fn(card, event, state, _prize=prize):
+        #
+        # A card may wager MORE THAN ONE prize: "wager a Gold, Might, and Vigor
+        # token with them" (Bet Big). combat.wagers is a list and each entry
+        # carries one prize, so that is three wagers, which is also what CR
+        # 8.5.46b describes -- a wager has "the prize", singular. They resolve
+        # identically because they hang on the same attack hitting.
+        #
+        # Only the singular key was read, so a card passing `tokens` wagered
+        # prize None: CR 8.5.46b's "no prize specified" case, where the winner
+        # is simply considered to have won and gets nothing.
+        _prizes = _first(params, "prizes", "tokens")
+        if _prizes is None:
+            _prizes = params.get("prize") or params.get("token")
+        prizes = ([_prizes] if isinstance(_prizes, str)
+                  else list(_prizes) if _prizes else [None])
+
+        def _fn(card, event, state, _prizes=prizes):
             from engine.card_effects.ability_keywords import add_wager, _controller_id
             # The source card is passed so a non-token payoff ("the winner loses
             # 1{h}") can be dispatched back to it when the wager resolves.
-            add_wager(state, _controller_id(card), _prize, source=card)
+            cid = _controller_id(card)
+            for prize in _prizes:
+                add_wager(state, cid, prize, source=card)
         return _fn
 
     if etype == "PREVENT_DAMAGE":

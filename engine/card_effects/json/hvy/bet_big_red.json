@@ -11,14 +11,20 @@
       ],
       "effects": [
         {
-          "type": "WAGER",
-          "tokens": [
-            "Gold",
-            "Might",
-            "Vigor"
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "WAGER",
+              "prizes": [
+                "Gold",
+                "Might",
+                "Vigor"
+              ]
+            }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'When this attacks a hero, YOU MAY wager a Gold, Might, and Vigor token with them.' Two clauses were missing. WAGER read only the singular 'prize'/'token', so the 'tokens' list was dropped and the card wagered prize None -- CR 8.5.46b's 'no prize specified' case, where the winner is considered to have won and receives nothing. WAGER now takes a list, which is three wagers on one attack (combat.wagers is a list and a wager has one prize); they resolve together because they hang on the same attack hitting. The 'you may' was absent too, so the wager was mandatory."
 }
