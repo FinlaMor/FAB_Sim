@@ -4,6 +4,11 @@
     {
       "ability_type": "TRIGGERED",
       "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
       "effects": [
         {
           "type": "DESTROY_PERMANENT",
@@ -17,26 +22,49 @@
       "effects": [
         {
           "type": "BANISH",
-          "target": "top_deck"
+          "amount": 1,
+          "target": {
+            "controller": "SELF",
+            "zone": "DECK_TOP"
+          }
         },
         {
-          "type": "CONDITIONAL_EFFECT",
+          "type": "CONDITIONAL",
           "condition": {
-            "type": "NOT",
-            "condition": {
-              "type": "CARD_IN_ZONE",
-              "zone": "top_deck",
-              "card_type": "attack_action"
-            }
+            "type": "AND",
+            "all": [
+              {
+                "type": "REF_IS_TYPE",
+                "ref": "banished",
+                "types": ["Action"],
+                "value": true
+              },
+              {
+                "type": "REF_IS_TYPE",
+                "ref": "banished",
+                "types": ["Attack"],
+                "value": false
+              }
+            ]
           },
-          "effects": [
+          "then": [
             {
-              "type": "BANISH_OPP_TOP_GRANT_PLAY",
-              "target": "top_deck"
+              "type": "GRANT_PLAY_FROM_BANISHED",
+              "ref": "banished"
+            },
+            {
+              "type": "GRANT_INSTANT_TIMING",
+              "filter": [
+                {
+                  "type": "CARD_IS_TYPE",
+                  "card_type": "Action"
+                }
+              ]
             }
           ]
         }
       ]
     }
-  ]
+  ],
+  "_comment": "'When this leaves the arena, banish the top card of YOUR deck. If it's a non-attack action card, you may play it this turn as though it were an instant.'\n\nThe payoff was BANISH_OPP_TOP_GRANT_PLAY, which is Infiltrate's effect: it banishes the top card of the OPPONENT's deck. So the card banished twice -- once from each deck -- and the permission it granted was for a card that has nothing to do with the one its own text is about. Its 'target': 'top_deck' was unread, because that effect takes no target.\n\nThe condition was wrong in a second, quieter way: it asked CARD_IN_ZONE about the top of the deck AFTER the banish had already moved that card, so it was inspecting whatever card came next. 'If IT is a non-attack action card' is about the card just banished, which is what the `banished` ref holds -- and 'non-attack action' is two claims (it IS an Action, it is NOT an Attack), so it is two REF_IS_TYPE checks and not one.\n\nThe start-of-turn destroy is gated on IS_ACTIVE_PLAYER: 'at the beginning of YOUR action phase' fires on the controller's turn, not on both.\n\nAPPROXIMATED: 'as though it were an instant' is a one-shot grant matched by card PROPERTIES, and the queue cannot name one object, so the grant matches the first non-attack Action card played rather than specifically the banished one. The play PERMISSION is identity-based (GRANT_PLAY_FROM_BANISHED acts on the ref), so the card that may be played is exactly right; only the timing grant is broader. Definition of done: an object_ref on GRANT_INSTANT_TIMING, as MODIFY_NEXT_ATTACK already has."
 }
