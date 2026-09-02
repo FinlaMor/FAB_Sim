@@ -114,6 +114,30 @@ B1 fill rate: the keyword table was completed in 40/54 replies, against Part A's
 54/54. Enumeration beats judgement but is not free -- some remaining misses are
 probably skipped rows rather than wrong answers.
 
+v3, Talishar reference ACTUALLY in the prompt (~400 extra tokens), same set:
+
+                        recall    false-pos   discrimination
+    v2 (no Talishar)    37.0%        3.7%          0.33
+    v3 (Talishar)       33.3%        3.7%          0.30
+
+TALISHAR DID NOTHING. One card worse is noise, but the subgroup test is not:
+every one of the 27 cards has a Talishar reference (median 228 chars), and on
+the 12 with a SUBSTANTIVE one (>=400 chars, where a second opinion should help
+most) the two arms are identical -- 5/12 both times. The arm that should have
+moved did not move at all. And 0 of 54 replies mention Talishar in any form.
+
+The block was present this time; that was verified before the run rather than
+assumed, which is what v2 got wrong. So this is a real negative result: ~400
+tokens per card, ~830k tokens over the remaining corpus, for no measurable gain.
+
+THE LIKELY REASON IS THAT NOTHING ASKS FOR IT. Parts A, B1, B2, B3 and C are all
+about the printed text and the JSON; none of them mentions the reference, so it
+sits in context as material the model is never instructed to use. That is worth
+one more arm before the block is deleted -- a part that forces the comparison
+("name one behaviour Talishar implements that our JSON does not, or write NONE")
+-- because the finding so far is "unused context is ignored", not "a reference
+implementation cannot help".
+
 CORRECTION TO THE FIRST READING OF THESE NUMBERS. The commit that recorded them
 concluded "keep the static guards as the gate; they caught every defect class in
 this set deterministically". That is wrong, and measuring it says so plainly:
