@@ -190,25 +190,56 @@ def test_the_examples_are_still_concrete():
         assert shape in prompt, shape + " is no longer shown as a worked shape"
 
 
-def test_the_talishar_second_opinion_is_offered_when_available(monkeypatch):
-    """The auditor's weakness is semantic, and a reference implementation of the
-    same card is the cheapest outside evidence there is (~230 tokens median).
-    It must be labelled as non-authoritative: Talishar's own README disclaims
-    it, and a divergence is a signal to look, not proof of a defect."""
+def test_the_talishar_reference_stays_out_of_the_prompt(monkeypatch):
+    """This test asserted the OPPOSITE twice before the measurements landed.
+
+    A reference implementation of the same card is the cheapest outside evidence
+    available for a weakness that is semantic, so it was tried twice, against 27
+    labelled before/after pairs each time:
+
+        v3  supplied as reference material     33.3% recall / 3.7% FP  (0.30)
+        v4  Part D forcing the comparison      22.2% / 7.4%            (0.15)
+        v2  no Talishar at all                 37.0% / 3.7%            (0.33)
+
+    v3 did nothing at all -- on the 12 cards with a substantive reference the
+    arms scored identically, 5/12 both times, and 0 of 54 replies mentioned it.
+    v4 tested the obvious diagnosis (unused context is ignored) with the obvious
+    fix (make it an enumeration, which is what rescued B1) and came out WORSE
+    than having no reference at all.
+
+    So it is deleted, and this guards the deletion: ~400 tokens per card and two
+    measured attempts, no gain either way. Re-adding it needs a NEW measurement,
+    not a new argument -- both arguments for it have already been tried.
+    """
     monkeypatch.setattr(AIW, "_talishar_reference",
                         lambda slug: "if(count($theirSoul) > 0) GiveGoAgain();")
     prompt = AIW.build_verification_prompt(CARD, ORIGINAL, "(reference)")
-    assert "GiveGoAgain" in prompt
-    assert "not authoritative" in prompt
-    assert "printed text decides" in " ".join(prompt.split())
-
-
-def test_no_talishar_block_when_there_is_no_reference(monkeypatch):
-    """Most cards have none. An empty block would be a heading with nothing
-    under it, which reads as 'Talishar implements this as nothing'."""
-    monkeypatch.setattr(AIW, "_talishar_reference", lambda slug: "")
-    prompt = AIW.build_verification_prompt(CARD, ORIGINAL, "(reference)")
     assert "Talishar" not in prompt
+    assert "GiveGoAgain" not in prompt
+    assert "PART D" not in prompt, (
+        "the forced-comparison part is back; it scored 22.2%/7.4% against "
+        "37.0%/3.7% without it")
+    assert "then Part C" in prompt, "the output ordering lost Part C"
+
+
+def test_enumeration_is_not_assumed_to_be_a_universal_lever():
+    """The one generalisation the v4 result forbids.
+
+    Part A is produced 54/54 and B1 improved when it became a table, so
+    "enumeration works where judgement does not" was the standing lesson. Part D
+    was an enumeration too, and it LOST 11 points of recall. It works when what
+    is being enumerated is the card's own text; it does not work when the model
+    is made to reconcile two implementations in different languages, which
+    manufactures divergences that are not defects.
+
+    Kept as a test so the reasoning is attached to the prompt rather than to a
+    commit message nobody reads.
+    """
+    prompt = AIW.build_verification_prompt(CARD, ORIGINAL, "(reference)")
+    enumerations = [l for l in prompt.splitlines() if l.startswith("=== PART")]
+    assert len(enumerations) == 5, enumerations
+    for part in ("PART A", "PART B1", "PART B2", "PART B3", "PART C"):
+        assert any(part in e for e in enumerations), part
 
 
 def test_b1_is_mechanical_not_a_judgement_call():
@@ -222,35 +253,3 @@ def test_b1_is_mechanical_not_a_judgement_call():
     assert '"if", "whenever", or "while"' in b1, (
         "the syntactic rule is gone; without it GATED is a judgement again")
     assert "do not decide which ones are interesting" in b1
-
-
-def test_the_talishar_reference_is_compared_against_not_just_supplied(monkeypatch):
-    """v3 supplied Talishar's code and measured nothing: recall 37.0% -> 33.3%
-    (one card, noise), identical scores on the 12 cards with a substantive
-    reference, and 0 of 54 replies mentioning it at all. Parts A/B1/B2/B3/C are
-    all about the printed text and the JSON, so the block sat in context as
-    material the model was never asked to use.
-
-    The fix is the one that worked for B1: make it an enumeration. If Part D is
-    ever reduced back to "consider the reference", the block is ~400 tokens per
-    card buying nothing and should be deleted instead.
-    """
-    monkeypatch.setattr(AIW, "_talishar_reference",
-                        lambda slug: "if(count($theirSoul) > 0) GiveGoAgain();")
-    prompt = AIW.build_verification_prompt(CARD, ORIGINAL, "(reference)")
-    d = prompt[prompt.index("=== PART D"):prompt.index("=== PART C")]
-    assert "one line for EVERY behaviour" in d, "Part D is no longer an enumeration"
-    assert "MISSING" in d
-    assert "DIVERGENCE:" in d
-    assert "printed text decides" in " ".join(d.split()), (
-        "Part D must keep the printed text authoritative over Talishar")
-
-
-def test_part_d_is_absent_and_unreferenced_when_there_is_no_reference(monkeypatch):
-    """A heading with nothing under it reads as 'Talishar implements nothing',
-    and an output order naming a section that does not exist invites the model
-    to invent one."""
-    monkeypatch.setattr(AIW, "_talishar_reference", lambda slug: "")
-    prompt = AIW.build_verification_prompt(CARD, ORIGINAL, "(reference)")
-    assert "PART D" not in prompt
-    assert "Talishar" not in prompt

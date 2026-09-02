@@ -777,23 +777,30 @@ def build_verification_prompt(card: dict, json_content: str, dsl_ref: str) -> st
     that no longer contained it. The examples below are synthetic -- structurally
     identical to the real defects, matching no card's printed text.
 
-    TALISHAR IS COMPARED AGAINST, NOT MERELY SUPPLIED. Version 3 of this
-    prompt included Talishar's implementation as reference material and measured
-    ZERO effect: recall 37.0% -> 33.3% (one card, noise at n=27), and on the 12
-    cards whose reference is substantive (>=400 chars) the two arms scored
-    identically, 5/12 both times. 0 of 54 replies mentioned it. The block was
-    ~400 tokens of context the model was never asked to use, and it used none of
-    it -- the finding was "unused context is ignored", not "a reference
-    implementation cannot help". Part D now forces the comparison as an
-    enumeration, which is the one thing that has reliably worked here: Part A is
-    produced 54/54 because it is a list that must be filled in, while B1 missed
-    the class it was written for for as long as it was a judgement call.
+    TALISHAR IS GONE, AFTER TWO ARMS THAT BOTH LOST. A reference implementation
+    of the same card looked like the cheapest outside evidence available for a
+    weakness that is semantic, so it was measured twice.
 
-    TALISHAR IS A SECOND OPINION ON INTENT. The auditor's weakness is semantic
-    ("does this JSON mean what the card says"), and a reference implementation of
-    the same card is the cheapest outside evidence available -- median ~230
-    tokens. It is not authoritative and its README disclaims it; a divergence is
-    a review signal, not proof.
+        v3  the block SUPPLIED as reference material   33.3% / 3.7%  (0.30)
+        v4  a Part D FORCING the comparison            22.2% / 7.4%  (0.15)
+        v2  no Talishar at all                         37.0% / 3.7%  (0.33)
+
+    v3 did nothing: on the 12 cards whose reference is substantive (>=400 chars)
+    the arms scored identically, 5/12 both times, and 0 of 54 replies mentioned
+    it. The obvious diagnosis was that Parts A/B1/B2/B3/C never ask the model to
+    look at it -- unused context being ignored -- and the obvious fix was the one
+    that had already worked twice here: make it an enumeration, one line per
+    behaviour Talishar implements, mapped to our node or MISSING.
+
+    That made it WORSE. Recall fell 11 points below v2 and false positives
+    doubled. Enumeration is not a universal lever; it works when the thing being
+    enumerated is the card's own text (Part A, B1), and here it spent output
+    budget reconciling two implementations in different languages, which
+    manufactures divergences that are not defects.
+
+    So the block is deleted: ~400 tokens per card, two measured attempts, no
+    gain either way. This is not "a reference implementation cannot help" in
+    general -- it is that this one, at this size of model, does not.
 
     THE FRAMING IS DELIBERATELY NEITHER "is there a problem?" NOR "there IS a
     problem, find it". Both were measured. The first invites acquiescence. The
@@ -801,31 +808,6 @@ def build_verification_prompt(card: dict, json_content: str, dsl_ref: str) -> st
     were real, and the old checklist prompt objected to 70% of ACCEPTED
     implementations, which in production meant rewriting correct cards.
     """
-    tal = _talishar_reference(card["slug"])
-    tal_block = f"""
-Talishar's implementation of this card (a SECOND OPINION on what the card is
-meant to do; it may have bugs and is not authoritative -- a divergence is a
-signal to look, not proof of a defect. Where it and our JSON disagree, the
-printed text decides):
-{tal}
-""" if tal else ""
-
-    tal_part = """
-=== PART D: AGAINST TALISHAR ===
-Write one line for EVERY behaviour Talishar's code above implements:
-
-    <behaviour, in a few words>  ->  <the JSON node that does the same, or MISSING>
-
-Then one final line:
-
-    DIVERGENCE: <the single behaviour that differs and matters most, or NONE>
-
-Do not skip this because the two are written in different languages; compare what
-they DO. Talishar may be wrong -- where it and the printed text disagree, the
-printed text decides, and the answer is NONE. But a behaviour that is MISSING
-from our JSON and present in both Talishar and the printed text is a defect.
-""" if tal else ""
-
     return f"""\
 You are auditing one card implementation against its printed text.
 
@@ -835,7 +817,6 @@ Card:
   slug: {card["slug"]}
   printed text: {card.get("functional_text") or "(none)"}
   printed keywords: {card.get("keywords") or []}
-{tal_block}
 Generated JSON:
 {json_content}
 
@@ -901,7 +882,6 @@ validates, and does nothing.
 The reverse is also wrong: INTIMIDATE and DOMINATE are effects a card PERFORMS as
 well as keywords it can gain. "Intimidate them" is the effect; "this gains
 intimidate" is the keyword.
-{tal_part}
 === PART C: COSTS ===
 Does the text say "as an additional cost"? A cost must be an "additional_cost"
 or a card-level "cost", NEVER an effect: an effect runs on resolution, when the
@@ -912,7 +892,7 @@ re-paid on every dispatch, and a static is dispatched on every attack-power
 recalculation.
 
 === OUTPUT ===
-Part A, then B1, B2, B3, then Part D if it is present above, then Part C. End with a final line, exactly one of:
+Part A, then B1, B2, B3, then Part C. End with a final line, exactly one of:
 
     VERDICT: LOOKS_GOOD
     VERDICT: CORRECTED

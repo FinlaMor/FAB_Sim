@@ -138,6 +138,46 @@ one more arm before the block is deleted -- a part that forces the comparison
 -- because the finding so far is "unused context is ignored", not "a reference
 implementation cannot help".
 
+v4, that arm, run 2026-09-02. IT MADE THINGS WORSE:
+
+                        recall    false-pos   discrimination
+    v2 (no Talishar)    37.0%        3.7%          0.33
+    v3 (supplied)       33.3%        3.7%          0.30
+    v4 (comparison
+        FORCED)         22.2%        7.4%          0.15
+
+Eleven points of recall below v2 and double the false positives. Talishar is
+deleted from the prompt: two arms, two losses, ~400 tokens per card.
+
+THE LESSON IS NARROWER THAN "ENUMERATION WORKS". That was the standing
+conclusion -- Part A is produced 54/54, and B1 only started catching its own
+defect class when it became a table with a syntactic rule -- and Part D was an
+enumeration built to the same recipe. It lost. Enumeration works when what is
+being enumerated is THE CARD'S OWN TEXT, where every row is a fact the model can
+read off the page. Asked to enumerate behaviours across two implementations in
+different languages, the model manufactures divergences: it spends its output
+budget reconciling Talishar's control flow with our JSON and reports the
+mismatches as defects, which is exactly the false-positive mode the rewrite was
+built to remove.
+
+Do not re-add the reference on the strength of a new argument. Both available
+arguments -- "give it evidence" and "make it use the evidence" -- have now been
+measured, and each lost to giving it nothing.
+
+THE RUN ALSO EXPOSED A DEFECT IN THIS FILE, which is worth more than the arm.
+`labelled_pairs` read the ACCEPTED side from the WORKING TREE, so the benchmark
+silently re-labelled itself whenever the corpus moved. Ordinary card work in the
+same session edited light_the_way_red's abilities; its fix commit had changed
+only `conditional_keywords`, so the pair had been correctly EXCLUDED (no change
+to `abilities` = no labelled defect), and the edit put it back in. The set went
+27 -> 28 between two runs that were being compared against each other, and
+nothing announced it. The v4 figures above are recomputed on the pinned 27 so
+they are comparable to v2 and v3; the raw run reported 21.4% / 7.1% over 28.
+
+A benchmark whose inputs drift with the repo cannot answer "did this change
+help", because both halves moved. The accepted side is now pinned to the commit
+that fixed each card.
+
 CORRECTION TO THE FIRST READING OF THESE NUMBERS. The commit that recorded them
 concluded "keep the static guards as the gate; they caught every defect class in
 this set deterministically". That is wrong, and measuring it says so plainly:
@@ -221,10 +261,28 @@ def labelled_pairs():
                     break
         if before.returncode != 0:
             continue
-        current = ROOT / path
-        if not current.exists():
+        # The ACCEPTED side is pinned to the commit that fixed the card, NOT to
+        # the working tree.
+        #
+        # It used to read the live file, which silently re-labelled the
+        # benchmark as the corpus moved. Ordinary card work three months later
+        # edited light_the_way_red's abilities; its fix commit had changed only
+        # `conditional_keywords`, so the pair had been correctly EXCLUDED (no
+        # change to `abilities` = no labelled defect) and the edit put it back
+        # in. The set went 27 -> 28 between two runs that were being compared
+        # against each other, and nothing said so.
+        #
+        # A benchmark whose inputs drift with the repo cannot answer "did this
+        # prompt change help", because both halves moved.
+        after = None
+        for commit in FIX_COMMITS:
+            got = subprocess.run(["git", "show", "%s:%s" % (commit, path)],
+                                 cwd=ROOT, capture_output=True, text=True,
+                                 encoding="utf-8", errors="replace")
+            if got.returncode == 0:
+                after = got.stdout
+        if after is None:
             continue
-        after = current.read_text(encoding="utf-8")
         if _abilities(before.stdout) == _abilities(after):
             continue          # only the comment changed: not a labelled defect
         pairs.append((slug, path, before.stdout, after))
