@@ -45,6 +45,26 @@ def _stamp_banished(card, banished):
     card.banished_for_this = existing + list(banished)
 
 
+def _other_hand_cards(card, state):
+    """The paying player's hand, WITHOUT the card whose cost is being paid.
+
+    A card being played is still in hand while its costs are checked -- it does
+    not leave for the stack until later -- so a from-hand cost that counts the
+    whole hand counts the card paying it. Enlightened Strike was playable with
+    an empty hand behind it for exactly that reason, found by comparing play
+    legality against Talishar.
+
+    "Discard this:" is the one cost paid WITH the source, and it does not use
+    this helper.
+    """
+    from engine.card_effects.ability_keywords import _controller_id
+    pid = _controller_id(card)
+    player = state.players.get(pid) if pid in getattr(state, "players", {}) else None
+    if player is None:
+        return []
+    return [c for c in player.hand.cards if c is not card]
+
+
 def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable]:
     """Return (check_fn, pay_fn).
 
@@ -108,7 +128,7 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
         amount = params.get("amount", 1)
         def can_pay(card, event, state, _a=amount):
             from engine.card_effects.ability_keywords import _controller_id
-            return len(state.players[_controller_id(card)].hand.cards) >= _a
+            return len(_other_hand_cards(card, state)) >= _a
         def pay(card, event, state, _a=amount):
             from engine.card_effects.ability_keywords import effect_discard, _controller_id
             _stamp_discarded(card, effect_discard(state, _controller_id(card),
@@ -136,10 +156,10 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
 
         def can_pay(card, event, state, _a=amount, _m=matches):
             from engine.card_effects.ability_keywords import _controller_id
-            hand = state.players[_controller_id(card)].hand
+            pool = _other_hand_cards(card, state)
             if _m is None:
-                return len(hand.cards) >= _a
-            return len([c for c in hand.cards if _m(c, state)]) >= _a
+                return len(pool) >= _a
+            return len([c for c in pool if _m(c, state)]) >= _a
 
         def pay(card, event, state, _a=amount, _m=matches):
             from engine.card_effects.ability_keywords import _controller_id, effect_discard
@@ -159,7 +179,7 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             from engine.card_effects.ability_keywords import _controller_id
             return any(
                 (getattr(c, 'cost', None) or 0) >= _a
-                for c in state.players[_controller_id(card)].hand.cards
+                for c in _other_hand_cards(card, state)
             )
         def pay(card, event, state):
             pass  # reveal is informational
@@ -172,7 +192,7 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             from engine.card_effects.ability_keywords import _controller_id
             return any(
                 (getattr(c, 'cost', None) or 0) <= _a
-                for c in state.players[_controller_id(card)].hand.cards
+                for c in _other_hand_cards(card, state)
             )
         def pay(card, event, state):
             pass
@@ -283,11 +303,11 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
         # "Put a card from your hand on the bottom of your deck" (enlightened_strike)
         def can_pay(card, event, state):
             from engine.card_effects.ability_keywords import _controller_id
-            return len(state.players[_controller_id(card)].hand.cards) >= 1
+            return len(_other_hand_cards(card, state)) >= 1
         def pay(card, event, state):
             from engine.card_effects.ability_keywords import _controller_id
             cid = _controller_id(card)
-            hand = state.players[cid].hand.cards
+            hand = _other_hand_cards(card, state)
             if not hand:
                 return
             # Agent sets state.cost_choices["PUT_HAND_CARD_BOTTOM"] = int index before
@@ -321,7 +341,7 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             from engine.card_effects.ability_keywords import _controller_id
             if _opt:
                 return True
-            return len(state.players[_controller_id(card)].hand.cards) >= _a
+            return len(_other_hand_cards(card, state)) >= _a
 
         def pay(card, event, state, _a=amount, _opt=optional):
             from engine.card_effects.ability_keywords import (
@@ -665,7 +685,7 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
 
         def _pool(card, state, _m=matches):
             from engine.card_effects.ability_keywords import _controller_id
-            hand = state.players[_controller_id(card)].hand.cards
+            hand = _other_hand_cards(card, state)
             if _m is None:
                 return list(hand)
             return [c for c in hand if _m(c, state)]
@@ -928,7 +948,7 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
         def can_pay(card, event, state, _a=amount):
             from engine.card_effects.ability_keywords import _controller_id
             hand = state.players[_controller_id(card)].hand
-            return len([c for c in hand.cards if _matches(c)]) >= _a
+            return len([c for c in _other_hand_cards(card, state) if _matches(c)]) >= _a
 
         def pay(card, event, state, _a=amount):
             from engine.card_effects.ability_keywords import _controller_id, _ask_player
@@ -936,7 +956,7 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             cid = _controller_id(card)
             for _ in range(_a):
                 hand = state.players[cid].hand
-                eligible = [c for c in hand.cards if _matches(c)]
+                eligible = [c for c in _other_hand_cards(card, state) if _matches(c)]
                 if not eligible:
                     break
                 pick = _ask_player(state, cid, [c.slug for c in eligible],
