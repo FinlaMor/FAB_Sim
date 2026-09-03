@@ -264,7 +264,23 @@ Additionally, each of these fails loudly or is harmless until a card needs it:
    `combat.keywords`. 27 cards print Blade Break; today only this one gates it,
    which is why it is recorded rather than half-built.
 
-6. **`Fragment` is not implemented** — 27 cards print it (Omens of the Third
+6. **`Ward` and `Arcane Barrier` are unwired** — `ability_keywords.ward` and
+   `arcane_barrier` exist and are imported by `triggers/triggers.py`, but never
+   registered, and the damage path in `effect_keywords` never consults them. So
+   no card's Ward prevents anything. 21 cards print one of the two.
+
+   Two separate things were wrong on top of that, and both are fixed: the DSL
+   called `ward(state, card, amount)` against a `ward(card, amount, state)`
+   signature, so every resolution raised `AttributeError` on `int.effect_manager`
+   and crashed the game; and `10000_year_reunion_red` ran WARD as an ON-PLAY
+   effect, destroying the aura the moment it resolved. The remaining 16 declare
+   it as a plain `STATIC`, which nothing dispatches, so they are inert rather
+   than wrong.
+
+   Definition of done: a damage replacement (CR 6.4) that offers ward before
+   damage is dealt, registered from the printed keyword rather than per card.
+
+7. **`Fragment` is not implemented** — 27 cards print it (Omens of the Third
    Age / GEM) and 32 mention it in text. Nothing in the engine emits a fragment
    event, so "whenever this fragments" cannot fire; the cards that have it are
    currently authored against `ON_BECOME`, which is only emitted when a HERO

@@ -1320,6 +1320,34 @@ def _apply_play_card(state: GameState, action: Action) -> None:
                 # clear it to the graveyard.
                 gs.stack.remove(c)
                 add_defend(gs, c)
+                return
+
+            # CR 1.3.2c — a deck-card with a PERMANENT SUBTYPE enters the arena
+            # when it resolves. resolve_stack clears whatever is still in the
+            # stack zone to the graveyard, so every aura, item and ally action
+            # card in the corpus was being played straight into the graveyard:
+            # the permanent never existed, and neither did anything that reads
+            # the board. Found by comparing outcomes against Talishar, which put
+            # Blessing of Bellona into `auras` where we put it into `graveyard`.
+            #
+            # Same shape as the defense-reaction case above -- leave the stack
+            # zone so resolve_stack sees it moved and does not clear it.
+            from engine.state import _PERMANENT_SUBTYPES
+            subs = {str(s) for s in (c.subtypes or [])}
+            if subs & _PERMANENT_SUBTYPES and c in gs.stack.cards:
+                owner = gs.players.get(getattr(c, "controller", None)
+                                       or getattr(c, "owner", None))
+                if owner is not None:
+                    if "Aura" in subs:
+                        dest = owner.auras
+                    elif "Item" in subs:
+                        dest = owner.items
+                    elif "Ally" in subs:
+                        dest = owner.allies
+                    else:
+                        dest = owner.permanents
+                    gs.stack.remove(c)
+                    dest.add(c)
 
         entry.effect_fn = _resolve_card_layer
 

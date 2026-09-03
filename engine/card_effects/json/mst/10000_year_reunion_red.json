@@ -3,13 +3,16 @@
   "abilities": [
     {
       "ability_type": "PLAY",
-      "_comment": "You may remove three +1{p} counters from among auras you control rather than pay its {r} cost (alternative cost). Ward 10.",
+      "_comment": "Ward 10 is a PRINTED KEYWORD, not an on-play effect. Running WARD here destroyed the aura the moment it resolved -- ward destroys its source to prevent damage (CR 8.3.20), so firing it at play time is the card killing itself on arrival. This ability now exists only to carry the alternative cost.",
       "alternative_cost": [
-        {"type": "REMOVE_COUNTERS_FROM_AURAS", "counter_type": "+1{p}", "amount": 3}
+        {
+          "type": "REMOVE_COUNTERS_FROM_AURAS",
+          "counter_type": "+1{p}",
+          "amount": 3
+        }
       ],
-      "effects": [
-        {"type": "WARD", "amount": 10}
-      ]
+      "effects": []
     }
-  ]
+  ],
+  "_comment": "NOT IMPLEMENTED: Ward. The keyword is unwired engine-wide -- ability_keywords.ward exists and is imported by triggers.py but never registered, and the damage path never consults it, so no card's Ward prevents anything. 16 other cards declare it as a plain STATIC, which nothing dispatches, so they are inert rather than wrong; this one had it as a PLAY effect and was actively self-destructive. Definition of done: a damage replacement that offers ward before damage is dealt."
 }

@@ -282,6 +282,13 @@ def test_every_ability_has_effects(path: Path):
         atype = (ability.get("ability_type") or "").upper()
         if atype in NO_EFFECTS_REQUIRED:
             continue
+        # An ability whose only content is an ALTERNATIVE COST is not a no-op:
+        # play.py reads alternative_costs off the ability to offer the alternate
+        # way of paying, and the card's own text may have nothing else to do.
+        # 10,000 Year Reunion is exactly that -- "you may remove three +1{p}
+        # counters rather than pay its {r} cost", plus a printed Ward.
+        if ability.get("alternative_cost"):
+            continue
         assert ability.get("effects") or ability.get("modes") or ability.get("options"), (
             f"{slug} ability[{i}] ({atype or 'no ability_type'}) has no effects, "
             f"modes, or options — it will resolve as a no-op"

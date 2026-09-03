@@ -2187,14 +2187,19 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         amt = params.get("amount", 0)
         def _fn(card, event, state, _a=amt):
             from engine.card_effects.ability_keywords import ward
-            ward(state, card, _a)
+            # ward(card, amount, state) -- the call had them transposed, so
+            # `state` arrived as the card and the AMOUNT arrived as the state.
+            # Every WARD resolution raised AttributeError on `int.effect_manager`
+            # and took the game down with it.
+            ward(card, _a, state)
         return _fn
 
     if etype == "ARCANE_BARRIER":
         amt = params.get("amount", 0)
         def _fn(card, event, state, _a=amt):
             from engine.card_effects.ability_keywords import arcane_barrier
-            arcane_barrier(state, card, _a)
+            # Same transposition as WARD above: arcane_barrier(card, amount, state).
+            arcane_barrier(card, _a, state)
         return _fn
 
     # ── flags / misc ───────────────────────────────────────────────────────
