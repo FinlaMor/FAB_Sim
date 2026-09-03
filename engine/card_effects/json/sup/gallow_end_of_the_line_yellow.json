@@ -6,8 +6,7 @@
       "activation_cost": 1,
       "cost": [
         {
-          "type": "PITCH",
-          "amount": 2
+          "type": "TAP_SELF"
         }
       ],
       "effects": [
@@ -41,5 +40,5 @@
       ]
     }
   ],
-  "_comment": "NOT IMPLEMENTED: 'until end of turn, effects controlled by opponents don't trigger when their attacks hit'. That is trigger SUPPRESSION scoped to a player -- the engine can add triggers and can gate them on conditions, but nothing can switch off a class of trigger belonging to someone else. The attack activation and Watery Grave are intact."
+  "_comment": "The attack activation is '**Action** - {r}, {t}: **Attack**' and was authored as a PITCH of 2 cards. Pitching is not tapping, and two is not one: it charged two cards the text never asks for and never exhausted the ally, so the attack was repeatable. Same substitution as kayo_strong_arm. TAP_SELF is checkable (can_pay is false while tapped) and activation_cost 1 is the {r}.\n\nNOT IMPLEMENTED: 'until end of turn, effects controlled by opponents don't trigger when their attacks hit'. That is trigger SUPPRESSION scoped to a player -- the engine can add triggers and can gate them on conditions, but nothing can switch off a class of trigger belonging to someone else. The attack activation and Watery Grave are intact."
 }

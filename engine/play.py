@@ -71,6 +71,7 @@ def available_actions(state, player_id) -> list[Action]:
     # turn player's action phase.
     _add_weapon_attacks(state, player_id, affordable_actions)
     _add_granted_permanent_attacks(state, player_id, affordable_actions)
+    _add_object_attack_activations(state, player_id, affordable_actions)
 
     # Hero activated/instant abilities defined in the DSL (e.g. Kayo's Instant).
     _add_hero_dsl_activations(state, player_id, affordable_actions)
@@ -115,11 +116,110 @@ def _add_weapon_attacks(state, player_id, affordable_actions) -> None:
                 continue
             if wc.has_per_turn_limit and (wc.activations or 0) <= 0:
                 continue
+            # "Remove a steam counter from this: Attack" — an ability cost that
+            # cannot be paid must not be offered, the same as an unaffordable
+            # resource cost.
+            if not _attack_ability_costs_payable(state, wc):
+                continue
             action = Action(type=ActionType.ACTIVATE_CARD, player_id=player_id,
                             card=wc, attack_source=wc, is_attack_proxy=True)
             cost = _calculate_resource_cost(state, action)
             if can_pay_cost(player.hand.cards, cost, player.resources):
                 affordable_actions.append(action)
+
+
+def _add_object_attack_activations(state, player_id, affordable_actions) -> None:
+    """Attack activations printed on objects that are NOT weapons.
+
+    CR 1.4.3b's own example is an ALLY: "Cintari Sellsword has an attack-ability
+    that produces an attack-proxy when activated." Allies, demi-heroes and
+    equipment can carry "Action - <cost>: Attack" exactly as weapons do.
+
+    Neither existing path offered them. _add_weapon_attacks iterates the two
+    weapon zones and requires card.is_weapon; _add_granted_permanent_attacks
+    offers only permanents carrying the GRANTED_ATTACK counter, which is the
+    Iris-of-Reality style grant. So an ally with a printed attack ability could
+    not attack at all, and every "when this attacks" trigger on it was dead:
+    suraya_archangel_of_erudition, gallow_end_of_the_line_yellow and
+    teklovossen_the_mechropotent, all with printed power and a parsed
+    activation cost.
+
+    Deliberately NOT gated on `weapon_exhausted`: that is the once-per-turn
+    weapon restriction, and an ally is not a weapon.
+    """
+    from engine.actions import can_pay_cost
+    player = state.players[player_id]
+    if state.active_player != player_id:
+        return
+    if state.step != Step.ACTION or state.stack_entries:
+        return
+    if player.action_points <= 0:
+        return
+
+    zones = (player.allies, player.permanents, player.items, player.auras,
+             player.head, player.chest, player.arms, player.legs,
+             player.hero_zone)
+    seen: set[int] = set()
+    for zone in zones:
+        for obj in list(getattr(zone, "cards", []) or []):
+            if id(obj) in seen:
+                continue
+            seen.add(id(obj))
+            if getattr(obj, "is_weapon", False):
+                continue                      # _add_weapon_attacks owns those
+            if GRANTED_ATTACK in (getattr(obj, "counters", None) or {}):
+                continue                      # granted-attack path owns those
+            if attack_ability_of(obj) is None or obj.power is None:
+                continue
+            if getattr(obj, "tapped", False) or getattr(obj, "exhausted", False):
+                continue
+            if obj.has_per_turn_limit and (obj.activations or 0) <= 0:
+                continue
+            if not _attack_ability_costs_payable(state, obj):
+                continue
+            action = Action(type=ActionType.ACTIVATE_CARD, player_id=player_id,
+                            card=obj, attack_source=obj, is_attack_proxy=True)
+            cost = _calculate_resource_cost(state, action)
+            if can_pay_cost(player.hand.cards, cost, player.resources):
+                affordable_actions.append(action)
+
+
+def attack_ability_of(card):
+    """The DSL ability whose effect is an ATTACK, or None.
+
+    One definition, used by both the offer and the payment, so an attack that is
+    offered is an attack whose costs get paid.
+    """
+    if card is None:
+        return None
+    from engine.card_effects.dsl.loader import get_card as _dsl_get_card
+    cd = _dsl_get_card(getattr(card, "slug", "") or "")
+    if cd is None:
+        return None
+    for ability in cd.abilities:
+        if any(str(getattr(e, "effect_type", "")).upper() in ("ATTACK", "ATTACKING")
+               for e in ability.effects):
+            return ability
+    return None
+
+
+def _attack_ability_costs_payable(state, card) -> bool:
+    ability = attack_ability_of(card)
+    if ability is None:
+        return True
+    for cost in getattr(ability, "costs", []) or []:
+        if cost.check_fn is not None and not cost.check_fn(card, None, state):
+            return False
+    return True
+
+
+def _pay_attack_ability_costs(state, action, card) -> None:
+    ability = attack_ability_of(card)
+    if ability is None:
+        return
+    for cost in getattr(ability, "costs", []) or []:
+        if cost.pay_fn is not None:
+            cost.pay_fn(card, None, state)
 
 
 #: Marker for a permanent that is currently a weapon by grant rather than by
@@ -1265,6 +1365,19 @@ def _apply_activate(state: GameState, action: Action) -> None:
     # CR 1.6.2b / CR 11.0: weapon and ally attacks go onto the chain as activated-layer entries.
     # All costs already paid by _pay_costs(). Just create the StackEntry.
     if getattr(action, 'is_attack_proxy', False):
+        # The ability's OWN costs — the clause before the colon — are not
+        # resources and are not paid by _pay_costs. "Remove a steam counter from
+        # Teklo Plasma Pistol: Attack" left the counter on the pistol, so the
+        # attack was free and the card's whole cost structure was bypassed; the
+        # same is true of an ally's "banish 2 cards from your soul: Attack".
+        # Paid here, before the layer is created, because a cost paid after the
+        # attack is on the chain is not a cost.
+        _pay_attack_ability_costs(state, action, card)
+        # CR 4.4.3d — and this branch returned before the per-turn decrement
+        # below, so a "Once per Turn Action - ...: Attack" could be activated
+        # again the moment its offer was recomputed.
+        if card.has_per_turn_limit and (card.activations or 0) > 0:
+            card.activations -= 1
         declared_modes, declared_targets, declared_x = _stack_declarations_from_action(action)
         entry = StackEntry(
             player_id=action.player_id,
