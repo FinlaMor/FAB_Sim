@@ -190,6 +190,43 @@ Two things to check when adding one:
   deltas, and one is registered once at game start, so only a check at the point
   of USE can see the restriction at all.
 
+## Attack-proxies (CR 1.4.3) — what "this" means during an attack
+
+Activating a weapon, ally, demi-hero or granted permanent to attack creates an
+**attack-proxy**: a non-card object representing the attack-source. It inherits
+the source's properties *except* the source's activated and resolution
+abilities (1.4.3a), ceases to exist when the chain link changes (1.4.3c), and
+effects applying to it do not apply to the source (1.4.3e).
+
+**This engine models the proxy as a flag on the Action** (`is_attack_proxy`) and
+puts the SOURCE OBJECT itself in `combat.attack_card`. That is a deliberate
+simplification, and it is the reason three separate defects landed here:
+
+* **`ON_HIT` means "when THIS hits."** It is dispatched only to the attack.
+  `ON_ANY_HIT` is the broadcast to the attacker's hero and permanents ("when an
+  attack you control hits"). They were once the same dispatch, so a weapon
+  reading "when this hits a hero, mark them" marked on *any* attack, from inside
+  its weapon zone. Seven weapons said that; four cards meant the broadcast.
+* **A granted trigger lives on whatever the attack IS.** For an attack ACTION
+  CARD the attack is the card, so an `INJECT_TRIGGER` at COMBAT scope attaches
+  to `card.granted_abilities` and travels with the object — Flick that card
+  later and the granted trigger fires with it. For a WEAPON the attack is the
+  proxy, so the grant stays on `combat.injected_triggers` and dies with the
+  chain link; the weapon card never had it. Combat-scoped storage *is* proxy
+  lifetime, which is why only the card case needed splitting out.
+* **The attack ability's own cost is not a resource cost.** `_pay_costs` covers
+  resources and action points; the clause before the colon ("Remove a steam
+  counter from this", "banish 2 cards from your soul") is a DSL ability cost,
+  checked at offer time by `_attack_ability_costs_payable` and paid in
+  `_apply_activate`'s proxy branch. Both go through `attack_ability_of`, so an
+  attack that is offered is an attack whose cost gets paid.
+
+**Who may attack**: `_add_weapon_attacks` (weapon zones, gated on
+`weapon_exhausted`), `_add_granted_permanent_attacks` (the `GRANTED_ATTACK`
+counter), and `_add_object_attack_activations` (everything else with a printed
+attack ability — allies, demi-heroes, equipment). The last is NOT gated on
+`weapon_exhausted`: that is the weapon rule, and an ally is not a weapon.
+
 ## Known engine limitations (the remaining engine-side work)
 
 A full CR audit lives in `docs/cr_audit_2026-07.md` (findings + fix status —
