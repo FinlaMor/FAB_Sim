@@ -20,6 +20,83 @@ from config import SLUG_INDEX_PATH
 _CARD_OBJECT_ID_COUNTER = count(1)
 
 
+#: A printed keyword appears in a card's functional text as a bold line of its
+#: own — "**Go again**", "**Ward 2**" — which is the convention the card corpus
+#: already relies on to tell a printed keyword from a granted one ("this gains
+#: **go again**" mid-sentence is conditional and does NOT count).
+_PRINTED_KEYWORD_LINE = re.compile(r"^[ \t]*\*\*([A-Za-z][A-Za-z ]*?)(?:\s+\d+)?\*\*[ \t]*$",
+                                   re.MULTILINE)
+
+
+_KEYWORD_VOCABULARY: Optional[set[str]] = None
+
+
+def _norm_kw(text: str) -> str:
+    return re.sub(r"[^a-z]", "", text.lower())
+
+
+def _keyword_vocabulary() -> set[str]:
+    """Normalised spellings of every keyword the card corpus actually uses.
+
+    The printed-line scan is restricted to these. Without the restriction it
+    matched any bold standalone line and invented 254 keywords out of labels
+    like "**Ice Fusion**", "**Rhinar Specialization**" and one card's misprint
+    "**Arcane Barrer**" — far more damage than the three omissions it fixes.
+    Deriving the vocabulary from the data keeps it self-maintaining: a keyword
+    is only ever added to a card that omits it if other cards spell it that way.
+    """
+    global _KEYWORD_VOCABULARY
+    if _KEYWORD_VOCABULARY is None:
+        vocab: set[str] = set()
+        try:
+            with open(SLUG_INDEX_PATH, encoding="utf-8") as fh:
+                for entry in json.load(fh).get("by_slug", {}).values():
+                    for kw in (entry.get("keywords") or []):
+                        vocab.add(_norm_kw(kw))
+        except (OSError, ValueError):
+            pass
+        _KEYWORD_VOCABULARY = vocab
+    return _KEYWORD_VOCABULARY
+
+
+def _keywords_with_printed(keywords: list[str], functional_text: Optional[str]) -> list[str]:
+    """Add keywords the card visibly prints but the upstream data omits.
+
+    The community card index populates `keywords` by hand and occasionally
+    misses one: Blood Runs Deep and Meganetic Lockwave both print a standalone
+    "**Go again**" line and carry no keywords at all, and Mask of Malicious
+    Manifestations does the same with blade break. Nothing downstream reads the
+    text, so those cards simply do not have the keyword.
+
+    All three are still unauthored, so this is PREVENTIVE rather than a live
+    fix — but it is the kind of thing an author would inherit silently, since
+    the natural move when writing a card is to trust `keywords` rather than
+    re-read the printed text.
+
+    Found by differential-testing attack keywords against real Talishar games
+    (scripts/talishar_combat_diff.py), which reported go again on every one of
+    110 spectator observations of Blood Runs Deep attacking, with none against.
+
+    Only ADDS. A keyword already listed is never duplicated (CR 8.3.5b: an
+    object cannot have two instances of a keyword) and one that is listed but
+    not printed is left alone, since plenty of keywords are granted by text
+    rather than printed as a line.
+    """
+    if not functional_text:
+        return keywords
+    vocabulary = _keyword_vocabulary()
+    have = {_norm_kw(k) for k in keywords}
+    out = list(keywords)
+    for match in _PRINTED_KEYWORD_LINE.finditer(functional_text):
+        camel = "".join(w.capitalize() for w in match.group(1).split())
+        key = _norm_kw(camel)
+        if key in have or key not in vocabulary:
+            continue
+        have.add(key)
+        out.append(camel)
+    return out
+
+
 @dataclass
 class CardEffect:
     """CR 6.3 staged continuous effect attached to a card object.
@@ -628,6 +705,8 @@ class CardDB:
         card.raw_subtypes     = raw.get("subtypes") or []
         card.raw_classes      = raw.get("classes") or []
         card.raw_ability_keywords = raw.get("keywords") or raw.get("ability_keywords") or []
+        card.raw_ability_keywords = _keywords_with_printed(
+            card.raw_ability_keywords, card.raw_functional_text)
         card.raw_legal_heroes = raw.get("legalHeroes") or raw.get("legal_heroes") or []
         card.raw_legal_formats = raw.get("legalFormats") or raw.get("legal_formats") or []
 

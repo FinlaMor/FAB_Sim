@@ -190,6 +190,50 @@ Two things to check when adding one:
   deltas, and one is registered once at game start, so only a check at the point
   of USE can see the restriction at all.
 
+## Types, classes, talents and subtypes are four different fields
+
+A card carries `types` (Action, Attack, Equipment, Weapon, Hero, DemiHero),
+`subtypes` (Aura, Item, Ally, OneHanded, Dagger), `classes` (Mechanologist,
+Ninja, Guardian) and `talents` (Chaos, Draconic, Elemental). Card text says
+"Mechanologist card" and "Illusionist attack" in the same breath as "attack
+action card", which makes it very easy to test a class against `types` — and
+the test then reads as perfectly sensible code that is **silently false
+forever**. Nothing raises; the branch just never runs.
+
+This has happened three times:
+
+* `boost()` read `"Mechanologist" in top.types` (CR 8.3.9), so the go-again half
+  of boost never once fired — 15 cards in the corpus.
+* `check_mirage()` read `"Illusionist" in attack.types` (CR 8.3.25), latent only
+  because nothing calls it yet.
+* Arakni's transform wrote `hero.types = ["Chaos", "Assassin", "Demi-Hero"]`,
+  packing a talent, a class and a misspelled type into one field.
+
+**Grep for it after touching keyword code**, since the failure is invisible at
+runtime — a class name adjacent to `.types`, or a type name adjacent to
+`.classes`, is always a bug:
+
+```
+python - <<'PY'   # or just: grep -rn '"Mechanologist" in .*\.types' engine/
+import re, pathlib
+CLASSES = ["Brute","Guardian","Illusionist","Mechanologist","Ninja","Ranger",
+           "Runeblade","Warrior","Wizard","Assassin","Merchant","Bard"]
+for p in pathlib.Path("engine").rglob("*.py"):
+    for i, line in enumerate(p.read_text(encoding="utf-8").splitlines(), 1):
+        for c in CLASSES:
+            if re.search(r'["\']%s["\'].{0,40}\.types\b' % c, line):
+                print("%s:%d %s" % (p, i, line.strip()))
+PY
+```
+
+Related: `card.keywords` is upstream data populated by hand, and it omits a
+keyword a card visibly prints about once per 1,600 cards. `_keywords_with_printed`
+in `card.py` adds a keyword back when the functional text prints it as a bold
+standalone line **and** other cards already spell it that way. The vocabulary
+restriction is the load-bearing part — without it the same scan invents 254
+keywords out of labels like `**Ice Fusion**` and one card's misprint
+`**Arcane Barrer**`.
+
 ## Attack-proxies (CR 1.4.3) — what "this" means during an attack
 
 Activating a weapon, ally, demi-hero or granted permanent to attack creates an

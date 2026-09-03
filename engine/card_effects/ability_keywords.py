@@ -522,7 +522,12 @@ def boost(card: Card, state: GameState) -> bool:
         state.event_manager.emit(
             Event(type='boosted', data={'player_id': cid, 'banished_card': top}),
             state)
-        if "Mechanologist" in top.types:
+        # CR 8.3.9 says "if it's a Mechanologist card" — Mechanologist is a
+        # CLASS, and a card's `types` holds Action/Attack/Equipment/etc. This
+        # read `top.types`, which never contains a class name, so the go-again
+        # half of boost was dead from the start: every boost banished the card
+        # and granted nothing.
+        if "Mechanologist" in (top.classes or []):
             if "Go again" not in card.keywords:
                 card.keywords.append("Go again")
             return True
@@ -1170,7 +1175,9 @@ def check_mirage(card: Card, event, state: GameState) -> bool:
     attack = state.combat.attack_card
     if attack is None:
         return False
-    if "Illusionist" in (attack.types or []):
+    # Illusionist is a CLASS, not a type — reading `types` here made the guard
+    # permanently false. Nothing calls check_mirage yet, so this was latent.
+    if "Illusionist" in (attack.classes or []):
         return False
     # Attack power must be 6 or more
     return (state.combat.attack_power or 0) >= 6
@@ -1711,7 +1718,12 @@ def become_agent_of_chaos(state, player_id: int, choose: bool = False):
         slug = _rng.choice(AGENT_OF_CHAOS_SLUGS)
     hero.slug = slug
     hero.name = slug.replace("_", " ").title()
-    hero.types = ["Chaos", "Assassin", "Demi-Hero"]
+    # Talent, class and type are three separate properties. Packing all three
+    # into `types` left `types` holding no real type at all ("Demi-Hero" is not
+    # even spelled the way the card data spells it, which is "DemiHero").
+    hero.types = ["DemiHero"]
+    hero.classes = ["Assassin"]
+    hero.talents = ["Chaos"]
     # "When you become this ..." — fire the new form's on-become ability.
     from engine.card_effects.dsl import dispatch as _dsl_dispatch
     _dsl_dispatch(state, "ON_BECOME", hero.slug, card=hero)
@@ -1725,7 +1737,9 @@ def return_to_brood(state, player_id: int):
         return
     hero.slug = "arakni_marionette"
     hero.name = "Arakni, Marionette"
-    hero.types = ["Chaos", "Assassin", "Hero"]
+    hero.types = ["Hero"]
+    hero.classes = ["Assassin"]
+    hero.talents = ["Chaos"]
 
 
 def effect_reload(state, player_id: int, source_card=None):
