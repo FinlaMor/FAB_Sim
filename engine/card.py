@@ -714,7 +714,10 @@ class CardDB:
         card.raw_played_horizontally = bool(raw.get("playedHorizontally") or raw.get("played_horizontally"))
 
         # Extra fields stored as card attributes (not part of layer system but useful)
-        card.talents          = raw.get("talents") or []
+        # Talents a card carries in every zone but the card DB does not record
+        # — the table lives in card_effects/, per the token_meta.py contract.
+        from engine.card_effects.intrinsic_traits import talents_for
+        card.talents          = talents_for(card.slug, raw.get("talents"))
         card.shorthands       = raw.get("shorthands") or []
         card.meta             = raw.get("meta") or []
         card.metatypes        = raw.get("metatypes") or []

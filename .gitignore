@@ -139,3 +139,7 @@ engine/card_effects/queues/
 engine/card_effects/json/review_queue.json
 engine/card_effects/json/triage_queue.json
 .bench/
+
+# Derived from FAB_Coach/fab_games.db, rebuilt by
+# scripts/verify_card_against_talishar.py --refresh-index
+card_data/talishar_card_index.json

@@ -4438,12 +4438,22 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         return _fn
 
     if etype == "MODIFY_ATTACK":
-        mod = params.get("mod", "add")
+        mod = str(params.get("mod", "add")).lower()
         amt = params.get("amount", 0)
+        # "subtract" fell through to the add branch, so a card that says it
+        # REDUCES an attack was increasing it — the worst direction to be wrong
+        # in, since it doubles the error. Three cards author it:
+        # a_drop_in_the_ocean_blue ("target attack gets -1{p}") was giving +1,
+        # blinding_beam_yellow ("-2{p}") was giving +2, and the Frailty token.
+        # MODIFY_ATTACKS_THIS_TURN and MODIFY_DEFENSE_VALUE already handle the
+        # spelling; this one never got the same treatment.
+
         def _fn(card, event, state, _mod=mod, _a=amt):
             if not state.combat:
                 return
             val = _resolve_amount(_a, state, card)
+            if _mod in ("subtract", "sub", "minus"):
+                val = -abs(val)
             if _mod not in ("set", "multiply"):
                 # A GAIN, so it is replaceable ("instead it gains that much
                 # plus 2"). Setting or multiplying is not a gain.

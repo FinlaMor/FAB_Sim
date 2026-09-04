@@ -99,7 +99,37 @@ JSON definition.
    Before finishing a batch, run the full suite (`python -m pytest tests/ -q`,
    ~8 minutes).
 
-8. **Update the work queue:** `python scripts/dsl_work_queue.py --set <set> --write-queue`
+8. **Check it against real games:**
+   ```
+   python scripts/verify_card_against_talishar.py --card <slug>
+   ```
+   This asks a different question than your test does. The test asks "does it
+   do what I think the text says"; this asks "does it do what an independent
+   implementation of the rules did, in games real people played". It finds
+   every real Talishar game that attacked with the card, rebuilds the board
+   from the spectator feed, puts the attack on the chain, and compares our
+   computed power against Talishar's own.
+
+   Three verdicts matter:
+
+   - `AGREES` — the strongest evidence available that the card is right.
+   - `NO EVIDENCE` — the card never attacks in the corpus. Common and fine;
+     it means this step can say nothing, not that the card is wrong.
+   - `DISAGREES` — a LEAD, not a verdict. Re-run with `--explain` and read the
+     board before changing anything. The harness fails in the direction that
+     manufactures findings: a gap in the reconstruction looks exactly like a
+     defect in the card, and historically most disagreements were the harness.
+     The tool prints `KNOWN LIMITS` when the card depends on state the feed
+     cannot carry (crowd/booed state, played-from-arsenal, player choices) and
+     softens its verdict accordingly.
+
+   The first run builds an index of the event store (~1 min); later runs are
+   seconds. `--refresh-index` picks up newly collected games.
+
+   Only power is compared, because that is what a spectator's view determines.
+   Keyword flags Talishar reported but our data lacks are printed too.
+
+9. **Update the work queue:** `python scripts/dsl_work_queue.py --set <set> --write-queue`
    flips entries to `"done"` automatically based on which JSON files exist.
 
 ## Batch automation
@@ -177,6 +207,9 @@ Most cards compose from existing types. When one genuinely doesn't:
 - [ ] Behavioral test(s) added and passing
 - [ ] No engine file was edited (if one had to be, the change is generic and
       card-free, and `DSL_REFERENCE.md` documents any new type)
+- [ ] `python scripts/verify_card_against_talishar.py --card <slug>` run, and
+      the verdict is `AGREES` or `NO EVIDENCE`. A `DISAGREES` is a lead to
+      read, not necessarily a defect — but it must be read, not skipped.
 - [ ] Work queue status refreshed
 
 ## Verifying a batch of cards

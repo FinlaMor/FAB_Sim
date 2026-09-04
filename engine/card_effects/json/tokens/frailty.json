@@ -2,13 +2,27 @@
   "slug": "frailty",
   "abilities": [
     {
+      "ability_type": "WHILE_STATIC",
+      "_comment": "'Your attack action cards played from arsenal and weapon attacks have -1{p}.' This carried a TODO saying the static was not expressible; it is, and has been for a while -- every piece already existed. ATTACK_CONTROLLED_BY_YOU is the load-bearing one: the RECALC_ATTACK_POWER bridge (engine._dsl_recalc_listener) dispatches to permanents belonging to BOTH players, so without it a Frailty in the DEFENDER's arena would shrink the attacker's attack. ATTACK_PLAYED_FROM_ZONE asks about the card currently attacking, unlike PLAYED_FROM_ARSENAL, which asks about the ability's SOURCE -- here the token itself, which was never played from anywhere. Found by replaying real attacks (scripts/talishar_attack_replay.py): 13 of the 25 remaining power disagreements were this, on cards like millers_grindstone (a weapon attack) and leave_no_witnesses_red (played from arsenal).",
+      "conditions": [
+        {"type": "ATTACK_CONTROLLED_BY_YOU"},
+        {
+          "type": "OR",
+          "any": [
+            {"type": "ATTACK_IS_WEAPON"},
+            {"type": "ATTACK_PLAYED_FROM_ZONE", "zone": "arsenal"}
+          ]
+        }
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "subtract", "amount": 1}
+      ]
+    },
+    {
       "ability_type": "STATIC_TRIGGERED",
       "trigger": "END_OF_TURN",
       "effects": [
-        {
-          "type": "DESTROY_SELF",
-          "_comment": "TODO: '-1{p} on arsenal attack actions and weapon attacks' static not yet expressible"
-        }
+        {"type": "DESTROY_SELF"}
       ]
     }
   ]

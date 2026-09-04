@@ -34,8 +34,31 @@ positive that looks exactly like an engine bug. Excluded by default:
 `--wide` drops the effects/chain-link exclusions to show how much of the
 disagreement they account for. Expect it to be worse; that is the point.
 
-WHERE IT STANDS: 96% of 800 attacks agree exactly (89% -> 94% -> 95% -> 96%,
-every step a fix to this harness rather than to the engine).
+WHERE IT STANDS: 98% (89 -> 94 -> 95 -> 96 -> 97 -> 98). Two of those steps
+were engine fixes, the rest were fixes to this harness.
+
+100% IS NOT REACHABLE FROM THIS FEED, and the remaining ~2% says why rather
+than hiding. Three classes, none of them an engine defect:
+
+  * "you've been BOOED this turn" (the mocking_blow family, 24 cards reference
+    booed/cheered). The crowd state appears nowhere in the structured
+    gameState — grepping every key for "boo" finds nothing. It exists only as
+    English in the chat log, "BOOOOO! The crowd jeers at Kayo". Recoverable
+    only by parsing prose, which is not a dependency worth taking for a
+    measurement tool.
+  * PLAYED FROM ARSENAL, which Frailty's -1{p} keys off. 94% of the arsenal
+    arrays a spectator sees are CardBack — the zone is face-down — so the
+    "was it in arsenal a moment ago" reconstruction below works for the other
+    6% and cannot close the class.
+  * PLAYER CHOICE. rotten_remains_blue reads "you MAY banish a card with 1{p}
+    from each hero's graveyard; if you do, this gets +1{p}, then repeat". The
+    decision is not in the state at any point. Our agent accepts, the real
+    player declined, and no amount of reconstruction fixes that — the state
+    genuinely does not determine the answer.
+
+The first two are limits of the spectator feed; the third is a limit of the
+method. Excluding them until the number reads 100% would be measuring the
+exclusion list, so they are left in and counted.
 
 THE DAGGER CLUSTERS, worked through case by case, were two reconstruction gaps
 and no engine defect:
@@ -123,15 +146,62 @@ DB = CardDB()
 
 EQUIP_SLOTS = ("head", "chest", "arms", "legs")
 
+#: Talishar combat-chain flag -> our keyword spelling. Shared with
+#: verify_card_against_talishar.py, which reports the flags seen on one card.
+FLAGS_TO_KEYWORDS = {
+    "go_again": "GoAgain",
+    "dominate": "Dominate",
+    "overpower": "Overpower",
+    "piercing": "Piercing",
+    "phantasm": "Phantasm",
+    "fusion": "Fusion",
+    "wager": "Wager",
+    "combo": "Combo",
+}
+
+
+#: Talishar decorates slugs in play. "_equip" marks an equipped Evo
+#: (evo_beta_base_chest_blue_equip), "_r" the second copy of a dual-wielded
+#: one-handed weapon. Neither is a distinct card. "NONE00" is an empty
+#: equipment slot, not a card at all.
+SLUG_SUFFIXES = ("_equip", "_r")
+NOT_A_CARD = {"CardBack", "NONE00", "DYNAMIC", ""}
+
 
 def _ids(entries):
     """Talishar zones hold either bare slugs or full card objects."""
     out = []
     for c in entries or []:
         slug = c.get("cardNumber") if isinstance(c, dict) else c
-        if isinstance(slug, str) and slug and slug != "CardBack":
+        if isinstance(slug, str) and slug not in NOT_A_CARD:
             out.append(slug)
     return out
+
+
+def canonical(slug):
+    """Strip Talishar's in-play decorations down to a card-data slug.
+
+    Missing this dropped every equipped Evo from the reconstruction, because
+    `evo_beta_base_chest_blue_equip` is not in card_data and _mk returned None.
+    war_machine_red gets +3{p} for "4 or more Evos equipped" and was reading
+    zero of them.
+    """
+    if DB.get(slug) is not None:
+        return slug
+    for suffix in SLUG_SUFFIXES:
+        if slug.endswith(suffix) and DB.get(slug[:-len(suffix)]) is not None:
+            return slug[:-len(suffix)]
+    return slug
+
+
+def _norm_name(text):
+    """Talishar renders hero names with the card's own punctuation and leet
+    spelling; compare on letters and digits only."""
+    return "".join(ch for ch in str(text).lower() if ch.isalnum())
+
+
+def _same_hero(target, name):
+    return _norm_name(target) == _norm_name(name)
 
 
 def is_marked(side):
@@ -145,7 +215,7 @@ def is_marked(side):
     for entry in side.get("equipment") or []:
         if not isinstance(entry, dict):
             continue
-        card = DB.get(entry.get("cardNumber") or "")
+        card = DB.get(canonical(entry.get("cardNumber") or ""))
         if card is None:
             continue
         if {str(t).lower() for t in (card.types or [])} & {"hero", "demihero"}:
@@ -157,7 +227,7 @@ def hero_name(side):
     """The side's hero name, lowercased, or "" — located by card type rather
     than by its position in the equipment list."""
     for slug in _ids(side.get("equipment")):
-        card = DB.get(slug)
+        card = DB.get(canonical(slug))
         if card is None:
             continue
         types = {str(t).lower() for t in (card.types or [])}
@@ -167,7 +237,7 @@ def hero_name(side):
 
 
 def _mk(slug, pid):
-    proto = DB.get(slug)
+    proto = DB.get(canonical(slug))
     if proto is None:
         return None
     card = copy.deepcopy(proto)
@@ -266,7 +336,7 @@ def build_state(side, opp, attacker_id=1):
     return st
 
 
-def our_power(st, slug, attacker_id=1):
+def our_power(st, slug, attacker_id=1, played_from=None):
     """What our engine says this attack's power is, on this board."""
     card = _mk(slug, attacker_id)
     if card is None:
@@ -281,6 +351,13 @@ def our_power(st, slug, attacker_id=1):
     st.combat = CombatState(attacker_id=attacker_id, link_id=1,
                             attack_power=power, attack_card=card, keywords=[])
     st.combat.base_attack_power = power
+    # Whether this is a WEAPON attack is a property of the attacking object and
+    # several statics key off it — Frailty's -1{p} hits "weapon attacks", and
+    # with from_weapon left at its default the branch could never fire.
+    st.combat.from_weapon = bool(
+        {str(t).lower() for t in (card.types or [])} & {"weapon"})
+    if played_from:
+        card.played_from_zone = played_from
     E._apply_turn_attack_effects(st, card)
     E._register_card_continuous_effects(st, card)
     E._recalculate_attack_power(st)
@@ -292,6 +369,12 @@ def attack_states(db_path, limit, wide=False):
     state of each attack that meets the comparison criteria."""
     con = sqlite3.connect("file:%s?mode=ro" % db_path, uri=True)
     prev: dict = {}
+    #: Last seen arsenal per game per side. Talishar never says which zone an
+    #: attack was played from, but "it was in that side's arsenal a moment ago
+    #: and is now attacking" is the same fact. Frailty's -1{p} applies to attack
+    #: action cards played FROM ARSENAL, so without this those attacks read 1
+    #: high.
+    last_arsenal: dict = {}
     skipped = collections.Counter()
     yielded = 0
     for gid, data in con.execute(
@@ -304,6 +387,16 @@ def attack_states(db_path, limit, wide=False):
             continue
         cc = gs.get("combat_chain") or {}
         slug = cc.get("attacking_card")
+        was_in_arsenal = last_arsenal.get(gid) or {}
+        # Talishar sends empty `data: {}` heartbeats to an authenticated
+        # spectator; they decode to an all-null state. Letting one overwrite the
+        # remembered arsenal wipes it a beat before the attack lands, which is
+        # exactly when it is needed.
+        if gs.get("turn_no") is not None:
+            last_arsenal[gid] = {
+                "player": set(_ids((gs.get("player") or {}).get("arsenal"))),
+                "opponent": set(_ids((gs.get("opponent") or {}).get("arsenal"))),
+            }
         if not (isinstance(slug, str) and slug and slug != "CardBack"):
             prev[gid] = None
             continue
@@ -339,12 +432,19 @@ def attack_states(db_path, limit, wide=False):
         p, o = gs.get("player") or {}, gs.get("opponent") or {}
         p_name, o_name = hero_name(p), hero_name(o)
         target = str(cc.get("attack_target") or "").strip().lower()
-        if target and o_name and target.startswith(o_name[:8]):
+        # FULL name, and it must match exactly one side. An 8-character prefix
+        # looked sufficient until an Arakni mirror: "arakni, huntsman" and
+        # "arakni, 5l!p3d 7hru 7h3 cr4x" share exactly "arakni, ", so both
+        # matched, the first branch won, and the harness reconstructed the
+        # DEFENDER as the attacker. Silent, and only in mirrors.
+        p_hit = bool(target and p_name and _same_hero(target, p_name))
+        o_hit = bool(target and o_name and _same_hero(target, o_name))
+        if o_hit and not p_hit:
             side, other = p, o
-        elif target and p_name and target.startswith(p_name[:8]):
+        elif p_hit and not o_hit:
             side, other = o, p
         else:
-            skipped["attacker side unknown"] += 1
+            skipped["attacker side ambiguous"] += 1
             continue
 
         # EITHER side, not just the attacker. Talishar's `effects` arrays do not
@@ -362,8 +462,12 @@ def attack_states(db_path, limit, wide=False):
             skipped["turn-scoped effect tokens in play"] += 1
             continue
 
+        # Which side's arsenal held it a moment ago decides played_from.
+        side_key = "player" if side is (gs.get("player") or {}) else "opponent"
+        played_from = "arsenal" if slug in (was_in_arsenal.get(side_key) or set()) else None
+
         yielded += 1
-        yield slug, power, side, other, skipped
+        yield slug, power, side, other, played_from, skipped
 
 
 def main():
@@ -380,12 +484,12 @@ def main():
     errors = collections.Counter()
     skipped = collections.Counter()
 
-    for slug, theirs, side, other, skip in attack_states(
+    for slug, theirs, side, other, played_from, skip in attack_states(
             args.db, args.limit, args.wide):
         skipped = skip
         try:
             st = build_state(side, other)
-            ours = our_power(st, slug)
+            ours = our_power(st, slug, played_from=played_from)
         except Exception as exc:
             errors[type(exc).__name__] += 1
             continue
