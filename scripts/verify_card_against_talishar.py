@@ -36,6 +36,30 @@ WHAT IT CHECKS
              therefore replay as empty, so our side correctly does nothing and
              the comparison is meaningless. Read the disagreements; do not
              treat the percentage as a score.
+  effects    Talishar publishes, per side, the cards whose effects are
+             currently live. That list IS the set of reasons an attack's power
+             differs from the printed number, so attacks carrying one are
+             excluded from the gate and the sources are REPORTED instead of
+             silently dropped, tagged by whether we could model them.
+
+             `--with-effects` replays them rather than excluding, by
+             dispatching each listed ACTION card's play ability to re-register
+             what it left pending (Up Sticks and Run's MODIFY_NEXT_ATTACK +4).
+             On a single traced case that reproduces Talishar exactly, 1 -> 5.
+             At scale it barely moves: 43% -> 45% over 400 attacks, because
+             only 14% of listed effects are replayable today —
+
+                 58%  a card we have not implemented
+                 27%  a token, hero or equipment, where "replay the play
+                      ability" is meaningless
+                 14%  an implemented Action card
+                  0%  not in card_data
+
+             so the ceiling is our own coverage, and it rises on its own as
+             cards get implemented. The ARRAYS ARE INVERTED relative to who
+             controls the effect: Talishar's chat has Player 1 playing Up
+             Sticks and Run and attacking with Hunter's Klaive, while the
+             effect sits in the defender's array.
   keywords   Every keyword flag Talishar reported for the card across those
              attacks, against the keywords our engine gives it.
   presence   How often the card shows up at all, which is the honest prior on
@@ -75,8 +99,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from scripts.talishar_attack_replay import (  # noqa: E402
-    DB, DB_PATH, FLAGS_TO_KEYWORDS, _ids, build_state, canonical, hero_name,
-    our_power,
+    DB, DB_PATH, FLAGS_TO_KEYWORDS, _ids, build_state, canonical, get_card,
+    hero_name, our_power,
 )
 
 INDEX_PATH = ROOT / "card_data" / "talishar_card_index.json"
@@ -401,7 +425,7 @@ def attacks_for(db_path, rowids):
         yield gid, run[0], (run[0].get("combat_chain") or {})
 
 
-def verify(slug, db_path, explain=False, refresh=False):
+def verify(slug, db_path, explain=False, refresh=False, with_effects=False):
     index = load_index(db_path, refresh)
     rowids = (index.get("attacks") or {}).get(slug) or []
     plays = (index.get("played") or {}).get(slug, 0)
@@ -420,6 +444,8 @@ def verify(slug, db_path, explain=False, refresh=False):
     attacks = 0
     hits = hits_agree = 0
     hit_mismatches = []
+    excluded_by_effects = 0
+    effect_sources = collections.Counter()
 
     for gid, run in attack_runs(db_path, rowids):
         theirs_hit = talishar_on_hit_delta(run)
@@ -460,10 +486,17 @@ def verify(slug, db_path, explain=False, refresh=False):
             side, other = o, p
         else:
             continue
-        if _ids(side.get("effects")) or _ids(other.get("effects")):
+        active = _ids(side.get("effects")) + _ids(other.get("effects"))
+        if active and not with_effects:
+            # Excluded from the gate, but NOT silently: Talishar's active-effects
+            # list is its own account of why a power differs, so the names are
+            # collected and reported. --with-effects replays them instead.
+            excluded_by_effects += 1
+            for slug_ in active:
+                effect_sources[canonical(slug_)] += 1
             continue
         try:
-            st = build_state(side, other)
+            st = build_state(side, other, with_effects=with_effects)
             ours = our_power(st, slug)
         except Exception:
             continue
@@ -471,7 +504,9 @@ def verify(slug, db_path, explain=False, refresh=False):
         if ours == theirs:
             agree += 1
         else:
-            mismatches.append((gid, gs.get("turn_no"), ours, theirs, side, other))
+            active = _ids(side.get("effects")) + _ids(other.get("effects"))
+            mismatches.append((gid, gs.get("turn_no"), ours, theirs, side, other,
+                               active))
 
     print("  distinct attacks        : %d" % attacks)
     if checked:
@@ -485,6 +520,22 @@ def verify(slug, db_path, explain=False, refresh=False):
               % (hits_agree, hits, 100 * hits_agree / hits, hits))
     else:
         print("  on-hit replayed         : never observed hitting a hero")
+
+    if excluded_by_effects:
+        print("  excluded (active effects): %d attack(s)" % excluded_by_effects)
+        top = []
+        for slug_, count in effect_sources.most_common(6):
+            proto = DB.get(slug_)
+            if proto is None:
+                tag = "?"
+            elif get_card(slug_) is None:
+                tag = "unimplemented"
+            elif "Action" not in (proto.types or []):
+                tag = "not-an-action"
+            else:
+                tag = "implemented"
+            top.append("%s[%s]" % (slug_, tag))
+        print("     what was modifying them: %s" % ", ".join(top))
 
     ours_kw = set(card.keywords or [])
     surprising = {k: n for k, n in flags_seen.items()
@@ -508,8 +559,27 @@ def verify(slug, db_path, explain=False, refresh=False):
 
     if mismatches:
         print("\n  POWER DISAGREEMENTS (%d):" % len(mismatches))
-        for gid, turn, ours, theirs, side, other in mismatches[:10]:
+        for gid, turn, ours, theirs, side, other, active in mismatches[:10]:
             print("     game %-9s turn %-4s ours=%-4s theirs=%-4s" % (gid, turn, ours, theirs))
+            # Talishar's own list of what is currently modifying things. This is
+            # the shortlist of reasons the power differs, and reading it beats
+            # guessing from the board -- it is how the dagger clusters were
+            # finally explained (up_sticks_and_run_red, "your next dagger attack
+            # gets +4"). Marked so you can see which we could even model.
+            if active:
+                labelled = []
+                for slug_ in dict.fromkeys(active):
+                    proto = DB.get(canonical(slug_))
+                    if proto is None:
+                        tag = "?"
+                    elif get_card(canonical(slug_)) is None:
+                        tag = "unimplemented"
+                    elif "Action" not in (proto.types or []):
+                        tag = "not-an-action"
+                    else:
+                        tag = "implemented"
+                    labelled.append("%s[%s]" % (slug_, tag))
+                print("        active effects: %s" % ", ".join(labelled))
             if explain:
                 print("        attacker %s" % hero_name(side))
                 for z in ("equipment", "auras", "items", "allies", "permanents"):
@@ -543,10 +613,15 @@ def main():
     ap.add_argument("--db", default=DB_PATH)
     ap.add_argument("--explain", action="store_true",
                     help="Print the attacker's board for each disagreement.")
+    ap.add_argument("--with-effects", action="store_true",
+                    help="Replay Talishar's active-effects list instead of "
+                         "excluding those attacks. Only ~14%% of listed effects "
+                         "are replayable today, so expect worse agreement.")
     ap.add_argument("--refresh-index", action="store_true",
                     help="Index games collected since the last run.")
     args = ap.parse_args()
-    return verify(args.card, args.db, args.explain, args.refresh_index)
+    return verify(args.card, args.db, args.explain, args.refresh_index,
+                  args.with_effects)
 
 
 if __name__ == "__main__":

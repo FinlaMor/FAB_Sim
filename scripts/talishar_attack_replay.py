@@ -245,7 +245,41 @@ def _mk(slug, pid):
     return card
 
 
-def build_state(side, opp, attacker_id=1):
+def apply_active_effects(st, side, opp, attacker_id=1):
+    """Re-create Talishar's ACTIVE EFFECTS list in our state.
+
+    Talishar publishes, per side, the cards whose effects are currently live —
+    which is exactly the list of reasons an attack's power differs from the
+    printed number. Replaying each card's PLAY ability re-registers what it
+    left pending: Up Sticks and Run's MODIFY_NEXT_ATTACK +4, and so on.
+
+    THE ARRAYS ARE INVERTED relative to who controls the effect. Talishar's
+    chat says "Player 1 played Up Sticks and Run" and "Player 1 activated
+    Hunter's Klaive", yet the effect appears in the DEFENDER's array. Attributing
+    it to the side it is listed under reproduces the un-pumped number;
+    attributing it to the other side reproduces Talishar's exactly (1 vs 5).
+
+    Only ACTION cards are replayed. Tokens (might, toughness) and heroes appear
+    in the same list, and dispatching a play ability on those is meaningless.
+    """
+    import copy as _copy
+    from engine.card_effects.dsl import dispatch
+
+    for listed_pid, data in ((attacker_id, side), (3 - attacker_id, opp)):
+        owner = 3 - listed_pid           # the inversion
+        for slug in _ids(data.get("effects")):
+            proto = DB.get(canonical(slug))
+            if proto is None or "Action" not in (proto.types or []):
+                continue
+            card = _copy.deepcopy(proto)
+            card.owner = card.controller = owner
+            try:
+                dispatch(st, "ON_PLAY", card.slug, card=card, event=None)
+            except Exception:
+                pass                     # a card we cannot replay must not stop the run
+
+
+def build_state(side, opp, attacker_id=1, with_effects=False):
     """Reconstruct as much of the attacker's board as the feed exposes.
 
     THE LISTENERS ARE NOT OPTIONAL. A card's WHILE_STATIC abilities fire off
@@ -333,6 +367,8 @@ def build_state(side, opp, attacker_id=1):
                 E._register_card_continuous_effects(st, player.hero)
             except Exception:
                 pass
+    if with_effects:
+        apply_active_effects(st, side, opp, attacker_id)
     return st
 
 
