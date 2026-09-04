@@ -71,19 +71,41 @@ That is fine once and hopeless per card in a batch, so the first run builds a
 slug -> rowid index and later runs are instant. `--refresh-index` picks up
 games collected since, incrementally from the last rowid seen.
 
+TWO CORPORA, and they are complementary. The spectator DB gives VOLUME —
+thousands of attacks per popular card — but shows hands as CardBack. The
+headless parquet corpus (`--parquet`) drives the same Talishar engine and
+records the FULL state: hands, current_turn_effects, next_turn_effects, marked.
+It is smaller, but it covers precisely what the spectator feed cannot judge.
+mark_of_the_black_widow_red reads 32% on the spectator on-hit check — its text
+banishes "a card from their hand" and we replay with an empty one — and 10/10
+against the open-hand corpus.
+
+I spent a long time asserting those classes were unverifiable. They were
+unverifiable IN ONE CORPUS, which is not the same thing, and the second corpus
+was sitting unused the whole time because I had filed it under "that is for
+card plays".
+
 WHAT A DISAGREEMENT MEANS. Read it as a lead, never a verdict. The replay
 harness fails in the direction that manufactures findings — a gap in the
-reconstruction is indistinguishable from a defect in the card — and three
-classes are known to be unreconstructible from spectator data:
+reconstruction is indistinguishable from a defect in the card. Classes the
+SPECTATOR check cannot see (all reported under KNOWN LIMITS, and all covered by
+--parquet):
 
   * "you've been booed this turn" and the rest of the crowd state, which exists
     only as English in the chat log
   * whether an attack action was played FROM ARSENAL, since 94% of the arsenal
     a spectator sees is CardBack
-  * anything gated on a player CHOICE ("you MAY banish ... if you do, +1")
+  * anything reading a HAND
+  * anything gated on a player CHOICE ("you MAY banish ... if you do, +1") —
+    still genuinely unresolvable, since a choice is in neither corpus
 
-Those are reported under KNOWN LIMITS rather than as failures. Everything else
-is worth reading the board for; --explain prints it.
+A MEASURED NON-FIX, recorded so it is not tried again: `layer` names what is
+currently resolving (a step, or the slug of a card), and attributing on-hit
+deltas by it looked like the obvious cure for the window contaminating one
+card's on-hit with another's. It changes nothing. 100 of 201 hit windows do
+contain a foreign card's layer, but they resolve BEFORE damage — only 4 fall in
+the post-damage window that is actually attributed. The guard is kept because
+it is correct, not because it helped.
 """
 from __future__ import annotations
 
@@ -108,6 +130,22 @@ INDEX_PATH = ROOT / "card_data" / "talishar_card_index.json"
 #: How large a rowid gap can be and still be the same attack. Bridges the empty
 #: heartbeat states, which carry no attacking card and so are never indexed.
 RUN_GAP = 4
+
+#: `layer` holds either one of these STEP names or the slug of the card
+#: currently resolving. A step means "the game itself is doing something", so
+#: the delta belongs to the attack; a slug that is not our card means someone
+#: else's effect and its delta is not ours to claim.
+STEP_LAYERS = {
+    "TRIGGER", "PRETRIGGER", "FINALIZECHAINLINK", "RESOLUTIONSTEP",
+    "ATTACKSTEP", "DEFENDSTEP", "ENDTURN", "STARTTURN", "DAMAGESTEP",
+    "LINKRESOLUTION", "CHAINCLOSE",
+}
+
+
+def slug_of(run):
+    """The card this run is an attack with."""
+    cc = run[0].get("combat_chain") or {}
+    return canonical(cc.get("attacking_card") or "")
 
 #: Text that marks a card as depending on state the spectator feed does not
 #: carry. Matched against the card's own functionalText, so the verdict can
@@ -233,22 +271,32 @@ def talishar_on_hit_delta(run):
             return None
         return {"attacker": observable(a), "defender": observable(d)}
 
-    # Measure from BEFORE the damage and subtract the damage back out, rather
-    # than from after it. Talishar usually resolves combat damage and the
-    # on-hit into separate states, but not always — when they land together,
-    # measuring "everything after the damage state" reads the on-hit as zero
-    # and blames us for applying it.
-    before, after = snapshot(damage_at), snapshot(len(run) - 1)
-    if before is None or after is None:
-        return None
-    delta = {}
-    for who in ("attacker", "defender"):
-        for field, value in after[who].items():
-            prior = before[who].get(field)
-            if prior is None or value is None or prior == value:
-                continue
-            delta["%s.%s" % (who, field)] = value - prior
-    return delta
+    # ATTRIBUTED BY `layer`, not by window. Talishar publishes what is
+    # currently resolving: a step name (TRIGGER, FINALIZECHAINLINK,
+    # RESOLUTIONSTEP, ATTACKSTEP...) or the SLUG of the card resolving. A naive
+    # "everything between damage and the chain clearing" window silently
+    # credits us with other cards' work -- a traced Kiss of Death attack has
+    # `layer=tarantula_toxin_red` resolving mid-combat, and its effects were
+    # being scored as Kiss of Death's on-hit.
+    #
+    # So each state's delta is attributed to whatever `layer` names at that
+    # state, and states naming a DIFFERENT card are skipped.
+    delta = collections.Counter()
+    for i in range(damage_at + 1, len(run)):
+        here, prior = snapshot(i), snapshot(i - 1)
+        if here is None or prior is None:
+            continue
+        layer = run[i].get("layer")
+        if isinstance(layer, str) and layer and layer not in STEP_LAYERS:
+            if canonical(layer) != slug_of(run):
+                continue                 # another card's effect, not ours
+        for who in ("attacker", "defender"):
+            for field, value in here[who].items():
+                was = prior[who].get(field)
+                if was is None or value is None or was == value:
+                    continue
+                delta["%s.%s" % (who, field)] += value - was
+    return {k: v for k, v in delta.items() if v}
 
 
 def our_on_hit_delta(slug, run):
@@ -323,6 +371,90 @@ def our_on_hit_delta(slug, run):
             if before[who][field] != value:
                 delta["%s.%s" % (who, field)] = value - before[who][field]
     return delta
+
+
+def parquet_check(slug, limit=40, max_files=260):
+    """Verify the card against the OPEN-HAND corpus.
+
+    The spectator feed shows hands as CardBack, and I kept calling everything
+    that depends on a hand unverifiable. It is not — it is unverifiable *in
+    that corpus*. FAB_Sim_Headless drives the same Talishar engine and records
+    the full state, hands included, plus current_turn_effects /
+    next_turn_effects (67% of states carry them). That covers exactly the
+    classes the spectator check has to disclaim: hand-reading on-hits,
+    turn-scoped pumps, marked, played-from-arsenal.
+
+    This is talishar_outcome_diff.py's comparison narrowed to one card: rebuild
+    the before-state, play the card, resolve, and compare the resulting zone
+    and life deltas with Talishar's own next state.
+    """
+    import glob
+    import random
+
+    try:
+        import pyarrow.parquet as pq
+    except ImportError:
+        return None, "pyarrow not installed"
+
+    from scripts.talishar_outcome_diff import (
+        NOT_COMPARED, build_state as pq_build, observe_ours, observe_talishar,
+        usable,
+    )
+    import engine.engine as E
+    from engine.actions import ActionType
+    from engine.play import apply_action, available_actions
+
+    files = sorted(glob.glob(
+        "C:/Users/Joseph/Desktop/FAB_Sim_Headless/datasets/*/parquet/games/*.parquet"))
+    if not files:
+        return None, "no parquet corpus"
+    random.Random(11).shuffle(files)
+
+    checked = agree = 0
+    diffs = collections.Counter()
+    for path in files[:max_files]:
+        if checked >= limit:
+            break
+        try:
+            table = pq.read_table(path, columns=["state_json", "next_state_json",
+                                                 "chosen_action_json"])
+        except Exception:
+            continue
+        for row in table.to_pylist():
+            if checked >= limit:
+                break
+            if slug not in (row.get("chosen_action_json") or ""):
+                continue
+            got, _why = usable(row)
+            if got is None:
+                continue
+            stj, act, nxt, pid, played = got
+            if played != slug:
+                continue
+            try:
+                st = pq_build(stj)
+                offers = [a for a in available_actions(st, pid)
+                          if getattr(a.card, "slug", None) == slug
+                          and a.type == ActionType.PLAY_CARD]
+                if not offers:
+                    continue
+                before = observe_ours(st)
+                apply_action(st, offers[0])
+                E.resolve_stack(st)
+                ours = observe_ours(st)
+            except Exception:
+                continue
+            theirs, base = observe_talishar(nxt), observe_talishar(stj)
+            checked += 1
+            bad = [k for k in sorted(theirs)
+                   if k in ours and k.split(".", 1)[1] not in NOT_COMPARED
+                   and (ours[k] - before.get(k, 0)) != (theirs[k] - base.get(k, 0))]
+            if bad:
+                for k in bad:
+                    diffs[k] += 1
+            else:
+                agree += 1
+    return (checked, agree, diffs), None
 
 
 _SLUG_INDEX = None
@@ -425,7 +557,8 @@ def attacks_for(db_path, rowids):
         yield gid, run[0], (run[0].get("combat_chain") or {})
 
 
-def verify(slug, db_path, explain=False, refresh=False, with_effects=False):
+def verify(slug, db_path, explain=False, refresh=False, with_effects=False,
+           parquet=False):
     index = load_index(db_path, refresh)
     rowids = (index.get("attacks") or {}).get(slug) or []
     plays = (index.get("played") or {}).get(slug, 0)
@@ -544,6 +677,22 @@ def verify(slug, db_path, explain=False, refresh=False, with_effects=False):
         print("  keywords Talishar always reported that we lack: %s"
               % ", ".join(sorted(surprising)))
 
+    if parquet:
+        result, why = parquet_check(slug)
+        if why:
+            print("  open-hand corpus        : unavailable (%s)" % why)
+        else:
+            n, ok, diffs = result
+            if n:
+                print("  open-hand corpus        : %d/%d play(s) agree (%.0f%%)"
+                      % (ok, n, 100 * ok / n))
+                if diffs:
+                    print("     fields that disagreed: %s"
+                          % ", ".join("%s x%d" % (k, c)
+                                      for k, c in diffs.most_common(6)))
+            else:
+                print("  open-hand corpus        : no comparable plays found")
+
     limits = known_limits(slug)
     if limits:
         print("\n  KNOWN LIMITS (a disagreement here may not be a defect):")
@@ -617,11 +766,15 @@ def main():
                     help="Replay Talishar's active-effects list instead of "
                          "excluding those attacks. Only ~14%% of listed effects "
                          "are replayable today, so expect worse agreement.")
+    ap.add_argument("--parquet", action="store_true",
+                    help="Also check the OPEN-HAND corpus (FAB_Sim_Headless), "
+                         "which shows hands and turn-scoped effects and so "
+                         "covers what the spectator feed cannot.")
     ap.add_argument("--refresh-index", action="store_true",
                     help="Index games collected since the last run.")
     args = ap.parse_args()
     return verify(args.card, args.db, args.explain, args.refresh_index,
-                  args.with_effects)
+                  args.with_effects, args.parquet)
 
 
 if __name__ == "__main__":

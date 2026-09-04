@@ -140,6 +140,15 @@ JSON definition.
 
    Keyword flags Talishar reported but our data lacks are printed too.
 
+   **Add `--parquet` when the card reads a hand**, or a turn-scoped effect, or
+   anything the spectator feed shows as CardBack. That checks the headless
+   open-hand corpus, which records the full state — hands, current/next turn
+   effects, marked — and so covers exactly what the spectator check has to
+   disclaim. `mark_of_the_black_widow_red` ("banish a card from their hand")
+   reads 32% on the spectator on-hit check and 10/10 on the open-hand one.
+   It is a smaller corpus, so "no comparable plays found" is a common and
+   honest answer.
+
 9. **Update the work queue:** `python scripts/dsl_work_queue.py --set <set> --write-queue`
    flips entries to `"done"` automatically based on which JSON files exist.
 
