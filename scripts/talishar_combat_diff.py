@@ -110,15 +110,28 @@ def merge_dual_wield(slug, index):
     return slug
 
 
-def scan(db_path):
+def scan(db_path, game_id=None):
     con = sqlite3.connect("file:%s?mode=ro" % db_path, uri=True)
     seen = collections.Counter()
+    played = collections.Counter()
     flag_true = collections.defaultdict(collections.Counter)
-    for (data,) in con.execute("SELECT data FROM events WHERE data IS NOT NULL"):
+    if game_id:
+        rows = con.execute(
+            "SELECT data FROM events WHERE game_id = ? AND data IS NOT NULL",
+            (game_id,))
+    else:
+        rows = con.execute("SELECT data FROM events WHERE data IS NOT NULL")
+    for (data,) in rows:
         try:
-            cc = json.loads(data)["gameState"]["combat_chain"]
+            gs = json.loads(data)["gameState"]
         except Exception:
             continue
+        lp = gs.get("last_played_card")
+        if isinstance(lp, dict):
+            lp = lp.get("cardNumber")
+        if isinstance(lp, str) and lp and lp != "CardBack":
+            played[lp] += 1
+        cc = gs.get("combat_chain") or {}
         a = cc.get("attacking_card")
         if not (isinstance(a, str) and a and a != "CardBack"):
             continue
@@ -126,18 +139,84 @@ def scan(db_path):
         for f in FLAGS:
             if cc.get(f):
                 flag_true[a][f] += 1
-    return seen, flag_true
+    return seen, flag_true, played
+
+
+def audit_one_game(db_path, game_id, index):
+    """Everything one real game says about our corpus.
+
+    Deliberately reports raw agreement rather than applying the >=30
+    observation floor: a single game cannot clear it, and the point here is to
+    see what a freshly collected game contains, not to draw corpus-wide
+    conclusions from it.
+    """
+    from engine.card_effects.dsl.loader import get_card, load_all_cards
+    load_all_cards()
+
+    seen, flag_true, played = scan(db_path, game_id)
+    print("GAME %s" % game_id)
+    print("  attack observations: %d over %d distinct attacking cards"
+          % (sum(seen.values()), len(seen)))
+    print("  distinct cards played: %d" % len(played))
+
+    cards = [c for c in played if c in index or c.islower()]
+    impl = [c for c in cards if get_card(c) is not None]
+    print("  of those, implemented: %d of %d (%.0f%%)"
+          % (len(impl), len(cards), 100 * len(impl) / max(1, len(cards))))
+
+    # Talishar mixes internal identifiers into last_played_card ("CBFABChaos").
+    # Real slugs are lowercase; anything with capitals that card data has never
+    # heard of is machinery, not a card we are missing.
+    def is_card(slug):
+        return slug in index or slug.islower()
+
+    noise = sorted(c for c in played if not is_card(c))
+    unimpl = sorted((c for c in played if is_card(c) and get_card(c) is None),
+                    key=lambda c: -played[c])
+    if unimpl:
+        print("\n  PLAYED BUT NOT IMPLEMENTED")
+        for slug in unimpl[:20]:
+            print("     %-38s %d obs%s"
+                  % (slug, played[slug],
+                     "" if slug in index else "   (not in card data either)"))
+    if noise:
+        print("\n  ignored non-card identifiers: %s" % ", ".join(noise))
+
+    print("\n  ATTACK KEYWORDS vs OUR CARD DATA")
+    disagreements = 0
+    for slug, n in seen.most_common():
+        stem = merge_dual_wield(slug, index)
+        entry = index.get(stem)
+        if entry is None:
+            print("     %-34s %4d obs  NOT IN CARD DATA" % (slug, n))
+            disagreements += 1
+            continue
+        ours = set(entry.get("keywords") or [])
+        for tal, name in FLAGS.items():
+            ratio = flag_true[slug][tal] / n
+            if ratio >= ALWAYS and name not in ours:
+                print("     %-34s %4d obs  %s reported %.0f%%, we lack it"
+                      % (stem, n, name, 100 * ratio))
+                disagreements += 1
+    if not disagreements:
+        print("     (no disagreements)")
+    return 0
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default=DB_PATH)
     ap.add_argument("--min-obs", type=int, default=MIN_OBS)
+    ap.add_argument("--game", help="Audit a single game id instead of the corpus.")
     args = ap.parse_args()
 
     index = json.loads((ROOT / "card_data" / "slug_index.json")
                        .read_text(encoding="utf-8"))["by_slug"]
-    seen, flag_true = scan(args.db)
+
+    if args.game:
+        return audit_one_game(args.db, args.game, index)
+
+    seen, flag_true, _played = scan(args.db)
 
     merged_seen = collections.Counter()
     merged_flags = collections.defaultdict(collections.Counter)
