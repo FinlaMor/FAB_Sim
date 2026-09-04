@@ -77,8 +77,15 @@ def pick_template(slug, index):
     return best if best else (None, None, False)
 
 
-def build_deck(slug, deck, copies=3):
-    """Swap the card in over filler, keeping the deck the same size."""
+def build_deck(slug, deck, copies=12):
+    """Swap the card in over filler, keeping the deck the same size.
+
+    STACKED ON PURPOSE. The generator waits for the card to be DRAWN, and three
+    copies in a sixty-card deck means most games end without it appearing --
+    the first head_jab_red run ground through whole games for fifteen minutes
+    and recorded nothing. Talishar adjudicates the card identically however
+    many copies are in the list.
+    """
     cards = list(deck.get("deck") or [])
     have = cards.count(slug)
     if have >= copies:
@@ -101,8 +108,12 @@ def build_deck(slug, deck, copies=3):
     return out
 
 
-def run_game(env, slug, seed, step_cap=1200):
-    """Play until the game ends, recording every transition that plays `slug`."""
+def run_game(env, slug, seed, step_cap=1200, want=6):
+    """Record up to `want` transitions playing `slug`, then stop.
+
+    Playing on to the end of the game taught us nothing about the card and a
+    full CC game is hundreds of steps.
+    """
     transitions = []
     init = env.reset(hero1=env._hero1, hero2=env._hero2,
                      deck1=env._deck1, deck2=env._deck2,
@@ -127,17 +138,21 @@ def run_game(env, slug, seed, step_cap=1200):
             nonpass = [a for a in legal
                        if "pass" not in str(getattr(a, "label", "")).lower()]
             choice = (nonpass or legal)[0]
-        played_target = choice is not None and slug in json.dumps(
-            choice.__dict__ if hasattr(choice, "__dict__") else {})
+        # Precise, not a substring match: `slug in json.dumps(action)` also
+        # matched pitching the card and blocking with it.
+        cd = choice.__dict__ if hasattr(choice, "__dict__") else {}
+        played_target = (str(cd.get("type") or "") == "PLAY_FROM_HAND"
+                         and cd.get("card_id") == slug)
         result = env.step(getattr(choice, "action_id", getattr(choice, "id", 0)))
         legal = result.legal_actions
         if played_target:
             transitions.append({
                 "state_json": json.dumps(before),
-                "chosen_action_json": json.dumps(
-                    choice.__dict__ if hasattr(choice, "__dict__") else {}),
+                "chosen_action_json": json.dumps(cd),
                 "next_state_json": json.dumps(env.get_state(refresh=True)),
             })
+            if len(transitions) >= want:
+                break
     return transitions
 
 
@@ -147,6 +162,10 @@ def main():
     ap.add_argument("--games", type=int, default=3)
     ap.add_argument("--adapter", default=ADAPTER)
     ap.add_argument("--seed", type=int, default=17)
+    ap.add_argument("--want", type=int, default=6,
+                    help="Stop a game after this many recorded transitions.")
+    ap.add_argument("--copies", type=int, default=12,
+                    help="Copies to stack into the deck so it is drawn.")
     args = ap.parse_args()
 
     sys.path.insert(0, str(HEADLESS))
@@ -177,7 +196,7 @@ def main():
     print("template: %s (hero=%s, already runs the card: %s)"
           % (path.name, template.get("hero"), already))
 
-    deck = build_deck(args.card, template)
+    deck = build_deck(args.card, template, copies=args.copies)
     GEN_DIR.mkdir(parents=True, exist_ok=True)
     mine = GEN_DIR / ("%s_seat0.json" % args.card)
     mine.write_text(json.dumps(deck, indent=1), encoding="utf-8")
@@ -197,7 +216,8 @@ def main():
     with out.open("w", encoding="utf-8") as fh:
         for i in range(args.games):
             try:
-                rows = run_game(env, args.card, rng.randrange(1, 10 ** 6))
+                rows = run_game(env, args.card, rng.randrange(1, 10 ** 6),
+                                want=args.want)
             except Exception as exc:
                 print("  game %d failed: %r" % (i + 1, exc))
                 continue
