@@ -16,12 +16,23 @@ chain:
      "dominate": false, "overpower": false, "piercing": false, ...}
 
 That is Talishar's own computed answer for the live attack. Aggregated over
-318,870 attack observations it says what a card's keywords ACTUALLY are, from
-an independent implementation of the same rules.
+35,515 real attacks it says what a card's keywords ACTUALLY are, from an
+independent implementation of the same rules.
+
+ONE ATTACK IS ONE OBSERVATION, and getting this wrong mattered. The combat
+chain sits in every gameState for as long as the attack is live, so counting
+events inflates every card by roughly 9x and makes MIN_OBS meaningless — a card
+at "30 observations" might have attacked twice. Three cards
+(victoria_archangel_of_triumph, pick_to_pieces_red, mechanical_strength_blue)
+sat just above the floor on exactly that basis and looked like findings; none
+of them survives once attacks are counted properly. `scan` therefore counts an
+attack once, when it becomes the attacking card, and credits each keyword flag
+at most once per attack (a flag can turn on part-way through, so it keeps
+watching, but the ratio is "attacks where the keyword was seen").
 
 WHAT IS TRUSTWORTHY HERE, and what is not. A printed keyword should be true in
 every appearance of the card; a granted or conditional one varies. Measured
-per-card over cards with >=30 observations:
+per-card, this splits cleanly:
 
     piercing    508 cards always-off,   8 always-on,   3 in between   <- printed
     phantasm    506                     5              8
@@ -33,18 +44,10 @@ per-card over cards with >=30 observations:
     confidence  504                     0             15              <- condition
     wager       490                     0             29              <- condition
 
-So only the ALWAYS-ON direction is used: a flag true in >=98% of >=30
-observations is a keyword the card really has. The always-off direction is
-reported separately and is weaker — a conditional keyword whose condition never
-came up looks identical to an absent one.
-
-AN "OBSERVATION" IS AN EVENT, NOT AN ATTACK. The combat chain sits in every
-gameState for as long as the attack is live, so one real attack contributes as
-many observations as the spectator saw events during it — roughly 10-20. Treat
-the counts as relative weight, not as a sample size: 985 observations is a lot
-of attacks, 30 might be two. This is why MIN_OBS is a floor and not a
-confidence level, and why the low-count rows deserve a manual look before they
-are believed.
+So only the ALWAYS-ON direction is used: a flag true in >=98% of >=30 attacks
+is a keyword the card really has. The always-off direction is reported
+separately and is weaker — a conditional keyword whose condition never came up
+looks identical to an absent one.
 
 POWER IS DELIBERATELY NOT CHECKED. Two heuristics were tried and both fail:
 
@@ -96,6 +99,22 @@ FLAGS = {
 #: so "never observed" says nothing about the printed card.
 ABSENCE_IS_MEANINGFUL = ("dominate", "overpower", "piercing", "phantasm")
 
+#: A keyword the card HAS which can hand it another one at runtime. Talishar
+#: reports the resolved attack, so a card that gains go again every time it is
+#: played looks exactly like a card that prints go again — and the card data is
+#: right to omit it.
+#:
+#: Without this the audit reprints the same 20 rows on every run, 16 of which
+#: are already fixed. A report whose findings are mostly resolved work is one
+#: nobody reads, so these move to their own bucket rather than the findings.
+RUNTIME_GRANTS = {
+    "Boost": ("GoAgain",
+              "CR 8.3.9 - boost grants go again when the banished card is "
+              "Mechanologist, which in a Mechanologist deck is nearly always"),
+    "Charge": ("GoAgain",
+               "card text grants go again when you have charged this turn"),
+}
+
 MIN_OBS = 30
 ALWAYS = 0.98
 
@@ -111,17 +130,29 @@ def merge_dual_wield(slug, index):
 
 
 def scan(db_path, game_id=None):
+    """Count ATTACKS, not events.
+
+    The combat chain sits in every gameState for as long as the attack is live,
+    so a single attack contributes 10-20 identical observations. Counting
+    events made MIN_OBS meaningless: a card at "30 observations" might have
+    attacked twice, and three cards sat just above the floor on exactly that
+    basis. An attack is counted once, when it becomes the attacking card —
+    tracked per game, since two games run concurrently in the same scan.
+    """
     con = sqlite3.connect("file:%s?mode=ro" % db_path, uri=True)
     seen = collections.Counter()
     played = collections.Counter()
     flag_true = collections.defaultdict(collections.Counter)
+    prev_attacker: dict = {}
+    credited: dict = {}
     if game_id:
         rows = con.execute(
-            "SELECT data FROM events WHERE game_id = ? AND data IS NOT NULL",
+            "SELECT game_id, data FROM events WHERE game_id = ? AND data IS NOT NULL",
             (game_id,))
     else:
-        rows = con.execute("SELECT data FROM events WHERE data IS NOT NULL")
-    for (data,) in rows:
+        rows = con.execute(
+            "SELECT game_id, data FROM events WHERE data IS NOT NULL")
+    for gid, data in rows:
         try:
             gs = json.loads(data)["gameState"]
         except Exception:
@@ -134,10 +165,19 @@ def scan(db_path, game_id=None):
         cc = gs.get("combat_chain") or {}
         a = cc.get("attacking_card")
         if not (isinstance(a, str) and a and a != "CardBack"):
+            prev_attacker[gid] = None
             continue
-        seen[a] += 1
+        if prev_attacker.get(gid) != a:
+            prev_attacker[gid] = a
+            credited[gid] = set()
+            seen[a] += 1
+        # A flag can turn on part-way through an attack, so keep watching it,
+        # but credit each one only once for this attack — the ratio is
+        # "attacks where the keyword was seen", not "states".
+        done = credited.setdefault(gid, set())
         for f in FLAGS:
-            if cc.get(f):
+            if cc.get(f) and f not in done:
+                done.add(f)
                 flag_true[a][f] += 1
     return seen, flag_true, played
 
@@ -164,6 +204,15 @@ def audit_one_game(db_path, game_id, index):
     print("  of those, implemented: %d of %d (%.0f%%)"
           % (len(impl), len(cards), 100 * len(impl) / max(1, len(cards))))
 
+    # last_played_card carries the same `_r` dual-wield suffix as the combat
+    # chain does, so fold it back the same way — otherwise hunters_klaive_r
+    # reads as a card missing from our data rather than a second copy of one we
+    # have.
+    folded = collections.Counter()
+    for slug, count in played.items():
+        folded[merge_dual_wield(slug, index)] += count
+    played = folded
+
     # Talishar mixes internal identifiers into last_played_card ("CBFABChaos").
     # Real slugs are lowercase; anything with capitals that card data has never
     # heard of is machinery, not a card we are missing.
@@ -183,23 +232,44 @@ def audit_one_game(db_path, game_id, index):
         print("\n  ignored non-card identifiers: %s" % ", ".join(noise))
 
     print("\n  ATTACK KEYWORDS vs OUR CARD DATA")
-    disagreements = 0
+    from engine.card import CardDB
+    card_db = CardDB()
+
+    def our_keywords(slug):
+        card = card_db.get(slug)
+        if card is not None and card.keywords is not None:
+            return set(card.keywords)
+        return set((index.get(slug) or {}).get("keywords") or [])
+
+    disagreements = weak = 0
     for slug, n in seen.most_common():
         stem = merge_dual_wield(slug, index)
-        entry = index.get(stem)
-        if entry is None:
-            print("     %-34s %4d obs  NOT IN CARD DATA" % (slug, n))
+        if stem not in index:
+            print("     %-34s %4d atk  NOT IN CARD DATA" % (slug, n))
             disagreements += 1
             continue
-        ours = set(entry.get("keywords") or [])
+        ours = our_keywords(stem)
         for tal, name in FLAGS.items():
             ratio = flag_true[slug][tal] / n
-            if ratio >= ALWAYS and name not in ours:
-                print("     %-34s %4d obs  %s reported %.0f%%, we lack it"
-                      % (stem, n, name, 100 * ratio))
-                disagreements += 1
+            if ratio < ALWAYS or name in ours:
+                continue
+            # Same grant awareness as the corpus mode, so a Boost card does not
+            # read as a finding here but not there.
+            if any(gets == name and src in ours
+                   for src, (gets, _why) in RUNTIME_GRANTS.items()):
+                continue
+            if n < 3:
+                # One or two attacks says nothing; the corpus run is where a
+                # keyword claim gets decided. Counted, not printed as a finding.
+                weak += 1
+                continue
+            print("     %-34s %4d atk  %s reported %.0f%%, we lack it"
+                  % (stem, n, name, 100 * ratio))
+            disagreements += 1
     if not disagreements:
         print("     (no disagreements)")
+    if weak:
+        print("     (%d claim(s) on fewer than 3 attacks, too weak to report)" % weak)
     return 0
 
 
@@ -235,15 +305,33 @@ def main():
     print("cards with >=%d observations: %d"
           % (args.min_obs, sum(1 for n in merged_seen.values() if n >= args.min_obs)))
 
-    missing, extra = [], []
+    # Keywords as the ENGINE sees them, not as slug_index prints them. The
+    # loader recovers keywords the upstream data omits (engine/card.py
+    # _keywords_with_printed), and reading the raw file would re-report
+    # blood_runs_deep_red forever even though the engine now has it.
+    from engine.card import CardDB
+    card_db = CardDB()
+
+    def our_keywords(slug):
+        card = card_db.get(slug)
+        if card is not None and card.keywords is not None:
+            return set(card.keywords)
+        return set(index[slug].get("keywords") or [])
+
+    missing, extra, explained = [], [], []
     for slug, n in merged_seen.items():
         if n < args.min_obs:
             continue
-        ours = set(index[slug].get("keywords") or [])
+        ours = our_keywords(slug)
         for tal, name in FLAGS.items():
             ratio = merged_flags[slug][tal] / n
             if ratio >= ALWAYS and name not in ours:
-                missing.append((slug, name, n, ratio))
+                grant = next((src for src, (gets, _why) in RUNTIME_GRANTS.items()
+                              if gets == name and src in ours), None)
+                if grant:
+                    explained.append((slug, name, n, grant))
+                else:
+                    missing.append((slug, name, n, ratio))
             elif ratio == 0.0 and name in ours and tal in ABSENCE_IS_MEANINGFUL:
                 extra.append((slug, name, n))
 
@@ -252,6 +340,13 @@ def main():
         print("   %-34s %-10s %5d obs  %.0f%%" % (slug, name, n, 100 * r))
     if not missing:
         print("   (none)")
+
+    if explained:
+        by_grant = collections.Counter(g for _s, _n, _o, g in explained)
+        print("\nexplained by a runtime grant, not findings:")
+        for grant, count in by_grant.most_common():
+            gets, why = RUNTIME_GRANTS[grant]
+            print("   %-8s -> %-8s %2d card(s)  (%s)" % (grant, gets, count, why))
 
     print("\nWE DECLARE THE KEYWORD; TALISHAR NEVER ONCE REPORTED IT")
     for slug, name, n in sorted(extra, key=lambda x: -x[2]):
