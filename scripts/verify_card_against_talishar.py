@@ -14,6 +14,28 @@ WHAT IT CHECKS
              the spectator feed, put the attack on the chain, and compare our
              computed attack power with Talishar's own `total_power`.
              (scripts/talishar_attack_replay.py holds the machinery.)
+             This is the part that decides the verdict.
+  on-hit     ADVISORY. Talishar usually resolves combat damage and the on-hit
+             into separate states while the attack is still on the chain:
+
+                 o.hp=21   before damage
+                 o.hp=15   combat damage (6)
+                 o.hp=14   the on-hit, "they lose 1 life"
+
+             so the on-hit's effect on life, deck, banish, discard, arsenal
+             count, soul, items, auras and allies can be read off and compared
+             with dispatching ON_HIT in our engine.
+
+             It is advisory rather than a gate because ATTRIBUTION IS THE WEAK
+             PART. The window from damage to the chain clearing also holds
+             defenders going to the graveyard and any other trigger, and the
+             agreement rate is strongly card-dependent for reasons that are
+             mostly OUR blind spots, not defects: 100% on pain_in_the_backside,
+             ~60% on kiss_of_death, 32% on mark_of_the_black_widow, whose text
+             is "they banish a card from THEIR HAND" — a hand we cannot see and
+             therefore replay as empty, so our side correctly does nothing and
+             the comparison is meaningless. Read the disagreements; do not
+             treat the percentage as a score.
   keywords   Every keyword flag Talishar reported for the card across those
              attacks, against the keywords our engine gives it.
   presence   How often the card shows up at all, which is the honest prior on
@@ -59,6 +81,10 @@ from scripts.talishar_attack_replay import (  # noqa: E402
 
 INDEX_PATH = ROOT / "card_data" / "talishar_card_index.json"
 
+#: How large a rowid gap can be and still be the same attack. Bridges the empty
+#: heartbeat states, which carry no attacking card and so are never indexed.
+RUN_GAP = 4
+
 #: Text that marks a card as depending on state the spectator feed does not
 #: carry. Matched against the card's own functionalText, so the verdict can
 #: separate "we disagree" from "this could never have been checked".
@@ -67,6 +93,10 @@ UNRECONSTRUCTABLE = (
     ("cheered", "crowd state appears only in the chat log"),
     ("from arsenal", "arsenal is face-down to spectators (94% CardBack)"),
     ("you may", "depends on a player choice that is not in the state"),
+    ("from their hand", "hands are CardBack; we replay with an empty hand"),
+    ("from your hand", "hands are CardBack; we replay with an empty hand"),
+    ("reveal their hand", "hand contents are never visible to a spectator"),
+    ("discard a card", "hands are CardBack; we replay with an empty hand"),
 )
 
 
@@ -125,6 +155,152 @@ def load_index(db_path, refresh=False, verbose=True):
     return index
 
 
+def sides_of(gs, cc):
+    """(attacker, defender) dicts, or (None, None) if it cannot be told apart."""
+    p, o = gs.get("player") or {}, gs.get("opponent") or {}
+    target = str(cc.get("attack_target") or "").strip().lower()
+    norm = lambda s: "".join(ch for ch in s if ch.isalnum())
+    p_hit = norm(target) == norm(hero_name(p))
+    o_hit = norm(target) == norm(hero_name(o))
+    if o_hit and not p_hit:
+        return p, o
+    if p_hit and not o_hit:
+        return o, p
+    return None, None
+
+
+def talishar_on_hit_delta(run):
+    """What the on-hit did, per Talishar, or None if this attack did not hit.
+
+    HIT IS DECIDED ON THE LAST ON-CHAIN STATE, not the first. Defense
+    accumulates as blockers are declared: art_of_desire_body_red opens a chain
+    at def=0 and closes it at def=4 against power 3, so reading the opening
+    state scores a hit that never happened and blames the card for an on-hit
+    that was never supposed to fire.
+
+    The delta is measured from the state where combat damage lands to the end
+    of the run, so the damage itself is excluded and what remains is the
+    on-hit.
+    """
+    last = run[-1].get("combat_chain") or {}
+    power, defense = last.get("total_power"), last.get("total_defense") or 0
+    if not isinstance(power, int) or defense >= power:
+        return None
+    attacker, defender = sides_of(run[-1], last)
+    if defender is None:
+        return None
+
+    expected_damage = power - defense
+    life = [_int((sides_of(gs, gs.get("combat_chain") or {})[1] or {}).get("health"))
+            for gs in run]
+    damage_at = None
+    for i in range(1, len(run)):
+        if life[i] is None or life[i - 1] is None:
+            continue
+        if life[i - 1] - life[i] >= expected_damage:
+            damage_at = i
+            break
+    if damage_at is None:
+        return None                      # damage never observed; nothing to attribute
+
+    def snapshot(index):
+        a, d = sides_of(run[index], run[index].get("combat_chain") or {})
+        if a is None:
+            return None
+        return {"attacker": observable(a), "defender": observable(d)}
+
+    # Measure from BEFORE the damage and subtract the damage back out, rather
+    # than from after it. Talishar usually resolves combat damage and the
+    # on-hit into separate states, but not always — when they land together,
+    # measuring "everything after the damage state" reads the on-hit as zero
+    # and blames us for applying it.
+    before, after = snapshot(damage_at), snapshot(len(run) - 1)
+    if before is None or after is None:
+        return None
+    delta = {}
+    for who in ("attacker", "defender"):
+        for field, value in after[who].items():
+            prior = before[who].get(field)
+            if prior is None or value is None or prior == value:
+                continue
+            delta["%s.%s" % (who, field)] = value - prior
+    return delta
+
+
+def our_on_hit_delta(slug, run):
+    """The same measurement, from our engine: reconstruct, fire ON_HIT, diff."""
+    from engine.card_effects.dsl import dispatch
+
+    last = run[-1]
+    cc = last.get("combat_chain") or {}
+    attacker, defender = sides_of(last, cc)
+    if attacker is None:
+        return None
+    st = build_state(attacker, defender)
+
+    card = None
+    for zone in ("weapon1", "weapon2"):
+        for equipped in getattr(st.players[1], zone).cards:
+            if equipped.slug == slug:
+                card = equipped
+    if card is None:
+        proto = DB.get(slug)
+        if proto is None:
+            return None
+        import copy
+        card = copy.deepcopy(proto)
+        card.owner = card.controller = 1
+
+    from engine.state import CombatState
+    power = last.get("combat_chain", {}).get("total_power") or card.base_power or 0
+    st.combat = CombatState(attacker_id=1, link_id=1, attack_power=power,
+                            attack_card=card, keywords=[])
+    st.combat.base_attack_power = card.base_power or 0
+    # combat.attack_target is set ONLY when the attack was declared against a
+    # permanent or ally; a hero attack leaves it None (see
+    # ATTACK_TARGET_IS_HERO in dsl/condition_types.py). Setting it to the
+    # defending hero — the intuitive reading — makes every "when this hits a
+    # hero" ability false, which read as the engine ignoring its own on-hits.
+    # We only get here for hero attacks, so it stays None.
+    st.combat.from_weapon = bool(
+        {str(t).lower() for t in (card.types or [])} & {"weapon"})
+
+    def snap():
+        return {"attacker": {
+                    "life": st.players[1].life,
+                    "deck": len(st.players[1].deck.cards),
+                    "soul": len(st.players[1].soul.cards),
+                    "discard": len(st.players[1].graveyard.cards),
+                    "banish": len(st.players[1].banished.cards),
+                    "arsenal": len(st.players[1].arsenal.cards),
+                    "items": len(st.players[1].items.cards),
+                    "auras": len(st.players[1].auras.cards),
+                    "allies": len(st.players[1].allies.cards)},
+                "defender": {
+                    "life": st.players[2].life,
+                    "deck": len(st.players[2].deck.cards),
+                    "soul": len(st.players[2].soul.cards),
+                    "discard": len(st.players[2].graveyard.cards),
+                    "banish": len(st.players[2].banished.cards),
+                    "arsenal": len(st.players[2].arsenal.cards),
+                    "items": len(st.players[2].items.cards),
+                    "auras": len(st.players[2].auras.cards),
+                    "allies": len(st.players[2].allies.cards)}}
+
+    before = snap()
+    try:
+        dispatch(st, "ON_HIT", slug, card=card, event=None)
+    except Exception:
+        return None
+    after = snap()
+    delta = {}
+    for who in ("attacker", "defender"):
+        for field, value in after[who].items():
+            if before[who][field] != value:
+                delta["%s.%s" % (who, field)] = value - before[who][field]
+    return delta
+
+
 _SLUG_INDEX = None
 
 
@@ -141,29 +317,88 @@ def known_limits(slug):
     return [why for phrase, why in UNRECONSTRUCTABLE if phrase in text]
 
 
-def attacks_for(db_path, rowids):
-    """Yield the FIRST state of each distinct attack among these rows."""
+def _int(value):
+    """Talishar sends health as a STRING. Reading it as an int and silently
+    getting None is how the first on-hit measurement came back empty."""
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+#: The visible fields an on-hit can move. Anything an on-hit does that is not
+#: one of these — "reveal their hand", "look at the top card" — is invisible to
+#: a spectator and cannot be checked.
+def observable(side):
+    return {
+        "life": _int(side.get("health")),
+        "deck": _int(side.get("deck_count")),
+        "soul": _int(side.get("soul_count")),
+        "discard": len(_ids(side.get("discard"))),
+        "banish": len(_ids(side.get("banish"))),
+        "arsenal": len(side.get("arsenal") or []),
+        "items": len(_ids(side.get("items"))),
+        "auras": len(_ids(side.get("auras"))),
+        "allies": len(_ids(side.get("allies"))),
+    }
+
+
+def attack_runs(db_path, rowids):
+    """Yield one entry per distinct attack: every state it was on the chain for.
+
+    The whole run, not just the first state, because that is where the on-hit
+    lives. Talishar resolves combat damage and the on-hit into SEPARATE states
+    while the attack is still on the chain:
+
+        o.hp=21   before damage
+        o.hp=15   combat damage
+        o.hp=14   the on-hit ("they lose 1 life")
+
+    Looking only at the first state, or differencing past the end of the run,
+    sees none of it.
+    """
     if not rowids:
         return
     con = sqlite3.connect("file:%s?mode=ro" % db_path, uri=True)
-    prev = {}
+    runs = collections.defaultdict(list)
     chunk = 900
-    for start in range(0, len(rowids), chunk):
-        batch = rowids[start:start + chunk]
+    ordered = sorted(rowids)
+    for start in range(0, len(ordered), chunk):
+        batch = ordered[start:start + chunk]
         placeholders = ",".join("?" * len(batch))
-        for gid, data in con.execute(
-                "SELECT game_id, data FROM events WHERE rowid IN (%s) "
+        for gid, rowid, data in con.execute(
+                "SELECT game_id, rowid, data FROM events WHERE rowid IN (%s) "
                 "ORDER BY rowid" % placeholders, batch):
             try:
                 gs = json.loads(data)["gameState"]
             except Exception:
                 continue
-            cc = gs.get("combat_chain") or {}
-            slug = cc.get("attacking_card")
-            if prev.get(gid) == slug:
-                continue
-            prev[gid] = slug
-            yield gid, gs, cc
+            runs[gid].append((rowid, gs))
+
+    for gid, states in runs.items():
+        run = []
+        last_rowid = None
+        for rowid, gs in states:
+            # A gap in rowids means states where this card was NOT the attacker
+            # — but SMALL gaps are not run boundaries. Talishar sends empty
+            # `data: {}` heartbeats to an authenticated spectator, and those
+            # decode to an all-null state with no attacking card, so they are
+            # never indexed. Splitting on a one-state gap cut runs off right
+            # before the damage resolved, which is precisely where the on-hit
+            # lives: a traced case ended at phase D with life untouched.
+            if last_rowid is not None and rowid - last_rowid > RUN_GAP and run:
+                yield gid, run
+                run = []
+            run.append(gs)
+            last_rowid = rowid
+        if run:
+            yield gid, run
+
+
+def attacks_for(db_path, rowids):
+    """Yield (game_id, first_state, combat_chain) per distinct attack."""
+    for gid, run in attack_runs(db_path, rowids):
+        yield gid, run[0], (run[0].get("combat_chain") or {})
 
 
 def verify(slug, db_path, explain=False, refresh=False):
@@ -183,6 +418,26 @@ def verify(slug, db_path, explain=False, refresh=False):
     mismatches = []
     flags_seen = collections.Counter()
     attacks = 0
+    hits = hits_agree = 0
+    hit_mismatches = []
+
+    for gid, run in attack_runs(db_path, rowids):
+        theirs_hit = talishar_on_hit_delta(run)
+        if theirs_hit is None:
+            continue
+        hits += 1
+        ours_hit = our_on_hit_delta(slug, run)
+        if ours_hit is None:
+            continue
+        # Only fields ONE of us moved are interesting; agreeing on zero is the
+        # common case and says the on-hit did nothing visible either way.
+        keys = set(theirs_hit) | set(ours_hit)
+        differing = {k: (ours_hit.get(k, 0), theirs_hit.get(k, 0)) for k in keys
+                     if ours_hit.get(k, 0) != theirs_hit.get(k, 0)}
+        if differing:
+            hit_mismatches.append((gid, differing))
+        else:
+            hits_agree += 1
 
     for gid, gs, cc in attacks_for(db_path, rowids):
         attacks += 1
@@ -225,6 +480,12 @@ def verify(slug, db_path, explain=False, refresh=False):
     else:
         print("  power replayed          : 0 comparable attacks")
 
+    if hits:
+        print("  on-hit replayed         : %d/%d agree (%.0f%%) over %d hit(s)  [ADVISORY]"
+              % (hits_agree, hits, 100 * hits_agree / hits, hits))
+    else:
+        print("  on-hit replayed         : never observed hitting a hero")
+
     ours_kw = set(card.keywords or [])
     surprising = {k: n for k, n in flags_seen.items()
                   if k not in ours_kw and attacks and n / attacks >= 0.98}
@@ -238,8 +499,15 @@ def verify(slug, db_path, explain=False, refresh=False):
         for why in dict.fromkeys(limits):
             print("     - %s" % why)
 
+    if hit_mismatches:
+        print("\n  ON-HIT DISAGREEMENTS (%d)   ours vs theirs:" % len(hit_mismatches))
+        for gid, differing in hit_mismatches[:10]:
+            parts = ", ".join("%s ours%+d theirs%+d" % (k, a, b)
+                              for k, (a, b) in sorted(differing.items()))
+            print("     game %-9s %s" % (gid, parts))
+
     if mismatches:
-        print("\n  DISAGREEMENTS (%d):" % len(mismatches))
+        print("\n  POWER DISAGREEMENTS (%d):" % len(mismatches))
         for gid, turn, ours, theirs, side, other in mismatches[:10]:
             print("     game %-9s turn %-4s ours=%-4s theirs=%-4s" % (gid, turn, ours, theirs))
             if explain:

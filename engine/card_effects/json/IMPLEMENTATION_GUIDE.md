@@ -126,7 +126,18 @@ JSON definition.
    The first run builds an index of the event store (~1 min); later runs are
    seconds. `--refresh-index` picks up newly collected games.
 
-   Only power is compared, because that is what a spectator's view determines.
+   **Attack power decides the verdict. The on-hit line is ADVISORY** — read the
+   disagreements, don't treat the percentage as a score. Talishar resolves
+   combat damage and the on-hit into separate states, so the on-hit's effect on
+   life / deck / banish / discard / arsenal / soul / items / auras / allies can
+   be compared against dispatching `ON_HIT` in our engine. What makes it
+   advisory is attribution: the window from damage to the chain clearing also
+   contains defenders hitting the graveyard and any other trigger, and several
+   card texts are simply unreplayable from a spectator's view — anything
+   reading a HAND most of all, since we rebuild with an empty one. A card whose
+   on-hit banishes "a card from their hand" will report near-0% agreement and
+   be perfectly correct.
+
    Keyword flags Talishar reported but our data lacks are printed too.
 
 9. **Update the work queue:** `python scripts/dsl_work_queue.py --set <set> --write-queue`
