@@ -50,16 +50,29 @@ positional hero detection, face-up flags) and only found the real one by
 instrumenting a single case end to end. Two of those guesses were worth keeping
 anyway; none of them was the bug.
 
-THE RESIDUAL IS MOSTLY NOT REPRODUCIBLE. The largest remaining cluster is
-felling_of_the_crown_red, whose +4 needs "4 or more Earth cards in your
-banished zone". In the disagreeing cases Talishar applies the bonus while the
-banish zone the spectator can see holds only 2-3 Earth cards, and our talent
-data is not at fault — no card in the corpus has Earth in its typeText and not
-in its talents. Talishar is counting cards the feed does not show us. That is a
-limit of spectator data, not a defect, and it caps what this method can prove.
+WHAT THE RESIDUAL ACTUALLY IS. I first concluded it was unreproducible — that
+Talishar was counting banished cards the feed does not show — and that was
+wrong. Reading the full board for the disagreeing cases instead of the summary
+gave a different answer, and both causes are real coverage gaps:
 
-Treat a disagreement as a lead, never as a finding: confirm it by reading the
-card and the engine before believing it.
+  * felling_of_the_crown_red gets +4 for "4 or more Earth cards in your
+    banished zone". In the failing cases the banish zone holds three Earth
+    cards plus COLORS_OF_ARIA_RED, which reads "while this is face-up in any
+    zone, it's Earth, Ice, and Lightning". Our data types it Elemental and the
+    card has no DSL file, so its cross-zone type static does not exist and the
+    count comes up one short. An UNIMPLEMENTED card silently corrupting an
+    IMPLEMENTED card's condition is the most valuable thing this tool has
+    surfaced, and nothing in the card-data comparison could have found it.
+  * the one +1 is a Frailty token, whose "-1{p} to weapon attacks and
+    arsenal-played attack actions" is explicitly unimplemented — the card's own
+    JSON carries a TODO saying the static is not yet expressible.
+
+So the method is not capped the way I claimed; it reaches real gaps. What it
+cannot do is tell you WHICH kind of gap you are looking at without reading the
+board, the card and the engine.
+
+Treat a disagreement as a lead, never as a finding — and read the whole board
+before concluding, not the aggregate.
 
     python scripts/talishar_attack_replay.py --limit 3000
     python scripts/talishar_attack_replay.py --limit 3000 --wide
@@ -184,6 +197,30 @@ def build_state(side, opp, attacker_id=1):
                 if card is not None:
                     zone.add(card)
     E._setup_dsl_listeners(st)
+
+    # Board permanents carry continuous effects of their own, and putting them
+    # in the zone is not the same as registering them. This did NOT move any
+    # measured case — the one it was aimed at, a Frailty token giving -1{p},
+    # turned out to be unimplemented in the card itself — but registering them
+    # is the faithful reconstruction and the omission would bite silently the
+    # moment such a card is authored.
+    for pid in (1, 2):
+        player = st.players[pid]
+        for zone_name in ("auras", "items", "allies", "permanents",
+                          "head", "chest", "arms", "legs", "weapon1", "weapon2"):
+            zone = getattr(player, zone_name, None)
+            if zone is None:
+                continue
+            for card in list(zone.cards):
+                try:
+                    E._register_card_continuous_effects(st, card)
+                except Exception:
+                    pass          # a card we cannot model must not kill the run
+        if player.hero is not None:
+            try:
+                E._register_card_continuous_effects(st, player.hero)
+            except Exception:
+                pass
     return st
 
 
