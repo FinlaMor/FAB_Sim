@@ -373,6 +373,85 @@ def our_on_hit_delta(slug, run):
     return delta
 
 
+GENERATED_DIR = ROOT / "card_data" / "generated_states"
+
+
+def compare_rows(rows, slug, limit=200):
+    """Run one card's transitions through the outcome comparison.
+
+    Shared by the parquet corpus and by states we generated ourselves — both
+    carry the identical shape, so this is written once.
+    """
+    from scripts.talishar_outcome_diff import (
+        NOT_COMPARED, build_state as pq_build, observe_ours, observe_talishar,
+        usable,
+    )
+    import engine.engine as E
+    from engine.actions import ActionType
+    from engine.play import apply_action, available_actions
+
+    checked = agree = 0
+    diffs = collections.Counter()
+    for row in rows:
+        if checked >= limit:
+            break
+        if slug not in (row.get("chosen_action_json") or ""):
+            continue
+        got, _why = usable(row)
+        if got is None:
+            continue
+        stj, act, nxt, pid, played = got
+        if played != slug:
+            continue
+        try:
+            st = pq_build(stj)
+            offers = [a for a in available_actions(st, pid)
+                      if getattr(a.card, "slug", None) == slug
+                      and a.type == ActionType.PLAY_CARD]
+            if not offers:
+                continue
+            before = observe_ours(st)
+            apply_action(st, offers[0])
+            E.resolve_stack(st)
+            ours = observe_ours(st)
+        except Exception:
+            continue
+        theirs, base = observe_talishar(nxt), observe_talishar(stj)
+        checked += 1
+        bad = [k for k in sorted(theirs)
+               if k in ours and k.split(".", 1)[1] not in NOT_COMPARED
+               and (ours[k] - before.get(k, 0)) != (theirs[k] - base.get(k, 0))]
+        if bad:
+            for k in bad:
+                diffs[k] += 1
+        else:
+            agree += 1
+    return checked, agree, diffs
+
+
+def generated_check(slug):
+    """States we made Talishar produce for this card, if any.
+
+    scripts/generate_talishar_states.py drives the real engine locally and
+    records the transitions, so a card nobody happened to play in a public game
+    can still be verified. This is the answer to every "NO EVIDENCE" verdict.
+    """
+    path = GENERATED_DIR / ("%s.jsonl" % slug)
+    if not path.exists():
+        return None
+    rows = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if line:
+            try:
+                rows.append(json.loads(line))
+            except Exception:
+                pass
+    if not rows:
+        return None
+    return compare_rows(rows, slug)
+
+
 def parquet_check(slug, limit=40, max_files=260):
     """Verify the card against the OPEN-HAND corpus.
 
@@ -676,6 +755,18 @@ def verify(slug, db_path, explain=False, refresh=False, with_effects=False,
     if surprising:
         print("  keywords Talishar always reported that we lack: %s"
               % ", ".join(sorted(surprising)))
+
+    gen = generated_check(slug)
+    if gen is not None:
+        n, ok, diffs = gen
+        if n:
+            print("  generated states        : %d/%d play(s) agree (%.0f%%)"
+                  % (ok, n, 100 * ok / n))
+            if diffs:
+                print("     fields that disagreed: %s"
+                      % ", ".join("%s x%d" % (k, c) for k, c in diffs.most_common(6)))
+        else:
+            print("  generated states        : recorded, but none comparable")
 
     if parquet:
         result, why = parquet_check(slug)

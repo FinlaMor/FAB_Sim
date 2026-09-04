@@ -149,6 +149,24 @@ JSON definition.
    It is a smaller corpus, so "no comparable plays found" is a common and
    honest answer.
 
+   **If the verdict is `NO EVIDENCE`, generate some.** Both checks above SEARCH
+   for games that happened to play the card, which most cards never get.
+   FAB_Sim_Headless runs the real Talishar engine locally, so the states can be
+   made to order:
+
+   ```
+   # once, in FAB_Sim_Headless:  $env:ADAPTER_MODE="real"; docker compose up -d adapter
+   python scripts/generate_talishar_states.py --card <slug> --games 3
+   python scripts/verify_card_against_talishar.py --card <slug>
+   ```
+
+   The generator picks a real CC deck whose hero can legally play the card,
+   swaps the card in over filler (so the deck stays legal by construction),
+   plays games against the live engine, and records every transition where the
+   card was played. The verifier picks those up automatically and reports them
+   as `generated states`. Talishar is still the only thing deciding what
+   happens — we only choose actions.
+
 9. **Update the work queue:** `python scripts/dsl_work_queue.py --set <set> --write-queue`
    flips entries to `"done"` automatically based on which JSON files exist.
 
