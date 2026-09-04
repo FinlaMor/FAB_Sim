@@ -34,7 +34,27 @@ positive that looks exactly like an engine bug. Excluded by default:
 `--wide` drops the effects/chain-link exclusions to show how much of the
 disagreement they account for. Expect it to be worse; that is the point.
 
-WHERE IT STANDS: 94% of 800 attacks agree exactly.
+WHERE IT STANDS: 96% of 800 attacks agree exactly (89% -> 94% -> 95% -> 96%,
+every step a fix to this harness rather than to the engine).
+
+THE DAGGER CLUSTERS, worked through case by case, were two reconstruction gaps
+and no engine defect:
+
+  * hunters_klaive, graphene_chelicera and kiss_of_death_red all showed a
+    consistent -4 in Arakni decks. Talishar's own chat log gave it away:
+    "Player 1 played Up Sticks and Run" immediately before the activation. That
+    card and cut_from_the_same_cloth_red both read "your next dagger attack
+    this turn gets +4{p}" — a turn-scoped marker living in player state, not on
+    the board. It IS visible as an effect token, but on the DEFENDER's effects
+    array even though the attacker played it, so filtering only the attacker's
+    effects let the entire cluster through.
+  * the residual -1 on the two daggers with STEALTH was Arakni Marionette's
+    "attacks with stealth against a marked hero get +1{p}". The marked
+    condition is in the feed, riding on the hero's entry in the equipment
+    array, and is now reconstructed into class_counters['marked'].
+
+Checking one case's marked flags and finding them all False nearly closed this
+off prematurely — that was a different game. Per-case, not per-cluster.
 
 EVERY BUG THIS TOOL HAS FOUND SO FAR HAS BEEN IN ITSELF, and that is worth
 stating plainly, because a replay harness fails in the direction that
@@ -114,6 +134,25 @@ def _ids(entries):
     return out
 
 
+def is_marked(side):
+    """Whether this side's HERO carries Talishar's `marked` flag.
+
+    It rides on the hero's entry in the equipment array rather than anywhere
+    obvious, which is why it was missed at first: Arakni Marionette gives
+    stealth attacks against a marked hero +1{p}, and without this every such
+    attack read 1 low.
+    """
+    for entry in side.get("equipment") or []:
+        if not isinstance(entry, dict):
+            continue
+        card = DB.get(entry.get("cardNumber") or "")
+        if card is None:
+            continue
+        if {str(t).lower() for t in (card.types or [])} & {"hero", "demihero"}:
+            return bool(entry.get("marked"))
+    return False
+
+
 def hero_name(side):
     """The side's hero name, lowercased, or "" — located by card type rather
     than by its position in the equipment list."""
@@ -162,6 +201,9 @@ def build_state(side, opp, attacker_id=1):
             player.life = int(data.get("health") or 0)
         except (TypeError, ValueError):
             pass
+        # CR 8.5.50 marked, as the engine stores it (effect_keywords.mark).
+        if is_marked(data):
+            player.class_counters["marked"] = 1
         for slug in _ids(data.get("equipment")):
             card = _mk(slug, pid)
             if card is None:
@@ -305,8 +347,19 @@ def attack_states(db_path, limit, wide=False):
             skipped["attacker side unknown"] += 1
             continue
 
-        if not wide and _ids(side.get("effects")):
-            skipped["attacker has effect tokens"] += 1
+        # EITHER side, not just the attacker. Talishar's `effects` arrays do not
+        # sit on the side you would expect: "Up Sticks and Run — your next
+        # dagger attack this turn gets +4" is played by the attacker and shows
+        # up in the DEFENDER's effects list. Filtering only the attacker let the
+        # whole dagger cluster through, and every one of those -4s was this
+        # card or its twin cut_from_the_same_cloth_red, not an engine bug.
+        #
+        # These turn-scoped "your next X gets +N" markers are the one visible
+        # thing the harness cannot restore: they live in player turn state, not
+        # on the board, so the token is a marker that a pump exists rather than
+        # something reconstructible. Excluded rather than reported.
+        if not wide and (_ids(side.get("effects")) or _ids(other.get("effects"))):
+            skipped["turn-scoped effect tokens in play"] += 1
             continue
 
         yielded += 1
