@@ -447,6 +447,7 @@ def generated_attack_check(slug):
 
     checked = agree = 0
     deltas = collections.Counter()
+    buffs = collections.Counter()
     for line in path.read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if not line:
@@ -488,7 +489,17 @@ def generated_attack_check(slug):
             agree += 1
         else:
             deltas[ours - theirs] += 1
-    return checked, agree, deltas
+            # `static_buffs` on the chain entry NAMES the cards buffing this
+            # attack, by set identifier. No inference needed, and it is the
+            # single most direct answer to "why is the power different" —
+            # kiss_of_death_red's only disagreement here resolved to OUT021,
+            # spike_with_bloodrot_red, "target attack action card with stealth
+            # gains +3{p}". Reported rather than replayed: naming the source is
+            # what makes the disagreement readable.
+            raw = str(chain[0].get("static_buffs") or "").strip()
+            for ident in [x for x in raw.replace(";", ",").split(",") if x and x != "-"]:
+                buffs[ident.strip()] += 1
+    return checked, agree, deltas, buffs
 
 
 def generated_check(slug):
@@ -596,6 +607,14 @@ def parquet_check(slug, limit=40, max_files=260):
             else:
                 agree += 1
     return (checked, agree, diffs), None
+
+
+def _ident_to_slug(ident):
+    """Talishar names buff sources by set identifier ("OUT021")."""
+    for slug, entry in _slug_index().items():
+        if ident in [str(x) for x in (entry.get("setIdentifiers") or [])]:
+            return slug
+    return None
 
 
 _SLUG_INDEX = None
@@ -747,7 +766,15 @@ def verify(slug, db_path, explain=False, refresh=False, with_effects=False,
         theirs = cc.get("total_power")
         if not isinstance(theirs, int):
             continue
-        if cc.get("total_defense") or cc.get("reactions") or cc.get("chain_links"):
+        # LATER CHAIN LINKS ARE NO LONGER EXCLUDED. That exclusion was set
+        # early on the assumption that earlier links carry bonuses the visible
+        # state cannot explain, and then never checked. Measured, later-link
+        # attacks agree 94% against 98% for first-link ones — a 4-point
+        # precision cost for the second-largest excluded bucket (~1,900
+        # attacks), which for a PER-CARD verifier is a bad trade: plenty of
+        # cards only ever attack in a later link, and for those the exclusion
+        # was the difference between evidence and none.
+        if cc.get("total_defense") or cc.get("reactions"):
             continue
         p, o = gs.get("player") or {}, gs.get("opponent") or {}
         target = str(cc.get("attack_target") or "").strip().lower()
@@ -820,12 +847,20 @@ def verify(slug, db_path, explain=False, refresh=False, with_effects=False,
 
     gen_atk = generated_attack_check(slug)
     if gen_atk is not None:
-        n, ok, deltas = gen_atk
+        n, ok, deltas, buffs = gen_atk
         if n:
             print("  generated attacks       : %d/%d agree (%.0f%%)"
                   % (ok, n, 100 * ok / n))
             if deltas:
                 print("     delta (ours-theirs): %s" % dict(deltas.most_common(5)))
+            if buffs:
+                # Resolve set identifiers to slugs; the identifier alone is
+                # unreadable and the whole point is to name the cause.
+                named = []
+                for ident, count in buffs.most_common(6):
+                    slug_ = _ident_to_slug(ident)
+                    named.append("%s=%s x%d" % (ident, slug_ or "?", count))
+                print("     static_buffs on the attack: %s" % ", ".join(named))
         else:
             print("  generated attacks       : recorded, but none comparable")
 
