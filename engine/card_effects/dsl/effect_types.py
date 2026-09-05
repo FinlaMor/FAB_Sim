@@ -1362,7 +1362,14 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # Where the banished card should be REMEMBERED, for the "if you do"
         # clause that follows. BANISH always sets the `banished` ref; a named
         # one survives alongside it.
-        record_as = params.get("record_as")
+        # "into" is the DSL's documented writer convention (engine/context.py:
+        # an effect writes with "into", a later effect reads with "ref"), and
+        # the CREATE_TOKEN site already reads all three spellings. BANISH read
+        # only `record_as`, so a card authored with `into` had the parameter
+        # silently dropped -- and two banishes in one ability then could not be
+        # told apart, which is exactly what "banish one from EACH graveyard, if
+        # you do ..." needs: that BOTH landed, not that something did.
+        record_as = _first(params, "record_as", "into", "store_as")
 
         def _fn(card, event, state, _a=amt, _fz=from_zone, _pt=player_target,
                 _fd=face_down, _cl=cost_limit, _filter=card_filter,
@@ -4038,6 +4045,90 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     break
             for spec in (_t if ok else _e):
                 compile_effect((spec.get("type") or "").upper(), spec)(card, event, state)
+        return _fn
+
+    if etype in ("REPEAT", "REPEAT_PROCESS"):
+        # "... then repeat this process." (Rotten Remains, Flood of Force.)
+        #
+        # Before this the only loop in the DSL was CLASH's own `repeat` count,
+        # so a repeating clause had to be authored as N unrolled copies with a
+        # bound picked by whoever wrote it — which silently truncates the card
+        # in exactly the games where the loop would have mattered, and reads as
+        # deliberate. The alternative, dropping the clause, makes the card
+        # weaker than printed.
+        #
+        # Three ways to stop, and a REPEAT needs at least one of the first two
+        # or it is just `max` iterations:
+        #   "times":  a fixed count (accepts the usual amount expressions).
+        #   "while":  conditions re-checked BEFORE each iteration.
+        #   STOP_REPEAT inside the body — the exact shape for "you MAY ...,
+        #             if you do ... then repeat", where declining ends it.
+        #
+        # `max` is a hard bound and is ALWAYS enforced. A game engine that runs
+        # self-play cannot have an effect that might not terminate: a condition
+        # that fails to go false (a mis-authored `while`, a cost that does not
+        # actually deplete) would hang the game rather than misplay a card.
+        # The default is far above anything a legal board can reach — a repeat
+        # feeding on a graveyard runs out at deck size — so hitting it means the
+        # card is mis-authored, not that a real game went long.
+        body_raw = _first(params, "effects", "then", "do", default=[])
+        if isinstance(body_raw, dict):
+            body_raw = [body_raw]
+        # "while", not "conditions": the loader POPS `conditions` off an effect
+        # spec and turns it into an effect-level gate (loader._compile_effect),
+        # so a REPEAT authored that way would get a test checked ONCE and a loop
+        # with no stop condition at all -- running to `max` every time, silently.
+        while_raw = _first(params, "while", "while_condition", "condition",
+                           default=[])
+        if isinstance(while_raw, dict):
+            while_raw = [while_raw]
+        times_raw = _first(params, "times", "count", "amount")
+        max_raw = params.get("max", 50)
+
+        def _fn(card, event, state, _b=body_raw, _w=while_raw,
+                _times=times_raw, _max=max_raw):
+            from engine.card_effects.dsl.condition_types import compile_condition as _cc
+            from engine.context import get_ref, set_ref
+            limit = int(_resolve_amount(_max, state, card) or 0)
+            if _times is not None:
+                wanted = int(_resolve_amount(_times, state, card) or 0)
+                limit = min(limit, wanted) if limit > 0 else wanted
+            # The break flag is scoped by NESTING DEPTH. A single shared flag
+            # looks fine until a STOP_REPEAT sits before a nested REPEAT in the
+            # same body: the inner loop would clear the outer loop's break on
+            # its way past, and the outer would run on as if nothing had asked
+            # it to stop.
+            depth = int(get_ref("__repeat_depth", 0)) + 1
+            flag = "__repeat_break_%d" % depth
+            set_ref("__repeat_depth", depth)
+            try:
+                for _ in range(max(0, limit)):
+                    for spec in _w:
+                        fn = _cc((spec.get("type") or "none"), spec)
+                        if fn is not None and not fn(card, event, state):
+                            return
+                    set_ref(flag, False)
+                    for spec in _b:
+                        compile_effect((spec.get("type") or "").upper(),
+                                       spec)(card, event, state)
+                    if get_ref(flag):
+                        return
+            finally:
+                set_ref(flag, False)
+                set_ref("__repeat_depth", depth - 1)
+        return _fn
+
+    if etype in ("STOP_REPEAT", "BREAK"):
+        # End the enclosing REPEAT after this iteration. Belongs to the
+        # INNERMOST loop: each REPEAT clears the flag at the top of its own
+        # body, so a nested loop consumes its own break rather than ending its
+        # parent. Outside a REPEAT it is a no-op, which is the right reading of
+        # "stop repeating" when nothing is repeating.
+        def _fn(card, event, state):
+            from engine.context import get_ref, set_ref
+            depth = int(get_ref("__repeat_depth", 0))
+            if depth > 0:
+                set_ref("__repeat_break_%d" % depth, True)
         return _fn
 
     if etype == "BANISH_REF":

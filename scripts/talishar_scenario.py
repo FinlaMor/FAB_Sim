@@ -341,6 +341,13 @@ def _card_matches(entry: dict, spec: dict) -> bool:
     together, because condition_types._card_traits pools them and a card
     authored "Earth" may carry it as a talent, a class, or neither.
     """
+    # A TOKEN cannot sit in a graveyard or a banished zone: it ceases to exist
+    # on entry (CR 3.0.12a), so stocking one leaves the zone empty and the whole
+    # scenario silently loses its fuel. aether_ashwing was picked as the 1-power
+    # card for rotten_remains and the graveyard came back empty every time.
+    if "Token" in (entry.get("types") or []):
+        return False
+
     traits = set()
     for key in ("classes", "talents", "subtypes", "types"):
         traits.update(str(v) for v in (entry.get(key) or []))
@@ -419,11 +426,22 @@ def zone_requirements(slug: str, index: dict | None = None) -> dict[str, list[st
 
     out: dict[str, list[str]] = {}
     for field, count, spec in wants:
-        # "hero_graveyard" is Talishar's name for a zone read across BOTH
-        # players ("banish a card from each hero's graveyard"). Stocking only
-        # our side means the cost is never payable and Talishar never offers
-        # the choice, so the paid branch cannot be built.
-        both_sides = str(spec.get("zone") or "").lower().startswith("hero_")
+        # WHOSE zone. "hero_graveyard" is Talishar's name for one read across
+        # BOTH players ("a card from each hero's graveyard"); an explicit
+        # `player` says which side. Stocking the wrong side means the cost is
+        # never payable, Talishar never offers the choice, and the paid branch
+        # cannot be built at all -- which is what happened the moment
+        # rotten_remains was re-authored with explicit SELF/OPPONENT conditions
+        # instead of the hero_ spelling.
+        zone_name = str(spec.get("zone") or "").lower()
+        who = str(spec.get("player") or "").upper()
+        # An ABSENT `player` means SELF, not "either" -- that is
+        # CARD_IN_ZONE's own default (condition_types.py: default="SELF").
+        # Treating it as both stocked the opponent's graveyard for
+        # cadaverous_tilling, whose Decompose only ever reads ours, making the
+        # board less like the game it stands in for.
+        both_sides = zone_name.startswith("hero_") or who in ("EACH", "BOTH", "ANY")
+        opponent_only = who in ("OPPONENT", "THEIRS", "THEIR")
         picked: list[str] = []
         for pool_pass in (True, False):
             if len(picked) >= count:
@@ -441,7 +459,12 @@ def zone_requirements(slug: str, index: dict | None = None) -> dict[str, list[st
                     picked.append(other)
         # Requirements on the same zone accumulate: Decompose needs 2 Earth
         # cards AND an action card, which is two conditions and three cards.
-        targets = [field, "opp_" + field] if both_sides else [field]
+        if opponent_only:
+            targets = ["opp_" + field]
+        elif both_sides:
+            targets = [field, "opp_" + field]
+        else:
+            targets = [field]
         for target in targets:
             out.setdefault(target, [])
             out[target].extend(p for p in picked if p not in out[target])

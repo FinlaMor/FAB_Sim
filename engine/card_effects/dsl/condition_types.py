@@ -1495,6 +1495,44 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return any(w in have for w in _w)
         return _is_type
 
+    if ctype in ("CARD_IS_POWER", "CARD_HAS_POWER", "CARD_POWER_IS"):
+        # "a card with 1{p}" as a filter over CANDIDATE cards, which is a
+        # different question from CARD_IN_ZONE's `power`: that one asks whether
+        # such a card EXISTS in a zone (the gate), this one picks which cards
+        # qualify (the cost). Rotten Remains needs both — the gate to decide
+        # whether the option is offered, the filter to decide what may be
+        # banished for it — and without this the filter could only be written
+        # over class or type, so "with 1{p}" silently became "any card".
+        #
+        # Exact and bounded spellings both, because cards say "with 1{p}" as
+        # often as "with 6 or more {p}".
+        exact = params.get("power")
+        want_gte = params.get("power_gte", exact)
+        want_lte = params.get("power_lte", exact)
+
+        def _is_power(c, e, s, _gte=want_gte, _lte=want_lte):
+            if _gte is None and _lte is None:
+                return False
+            power = getattr(c, "power", None)
+            if power is None:
+                power = getattr(c, "base_power", None)
+            # A card with no power at all (an equipment, a non-attack action)
+            # does not have "1{p}" — it has none, which is not a number to
+            # compare. Treating it as 0 would let "with 0{p}" sweep up every
+            # such card.
+            if power is None:
+                return False
+            try:
+                power = int(power)
+            except (TypeError, ValueError):
+                return False
+            if _gte is not None and power < int(_gte):
+                return False
+            if _lte is not None and power > int(_lte):
+                return False
+            return True
+        return _is_power
+
     if ctype in ("CARD_IS_FACE_DOWN", "CARD_IS_FACE_UP"):
         # "a FACE DOWN arrow in your arsenal". The one card that needed this
         # wrote REF_PITCH_IS with pitch "face_up" — a condition about PITCH

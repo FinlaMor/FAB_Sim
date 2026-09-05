@@ -362,6 +362,52 @@ Reference-reading conditions: `REF_PITCH_IS` (`ref`, `pitch` — 1 red / 2 yello
 / 3 blue), `REF_EXISTS` (`ref`), and `ATTACK_TARGET_IS_HERO` (the attack was
 declared at a hero, not a permanent or ally).
 
+`BANISH`, `LOOK_AT` and the rest write their reference with `into` (also spelled
+`record_as` / `store_as`), which matters when one ability banishes twice: the
+shared `banished` ref holds only the most recent, so "banish one from EACH
+graveyard, **if you do** …" has to name both and test both with `REF_EXISTS`.
+
+### Repeat
+
+| Type | Fields | Description |
+|---|---|---|
+| `REPEAT` (alias `REPEAT_PROCESS`) | `effects`, `while` ([<conditions>]), `times` (int or amount expr), `max` (default 50) | "… then repeat this process." Runs `effects` until `while` fails, `times` is exhausted, a `STOP_REPEAT` fires, or `max` is reached |
+| `STOP_REPEAT` (alias `BREAK`) | — | Ends the enclosing `REPEAT` after the current pass. Belongs to the innermost loop; outside one it is a no-op |
+
+`max` is a hard bound and is **always** enforced, `while` or no `while`. A
+self-play engine cannot host an effect that might not terminate, so a condition
+that fails to go false hangs the game rather than misplaying one card. The
+default is far above any legal board — a repeat feeding on a graveyard runs out
+at deck size — so reaching it means the card is mis-authored.
+
+Give a `REPEAT` at least one of `while` / `times` / an inner `STOP_REPEAT`, or
+it is simply `max` iterations. For "you **may** X. If you do, Y, then repeat",
+put `STOP_REPEAT` in the `MAY`'s `else`: declining ends the process, which is
+what the second and later passes of "you may" mean.
+
+```json
+{"type": "REPEAT",
+ "while": [{"type": "CARD_IN_ZONE", "zone": "graveyard", "player": "SELF",
+            "power": 1, "count_gte": 1}],
+ "effects": [
+   {"type": "MAY",
+    "effects": [
+      {"type": "BANISH", "from_zone": "GRAVEYARD", "player": "SELF",
+       "amount": 1, "into": "mine",
+       "filter": [{"type": "CARD_IS_POWER", "power": 1}]},
+      {"type": "CONDITIONAL",
+       "when": [{"type": "REF_EXISTS", "ref": "mine"}],
+       "then": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}],
+       "else": [{"type": "STOP_REPEAT"}]}],
+    "else": [{"type": "STOP_REPEAT"}]}]}
+```
+
+`CARD_IS_POWER` (aliases `CARD_HAS_POWER`, `CARD_POWER_IS`; fields `power`,
+`power_gte`, `power_lte`) filters CANDIDATE cards by power — a different
+question from `CARD_IN_ZONE`'s `power`, which asks whether such a card exists in
+a zone. A cost saying "a card with 1{p}" needs both: the zone test to decide
+whether the option is offered, the filter to decide what may be spent.
+
 ```json
 "effects": [
   {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "OPPONENT", "into": "seen"},
