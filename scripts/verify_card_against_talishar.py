@@ -440,6 +440,45 @@ def compare_rows(rows, slug, limit=200):
     return checked, agree, diffs
 
 
+def rebuild_chain_links(st, st_json, attacker):
+    """Rebuild the resolved combat chain from the local engine's `links`.
+
+    This is what makes COMBO cards verifiable. The spectator feed's
+    chain_links holds only {"result", "isDraconic"} and never names the
+    previous card, so "if Surging Strike was the last attack this combat chain"
+    can never be evaluated there — whelming_gustwave_red disagrees on 215 of
+    269 spectator attacks for exactly that reason, every one of them a false
+    positive.
+
+    The local engine records the real thing. Each `links` entry is a flat run
+    of 10-field card records (Talishar's ChainLinksPieces()=10), the first of
+    which is that link's attacking card:
+
+        [["persuasive_prognosis_blue", "1", "1", "HAND", ...], ...]
+
+    Only attack_slug is filled in, because that is what LAST_CHAIN_ATTACK's
+    `name` form reads. The hit/talent/class forms would need fields this array
+    does not obviously carry, and inventing values for them would make the
+    condition answer confidently from made-up data.
+    """
+    from engine.state import ChainLink
+
+    links = st_json.get("links") or []
+    rebuilt = []
+    for i, entry in enumerate(links):
+        if not isinstance(entry, (list, tuple)) or not entry:
+            continue
+        card_slug = canonical(str(entry[0] or ""))
+        if not card_slug:
+            continue
+        rebuilt.append(ChainLink(
+            chainlink_id=i + 1, attacker_id=attacker, attack_slug=card_slug,
+            attack_power=0, net_damage=0, keywords=[], from_weapon=False))
+    if rebuilt:
+        st.chain_links = rebuilt
+    return len(rebuilt)
+
+
 def generated_attack_check(slug):
     """Compare attack power on states we made Talishar produce.
 
@@ -478,6 +517,7 @@ def generated_attack_check(slug):
         try:
             st = pq_build(st_json)
             E._setup_dsl_listeners(st)
+            rebuild_chain_links(st, st_json, attacker)
             card = DB.get(slug)
             if card is None:
                 continue
