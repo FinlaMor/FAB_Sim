@@ -78,6 +78,12 @@ class Scenario:
     opp_health: int = 20
     opp_hand: list[str] | None = None
     opp_arsenal: list[str] = field(default_factory=list)
+    #: The opponent's graveyard and banished zone. Needed by any cost that
+    #: reaches across the table -- rotten_remains banishes "a card with 1{p}
+    #: from EACH hero's graveyard", so with only our side stocked Talishar never
+    #: offers the choice and the paid branch cannot be built at all.
+    opp_discard: list[str] = field(default_factory=list)
+    opp_banish: list[str] = field(default_factory=list)
     current_turn_effects: list[dict] = field(default_factory=list)
     action_points: int = 1
     #: Which seat holds the card and has priority. Seat 2 is what a defence
@@ -88,6 +94,11 @@ class Scenario:
     #: Label carried through to the recorded rows so a disagreement can be
     #: traced back to the situation that produced it.
     label: str = "baseline"
+    #: Answer Talishar's optional-cost prompts by PAYING rather than passing.
+    #: Only meaningful once the zone the cost draws from is stocked -- Talishar
+    #: does not offer Decompose at all with an empty graveyard -- which is what
+    #: zone_requirements() is for.
+    take_optional: bool = False
 
     def patch(self) -> dict:
         me: dict = {
@@ -102,8 +113,11 @@ class Scenario:
         them: dict = {"health": self.opp_health}
         if self.opp_hand is not None:
             them["hand"] = list(self.opp_hand)
-        if self.opp_arsenal:
-            them["arsenal"] = list(self.opp_arsenal)
+        for zone, value in (("arsenal", self.opp_arsenal),
+                            ("discard", self.opp_discard),
+                            ("banish", self.opp_banish)):
+            if value:
+                them[zone] = list(value)
 
         actor = 2 if int(self.actor) == 2 else 1
         out = {
@@ -234,7 +248,8 @@ def validate(scenario: Scenario, index: dict) -> None:
     """
     unknown = []
     for zone in ("hand", "chain_links", "arsenal", "discard", "banish", "pitch",
-                 "deck_top", "opp_hand", "opp_arsenal"):
+                 "deck_top", "opp_hand", "opp_arsenal", "opp_discard",
+                 "opp_banish"):
         for slug in (getattr(scenario, zone) or []):
             if slug not in index:
                 unknown.append("%s:%s" % (zone, slug))
@@ -302,6 +317,159 @@ def combo_partners(slug: str, index: dict | None = None) -> list[str]:
         if name in text and by_name[name] not in found:
             found.append(by_name[name])
     return found
+
+
+#: CARD_IN_ZONE zone names -> the Scenario field that stocks that zone. The DSL
+#: spells zones both ways ("GRAVEYARD" and "graveyard"), so lookups lowercase.
+_ZONE_TO_FIELD = {
+    "graveyard": "discard",
+    "hero_graveyard": "discard",
+    "discard": "discard",
+    "banished": "banish",
+    "banish": "banish",
+    "pitch": "pitch",
+    "arsenal": "arsenal",
+    "soul": "soul",
+}
+
+
+def _card_matches(entry: dict, spec: dict) -> bool:
+    """Does this slug_index entry satisfy one CARD_IN_ZONE's trait filters?
+
+    Mirrors the DSL's own matching loosely rather than exactly: `card_class`,
+    `talent` and `subtype` are all checked against classes + talents + subtypes
+    together, because condition_types._card_traits pools them and a card
+    authored "Earth" may carry it as a talent, a class, or neither.
+    """
+    traits = set()
+    for key in ("classes", "talents", "subtypes", "types"):
+        traits.update(str(v) for v in (entry.get(key) or []))
+
+    for key in ("card_class", "talent", "subtype", "card_type"):
+        want = spec.get(key)
+        if want and str(want) not in traits:
+            return False
+    for want in (spec.get("filter_types") or []):
+        if str(want) not in traits:
+            return False
+    if spec.get("color") and not str(entry.get("color") or "").lower().startswith(
+            str(spec["color"]).lower()[:1]):
+        return False
+
+    power = entry.get("power")
+    try:
+        power = int(power)
+    except (TypeError, ValueError):
+        power = None
+    if spec.get("power") is not None:
+        if power != int(spec["power"]):
+            return False
+    if spec.get("power_gte") is not None:
+        if power is None or power < int(spec["power_gte"]):
+            return False
+    return True
+
+
+def zone_requirements(slug: str, index: dict | None = None) -> dict[str, list[str]]:
+    """Real cards to stock so this card's zone-gated abilities can fire.
+
+    Read out of the card's own DSL, not a table: every CARD_IN_ZONE condition
+    anywhere in its abilities says "this ability needs N cards matching X in
+    zone Z", which is exactly a shopping list. An empty board answers only half
+    of what a card does -- Cadaverous Tilling's Decompose needs 2 Earth cards
+    and an action in the graveyard before Talishar will even OFFER the choice,
+    so on a bare board the whole clause is unreachable and "the scenario agrees"
+    means nothing about it.
+
+    Conditions wanting a zone EMPTY (count_eq/amount 0) are skipped: that is
+    already the default board.
+    """
+    index = index if index is not None else slug_index()
+    card_def = _card_json(slug)
+    if not card_def:
+        return {}
+
+    wants: list[tuple[str, int, dict]] = []
+
+    def walk(node):
+        if isinstance(node, dict):
+            if str(node.get("type") or "") == "CARD_IN_ZONE":
+                zone = str(node.get("zone") or "").lower()
+                field = _ZONE_TO_FIELD.get(zone)
+                count = node.get("count_gte", node.get("amount", 1))
+                try:
+                    count = int(count)
+                except (TypeError, ValueError):
+                    count = 1
+                # count_eq 0 / amount 0 mean "this zone must be EMPTY".
+                if field and count > 0 and node.get("count_eq") != 0:
+                    wants.append((field, count, node))
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+
+    walk(card_def.get("abilities") or [])
+    if not wants:
+        return {}
+
+    # Prefer cards the same heroes can play, so the board stays plausible.
+    legal = {h.lower() for h in ((index.get(slug) or {}).get("legalHeroes") or [])}
+
+    out: dict[str, list[str]] = {}
+    for field, count, spec in wants:
+        # "hero_graveyard" is Talishar's name for a zone read across BOTH
+        # players ("banish a card from each hero's graveyard"). Stocking only
+        # our side means the cost is never payable and Talishar never offers
+        # the choice, so the paid branch cannot be built.
+        both_sides = str(spec.get("zone") or "").lower().startswith("hero_")
+        picked: list[str] = []
+        for pool_pass in (True, False):
+            if len(picked) >= count:
+                break
+            for other, entry in index.items():
+                if len(picked) >= count:
+                    break
+                if other == slug or other in picked:
+                    continue
+                if pool_pass and legal:
+                    others = {h.lower() for h in (entry.get("legalHeroes") or [])}
+                    if not (others & legal):
+                        continue
+                if _card_matches(entry, spec):
+                    picked.append(other)
+        # Requirements on the same zone accumulate: Decompose needs 2 Earth
+        # cards AND an action card, which is two conditions and three cards.
+        targets = [field, "opp_" + field] if both_sides else [field]
+        for target in targets:
+            out.setdefault(target, [])
+            out[target].extend(p for p in picked if p not in out[target])
+    return out
+
+
+_CARD_JSON_CACHE: dict[str, dict] = {}
+
+
+def _card_json(slug: str) -> dict:
+    """The card's DSL definition, or {} when it has none.
+
+    Never a bare rglob over the card tree -- the pipeline leaves drafts and
+    review artifacts in there, and picking one up silently reads a card that is
+    not the implemented one.
+    """
+    if not _CARD_JSON_CACHE:
+        root = ROOT / "engine" / "card_effects" / "json"
+        for path in root.rglob("*.json"):
+            if "needs_review" in path.parts or "batch" in path.parts:
+                continue
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            if isinstance(data, dict) and data.get("slug") and "abilities" in data:
+                _CARD_JSON_CACHE.setdefault(str(data["slug"]), data)
+    return _CARD_JSON_CACHE.get(slug) or {}
 
 
 def main():

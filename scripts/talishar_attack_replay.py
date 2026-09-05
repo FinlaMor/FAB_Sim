@@ -291,6 +291,73 @@ def apply_active_effects(st, side, opp, attacker_id=1):
                 pass                     # a card we cannot replay must not stop the run
 
 
+def _replay_agent(state, options, context=""):
+    """DECLINE optional effects; take the first option for anything else.
+
+    The stub used to answer every prompt with options[0], and ask_yes_no offers
+    YES first "so a default agent acts". That was harmless while the harness
+    never fired ON_ATTACK triggers. Once it did, every optional on-attack pump
+    was paid for automatically -- and the spectator feed cannot tell us whether
+    the player actually paid.
+
+    Cadaverous Tilling is the shape: "Decompose - when this attacks, you may
+    banish 2 Earth cards and an action card from your graveyard. If you do, this
+    gets +2{p}." Auto-accepting turned 102 agreeing attacks into ours+2, and
+    felling_of_the_crown another 67. Talishar's number reflects the choice the
+    player made; we were inventing one.
+
+    Declining is the defensible default: it is the card's PRINTED power with no
+    elective extra, so a disagreement means we are missing something rather than
+    manufacturing it. It also matches the corpus, where these costs are rarely
+    paid -- banishing three cards for +2{p} usually is not worth it. When a card
+    is one where paying IS usually right, it shows up as a systematic -N cluster
+    on that one card, which is the shape this audit already triages.
+
+    Scenarios (scripts/talishar_scenario.py) are the way to test the ACCEPTED
+    branch: there the board is built, so the choice can be made deliberately
+    instead of guessed.
+    """
+    from engine.card_effects.ability_keywords import NO, DECLINE
+    for opt in (NO, DECLINE):
+        if opt in options:
+            return opt
+    return options[0]
+
+
+def _accepting_agent(state, options, context=""):
+    """Take every optional. The counterfactual, not a replay setting.
+
+    Paired with _replay_agent by explains_as_choice(): if declining disagrees
+    with Talishar and accepting agrees, the difference is a player choice the
+    feed does not record, and calling it a defect would be wrong."""
+    return options[0]
+
+
+def explains_as_choice(side, other, slug, theirs, played_from=None,
+                       with_effects=False):
+    """Would ACCEPTING an optional have matched Talishar's number?
+
+    Both directions genuinely occur -- 171 corpus attacks where the player paid
+    Cadaverous Tilling's Decompose cost, 102 where they did not -- so neither
+    "always accept" nor "always decline" is a defensible default, and picking
+    either manufactures roughly a hundred findings. The spectator feed does not
+    record the choice, so the honest verdict is "not judgeable here", and the
+    scenario path (scripts/talishar_scenario.py) is where the accepted branch
+    gets tested deliberately.
+
+    Only called on a disagreement, so the second replay costs ~7% more work
+    rather than doubling it. A fresh state is required: our_power() mutates the
+    one it is given, and `with_effects` must match the caller's -- a
+    counterfactual built on a different board is not a counterfactual.
+    """
+    try:
+        alt_state = build_state(side, other, with_effects=with_effects)
+        alt_state.player_agents = {1: _accepting_agent, 2: _accepting_agent}
+        return our_power(alt_state, slug, played_from=played_from) == theirs
+    except Exception:
+        return False
+
+
 def build_state(side, opp, attacker_id=1, with_effects=False):
     """Reconstruct as much of the attacker's board as the feed exposes.
 
@@ -308,8 +375,7 @@ def build_state(side, opp, attacker_id=1, with_effects=False):
     st.step = Step.COMBAT if hasattr(Step, "COMBAT") else Step.ACTION
     st.active_player = attacker_id
     st.combat = None
-    st.player_agents = {1: lambda s, options, context="": options[0],
-                        2: lambda s, options, context="": options[0]}
+    st.player_agents = {1: _replay_agent, 2: _replay_agent}
 
     for pid, data in ((attacker_id, side), (3 - attacker_id, opp)):
         player = st.players[pid]
@@ -561,6 +627,7 @@ def main():
     by_card = collections.defaultdict(collections.Counter)
     errors = collections.Counter()
     skipped = collections.Counter()
+    optional = collections.Counter()
 
     for slug, theirs, side, other, played_from, skip in attack_states(
             args.db, args.limit, args.wide):
@@ -573,6 +640,13 @@ def main():
             continue
         if ours is None:
             continue
+        if ours != theirs and explains_as_choice(side, other, slug, theirs,
+                                                 played_from):
+            # A legal optional the player took and the feed does not record.
+            # Counted, not scored: it is neither an agreement (we did not
+            # predict it) nor a defect (nothing is wrong).
+            optional[slug] += 1
+            continue
         checked += 1
         if ours == theirs:
             agree += 1
@@ -583,6 +657,11 @@ def main():
     print("attacks compared: %d" % checked)
     if checked:
         print("power identical  : %d (%.0f%%)" % (agree, 100 * agree / checked))
+    if optional:
+        print("not judgeable    : %d (optional cost the feed does not record; "
+              "accepting it would have matched)" % sum(optional.values()))
+        for slug, n in optional.most_common(6):
+            print("     %-32s %d" % (slug, n))
     print("\nskipped: %s" % dict(skipped.most_common(8)))
     if errors:
         print("errors: %s" % dict(errors.most_common(6)))

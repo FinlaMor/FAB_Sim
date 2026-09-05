@@ -96,8 +96,13 @@ SPECTATOR check cannot see (all reported under KNOWN LIMITS, and all covered by
   * whether an attack action was played FROM ARSENAL, since 94% of the arsenal
     a spectator sees is CardBack
   * anything reading a HAND
-  * anything gated on a player CHOICE ("you MAY banish ... if you do, +1") —
-    still genuinely unresolvable, since a choice is in neither corpus
+  * anything gated on a player CHOICE ("you MAY banish ... if you do, +1"). The
+    choice is in neither corpus, so these are no longer SCORED: when declining
+    disagrees but accepting would have matched, the attack is reported as "not
+    judgeable" instead. Both directions really occur — 171 corpus attacks paid
+    Cadaverous Tilling's Decompose cost and 102 did not — so answering the
+    prompt either way manufactures about a hundred findings. Build the board
+    with scripts/talishar_scenario.py to test the taken branch on purpose.
 
 A MEASURED NON-FIX, recorded so it is not tried again: `layer` names what is
 currently resolving (a step, or the slug of a card), and attributing on-hit
@@ -122,7 +127,9 @@ sys.path.insert(0, str(ROOT))
 
 from scripts.talishar_attack_replay import (  # noqa: E402
     DB, DB_PATH, FLAGS_TO_KEYWORDS, _announce_attack as announce_attack, _ids,
-    build_state, canonical, get_card, hero_name, our_power,
+    _accepting_agent as accepting_agent, _replay_agent as replay_agent,
+    build_state, canonical, explains_as_choice, get_card, hero_name,
+    our_power,
 )
 
 INDEX_PATH = ROOT / "card_data" / "talishar_card_index.json"
@@ -154,7 +161,16 @@ UNRECONSTRUCTABLE = (
     ("booed", "crowd state appears only in the chat log"),
     ("cheered", "crowd state appears only in the chat log"),
     ("from arsenal", "arsenal is face-down to spectators (94% CardBack)"),
-    ("you may", "depends on a player choice that is not in the state"),
+    # Attacks the choice explains are reported as "not judgeable" rather than
+    # scored. The residue is the cases where accepting could not reproduce
+    # Talishar's number EITHER, because the option's own gate fails on our
+    # rebuilt board -- Decompose needs 2 Earth cards and an action in the
+    # graveyard, and a spectator graveyard is not fully reconstructible. Those
+    # stay in the disagreement list on purpose: explaining them away would need
+    # the harness to ignore the gate, and a harness that can bypass conditions
+    # can explain almost anything.
+    ("you may", "depends on a player choice that is not in the state; the "
+                "attacks it explains are reported as not judgeable"),
     ("from their hand", "hands are CardBack; we replay with an empty hand"),
     ("from your hand", "hands are CardBack; we replay with an empty hand"),
     ("reveal their hand", "hand contents are never visible to a spectator"),
@@ -508,7 +524,16 @@ def generated_attack_check(slug):
             continue
         combat = st_json.get("combat") or {}
         chain = st_json.get("combat_chain") or []
-        theirs = combat.get("attack_power")
+        # `_fab_oracle_power` is set only on a generated row that PAID an
+        # optional cost. The board on that row is the one from BEFORE the
+        # payment -- paying spends the cost, and a state whose graveyard has
+        # already been banished away cannot reproduce the pump it bought -- so
+        # the board and the oracle number deliberately come from either side of
+        # the choice. Absent on every other row, where the state's own number is
+        # the answer.
+        theirs = st_json.get("_fab_oracle_power")
+        if theirs is None:
+            theirs = combat.get("attack_power")
         if not chain or chain[0].get("card_id") != slug:
             continue
         if not isinstance(theirs, int):
@@ -516,6 +541,21 @@ def generated_attack_check(slug):
         attacker = int(combat.get("attacker") or chain[0].get("player") or 1)
         try:
             st = pq_build(st_json)
+            # pq_build uses conftest's _make_state, whose default agent answers
+            # every prompt with options[0] -- and ask_yes_no offers YES first.
+            # That auto-pays every optional on-attack cost, which is invention,
+            # not replay. Same agent as the spectator replay, same reasoning.
+            #
+            # No explains_as_choice counterfactual here, unlike the spectator
+            # check: a generated scenario RECORDS which branch it took, because
+            # Talishar surfaces the cost prompt as real legal actions and the
+            # generator chose one. So the choice is known rather than guessed --
+            # replay it with the agent that matches. Comparing a paid-for state
+            # against an engine that refused to pay would be a guaranteed
+            # disagreement saying nothing about the card.
+            took = bool((st_json.get("_fab_scenario") or {}).get("take_optional"))
+            agent = accepting_agent if took else replay_agent
+            st.player_agents = {1: agent, 2: agent}
             E._setup_dsl_listeners(st)
             rebuild_chain_links(st, st_json, attacker)
             card = DB.get(slug)
@@ -803,6 +843,7 @@ def verify(slug, db_path, explain=False, refresh=False, with_effects=False,
     hits = hits_agree = 0
     hit_mismatches = []
     excluded_by_effects = 0
+    optional_choice = 0
     effect_sources = collections.Counter()
 
     for gid, run in attack_runs(db_path, rowids):
@@ -866,6 +907,16 @@ def verify(slug, db_path, explain=False, refresh=False, with_effects=False,
             ours = our_power(st, slug)
         except Exception:
             continue
+        if ours != theirs and explains_as_choice(side, other, slug, theirs,
+                                                 with_effects=with_effects):
+            # An optional the player took ("you may banish ... if you do, this
+            # gets +2{p}") that the feed does not record. Both directions occur
+            # in the corpus, so neither answering yes nor answering no is a
+            # defensible default -- either one manufactures findings. Counted
+            # apart from the score; the scenario path tests the taken branch
+            # deliberately.
+            optional_choice += 1
+            continue
         checked += 1
         if ours == theirs:
             agree += 1
@@ -886,6 +937,10 @@ def verify(slug, db_path, explain=False, refresh=False, with_effects=False,
               % (hits_agree, hits, 100 * hits_agree / hits, hits))
     else:
         print("  on-hit replayed         : never observed hitting a hero")
+
+    if optional_choice:
+        print("  not judgeable           : %d attack(s) turned on an optional "
+              "cost the feed does not record" % optional_choice)
 
     if excluded_by_effects:
         print("  excluded (active effects): %d attack(s)" % excluded_by_effects)

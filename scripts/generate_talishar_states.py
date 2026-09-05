@@ -46,7 +46,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from scripts.talishar_scenario import (  # noqa: E402
-    ADAPTER, HEADLESS, Scenario, ScenarioError, build, combo_partners, slug_index,
+    ADAPTER, HEADLESS, Scenario, ScenarioError, build, combo_partners,
+    slug_index, zone_requirements,
 )
 
 OUT_DIR = ROOT / "card_data" / "generated_states"
@@ -63,6 +64,7 @@ def situations(slug, index, repeats=1, seed=17):
     names the previous chain link.
     """
     rng = random.Random(seed)
+    fuel = zone_requirements(slug, index)
     out = []
     for _ in range(max(1, repeats)):
         s = rng.randrange(1, 10 ** 6)
@@ -70,6 +72,19 @@ def situations(slug, index, repeats=1, seed=17):
         for partner in combo_partners(slug, index):
             out.append(Scenario(card=slug, seed=s, chain_links=[partner],
                                 label="combo:%s" % partner))
+        # An optional cost is unreachable on an empty board -- Talishar will not
+        # even OFFER Decompose without 2 Earth cards and an action in the
+        # graveyard -- so a baseline scenario says nothing about that clause.
+        # Stock what the card's own CARD_IN_ZONE conditions ask for, then run
+        # BOTH branches: the pump must appear when paid and stay absent when
+        # not. Declining alone would pass just as well against a card whose
+        # optional never fires at all.
+        if fuel:
+            for taken in (False, True):
+                out.append(Scenario(card=slug, seed=s, take_optional=taken,
+                                    label="optional:%s" % ("taken" if taken
+                                                           else "declined"),
+                                    **fuel))
     return out
 
 
@@ -99,7 +114,17 @@ def run_scenario(sc, index, adapter):
         "situation": sc.label,
     }
 
-    return transition, _live_attack(built, result, sc.card), None
+    attack = _live_attack(built, result, sc.card, sc.take_optional)
+    if attack is not None:
+        # Tag which branch Talishar actually walked. Without it the verifier
+        # replays every recorded attack with the DECLINING agent, so a state
+        # recorded after PAYING the cost would be compared against an engine
+        # that refused to pay -- a guaranteed disagreement that says nothing
+        # about the card. Namespaced so it cannot collide with a Talishar key.
+        attack = dict(attack)
+        attack["_fab_scenario"] = {"label": sc.label,
+                                   "take_optional": bool(sc.take_optional)}
+    return transition, attack, None
 
 
 #: How many priority passes to walk through looking for the live attack. An
@@ -107,32 +132,87 @@ def run_scenario(sc, index, adapter):
 #: reaches the chain, so two is the common case; the cap only stops a runaway.
 _PASS_BUDGET = 8
 
+#: Extra steps allowed when PAYING an optional cost. Decompose banishes three
+#: separate cards, each its own CHOOSE_ action, so the pass budget alone runs
+#: out before the attack goes live.
+_CHOICE_BUDGET = 10
 
-def _live_attack(built, result, slug):
+
+def _live_attack(built, result, slug, take_optional=False):
     """The state where `slug` is the attack on the chain, or None.
 
     Playing an attack does not put it on the chain -- it goes to the stack and
     opens an instant-speed window for each player first. Reading the state
     immediately after the play therefore shows an empty combat chain, and an
     earlier version of this recorded nothing at all for cards whose window did
-    not happen to auto-pass. So: take PASS and nothing else, and stop the moment
-    the attack is live.
+    not happen to auto-pass. So: walk forward until the attack is live.
 
-    Passing only is what keeps this a measurement rather than a game. Any other
-    action would change the board the scenario asked for.
+    PASS and nothing else, normally: any other action would change the board the
+    scenario asked for. The exception is `take_optional`, which answers the
+    card's own cost prompt -- Talishar surfaces those as real legal actions
+    (phase MAYCHOOSEMULTIZONE, CHOOSE_* options plus PASS), so the branch is
+    something we can choose rather than guess. That is the whole reason the
+    accepted branch is testable here and not in the spectator corpus.
     """
-    for _ in range(_PASS_BUDGET):
+    budget = _PASS_BUDGET + (_CHOICE_BUDGET if take_optional else 0)
+    first_live = None   # the attack on the chain, cost not yet paid
+    pre_choice = None   # the board Talishar offered the choice on
+    paid = False
+    for _ in range(budget):
         state = result["state"]
         combat = state.get("combat") or {}
         chain = state.get("combat_chain") or []
-        if combat.get("active") and chain and chain[0].get("card_id") == slug:
-            return state
-        passes = [a for a in (result.get("legal_actions") or [])
-                  if a.get("type") == "PASS"]
-        if not passes:
-            return None
-        result = built.step(passes[0]["action_id"])
-    return None
+        legal = result.get("legal_actions") or []
+        choices = [a for a in legal
+                   if str(a.get("type", "")).startswith("CHOOSE_")]
+        live = bool(combat.get("active") and chain
+                    and chain[0].get("card_id") == slug)
+        if live and first_live is None:
+            first_live = state
+
+        if not take_optional:
+            if live:
+                return state
+        elif choices:
+            # KEEP THE BOARD AS IT WAS BEFORE PAYING. Paying SPENDS the cost:
+            # once Decompose resolves the graveyard is empty, and replaying that
+            # state cannot reproduce the pump it bought -- our engine's gate
+            # wants the two Earth cards that are no longer there, so the paid
+            # branch read ours=6 against theirs=8 for that reason alone. The
+            # question is "given THIS board, what is the power once the optional
+            # is taken", so the board comes from before the payment and only the
+            # oracle number from after.
+            if pre_choice is None:
+                pre_choice = state
+            result = built.step(choices[0]["action_id"])
+            paid = True
+            continue
+        elif paid and live:
+            out = dict(pre_choice)
+            out["_fab_oracle_power"] = combat.get("attack_power")
+            return out
+        elif not live and first_live is not None:
+            # Walked past the attack without ever being offered the choice.
+            break
+
+        # THE PROMPT CAN LAG THE ATTACK GOING LIVE. Talishar puts the card on
+        # the chain and surfaces the cost prompt a step later, and whether it is
+        # already up on the first live state varies with the deck shuffle. An
+        # earlier version returned at the first live state, so the paid branch
+        # silently became the declined branch on some runs and not others --
+        # identical output, no error, and nothing to say the setup had failed.
+        # So keep passing while the attack is live and look again.
+        step_on = next((a for a in legal if a.get("type") == "PASS"), None)
+        if step_on is None:
+            break
+        result = built.step(step_on["action_id"])
+
+    if take_optional and not paid:
+        # Report it rather than return a state indistinguishable from the
+        # declined branch: an unpaid "taken" row would agree with our engine for
+        # the wrong reason and quietly claim coverage the run never had.
+        return None
+    return first_live
 
 
 def generate(slug, adapter=ADAPTER, repeats=1, seed=17, verbose=True):
@@ -158,7 +238,13 @@ def generate(slug, adapter=ADAPTER, repeats=1, seed=17, verbose=True):
         if atk:
             attacks.append(atk)
         if verbose:
-            power = ((atk or {}).get("combat") or {}).get("attack_power")
+            # On a paid-optional row the board is the PRE-payment one, so its
+            # own combat.attack_power is the unpaid number; the oracle is what
+            # Talishar settled on after. Printing the board's number there made
+            # both branches read 6 and 6 and hid a working setup.
+            power = (atk or {}).get("_fab_oracle_power")
+            if power is None:
+                power = ((atk or {}).get("combat") or {}).get("attack_power")
             print("  %-24s %s%s" % (
                 sc.label,
                 "transition" if tr else "no transition",

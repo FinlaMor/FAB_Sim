@@ -58,6 +58,51 @@ def test_unknown_slug_is_empty_not_an_error(index):
     assert combo_partners("not_a_real_card_zzz", index) == []
 
 
+# ----------------------------------------------------------------------
+# Zone requirements: what a card needs on the board before its gated
+# abilities can fire at all.
+# ----------------------------------------------------------------------
+
+
+def test_an_optional_cost_asks_for_the_zone_it_draws_from(index):
+    """Cadaverous Tilling's Decompose needs 2 Earth cards and an action card in
+    the graveyard before Talishar will even OFFER the choice. On a bare board
+    the whole clause is unreachable, so "the scenario agrees" says nothing about
+    it -- which is what made the card look verified when it was not."""
+    from scripts.talishar_scenario import zone_requirements
+
+    req = zone_requirements("cadaverous_tilling_red", index)
+    assert "discard" in req
+    fuel = req["discard"]
+    assert len(fuel) >= 3, "Decompose banishes three cards; %r" % (fuel,)
+    earth = [s for s in fuel
+             if "Earth" in ((index.get(s) or {}).get("talents") or [])
+             + ((index.get(s) or {}).get("classes") or [])]
+    assert len(earth) >= 2, "needs 2 Earth cards, got %r" % (earth,)
+
+
+def test_a_cross_table_cost_stocks_both_graveyards(index):
+    """Rotten Remains banishes "a card with 1{p} from EACH hero's graveyard".
+    With only our side stocked Talishar never offers the choice at all, and the
+    paid branch cannot be built -- the generator reported no attack state rather
+    than silently recording an unpaid one."""
+    from scripts.talishar_scenario import zone_requirements
+
+    req = zone_requirements("rotten_remains_blue", index)
+    assert req.get("discard"), req
+    assert req.get("opp_discard"), req
+
+
+def test_a_card_with_no_zone_gate_asks_for_nothing(index):
+    """The negative case: a requirement reader that returned something for every
+    card would stock boards nothing needed and make every scenario slower and
+    less like the game it stands in for."""
+    from scripts.talishar_scenario import zone_requirements
+
+    assert zone_requirements("head_jab_red", index) == {}
+    assert zone_requirements("whelming_gustwave_red", index) == {}
+
+
 def test_a_typo_is_refused_before_the_adapter_sees_it(index):
     """Talishar accepts an unknown card id: it puts it in the zone and then
     offers it as a legal play. A typo would build a board with a phantom card

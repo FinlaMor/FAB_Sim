@@ -17,12 +17,14 @@ These assert through our_power(), the same entry point the comparison uses, so
 the test fails if the announcement is removed from it.
 """
 
+import copy
+
 import pytest
 
 from engine.card import CardDB
 from engine.card_effects.dsl.loader import load_all_cards
 from engine.state import ChainLink, Step
-from scripts.talishar_attack_replay import our_power
+from scripts.talishar_attack_replay import _replay_agent, our_power
 from tests.conftest import _make_state
 import engine.engine as E
 
@@ -40,8 +42,10 @@ def _board():
     st.step = Step.COMBAT if hasattr(Step, "COMBAT") else Step.ACTION
     st.active_player = 1
     st.combat = None
-    st.player_agents = {1: lambda s, options, context="": options[0],
-                        2: lambda s, options, context="": options[0]}
+    # The harness's own agent, not a local stand-in: conftest's default answers
+    # every prompt with options[0], and ask_yes_no offers YES first, so a local
+    # stub would quietly test a configuration the comparison never runs.
+    st.player_agents = {1: _replay_agent, 2: _replay_agent}
     # Without this every WHILE_STATIC and every dispatched trigger is silently
     # absent -- the harness's own docstring calls this out as the whole hazard
     # of a replay harness.
@@ -78,6 +82,61 @@ def test_combo_pump_absent_when_a_different_card_was_the_last_link():
     st = _board()
     _push_link(st, "head_jab_red")
     assert our_power(st, COMBO_CARD, attacker_id=1) == _base_power(COMBO_CARD)
+
+
+def test_the_replay_agent_declines_optional_effects():
+    """Announcing the attack fires optional pumps too, and the old stub answered
+    every prompt with options[0] -- which ask_yes_no offers as YES.
+
+    The spectator feed does not record whether the player paid an optional cost,
+    so auto-accepting is invention: it turned 102 agreeing cadaverous_tilling
+    attacks into ours+2, and 67 more on felling_of_the_crown.
+    """
+    from engine.card_effects.ability_keywords import YES, NO, DECLINE
+    from scripts.talishar_attack_replay import _replay_agent
+
+    assert _replay_agent(None, [YES, NO]) == NO
+    assert _replay_agent(None, ["banish a card", DECLINE]) == DECLINE
+    # Anything that is not an opt-out still takes the first option, so a forced
+    # choice does not deadlock the replay.
+    assert _replay_agent(None, ["a", "b"]) == "a"
+
+
+#: Cadaverous Tilling: "Decompose - when this attacks, you may banish 2 Earth
+#: cards and an action card from your graveyard. If you do, this gets +2{p}."
+OPTIONAL_PUMP_CARD = "cadaverous_tilling_red"
+#: Enough Earth action cards to satisfy Decompose's gate AND its cost.
+DECOMPOSE_FUEL = ["autumns_touch_red", "autumns_touch_yellow", "anthem_of_spring_blue"]
+
+
+def _stock_graveyard(st, slugs, owner=1):
+    for slug in slugs:
+        card = copy.deepcopy(DB.get(slug))
+        card.owner = card.controller = owner
+        st.players[owner].graveyard.add(card)
+
+
+def test_an_optional_pump_is_declined_even_when_it_could_be_paid():
+    """The graveyard is stocked so Decompose's gate PASSES and the cost is
+    payable. Declining must still be what happens -- otherwise the harness is
+    inventing a player choice the spectator feed never recorded."""
+    st = _board()
+    _stock_graveyard(st, DECOMPOSE_FUEL)
+    assert our_power(st, OPTIONAL_PUMP_CARD, attacker_id=1) == \
+        _base_power(OPTIONAL_PUMP_CARD)
+
+
+def test_accepting_the_same_optional_does_pump_it():
+    """The counterfactual explains_as_choice() computes. Without this, the test
+    above would pass just as well against a card whose optional is unreachable,
+    and would be proving nothing about the agent."""
+    from scripts.talishar_attack_replay import _accepting_agent
+
+    st = _board()
+    _stock_graveyard(st, DECOMPOSE_FUEL)
+    st.player_agents = {1: _accepting_agent, 2: _accepting_agent}
+    assert our_power(st, OPTIONAL_PUMP_CARD, attacker_id=1) == \
+        _base_power(OPTIONAL_PUMP_CARD) + 2
 
 
 def test_a_trigger_that_raises_does_not_take_down_the_power_read():

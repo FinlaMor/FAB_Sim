@@ -174,11 +174,32 @@ JSON definition.
      ATTACK cards: the outcome comparison needs a quiet board and same-input
      resolution, and a chained attack gives neither.
 
-   Situations come from the card's own text, not a per-card table: `baseline`
-   plus one `combo:<partner>` for every attack the card names. That is what
-   makes combo cards checkable at all — the spectator feed never names the
-   previous chain link, so `whelming_gustwave_red` reads 20% there and 100% on
-   built states.
+   Situations come from the card's own text and DSL, not a per-card table:
+
+   - `baseline` — a quiet board.
+   - `combo:<partner>` — one per attack the card names, with that attack as the
+     previous chain link. The spectator feed never names the previous link, so
+     this is what makes combo cards checkable at all: `whelming_gustwave_red`
+     reads 20% there and 100% on built states.
+   - `optional:declined` / `optional:taken` — when the card has an optional cost.
+     The zones it draws from are stocked from its own `CARD_IN_ZONE` conditions
+     (`zone_requirements()`), because **Talishar does not offer the choice at
+     all on a bare board** — Decompose needs 2 Earth cards and an action in the
+     graveyard first, so a baseline scenario says nothing about that clause.
+     Both branches run: the pump must appear when paid and stay absent when not.
+
+   Two things about the paid branch that are easy to get wrong, and were:
+
+   - **The attack goes live before the cost is paid.** Talishar puts the card on
+     the chain and surfaces the prompt a step later, and whether it is up on the
+     first live state varies with the shuffle. Stopping at the first live state
+     made the paid branch silently identical to the declined one on some runs.
+   - **Paying spends the cost**, so the state afterwards no longer contains it
+     and cannot reproduce the pump it bought. The recorded row is therefore the
+     board from *before* the payment, with Talishar's post-payment number in
+     `_fab_oracle_power`; the verifier prefers that and replays with an
+     accepting agent. If the choice is never offered, the generator records
+     nothing rather than an unpaid row that would agree for the wrong reason.
 
    **Build your own board** when the default situations miss the point:
 
