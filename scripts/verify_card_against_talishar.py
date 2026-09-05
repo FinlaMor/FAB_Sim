@@ -121,8 +121,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from scripts.talishar_attack_replay import (  # noqa: E402
-    DB, DB_PATH, FLAGS_TO_KEYWORDS, _ids, build_state, canonical, get_card,
-    hero_name, our_power,
+    DB, DB_PATH, FLAGS_TO_KEYWORDS, _announce_attack as announce_attack, _ids,
+    build_state, canonical, get_card, hero_name, our_power,
 )
 
 INDEX_PATH = ROOT / "card_data" / "talishar_card_index.json"
@@ -531,6 +531,11 @@ def generated_attack_check(slug):
             st.combat.base_attack_power = power
             E._apply_turn_attack_effects(st, card)
             E._register_card_continuous_effects(st, card)
+            # Announce the attack, so pumps written as ON_ATTACK triggers fire.
+            # Only continuous statics ran before this, which made every
+            # "Combo — ... gains +N{p}" card read low against Talishar on the
+            # very states built to exercise it.
+            announce_attack(st, card)
             E._recalculate_attack_power(st)
             ours = st.combat.attack_power
         except Exception:
@@ -682,6 +687,15 @@ def _slug_index():
 def known_limits(slug):
     text = ((_slug_index().get(slug) or {}).get("functionalText") or "").lower()
     return [why for phrase, why in UNRECONSTRUCTABLE if phrase in text]
+
+
+def is_implemented(slug):
+    """Does this card have a DSL definition, or only printed stats?"""
+    from engine.card_effects.dsl.loader import get_card as _get_def
+    try:
+        return _get_def(slug) is not None
+    except Exception:
+        return True  # never let a lookup failure fabricate a disclaimer
 
 
 def _int(value):
@@ -944,6 +958,15 @@ def verify(slug, db_path, explain=False, refresh=False, with_effects=False,
                 print("  open-hand corpus        : no comparable plays found")
 
     limits = known_limits(slug)
+    if not is_implemented(slug):
+        # Say it rather than leave it to be inferred. The card database carries
+        # printed stats for every card, so an UNIMPLEMENTED card still replays
+        # and still produces a number -- its base power, every time. Against a
+        # state built to exercise a Combo that reads as a clean disagreement,
+        # and open_the_center_red's 1/2 was very nearly read here as an engine
+        # defect when the card simply has no JSON yet.
+        limits = ["no JSON definition for this card yet - every effect is "
+                  "absent, so a disagreement is expected, not a defect"] + limits
     if limits:
         print("\n  KNOWN LIMITS (a disagreement here may not be a defect):")
         for why in dict.fromkeys(limits):

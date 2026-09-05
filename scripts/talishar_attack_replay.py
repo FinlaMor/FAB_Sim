@@ -408,8 +408,33 @@ def our_power(st, slug, attacker_id=1, played_from=None):
         card.played_from_zone = played_from
     E._apply_turn_attack_effects(st, card)
     E._register_card_continuous_effects(st, card)
+    _announce_attack(st, card)
     E._recalculate_attack_power(st)
     return st.combat.attack_power
+
+
+def _announce_attack(st, card):
+    """Fire the ON_ATTACK triggers, the way announcing the attack does.
+
+    Without this the harness applied only continuous statics, so any pump
+    written as a TRIGGERED / ON_ATTACK ability read as absent. That is a large
+    class -- every "Combo - ... gains +N{p}" card among them -- and it fails in
+    the direction that looks like an engine defect: ours low, theirs right.
+    whelming_gustwave's combo was reported as a -1 disagreement on exactly the
+    states built to exercise it, while the engine itself had the card right.
+
+    engine.engine emits 'attacking' at the same point for the same reason
+    (engine.py: "7.2.4: attack event"); replaying the event rather than calling
+    the DSL directly keeps granted triggers and the listener ordering intact.
+    """
+    from engine.state import Event
+    try:
+        st.event_manager.emit(Event(type="attacking", card=card.slug), st)
+    except Exception:
+        # A trigger that needs more of a real game than a reconstructed state
+        # carries must not take the whole comparison down with it; the power
+        # read below is still the engine's answer for everything else.
+        pass
 
 
 def attack_states(db_path, limit, wide=False):

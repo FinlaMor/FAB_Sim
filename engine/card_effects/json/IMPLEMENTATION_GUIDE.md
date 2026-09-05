@@ -156,15 +156,15 @@ JSON definition.
 
    ```
    # once, in FAB_Sim_Headless:  $env:ADAPTER_MODE="real"; docker compose up -d adapter
-   python scripts/generate_talishar_states.py --card <slug> --games 3
+   python scripts/generate_talishar_states.py --card <slug>
    python scripts/verify_card_against_talishar.py --card <slug>
    ```
 
-   The generator picks a real CC deck whose hero can legally play the card,
-   swaps the card in over filler (so the deck stays legal by construction),
-   plays games against the live engine, and records every transition where the
-   card was played. The verifier picks those up automatically. Talishar is
-   still the only thing deciding what happens — we only choose actions.
+   The generator borrows a real CC deck whose hero can legally play the card,
+   then **builds the board directly** through the adapter's `POST /scenario`:
+   the card in hand, the resources paid, the combo partner already on the
+   chain. Seconds per card, and aimable. Talishar is still the only thing
+   deciding what happens — we only choose the starting state and the action.
 
    Two things get recorded, because they answer different questions:
 
@@ -173,6 +173,42 @@ JSON definition.
      Talishar's own `combat.attack_power`. This is the one that works for
      ATTACK cards: the outcome comparison needs a quiet board and same-input
      resolution, and a chained attack gives neither.
+
+   Situations come from the card's own text, not a per-card table: `baseline`
+   plus one `combo:<partner>` for every attack the card names. That is what
+   makes combo cards checkable at all — the spectator feed never names the
+   previous chain link, so `whelming_gustwave_red` reads 20% there and 100% on
+   built states.
+
+   **Build your own board** when the default situations miss the point:
+
+   ```python
+   from scripts.talishar_scenario import Scenario, build
+   built = build(Scenario(card="whelming_gustwave_red",
+                          chain_links=["surging_strike_red"],
+                          arsenal=["head_jab_red"], discard=[...], resources=3))
+   after = built.play("whelming_gustwave_red")
+   ```
+
+   Zones take plain slugs (`hand`, `arsenal`, `discard`, `banish`, `pitch`,
+   `deck_top`, `chain_links`), plus `health` / `opp_health` / `resources`.
+   `actor=2` puts the card in the other seat, which is the only way to reach a
+   defence reaction — it can only be played while the opponent is attacking.
+   `resources` defaults to 3 because Talishar does not gate legality on cost: it
+   offers the play and then drops into the phase-P pitch prompt, and pre-paying
+   skips a decision that has nothing to do with the effect under test.
+
+   `/scenario` re-reads the state it wrote and refuses the request if it did
+   not round-trip, so a field that fails to land is an error rather than a
+   quietly different board. It cannot catch a field you never asked for,
+   though: setting a chain link without its summary row produced a chain that
+   was visible in the state and invisible to every combo card. **Assert on the
+   outcome — the power, the damage — never on the scenario echo.**
+
+   What a scenario cannot express yet: anything resting on accumulated turn
+   history (class-state counters, per-turn stats), since the patch sets zones
+   and turn scalars only. `--play-games` keeps the old stack-the-deck-and-play
+   path for those.
 
 9. **Update the work queue:** `python scripts/dsl_work_queue.py --set <set> --write-queue`
    flips entries to `"done"` automatically based on which JSON files exist.
