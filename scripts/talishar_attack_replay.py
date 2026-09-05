@@ -34,8 +34,20 @@ positive that looks exactly like an engine bug. Excluded by default:
 `--wide` drops the effects/chain-link exclusions to show how much of the
 disagreement they account for. Expect it to be worse; that is the point.
 
-WHERE IT STANDS: 98% (89 -> 94 -> 95 -> 96 -> 97 -> 98). Two of those steps
-were engine fixes, the rest were fixes to this harness.
+WHERE IT STANDS: 97% of 1,200 attacks, with later chain links now INCLUDED
+(89 -> 94 -> 95 -> 96 -> 97 -> 98 on the old first-link-only slice). Two of
+those steps were engine fixes; the rest were fixes to this harness.
+
+INCLUDING LATER CHAIN LINKS costs about a point and roughly triples the
+evidence, which is the right trade for a per-card tool. It does surface one
+expected class of false positive: COMBO cards. `chain_links` carries only
+{"result", "isDraconic"} across all 53,050 entries in the corpus and never
+names the previous card, so "if Surging Strike was the last attack this combat
+chain" cannot be evaluated and whelming_gustwave_red/yellow read 1 low every
+time. That is a limit of the feed, not a defect, and the per-card verifier
+reports it under KNOWN LIMITS. `isDraconic` is the one piece that IS usable —
+"Draconic chain links you control" is reconstructible where the named-card form
+is not.
 
 100% IS NOT REACHABLE FROM THIS FEED, and the remaining ~2% says why rather
 than hiding. Three classes, none of them an engine defect:
@@ -447,9 +459,14 @@ def attack_states(db_path, limit, wide=False):
         if cc.get("total_defense") or cc.get("reactions"):
             skipped["already defended"] += 1
             continue
-        if not wide and cc.get("chain_links"):
-            skipped["later chain link"] += 1
-            continue
+        # Later chain links are NOT excluded any more. The exclusion was set on
+        # the assumption that earlier links carry bonuses the visible state
+        # cannot explain, and never checked; measured, later-link attacks agree
+        # 94% against 98% for first-link ones. Four points of precision for
+        # roughly triple the evidence, and the entries themselves hold nothing
+        # reconstructible anyway -- {"result": "hit", "isDraconic": false}.
+        # verify_card_against_talishar.py made this change first; keeping the
+        # two in step matters because they share the reconstruction.
         if DB.get(slug) is None:
             skipped["not in card data"] += 1
             continue

@@ -159,6 +159,17 @@ UNRECONSTRUCTABLE = (
     ("from your hand", "hands are CardBack; we replay with an empty hand"),
     ("reveal their hand", "hand contents are never visible to a spectator"),
     ("discard a card", "hands are CardBack; we replay with an empty hand"),
+    # chain_links carries ONLY {"result", "isDraconic"} across all 53,050
+    # entries in the corpus -- it never names the previous card. So "if X was
+    # the last attack this combat chain" cannot be evaluated, and every combo
+    # card reads one pump low. (isDraconic IS there, so "Draconic chain links
+    # you control" is reconstructible; the named-card form is not.)
+    ("was the last attack",
+     "spectator chain_links never names the previous card - use --parquet or "
+     "generated states, whose `links` does"),
+    ("**combo**",
+     "spectator chain_links never names the previous card - use --parquet or "
+     "generated states, whose `links` does"),
 )
 
 
