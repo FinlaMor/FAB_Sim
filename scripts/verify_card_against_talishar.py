@@ -429,6 +429,68 @@ def compare_rows(rows, slug, limit=200):
     return checked, agree, diffs
 
 
+def generated_attack_check(slug):
+    """Compare attack power on states we made Talishar produce.
+
+    This is the path that works for ATTACK cards. The play/outcome comparison
+    cannot judge them — talishar_outcome_diff.usable() wants a quiet board and
+    same-input resolution, and a chained attack gives neither — but an active
+    combat state carries Talishar's own `combat.attack_power`, which is the
+    same oracle the spectator replay uses, on a state that ALSO has hands.
+    """
+    path = GENERATED_DIR / ("%s.attacks.jsonl" % slug)
+    if not path.exists():
+        return None
+    from scripts.talishar_outcome_diff import build_state as pq_build
+    import engine.engine as E
+    from engine.state import CombatState
+
+    checked = agree = 0
+    deltas = collections.Counter()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            st_json = json.loads(line)
+        except Exception:
+            continue
+        combat = st_json.get("combat") or {}
+        chain = st_json.get("combat_chain") or []
+        theirs = combat.get("attack_power")
+        if not chain or chain[0].get("card_id") != slug:
+            continue
+        if not isinstance(theirs, int):
+            continue
+        attacker = int(combat.get("attacker") or chain[0].get("player") or 1)
+        try:
+            st = pq_build(st_json)
+            E._setup_dsl_listeners(st)
+            card = DB.get(slug)
+            if card is None:
+                continue
+            import copy as _copy
+            card = _copy.deepcopy(card)
+            card.owner = card.controller = attacker
+            power = card.base_power or 0
+            st.combat = CombatState(attacker_id=attacker, link_id=1,
+                                    attack_power=power, attack_card=card,
+                                    keywords=[])
+            st.combat.base_attack_power = power
+            E._apply_turn_attack_effects(st, card)
+            E._register_card_continuous_effects(st, card)
+            E._recalculate_attack_power(st)
+            ours = st.combat.attack_power
+        except Exception:
+            continue
+        checked += 1
+        if ours == theirs:
+            agree += 1
+        else:
+            deltas[ours - theirs] += 1
+    return checked, agree, deltas
+
+
 def generated_check(slug):
     """States we made Talishar produce for this card, if any.
 
@@ -755,6 +817,17 @@ def verify(slug, db_path, explain=False, refresh=False, with_effects=False,
     if surprising:
         print("  keywords Talishar always reported that we lack: %s"
               % ", ".join(sorted(surprising)))
+
+    gen_atk = generated_attack_check(slug)
+    if gen_atk is not None:
+        n, ok, deltas = gen_atk
+        if n:
+            print("  generated attacks       : %d/%d agree (%.0f%%)"
+                  % (ok, n, 100 * ok / n))
+            if deltas:
+                print("     delta (ours-theirs): %s" % dict(deltas.most_common(5)))
+        else:
+            print("  generated attacks       : recorded, but none comparable")
 
     gen = generated_check(slug)
     if gen is not None:

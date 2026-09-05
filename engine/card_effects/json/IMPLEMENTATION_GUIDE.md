@@ -163,9 +163,16 @@ JSON definition.
    The generator picks a real CC deck whose hero can legally play the card,
    swaps the card in over filler (so the deck stays legal by construction),
    plays games against the live engine, and records every transition where the
-   card was played. The verifier picks those up automatically and reports them
-   as `generated states`. Talishar is still the only thing deciding what
-   happens — we only choose actions.
+   card was played. The verifier picks those up automatically. Talishar is
+   still the only thing deciding what happens — we only choose actions.
+
+   Two things get recorded, because they answer different questions:
+
+   - `generated states` — play/outcome transitions, for NON-attack cards.
+   - `generated attacks` — states where the card is the live attack, carrying
+     Talishar's own `combat.attack_power`. This is the one that works for
+     ATTACK cards: the outcome comparison needs a quiet board and same-input
+     resolution, and a chained attack gives neither.
 
 9. **Update the work queue:** `python scripts/dsl_work_queue.py --set <set> --write-queue`
    flips entries to `"done"` automatically based on which JSON files exist.

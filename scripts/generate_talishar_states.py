@@ -115,6 +115,13 @@ def run_game(env, slug, seed, step_cap=1200, want=6):
     full CC game is hundreds of steps.
     """
     transitions = []
+    #: States where OUR card is the live attack. These are what the attack-power
+    #: comparison needs, and they are not transitions: Talishar's own
+    #: `combat.attack_power` is the answer, read straight off the state. This is
+    #: the path that works for attack cards, where the play/outcome comparison
+    #: structurally cannot (it wants a quiet board and same-input resolution,
+    #: and a chained attack gives neither).
+    attacks = []
     init = env.reset(hero1=env._hero1, hero2=env._hero2,
                      deck1=env._deck1, deck2=env._deck2,
                      seed=seed, format="cc")
@@ -145,15 +152,25 @@ def run_game(env, slug, seed, step_cap=1200, want=6):
                          and cd.get("card_id") == slug)
         result = env.step(getattr(choice, "action_id", getattr(choice, "id", 0)))
         legal = result.legal_actions
+
+        now = env.get_state(refresh=True)
+        combat = now.get("combat") or {}
+        chain = now.get("combat_chain") or []
+        if combat.get("active") and chain and chain[0].get("card_id") == slug:
+            attacks.append(json.dumps(now))
         if played_target:
             transitions.append({
                 "state_json": json.dumps(before),
                 "chosen_action_json": json.dumps(cd),
                 "next_state_json": json.dumps(env.get_state(refresh=True)),
             })
-            if len(transitions) >= want:
-                break
-    return transitions
+        # Stop only when BOTH are satisfied. Breaking on the transition quota
+        # alone captured no attack states at all: the attack goes to the STACK
+        # first and combat only becomes active on a later step, so the loop was
+        # exiting before the thing it was trying to record existed.
+        if len(transitions) >= want and len(attacks) >= want:
+            break
+    return transitions, attacks
 
 
 def main():
@@ -212,12 +229,15 @@ def main():
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     out = OUT_DIR / ("%s.jsonl" % args.card)
     total = 0
+    all_attacks = []
     rng = random.Random(args.seed)
     with out.open("w", encoding="utf-8") as fh:
         for i in range(args.games):
             try:
-                rows = run_game(env, args.card, rng.randrange(1, 10 ** 6),
-                                want=args.want)
+                rows, atks = run_game(env, args.card,
+                                      rng.randrange(1, 10 ** 6),
+                                      want=args.want)
+                all_attacks.extend(atks)
             except Exception as exc:
                 print("  game %d failed: %r" % (i + 1, exc))
                 continue
@@ -226,7 +246,11 @@ def main():
             total += len(rows)
             print("  game %d: %d transition(s) playing %s" % (i + 1, len(rows), args.card))
     print("\nwrote %d transition(s) to %s" % (total, out))
-    return 0 if total else 1
+    if all_attacks:
+        atk_out = OUT_DIR / ("%s.attacks.jsonl" % args.card)
+        atk_out.write_text("\n".join(all_attacks) + "\n", encoding="utf-8")
+        print("wrote %d attack state(s) to %s" % (len(all_attacks), atk_out))
+    return 0 if (total or all_attacks) else 1
 
 
 if __name__ == "__main__":
