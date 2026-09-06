@@ -207,6 +207,56 @@ def slug_index() -> dict:
                       .read_text(encoding="utf-8"))["by_slug"]
 
 
+_TEMPLATE_CACHE: list[tuple] = []
+
+
+def _templates() -> list[tuple]:
+    """Every CC template deck, read once.
+
+    pick_template() is called per card, and a sweep over the implemented pool
+    re-read all forty deck files 1500 times -- minutes of pure I/O before a
+    single scenario was built.
+    """
+    if not _TEMPLATE_CACHE:
+        for path in sorted(DECK_TEMPLATES.glob("*.json")):
+            try:
+                _TEMPLATE_CACHE.append(
+                    (path, json.loads(path.read_text(encoding="utf-8"))))
+            except Exception:
+                continue
+    return _TEMPLATE_CACHE
+
+
+def _hero_matches(deck_hero: str, legal_name: str) -> bool:
+    """Does this deck's hero slug name the same hero as `legal_name`?
+
+    legalHeroes are display names with the spaces removed ("GravyBones",
+    "Boltyn"); deck heroes are slugs ("gravy_bones_shipwrecked_looter",
+    "ser_boltyn_breaker_of_dawn"). The old test was `slug.startswith(name)`,
+    which fails both: "gravybones" is not a prefix of "gravy_bones_...", and
+    "boltyn" is not a prefix of "ser_boltyn_...". That silently made 130
+    implemented cards unreachable -- reported as "no CC template deck for a
+    hero that can legally play X" when the hero was sitting right there.
+
+    Matching a contiguous RUN of slug tokens, rather than a substring, is what
+    keeps it precise: a bare `in` test would let "Ira" match any hero slug that
+    happens to contain those three letters.
+    """
+    want = "".join(ch for ch in legal_name.lower() if ch.isalnum())
+    if not want:
+        return False
+    parts = [p for p in deck_hero.lower().split("_") if p]
+    for i in range(len(parts)):
+        joined = ""
+        for j in range(i, len(parts)):
+            joined += parts[j]
+            if joined == want:
+                return True
+            if len(joined) > len(want):
+                break
+    return False
+
+
 def pick_template(slug: str, index: dict):
     """A real CC deck whose hero can legally play this card.
 
@@ -220,15 +270,9 @@ def pick_template(slug: str, index: dict):
     entry = index.get(slug) or {}
     legal = {h.lower() for h in (entry.get("legalHeroes") or [])}
     best = None
-    for path in sorted(DECK_TEMPLATES.glob("*.json")):
-        try:
-            deck = json.loads(path.read_text(encoding="utf-8"))
-        except Exception:
-            continue
+    for path, deck in _templates():
         hero = str(deck.get("hero") or "")
-        # legalHeroes are display names ("Katsu"); deck heroes are slugs
-        # ("katsu_the_wanderer"), so match on the leading name.
-        if legal and not any(hero.startswith(h) for h in legal):
+        if legal and not any(_hero_matches(hero, h) for h in legal):
             continue
         if slug in (deck.get("deck") or []):
             return path, deck, True
@@ -330,7 +374,55 @@ _ZONE_TO_FIELD = {
     "pitch": "pitch",
     "arsenal": "arsenal",
     "soul": "soul",
+    "hand": "hand",
 }
+
+
+#: Effects that CONSUME cards from a zone, so a scenario has to stock that zone
+#: before the effect can happen at all. Effects that only ADD to a zone are not
+#: here: stocking for those would fill a board with cards nothing reads.
+_CONSUMING_EFFECTS = {
+    "DISCARD", "BANISH", "MOVE_REF", "MOVE", "DESTROY_REF", "BANISH_REF",
+    "PUT_ON_BOTTOM", "PUT_INTO_ARSENAL", "REVEAL",
+    # SELECT_FROM_ZONE does not consume, it stores -- but the requirement is
+    # identical: the zone has to hold a matching card or the selection finds
+    # nothing and every effect gated on it falls out.
+    "SELECT_FROM_ZONE", "CHOOSE_FROM_ZONE",
+}
+
+#: Where an effect takes cards from when it does not say. DISCARD is from hand;
+#: the ref-based movers name their origin explicitly.
+_DEFAULT_SOURCE = {"DISCARD": "hand"}
+
+
+def _effect_requirement(etype: str, node: dict):
+    """Turn a consuming effect into (field, count, filter-spec), or None."""
+    raw_zone = str(node.get("from_zone") or node.get("from")
+                   or node.get("zone") or _DEFAULT_SOURCE.get(etype, "")).lower()
+    field = _ZONE_TO_FIELD.get(raw_zone) or ("hand" if raw_zone == "hand" else None)
+    if field is None:
+        return None
+    try:
+        count = int(node.get("amount", 1))
+    except (TypeError, ValueError):
+        count = 1
+    if count <= 0:
+        return None
+    # Flatten the two filter shapes into one spec _card_matches understands: the
+    # inline keys (card_type, subtype, ...) and a `filter` list of per-card
+    # conditions ({"type": "CARD_IS_TALENT", "talent": "Earth"}).
+    spec = {"zone": raw_zone, "player": node.get("player")}
+    for key in ("card_type", "card_class", "talent", "subtype", "color",
+                "power", "power_gte", "power_lte", "filter_types"):
+        if node.get(key) is not None:
+            spec[key] = node[key]
+    for cond in (node.get("filter") or []):
+        if not isinstance(cond, dict):
+            continue
+        for key, value in cond.items():
+            if key != "type" and value is not None:
+                spec.setdefault(key, value)
+    return (field, count, spec)
 
 
 def _card_matches(entry: dict, spec: dict) -> bool:
@@ -400,7 +492,8 @@ def zone_requirements(slug: str, index: dict | None = None) -> dict[str, list[st
 
     def walk(node):
         if isinstance(node, dict):
-            if str(node.get("type") or "") == "CARD_IN_ZONE":
+            etype = str(node.get("type") or "").upper()
+            if etype == "CARD_IN_ZONE":
                 zone = str(node.get("zone") or "").lower()
                 field = _ZONE_TO_FIELD.get(zone)
                 count = node.get("count_gte", node.get("amount", 1))
@@ -411,6 +504,17 @@ def zone_requirements(slug: str, index: dict | None = None) -> dict[str, list[st
                 # count_eq 0 / amount 0 mean "this zone must be EMPTY".
                 if field and count > 0 and node.get("count_eq") != 0:
                     wants.append((field, count, node))
+            elif etype in _CONSUMING_EFFECTS:
+                # A cost is not always gated by a condition. "You may DISCARD an
+                # ally", "you may put a shuriken from your graveyard on the
+                # bottom of your deck" -- the zone the cost eats from is named
+                # by the EFFECT and nothing else, so a reader that only looked
+                # at CARD_IN_ZONE asked for nothing and the optional branch was
+                # unreachable. Those cards then "agreed" on a baseline board
+                # that never exercised the clause at all.
+                spec = _effect_requirement(etype, node)
+                if spec is not None:
+                    wants.append(spec)
             for value in node.values():
                 walk(value)
         elif isinstance(node, list):

@@ -4047,6 +4047,77 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 compile_effect((spec.get("type") or "").upper(), spec)(card, event, state)
         return _fn
 
+    if etype in ("SELECT_FROM_ZONE", "CHOOSE_FROM_ZONE"):
+        # Choose cards in a zone and STORE them, without moving them.
+        #
+        # The *_REF family (MOVE_REF, DESTROY_REF, BANISH_REF, PUT_COUNTER_REF,
+        # FLIP_REF) all need a reference, and the only producers were LOOK_AT --
+        # whose zone map is DECK_TOP / ARSENAL / HAND -- and SELECT_FROM_REF,
+        # which narrows a reference that already exists. Nothing could produce
+        # one from a GRAVEYARD or a BANISHED zone, so "put a shuriken from your
+        # graveyard on the bottom of your deck" had no way to be said.
+        # swift_pickup_red was authored as a MOVE_REF reading a name nothing
+        # set: the move silently did nothing while the +1{p} beside it applied
+        # anyway, leaving the card stronger than printed.
+        #
+        # Selection only. The mover that follows decides what happens to the
+        # cards, which is what keeps this composable rather than a fifth
+        # bespoke "select and do X" effect.
+        zone_raw = str(_first(params, "zone", "from_zone", "from",
+                              default="graveyard")).upper()
+        who = str(params.get("player", "SELF")).upper()
+        amount_raw = params.get("amount", 1)
+        into = _first(params, "into", "record_as", "store_as", default="chosen")
+        optional = bool(params.get("optional"))
+        filter_raw = params.get("filter") or []
+        if isinstance(filter_raw, dict):
+            filter_raw = [filter_raw]
+
+        def _fn(card, event, state, _z=zone_raw, _who=who, _a=amount_raw,
+                _into=into, _opt=optional, _f=filter_raw):
+            from engine.card_effects.ability_keywords import (_ask_player,
+                                                              _controller_id)
+            from engine.card_effects.dsl.condition_types import compile_condition as _cc
+            from engine.context import set_ref
+            zones = {"GRAVEYARD": "graveyard", "DISCARD": "graveyard",
+                     "BANISHED": "banished", "BANISH": "banished",
+                     "HAND": "hand", "ARSENAL": "arsenal", "SOUL": "soul",
+                     "PITCH": "pitch", "DECK": "deck"}
+            zone_name = zones.get(_z)
+            if zone_name is None:
+                return
+            cid = _controller_id(card)
+            tid = cid if _who in ("SELF", "YOU", "") else (3 - cid)
+            if tid not in state.players:
+                return
+            checks = [_cc(str(f.get("type") or "").upper(), f) for f in _f]
+
+            def _ok(c):
+                return all(fn is None or fn(c, event, state) for fn in checks)
+
+            want = int(_resolve_amount(_a, state, card) or 0)
+            picked = []
+            for _ in range(max(0, want)):
+                pool = [c for c in getattr(state.players[tid], zone_name).cards
+                        if _ok(c) and c not in picked]
+                if not pool:
+                    break
+                options = [c.slug for c in pool] + (["none"] if _opt else [])
+                pick = _ask_player(state, cid, options,
+                                   context="Choose a card in %s" % zone_name)
+                if pick == "none":
+                    break
+                target = next((c for c in pool if c.slug == pick), None)
+                if target is None:
+                    break
+                picked.append(target)
+            # Nothing stored when nothing qualified, so a following REF_EXISTS
+            # reads False and "if you do" falls out on its own -- rather than
+            # storing an empty list, which REF_EXISTS would have to special-case.
+            if picked:
+                set_ref(str(_into), picked[0] if len(picked) == 1 else picked)
+        return _fn
+
     if etype in ("REPEAT", "REPEAT_PROCESS"):
         # "... then repeat this process." (Rotten Remains, Flood of Force.)
         #

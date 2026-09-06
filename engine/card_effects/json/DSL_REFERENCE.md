@@ -357,6 +357,7 @@ sentence like "look at the top card, and if it's red you may destroy it for
 | `PUT_COUNTER_REF` | `ref`, `counter_type`, `amount` | Put counters on the referenced card(s) (vs `PUT_COUNTER`, which targets the ability's own source) |
 | `FLIP_REF` | `ref`, `face_up` | Turn referenced card(s) face-up or face-down (`is_public`) |
 | `MAY` | `prompt`, `conditions`, `effects` | "You may X. If you do, Y." — offers the block only when `conditions` hold; declining runs none of `effects`, so "if you do" needs no separate plumbing |
+| `SELECT_FROM_ZONE` (alias `CHOOSE_FROM_ZONE`) | `zone` (GRAVEYARD/BANISHED/HAND/ARSENAL/SOUL/PITCH/DECK), `player`, `amount`, `filter` ([<conditions>]), `into`, `optional` | Choose cards in a zone and STORE them **without moving them**. The only producer that reaches a graveyard or banished zone — `LOOK_AT` covers DECK_TOP/ARSENAL/HAND, `SELECT_FROM_REF` narrows a reference that already exists. Stores nothing when nothing qualifies, so a following `REF_EXISTS` reads False and "if you do" falls out on its own |
 
 Reference-reading conditions: `REF_PITCH_IS` (`ref`, `pitch` — 1 red / 2 yellow
 / 3 blue), `REF_EXISTS` (`ref`), and `ATTACK_TARGET_IS_HERO` (the attack was
@@ -366,6 +367,15 @@ declared at a hero, not a permanent or ally).
 `record_as` / `store_as`), which matters when one ability banishes twice: the
 shared `banished` ref holds only the most recent, so "banish one from EACH
 graveyard, **if you do** …" has to name both and test both with `REF_EXISTS`.
+
+A `ref` no effect in the same ability produces reads None, so the consuming
+effect silently does nothing — and if the bonus it was meant to gate sits beside
+it as a sibling rather than inside a `CONDITIONAL`, the card ends up stronger
+than printed. `swift_pickup_red` pumped +1{p} with an empty graveyard for
+exactly that reason. `tests/test_no_dangling_refs.py` guards the class; the
+engine sets `banished`, `banished_cards`, `discarded`, `destroyed`, `dagger`,
+`sharpened`, `countered`, `bottomed`, `arsenaled` and a few others by name, and
+everything else has to be stored with `into` first.
 
 ### Repeat
 

@@ -80,11 +80,19 @@ def situations(slug, index, repeats=1, seed=17):
         # not. Declining alone would pass just as well against a card whose
         # optional never fires at all.
         if fuel:
+            # HAND fuel JOINS the card under test, it does not replace it.
+            # Scenario.hand defaults to [card]; passing hand=<fuel> as a kwarg
+            # overrode that and left the card out of hand entirely, so it could
+            # not be played and the situation recorded nothing.
+            kwargs = dict(fuel)
+            hand_fuel = kwargs.pop("hand", [])
+            if hand_fuel:
+                kwargs["hand"] = [slug] + list(hand_fuel)
             for taken in (False, True):
                 out.append(Scenario(card=slug, seed=s, take_optional=taken,
                                     label="optional:%s" % ("taken" if taken
                                                            else "declined"),
-                                    **fuel))
+                                    **kwargs))
     return out
 
 

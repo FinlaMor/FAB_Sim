@@ -6,7 +6,10 @@ back via `ref`. `get_ref` returns None for a name nothing wrote, and every
 consumer treats None as "nothing to act on" -- so the effect silently does
 nothing and the gate is silently false.
 
-Fourteen abilities read names nothing anywhere writes. They read like zone or
+Fourteen abilities read names nothing anywhere writes (swift_pickup_red has
+since been fixed: it needed SELECT_FROM_ZONE, which did not exist -- the *_REF
+family could not reach a graveyard, so there was no way to author the card
+correctly and the ref was aimed at an empty register instead). They read like zone or
 filter names, which is what they were meant as:
 
   deathly_duet_yellow    REF_PITCH_IS ref "ATTACK_ACTION" / "NON_ATTACK_ACTION"
@@ -237,9 +240,6 @@ KNOWN_UNFIXED = {
     "pulsewave_harpoon_red", "pry_yellow",
     # "when this is put into your graveyard from anywhere" has no trigger.
     "sirens_of_safe_harbor_red",
-    # "put a shuriken item from your graveyard on the bottom of your deck" --
-    # needs a filtered graveyard choice that records what it moved.
-    "swift_pickup_red",
     # "this gets the chosen card's name" -- copying a name is not expressible.
     "become_the_bottle_red", "become_the_bottle_yellow",
     # "destroy a RANDOM item in the arena" -- object targets prompt, never roll.

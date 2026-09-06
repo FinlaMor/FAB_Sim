@@ -1,35 +1,45 @@
 {
   "slug": "swift_pickup_red",
+  "_comment": "\"When this attacks, you may put a shuriken item from your graveyard on the bottom of your deck. If you do, this gets +1{p}. Go again\" The previous version was a MOVE_REF reading `shuriken_item`, a name nothing in the ability ever set, so the move silently did nothing -- while MODIFY_ATTACK sat beside it as a SIBLING and applied anyway. Built states showed the card at 4{p} with an EMPTY graveyard, and with a shuriken present the shuriken was still there afterwards: the cost was never paid either way, so the card was strictly stronger than printed (the costs-vs-effects class). It could not be authored correctly before: the *_REF family needs a reference, and the only producers (LOOK_AT, SELECT_FROM_REF) cannot reach a graveyard, so SELECT_FROM_ZONE was added for it. Now the selection stores the chosen shuriken under `picked`, MOVE_REF bottoms exactly that card, and the +1{p} is gated on REF_EXISTS so 'if you do' is real -- declining, or having no shuriken, grants nothing. `optional: true` on the selection is what lets the player back out after seeing the choices, which is the second half of 'you may'. Go again is printed and unconditional, so it stays a plain PLAY ability.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
       "effects": [
         {
           "type": "MAY",
+          "prompt": "Put a shuriken item from your graveyard on the bottom of your deck?",
           "effects": [
             {
-              "type": "MOVE_REF",
-              "ref": "shuriken_item",
-              "from": "GRAVEYARD",
-              "to": "BOTTOM_DECK"
+              "type": "SELECT_FROM_ZONE",
+              "zone": "GRAVEYARD",
+              "player": "SELF",
+              "amount": 1,
+              "optional": true,
+              "into": "picked",
+              "filter": [{"type": "CARD_IS_TYPE", "subtype": "Shuriken"}]
             },
             {
-              "type": "MODIFY_ATTACK",
-              "mod": "add",
-              "amount": 1
+              "type": "CONDITIONAL",
+              "when": [{"type": "REF_EXISTS", "ref": "picked"}],
+              "then": [
+                {
+                  "type": "MOVE_REF",
+                  "ref": "picked",
+                  "to_zone": "deck",
+                  "position": "bottom",
+                  "player": "OWNER"
+                },
+                {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+              ]
             }
           ]
         }
-      ],
-      "trigger": "ON_ATTACK"
+      ]
     },
     {
       "ability_type": "PLAY",
-      "effects": [
-        {
-          "type": "GO_AGAIN"
-        }
-      ]
+      "effects": [{"type": "GO_AGAIN"}]
     }
   ]
 }
