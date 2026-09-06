@@ -221,14 +221,22 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         # the way LAST_CHAIN_ATTACK does rather than demanding an exact slug.
         import re as _re
         wants = {_norm(v) for v in _as_list(params, "names", "name", "card_name") if v}
+        # "target attack action card WITH HERALD IN ITS NAME" -- 40 cards use
+        # this templating, and an exact-name comparison answers a different
+        # question: no card is called "Herald". Kept separate from `name` so a
+        # card asking for one specific attack cannot accidentally match a family.
+        contains = {_norm(v) for v in
+                    _as_list(params, "name_contains", "names_contain") if v}
 
-        def _ani(c, e, s, _w=wants):
-            if not _w or not s.combat or not getattr(s.combat, 'attack_card', None):
+        def _ani(c, e, s, _w=wants, _c=contains):
+            if not (_w or _c) or not s.combat or not getattr(s.combat, 'attack_card', None):
                 return False
             atk = s.combat.attack_card
             slug = _re.sub(r'_(red|yellow|blue)$', '', getattr(atk, 'slug', '') or '')
-            return (_norm(slug) in _w
-                    or _norm(getattr(atk, 'name', '') or '') in _w)
+            name = _norm(getattr(atk, 'name', '') or '')
+            if _w and (_norm(slug) in _w or name in _w):
+                return True
+            return any(want in name or want in _norm(slug) for want in _c)
         return _ani
 
     if ctype == "WEAPON_SUBTYPE_IN":

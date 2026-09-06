@@ -1,0 +1,19 @@
+{
+  "slug": "villainous_pose_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2
+        },
+        {
+          "type": "CROWD_BOO"
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next attack this turn gets +2{p}. The crowd boos you. Go again' -- Go again is printed and unconditional, deliberately not authored and not declared conditional.\n\nCROWD_BOO defaults to the CONTROLLER, which is what 'boos YOU' means; the opponent-facing form needs an explicit player. It routes through ability_keywords.effect_crowd_boos -> effect_keywords.boo (CR 8.5.57), so replacement effects and every card that reads the booed state see it -- a SET_FLAG here would be invisible to both.\n\nMODIFY_NEXT_ATTACK with no filter is right: the text says 'your next attack', unqualified."
+}

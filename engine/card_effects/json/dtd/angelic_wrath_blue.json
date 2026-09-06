@@ -1,0 +1,30 @@
+{
+  "slug": "angelic_wrath_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_TYPE_IN",
+            "types": [
+              "Action"
+            ]
+          },
+          {
+            "type": "ATTACK_NAME_IN",
+            "name_contains": "Herald"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target attack action card with Herald in its name gets +2{p}'\n\n'WITH HERALD IN ITS NAME' IS A SUBSTRING, not a name. ATTACK_NAME_IN compared whole names (with the colour suffix stripped, so one entry covers all three printings) and no card is called 'Herald', so an exact comparison is false in every state -- silently, because a targeting filter that matches nothing looks like a card with no legal target. It now takes `name_contains` as a separate key, kept apart from `name` so a card naming one specific attack cannot accidentally match a family. 40 cards in the corpus use this templating.\n\nThe ATTACK_TYPE_IN Action half is the 'attack action CARD' restriction: without it the reaction could target a weapon attack whose name happened to contain Herald."
+}

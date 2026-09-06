@@ -1,0 +1,26 @@
+{
+  "slug": "skybody_keikoi",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 0,
+      "conditions": [
+        {
+          "type": "CARD_IS_FACE_DOWN"
+        }
+      ],
+      "cost": [
+        {
+          "type": "DESTROY_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PREVENT_DAMAGE",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'Cloaked / Instant - Destroy this: Prevent the next 1 damage that would be dealt to you this turn. Activate this ability only while this is face-down.'\n\nCloaked is a printed keyword and fires from the card DB, deliberately not authored.\n\n'ONLY WHILE THIS IS FACE-DOWN' is an ability-level condition, which gates both the OFFER (play._add_hero_dsl_activations checks conditions before listing the action) and the resolution -- 'activate only if' means the action must not be offered at all. CARD_IS_FACE_DOWN reads the source card, and also treats is_public=False as face-down, because not every path that hides a card sets face_down."
+}

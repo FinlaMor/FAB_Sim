@@ -35,9 +35,41 @@ abilities still needs a stub: `{"slug": "...", "abilities": []}`.
 Tokens live in `json/tokens/`. Every token a card creates must also have a
 JSON definition.
 
+## Which card to write next
+
+**Author the card that writes the other five.** Card text repeats: colour
+variants are one sentence with one number changed, and unrelated cards share
+whole sentences outright. Two generators exploit that, and both are gated
+rather than trusted:
+
+```
+python scripts/group_work_queue.py                       # what to author, ranked by yield
+python scripts/copy_identical_text_cards.py --dry-run --substitute-numbers
+python scripts/copy_identical_text_cards.py --write --substitute-numbers
+python scripts/copy_identical_text_cards.py --held-back  # and why the rest were not
+```
+
+`group_work_queue.py` ranks the pending corpus by how many cards ONE
+implementation unlocks. Roughly a third of what is left sits in groups of three
+or more where no printing is implemented — which is exactly why the copier has
+nothing to copy: the group is unimplemented as a unit. Write one member, run the
+copier, get the rest.
+
+The copier holds a card back rather than guessing whenever the source and the
+target differ in a way that could matter (printed keywords, card types, heroes,
+card-level cost metadata, a source with unread parameters, a source that
+implements nothing, a source whose whole implementation is a flag nothing
+reads). `--held-back` lists them with the reason. Copies carry `_copied_from`,
+derived ones `_derived_from` + `_substituted`, and both families are pinned by
+tests that re-derive them from the source's *current* abilities — so an edit to
+one printing cannot silently leave the others behind.
+
+Run the copier to a fixpoint: each pass can unlock the next.
+
 ## Workflow for implementing a card
 
-1. **Pick a card.** Either from a set's work queue
+1. **Pick a card.** From `scripts/group_work_queue.py` (highest yield), or from a
+   set's work queue
    (`python scripts/dsl_work_queue.py --set hnt` lists missing cards) or
    because a deck needs it (`python scripts/dsl_work_queue.py --deck decks/foo.txt`).
 

@@ -1,0 +1,25 @@
+{
+  "slug": "seekers_gilet",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 1,
+      "cost": [
+        {
+          "type": "DESTROY_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PREVENT_DAMAGE",
+          "amount": 1
+        },
+        {
+          "type": "OPT",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'Instant - {r}, destroy Seeker's Gilet: Prevent the next 1 damage that would be dealt to your hero this turn. Opt 1'\n\nThe {r} is the ACTIVATION COST and the destroy is a COST, not an effect: both have to be paid before the ability resolves, and modelling either as an effect would let the ability be activated without paying. PREVENT_DAMAGE with no damage_type is correct here -- the printed text names no type, so the shield absorbs any (tests/test_prevention_damage_type.py guards the opposite mistake). Opt is CR 8.5.x and has its own effect type; it is NOT a printed keyword on this card, so it is authored."
+}

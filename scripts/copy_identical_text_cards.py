@@ -257,6 +257,34 @@ def _apply_substitution(abilities, old, new):
     return json.loads(swapped)
 
 
+def _rank(slug, entry, candidates, idx):
+    """Order candidate sources so the most compatible one is tried first.
+
+    Source selection was `sorted(sources)[0]` -- alphabetical -- and the hazard
+    checks then ran against whatever that happened to be. flash_bolt_yellow has
+    the same card types as flash_bolt_blue and would have copied cleanly, but
+    the alphabetical winner was an ACTION reading the same sentence, so the
+    whole group was held back for "card types differ" while a perfect source
+    sat in the same list. Four cards, and the same shape wherever one sentence
+    is printed on both an Instant and an Action.
+
+    Ranked on the things the hazard checks look at, most specific first: the
+    same card (a colour variant), then identical types, then identical printed
+    keywords. Alphabetical order breaks remaining ties, so the choice stays
+    deterministic.
+    """
+    def key(other_slug):
+        other = idx.get(other_slug) or {}
+        return (
+            0 if _base(other_slug) == _base(slug) else 1,
+            0 if (entry.get("types") or []) == (other.get("types") or []) else 1,
+            0 if ({str(k).lower() for k in (entry.get("keywords") or [])}
+                  == {str(k).lower() for k in (other.get("keywords") or [])}) else 1,
+            other_slug,
+        )
+    return sorted(candidates, key=key)
+
+
 def plan(substitute_numbers=False):
     idx = json.loads((ROOT / "card_data" / "slug_index.json")
                      .read_text(encoding="utf-8"))["by_slug"]
@@ -281,64 +309,82 @@ def plan(substitute_numbers=False):
 
     todo, held = [], []
     for slug, entry in sorted(substantive.items()):
-        sources = by_text.get(signature(entry, False))
-        substitution = None
-        if not sources and substitute_numbers:
-            # No card reads exactly the same; look for one that reads the same
-            # apart from a single number, and carry the number across.
-            for candidate in sorted(by_blur.get(signature(entry, True), [])):
+        # EVERY usable source is a candidate, not just the first one found.
+        # The old shape picked one source and let the hazard checks pass
+        # judgement on it, so a card with a perfect source and an imperfect one
+        # was held back whenever the imperfect one sorted first: flash_bolt_
+        # yellow shares its EXACT text with an Action and its types with
+        # flash_bolt_blue, and was rejected for "card types differ" while blue
+        # sat in the same list one substitution away. Exact matches rank ahead
+        # of substituted ones (no number to get wrong), and the checks now
+        # FILTER candidates rather than deciding on one.
+        exact = [(c, None) for c in
+                 _rank(slug, entry, by_text.get(signature(entry, False)) or [], idx)]
+        blurred = []
+        if substitute_numbers:
+            for candidate in _rank(slug, entry,
+                                   by_blur.get(signature(entry, True), []), idx):
                 found = _substitution(entry, idx[candidate],
                                       json.loads(paths[candidate].read_text(
                                           encoding="utf-8")))
                 if found:
-                    sources, substitution = [candidate], found
-                    break
-        if not sources:
+                    blurred.append((candidate, found))
+        best = None
+        for source, substitution in exact + blurred:
+            src_entry = idx[source]
+            raw = json.loads(paths[source].read_text(encoding="utf-8"))
+            reasons = _hazards(slug, entry, source, src_entry, raw, flagged)
+            if not reasons:
+                best = (slug, source, [], raw, entry, substitution)
+                break
+            if best is None:
+                best = (slug, source, reasons, raw, entry, substitution)
+        if best is None:
             continue
-        source = sorted(sources)[0]
-        src_entry = idx[source]
-        raw = json.loads(paths[source].read_text(encoding="utf-8"))
-
-        reasons = []
-        if ({str(k).lower() for k in (entry.get("keywords") or [])}
-                != {str(k).lower() for k in (src_entry.get("keywords") or [])}):
-            reasons.append("printed keywords differ")
-        if (entry.get("types") or []) != (src_entry.get("types") or []):
-            reasons.append("card types differ")
-        if "Hero" in (entry.get("types") or []) or "Hero" in (src_entry.get("types") or []):
-            reasons.append("hero card")
-        if _base(slug) != _base(source) and any(k in raw for k in _META):
-            reasons.append("source carries card-level metadata and the names differ")
-        if source in flagged:
-            reasons.append("source has unread parameters (audit_params)")
-        if _only_sets_dead_flags(raw):
-            # cartilage_crush_blue, chokeslam_yellow and fatigue_shot_red each
-            # implement a restriction the engine cannot express by writing a
-            # SET_FLAG nothing reads, and each says so in its _comment. Copying
-            # one turns a single visible gap into three, and tripped
-            # test_no_dead_flags' ratchet -- whose docstring says never raise it.
-            reasons.append("source's whole implementation is a flag nothing reads")
-        if not (raw.get("abilities") or []) and not any(
-                raw.get(k) for k in _META):
-            # ...UNLESS the implementation is card-level cost machinery.
-            # jump_start_red's whole text is "if you control a Hyper Driver,
-            # this costs {r} less to play", which is `cost_modifiers` and
-            # correctly has no abilities -- a cost must block play legality,
-            # never be modelled as an effect. Without the _META exemption this
-            # guard held back every such card as unimplemented.
-            #
-            # `substantive` already excluded keyword-only targets, so an empty
-            # source here is a card whose text was NOT implemented -- either a
-            # deliberate stub (hamstring_shot_red carries a _comment saying the
-            # engine has no cost-increase path) or an oversight. Copying it
-            # manufactures cards that LOOK implemented, count as implemented,
-            # and do nothing -- the worst outcome available, because a missing
-            # card at least raises MissingCardImplementation.
-            reasons.append("source implements nothing (empty abilities)")
-
-        (held if reasons else todo).append(
-            (slug, source, reasons, raw, entry, substitution))
+        (held if best[2] else todo).append(best)
     return todo, held, paths
+
+
+def _hazards(slug, entry, source, src_entry, raw, flagged):
+    """Why this source must NOT be copied to this card, if anything."""
+    reasons = []
+    if ({str(k).lower() for k in (entry.get("keywords") or [])}
+            != {str(k).lower() for k in (src_entry.get("keywords") or [])}):
+        reasons.append("printed keywords differ")
+    if (entry.get("types") or []) != (src_entry.get("types") or []):
+        reasons.append("card types differ")
+    if "Hero" in (entry.get("types") or []) or "Hero" in (src_entry.get("types") or []):
+        reasons.append("hero card")
+    if _base(slug) != _base(source) and any(k in raw for k in _META):
+        reasons.append("source carries card-level metadata and the names differ")
+    if source in flagged:
+        reasons.append("source has unread parameters (audit_params)")
+    if _only_sets_dead_flags(raw):
+        # cartilage_crush_blue, chokeslam_yellow and fatigue_shot_red each
+        # implement a restriction the engine cannot express by writing a
+        # SET_FLAG nothing reads, and each says so in its _comment. Copying
+        # one turns a single visible gap into three, and tripped
+        # test_no_dead_flags' ratchet -- whose docstring says never raise it.
+        reasons.append("source's whole implementation is a flag nothing reads")
+    if not (raw.get("abilities") or []) and not any(
+            raw.get(k) for k in _META):
+        # ...UNLESS the implementation is card-level cost machinery.
+        # jump_start_red's whole text is "if you control a Hyper Driver,
+        # this costs {r} less to play", which is `cost_modifiers` and
+        # correctly has no abilities -- a cost must block play legality,
+        # never be modelled as an effect. Without the _META exemption this
+        # guard held back every such card as unimplemented.
+        #
+        # `substantive` already excluded keyword-only targets, so an empty
+        # source here is a card whose text was NOT implemented -- either a
+        # deliberate stub (hamstring_shot_red carries a _comment saying the
+        # engine has no cost-increase path) or an oversight. Copying it
+        # manufactures cards that LOOK implemented, count as implemented,
+        # and do nothing -- the worst outcome available, because a missing
+        # card at least raises MissingCardImplementation.
+        reasons.append("source implements nothing (empty abilities)")
+
+    return reasons
 
 
 def _rename_self_references(abilities, source, slug):
