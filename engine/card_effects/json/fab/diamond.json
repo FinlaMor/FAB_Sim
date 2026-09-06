@@ -1,0 +1,17 @@
+{
+  "slug": "diamond",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "DRAW", "amount": 1},
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - Destroy Diamond: Draw a card. **Go again**' on a Generic Token - Item.\n\nNo resource cost before 'destroy this', so CARD-LEVEL activation_cost is 0 (DSL-authoritative; play.py's affordability gate for DSL activated abilities reads runtime card.activation_cost). Nothing double-authored as PAY_RESOURCES - that would charge per IMPLEMENTATION_GUIDE. 'Destroy Diamond' sits before the colon, so it is the ability-level COST [{\"type\": \"DESTROY_SELF\"}] (cost_types.py:43-51 - can_pay always true, pay routes through canonical destroy(); paid check-then-pay before the effects run, and the effects still resolve off the destroyed object). ACTIVATE = 'Action -' activated-ability timing; play._add_hero_dsl_activations scans player.items and offers it in the action phase with an action point.\n\nTRAILING GO AGAIN IS AUTHORED EXPLICITLY as GAIN keyword GO_AGAIN despite GoAgain appearing in printed_keywords: the DB keyword pays out only at card-stack-layer resolution via card.has_go_again, but non-attack activations run inline with NO stack entry, so that payout never fires for them - .review/gold.json records exactly this dropped-clause defect for gold, whose printed text is this same sentence family, and .triage/diamond.json prescribes explicit authoring for Diamond. Shipped arc/teklo_foundry_heart.json is the item precedent ending its ACTIVATE in GAIN keyword GO_AGAIN; .drafts/copper.json is this same sentence with a {r}4 activation. canonical_keyword('GO_AGAIN') -> 'Go Again' -> _grant_go_again (effect_types.py:4927-4941): outside combat it pays +1 action point directly (CR 8.3.5a) with the 8.3.5c no-double-grant guard. No double-grant risk from the DB entry: it is inert on the activation path, and Diamond is a token - never played from hand - so no other keyword path consumes it either.\n\nPLACEMENT NOTE: per .triage/diamond.json the token definition belongs in json/tokens/ when adopted; foldering here is organizational only."
+}

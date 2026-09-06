@@ -1,0 +1,29 @@
+{
+  "slug": "growl_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "_comment": "'When this attacks, the next Crouching Tiger you play this combat chain gets +1{p}.' ON_ATTACK is dispatched by _dsl_attacking_listener (engine.py:1524-1529) to combat.attack_card - this card IS the attack when it fires.",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_CARD",
+          "amount": 0,
+          "filter": [
+            {"type": "CARD_IS_NAMED", "name": "Crouching Tiger"}
+          ],
+          "grant_abilities": [
+            {
+              "ability_type": "TRIGGERED",
+              "trigger": "ON_ATTACK",
+              "effects": [
+                {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Growl - Ninja Action - Attack (Round the Table).\n\nPRINTED GO AGAIN NOT AUTHORED: printed_keywords carries GoAgain - it fires from the card DB keywords field. Re-authoring it as an effect would pay a second action point.\n\nTHE PUMP: MODIFY_NEXT_CARD (alias of MODIFY_NEXT_CARD_COST, effect_types.py:4665-4743) queues a ONE-SHOT entry on the controller's dsl_queued_card_mods, consumed by the first matching PLAYED card (play.py:1713-1747). amount IS AUTHORED AS 0, DELIBERATELY: the compile-side default is 1 and _calculate_resource_cost SUBTRACTS the stored amount from the consuming card's cost (play.py:1447-1451) - omitting it would add an unprinted {r} discount.\n\nDEVIATION FROM TRIAGE, disclosed: triage suggested 'on_consume MODIFY_ATTACK add 1'. on_consume runs at PLAY time inside _pay_costs (play.py:1744-1746), where state.combat either does not exist yet or belongs to a PREVIOUS chain link - MODIFY_ATTACK returns early outside combat (effect_types.py:4127-4128) and would pump the wrong attack at best. The corpus precedent (.drafts/captains_call_blue.json mode A, reviewed) instead attaches a TRIGGERED ON_ATTACK ability to the consuming copy via grant_abilities (play.py:1739-1742 stores raw dicts on card.granted_abilities), so the +1{p} lands when THAT Crouching Tiger attacks - which is what '+1{p}' means for an attack action card.\n\nFILTER VERIFIED: CARD_IS_NAMED reads names/name/card_name, matches the name or the slug minus colour suffix (condition_types.py:1579-1594); 'Crouching Tiger' is the printed name of slug crouching_tiger in card_data/slug_index.json, so every colour printing matches.\n\nGAP, disclosed: the printed scope is 'this combat chain', but the dsl_queued_card_mods queue has NO chain-link scope - entries persist until consumed or cleared at end of turn (engine.py:933-934). A Crouching Tiger played on a LATER chain link this turn would also get +1{p}. Over-application is bounded by the queue being one-shot: exactly one Crouching Tiger gets the pump, just possibly the wrong one. Same gap recorded on .drafts/beckoning_brilliance_red.json ('this chain link'); fixing it needs a span/expiry param on MODIFY_NEXT_CARD or a chain-close sweep mirroring the end-of-turn one."
+}

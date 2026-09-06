@@ -1,0 +1,17 @@
+{
+  "slug": "battlefront_bastion_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {"type": "IS_DEFENDING_CARD"},
+        {"type": "DEFENDING_CARD_COUNT", "amount": 1, "comparison": "eq"}
+      ],
+      "effects": [
+        {"type": "PREVENT_DAMAGE", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'When this defends alone, prevent the next 1 damage that would be dealt to you this turn.' Identical printed text to battlefront_bastion_blue; same draft, slug differs only.\n\nShape: TRIGGERED + ON_DEFEND - the release notes settle this as an event-based trigger ('When this defends'), and play.py _apply_defend emits one 'defend' event per defending card (engine._dsl_defend_listener dispatches to the card object). IS_DEFENDING_CARD encodes that THIS card is the defender (its no-recalc-context fallback checks membership on combat.defending_cards); DEFENDING_CARD_COUNT eq 1 does the 'alone' work. PREVENT_DAMAGE amount=1 registers a one-shot PREVENTION replacement on the controller - consumed when it absorbs, which is exactly 'the next 1 damage'.\n\nGAP 1 - 'alone' is defined over the ADDITION BATCH, and the DSL cannot see the batch. CR 7.0.5e and Rules Reprise #20 (which uses Battlefront Bastion itself as the example): you look at what is being added to the chain link at that moment, not what is already there - a lone effect-addition (Pulsewave Harpoon style) defends alone EVEN IF other defenders are already on the chain link, while cards put onto the link by the same event defend together. The engine appends ALL co-declared cards to combat.defending_cards BEFORE firing any defend event (play.py ~1353-1376), and the event payload carries only {'card'} - so DEFENDING_CARD_COUNT (which counts the whole chain link) gets the declared-alone case right and the declared-together case right, but UNDER-fires the official case 'added alone by an effect while other defenders already present'. Closing this needs a batch-size field on the defend event payload plus a condition over it; both are generic engine additions, so this draft ships the closest expressible behaviour.\n\nGAP 2 - 'this turn' lapse is not enforced. PREVENT_DAMAGE reads only amount/damage_type/source_class; the ReplacementEffect it registers has no duration, and end-of-turn cleanup (EffectManager.clear_turn_effects) sweeps continuous_effects only - nothing expires unconsumed replacement effects. An unused shield therefore persists into later turns instead of lapsing. Rare in practice (the shield lives on a defender), but the card is slightly stronger than printed in games where the attack deals no damage.\n\nNote 2 (later additions don't revoke the prevention) holds structurally: ability conditions evaluate at resolution (interpreter._run_ability), which happens during defend-step priority - before the reaction step in which further defending cards can join - so the count cannot be broken retroactively. Release notes 3/4 are multiplayer-only and out of scope for the 2-player sim; note 3's scenario maps to co-declared defenders, which the count handles."
+}

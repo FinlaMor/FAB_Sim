@@ -1,0 +1,27 @@
+{
+ "slug": "junkyard_dogg_yellow",
+ "cost": {
+  "type": "SCRAP",
+  "play_activate": "PLAY",
+  "optional": "TRUE"
+ },
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_ATTACK",
+   "conditions": [
+    {
+     "type": "SCRAPPED"
+    }
+   ],
+   "effects": [
+    {
+     "type": "MODIFY_ATTACK",
+     "mod": "add",
+     "amount": 1
+    }
+   ]
+  }
+ ],
+ "_comment": "Mechanologist Action - Attack (BrightLights). 'Scrap. When this attacks, if it scrapped a card, this gets +1{p}.'\n\nSCRAP cost (card-level): CR 8.3.32 optional additional cost to play â€” you may banish an item or equipment from your graveyard. Authored as card-level `cost` (play-time additional cost) rather than a separate empty PLAY ability; an ability existing only to carry a cost has no effects, which is a hygiene no-op. Card-level `cost` compiles to play_cost, which engine/play.py checks and pays (cost_types.py:143-190). The SCRAP cost records a turn event marker keyed by THIS card's slug and the scrapped card's slug/name.\n\nTRIGGERED ON_ATTACK: fires when this card enters the combat chain as the attacking card. An Action - Attack card is NOT an ATTACK_REACTION â€” that ability type never fires on one.\n\nSCRAPPED condition: checks whether THIS card paid its scrap cost when played (condition_types.py:1917-1937). The marker is keyed by the asking card's slug, so 'if IT scrapped a card' is correctly scoped to this card, not a player-level 'you scrapped' flag.\n\nMODIFY_ATTACK add 1: bumps this attack's power; recorded on combat.power_mods so it survives later recalculations within the chain link (effect_types.py:4123-4158).\n\nRelease note: 'If you do not have an item or equipment in your graveyard, you can not scrap to play this card.' The SCRAP cost's can_pay returns True (optional), but pay() returns early with no effect if no eligible cards exist â€” the marker is not written, so SCRAPPED is false and the pump does not apply."
+}

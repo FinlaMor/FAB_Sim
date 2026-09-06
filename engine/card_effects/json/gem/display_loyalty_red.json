@@ -1,0 +1,27 @@
+{
+  "slug": "display_loyalty_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "CHAIN_LINKS_CONTROLLED_GTE", "amount": 1, "attribute": "Draconic"}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"},
+        {"type": "CHAIN_LINKS_CONTROLLED_GTE", "amount": 1, "attribute": "Draconic"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "fealty"}
+      ]
+    }
+  ],
+  "_comment": "'If you control 2 or more Draconic chain links, this gets go again and \"When this attacks a hero, create a Fealty token.\"' Draconic Ninja Action - Attack.\n\nGo again: printed_keywords lists GoAgain, so the conditional-keyword shape is used - a WHILE_STATIC gated on SOURCE_IS_ATTACK granting GAIN keyword GO_AGAIN, so loader.conditional_keywords() strips the printed unconditional keyword and the gate governs instead. Shape copied from sibling draft .drafts/demonstrate_devotion_red.json, whose printed text is IDENTICAL to this card's; every claim re-verified against the engine this session.\n\nWhy amount 1 and not 2: release note 1 says the card counts ITSELF as a Draconic chain link, but a ChainLink is appended to state.chain_links only AFTER the attack's damage resolves (engine.py:2148-2163, verified), so during Display Loyalty's own attack neither gate can see its own link. '2 or more including itself' therefore means >=1 PRIOR Draconic link, which is what CHAIN_LINKS_CONTROLLED_GTE amount 1 attribute Draconic tests (condition_types.py:1819-1847 reads amount + attribute/talent/class/subtype and matches the talent across each stored link's talents/classes/subtypes/keywords). Both abilities share the same gate at the same timing, so one number serves both. First-attack-of-chain case checks out: table says 1 link < 2 -> nothing; engine says 0 prior < 1 -> nothing.\n\nFealty rider: direct TRIGGERED ON_ATTACK rather than INJECT_TRIGGER - _dsl_attacking_listener dispatches ON_ATTACK to the attacking card's own slug (engine.py:1524-1529, verified), and this card IS the attack when played, so it hears its own declaration. ATTACK_TARGET_IS_HERO (condition_types.py:1960) is false only when combat.attack_target is set, i.e. a permanent/ally was attacked. CREATE_TOKEN spelling 'token': 'fealty' copied from implemented pledge_fealty_red (fng) and for_the_realm_red (fab); the Fealty token definition already exists at json/cin/fealty.json.\n\nResidual gap (release note 2): 'if the combat chain is open you are still considered to control a chain link, even if the attack is no longer on the combat chain' - last-known-information when the attack leaves the chain mid-combat. The WHILE_STATIC gate re-evaluates only on RECALC_ATTACK_POWER events against live state.chain_links, so that specific edge is not modelled; no DSL condition expresses last-known-information for a departed attack."
+}

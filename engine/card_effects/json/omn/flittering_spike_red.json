@@ -1,0 +1,23 @@
+{
+  "slug": "flittering_spike_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "EVENT_THIS_TURN", "event": "play", "qualifier": "instant"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "lightning_flow", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'If you've played an instant card this chain link, this gets +2{p}. / When this hits, create a Lightning Flow token.' Lightning Action - Attack.\n\nABILITY TYPES GOVERNED BY THE RELEASE NOTES: notes 1-2 say the +2{p} is a conditional continuous effect ALWAYS CHECKING while face-up in the arena and tied to being the active chain link - so WHILE_STATIC (re-evaluated at every RECALC_ATTACK_POWER dispatch), not a triggered ability. Note 3 ('not functional while defending') is SOURCE_IS_ATTACK: true only when this card IS combat.attack_card, which is also what 'it is the active chain link' means; a defending Flittering Spike is not the attack card and the static stays off.\n\nDISCLOSED GAP - the gate 'If you've played an instant card THIS CHAIN LINK' has no exact condition. REACTION_THIS_LINK (condition_types.py:1484) is chain-link-scoped but its only producer, play._record_reaction_on_link via _reaction_kinds (play.py:710-739, called at :1103 and :1310), appends ONLY kinds 'attack_reaction'/'defense_reaction' derived from card types - plain Instant plays are never recorded - so gating on it would fire the pump on reactions and NEVER on the printed trigger. Authored instead EVENT_THIS_TURN {event:'play', qualifier:'instant'}: play.py:1085-1101 records every play's types as turn markers and record_turn_event_for_player expands list qualifiers element-wise (effect_keywords.py:582-606), so playing an Instant writes did_this_turn:play:instant and the printed cause-effect works - but the window is TURN-scoped, so an instant played earlier this turn (a previous chain link or the action phase) over-triggers where the printed card would not. Exact scope needs instant plays recorded link-scoped (e.g. appended to combat.reactions_this_link with kind 'instant') or a chain-link-scoped play-event condition; same gap flagged by .triage/flittering_charge_red.json and .triage/flittering_forcefield_yellow.json.\n\nSTATIC DELIVERY: MODIFY_ATTACK under WHILE_STATIC applies transiently in the stage-8 window without accumulating on combat.power_mods (the handler branches on event.type == 'recalculate_attack_power', effect_types.py:4134-4144) - correct for an always-checking static re-applied at each recalculation.\n\nHIT HALF: TRIGGERED ON_HIT + CREATE_TOKEN, deliberately UNGATED - release note 4 says it triggers when it hits heroes OR ALLIES, so there is no ATTACK_TARGET_IS_HERO gate. CREATE_TOKEN reads token/count|amount/player/destination (effect_types.py:1942-2013); 'lightning_flow' is the slug of json/tokens/lightning_flow.json (exists as an empty stub), player defaults SELF, zone routing derives from the token template's subtypes."
+}

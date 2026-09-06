@@ -1,0 +1,59 @@
+{
+  "slug": "azalea_ace_in_the_hole",
+  "activation_cost": 0,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {
+          "type": "PUT_ARSENAL_BOTTOM",
+          "player": "SELF"
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "REF_EXISTS",
+              "ref": "bottomed"
+            }
+          ],
+          "then": [
+            {
+              "type": "PUT_INTO_ARSENAL",
+              "from": "DECK_TOP",
+              "face_up": true,
+              "player": "SELF"
+            },
+            {
+              "type": "CONDITIONAL",
+              "when": [
+                {
+                  "type": "REF_IS_TYPE",
+                  "ref": "arsenaled",
+                  "subtype": "Arrow"
+                }
+              ],
+              "then": [
+                {
+                  "type": "MODIFY_NEXT_CARD_COST",
+                  "amount": 0,
+                  "object_ref": "arsenaled",
+                  "keywords": [
+                    "Dominate"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GAIN",
+          "asset": "ACTION_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'Once per Turn Action - 0' is card-level activation_cost=0 + per_turn=1; the loader syncs both onto the runtime Card (card.py) and play._add_hero_dsl_activations enforces the limit/timing; ACTIVATE is action-speed so the engine charges the action point. PUT_ARSENAL_BOTTOM defaults to OPPONENT (the Disable printings were its first users) so 'player': 'SELF' is mandatory. Its handler sets ref 'bottomed' only when a card actually moved, which IS the 'If you do' - tested via CONDITIONAL/when REF_EXISTS (the clause is mandatory, so not MAY). PUT_INTO_ARSENAL(from DECK_TOP, face_up true) stores ref 'arsenaled' ONLY if the arsenal had space, so a full arsenal correctly grants nothing downstream. The arrow test is REF_IS_TYPE on 'arsenaled'. The Dominate grant is MODIFY_NEXT_CARD_COST with object_ref pinned to the arsenaled card: verified end-to-end - _pay_costs consumes the entry one-shot when THAT card is played and appends 'Dominate' to its keywords (play.py), _recalculate_attack_power stage 6 seeds combat.keywords from card.keywords where the defend step enforces dominate, and the queue is cleared at end of turn (engine cleanup) giving 'until end of turn'. Known approximation: printed text has the card gain dominate while sitting in the arsenal; here the gain lands at play time - indistinguishable unless something reads an arsenal card's keywords mid-turn, which nothing does. GO AGAIN: authored as GAIN asset ACTION_POINTS 1 (the CR 8.3.5 substance). The GAIN{keyword}/GO_AGAIN effects grant to state.combat.keywords and are inert outside an attack (.review findings flag exactly this dead on hero ACTIVATE abilities), and the hero's PRINTED GoAgain keyword does NOT cover it either: the engine grants the action point from card.has_go_again only on layer_type=='card' resolution (engine.py), while a hero activation runs through _apply_activate's immediate DSL dispatch with no stack layer, and Action.has_go_again is written but never consumed. No double-grant risk: the hero itself is never a resolving card layer. Printed keywords Dominate/GoAgain come from the card DB and are NOT re-authored here."
+}

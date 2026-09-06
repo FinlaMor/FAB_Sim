@@ -1,0 +1,17 @@
+{
+  "slug": "doomsday_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "target": {
+        "filter": [
+          {"type": "CARD_IN_ZONE", "zone": "banished", "keywords": ["blood_debt"], "face_up": true, "count_gte": 6}
+        ]
+      },
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "blasmophet_the_soul_harvester", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Play Doomsday only if there are 6 or more cards with blood debt in your banished zone. Create a Blasmophet, the Soul Harvester token.' Shadow Instant.\n\nPLAY RESTRICTION as target.filter, NOT conditions: compile_card (loader.py:144-162) reads no top-level 'conditions' key, and ability-level 'conditions' are only checked at RESOLUTION (interpreter._run_ability:54-58) - an illegal Doomsday could leave the hand and fizzle. The one live play-time gate for DSL cards is play._legality_check (play.py:420-431), which evaluates every PLAY/ACTION/MODAL/AR/DR ability's target_filter with cond.fn(card, None, state) and rules the play illegal when it fails; hand-play Actions carry no declared target (play.py:49-53), so the filter acts purely as 'play only if'. run_ability re-checks the same filter at resolution (:41-45) - harmless. Pitching never consults DSL abilities, matching the release note ('You can still pitch Doomsday even if this criteria is not met').\n\nCARD_IN_ZONE params all read by the handler (condition_types.py:844-909): zone 'banished' is the Player attribute name lowercased (getattr at :935); 'keywords' are normalised so 'blood_debt' matches the DB's BloodDebt spelling; face_up true maps to is_public (:973), per the release note that face-down banished cards have no traits and do not count; count_gte 6.\n\nLegendary / Specialization are deck-building traits in printed_keywords, not engine-applied combat keywords - deliberately not authored.\n\nGAP - TOKEN DEFINITION MISSING: blasmophet_the_soul_harvester exists in card_data/slug_index.json (Token; Ally, Demon; 6{p}/6{h}) but there is NO json/tokens/blasmophet_the_soul_harvester.json. create_token calls require_card(token_slug) (effect_keywords.py:276), so resolving this PLAY ability raises MissingCardImplementation and aborts the game until that token definition is authored (same failure mode recorded for beckoning_hunger_red's Insatiable Hunger token in .review/). The CREATE_TOKEN spelling itself is verified: handler reads token/count|amount/player/destination (effect_types.py:1942-1965); player defaults SELF."
+}

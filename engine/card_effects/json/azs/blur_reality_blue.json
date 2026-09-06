@@ -1,0 +1,38 @@
+{
+  "slug": "blur_reality_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MOVE_MATCHING",
+          "to_zone": "banished",
+          "target": {
+            "controller": "SELF",
+            "zone": "ARENA",
+            "amount": 1,
+            "record_as": "chosen",
+            "filter": [
+              { "type": "CARD_IS_TALENT", "talent": "Lightning" },
+              { "type": "CARD_IS_TYPE", "card_type": "Aura" },
+              { "type": "NOT", "inner_type": "HAS_COUNTER", "counter": "holo" }
+            ]
+          }
+        },
+        {
+          "type": "MOVE_REF",
+          "ref": "chosen",
+          "to_zone": "permanents",
+          "player": "OWNER"
+        },
+        {
+          "type": "PUT_COUNTER_REF",
+          "ref": "chosen",
+          "counter_type": "holo",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "Selection happens at RESOLUTION time (release notes: 'you must choose and banish ... when the triggered effect resolves'), so there is no ability-level target; MOVE_MATCHING is the selector because it is the only arena-scoped primitive that chooses AND records its choice (record_as) - LOOK_AT only scans DECK_TOP/ARSENAL/HAND and plain BANISH cannot leave the arena. Steps follow the printed order: banish to the OWNER's banished zone (MOVE_MATCHING destinations default to obj.owner), return to the owner's permanents (auras live in player.permanents - Player.auras is a SubZoneView over it - hence zone name 'permanents'), THEN put the holo counter. That last ordering is load-bearing: Zone.add calls reset_to_base_state() when a card leaves the arena (CR 3.0.9; state.py ~252, card.py:480 clears card.counters), so an earlier draft that put the counter on BEFORE the banish-round-trip shipped an aura that came back with no holo counter. NOT/HAS_COUNTER compiles via the flattened inner_type form (condition_types.py:2220); triage's 'CARD_TYPE_IN' does not exist - CARD_IS_TYPE is the real condition and checks types AND subtypes, which is what 'Aura' needs (all 35 Lightning auras in card data carry subtype Aura + talent Lightning). Release-note 'no priority between any of the effects' holds: all three steps run inside one ability resolution. KNOWN GAP, flagged: if you control no qualifying aura at resolution, MOVE_MATCHING finds nothing and the whole ability fizzles silently; the printed card is effectively unplayable in that spot rather than fizzle-y, and play-time targeting is not enforced on this path."
+}

@@ -1,0 +1,11 @@
+{
+  "slug": "hungering_slaughterbeast_red",
+  "cost": {
+    "play_activate": "PLAY",
+    "optional": "FALSE",
+    "type": "BANISH_RANDOM_FROM_GRAVEYARD",
+    "amount": 3
+  },
+  "abilities": [],
+  "_comment": "'As an additional cost to play Hungering Slaughterbeast, banish 3 random cards from your graveyard.' + printed **Blood Debt**. Shadow Brute Action - Attack (batch set label LeviaBlitzDeck).\n\nBLOOD DEBT NOT AUTHORED: printed_keywords carries BloodDebt - a CR section 8 keyword on the card DB keywords field, implemented engine-side (ability_keywords.blood_debt); re-authoring it would be a defect.\n\nCOSTS ARE COSTS: 'as an additional cost to play' must be able to BLOCK the play, so it is a cost, never an ON_PLAY effect.\n\nSHAPE - CARD LEVEL, NOT A COST-ONLY PLAY ABILITY: the cost is this card's ENTIRE printed behaviour, so it is authored as the top-level cost object with \"abilities\": []. A PLAY ability carrying only additional_cost and \"effects\": [] fails test_card_json_hygiene.test_every_ability_has_effects (tests/test_card_json_hygiene.py:248-257 asserts effects or modes or options), so that spelling is a hygiene defect by construction even though DSL_REFERENCE's Scrap snippet shows it. The hygiene test counts a card-level cost as implementation, and the engine path is verified in the loader this session: compile_card reads the top-level 'cost' dict through _compile_cost into CardDef.play_cost (loader.py:144-162), which play.py checks before offering the play and pays on application. Shape copied from .drafts/boneyard_marauder_blue.json / _red.json - Boneyard Marauder blue is the SAME LeviaBlitzDeck set with an identical first sentence.\n\nCOST TYPE: BANISH_RANDOM_FROM_GRAVEYARD (cost_types.py:192-224, read this session) takes exactly one parameter, amount (default 1): can_pay requires >= N cards in the controller's graveyard, so with fewer than 3 the play is not offered - correct for a MANDATORY additional cost; pay random.sample()s N cards ('random cards', not chosen) and banishes each via canonical banish(origin_zone='graveyard'), so they actually leave the graveyard rather than sitting in both zones. It also records what it banished under the shared banished_cards ref, which this card has no payoff to read but costs nothing.\n\nNo gaps."
+}

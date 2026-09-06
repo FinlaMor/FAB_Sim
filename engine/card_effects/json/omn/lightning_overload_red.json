@@ -1,0 +1,33 @@
+{
+ "slug": "lightning_overload_red",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "effects": [
+    {
+     "type": "DEAL_ARCANE",
+     "amount": 4,
+     "target": "ANY"
+    },
+    {
+     "type": "CONDITIONAL_EFFECT",
+     "when": [
+      {
+       "type": "EVENT_THIS_TURN",
+       "event": "graveyard",
+       "qualifier": "instant"
+      }
+     ],
+     "then": [
+      {
+       "type": "CREATE_TOKEN",
+       "token": "lightning_flow",
+       "amount": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "_comment": "Lightning Wizard Action (non-attack). PLAY ability resolves on play. DEAL_ARCANE with target: 'ANY' prompts for any hero or ally at resolution (known limitation: play-time target declaration not fully expressible; cosmic_suture_yellow same gap). Starfall clause: CONDITIONAL_EFFECT gated on EVENT_THIS_TURN graveyard qualifier instant -> CREATE_TOKEN lightning_flow. Release notes: target declared at play, damage dealt at resolution, Starfall checked after damage, token created even if target no longer exists. No priority between effects."
+}

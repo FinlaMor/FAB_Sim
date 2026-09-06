@@ -1,0 +1,57 @@
+{
+ "slug": "invert_existence_blue",
+ "abilities": [
+  {
+   "ability_type": "STATIC",
+   "effects": [
+    {
+     "type": "PLAYABLE_FROM_BANISHED"
+    }
+   ]
+  },
+  {
+   "ability_type": "PLAY",
+   "effects": [
+    {
+     "type": "BANISH",
+     "player": "OPPONENT",
+     "from_zone": "GRAVEYARD",
+     "amount": 2,
+     "optional": "TRUE",
+     "record_as": "banished_cards"
+    },
+    {
+     "type": "CONDITIONAL_EFFECT",
+     "when": [
+      {
+       "type": "REF_CONTAINS_TYPE",
+       "ref": "banished_cards",
+       "types": [
+        "Action",
+        "Attack"
+       ]
+      },
+      {
+       "type": "REF_CONTAINS_TYPE",
+       "ref": "banished_cards",
+       "types": [
+        "Action"
+       ],
+       "not_types": [
+        "Attack"
+       ]
+      }
+     ],
+     "then": [
+      {
+       "type": "DEAL_ARCANE",
+       "amount": 2,
+       "target": "OPPONENT"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "_comment": "BloodDebt is a printed keyword (in printed_keywords) and fires from the card DB keywords field - not authored here. GAP: The banish clause should let the CONTROLLER choose up to 2 cards from opponent's graveyard, but BANISH effect asks the zone owner (opponent) to choose. LOOK_AT does not support GRAVEYARD zone (zone_map only has DECK_TOP/ARSENAL/HAND), so the triage's LOOK_AT->SELECT_FROM_REF->BANISH_REF composition is not currently expressible. Authored with BANISH as best approximation; the chooser deviation is a known DSL limitation (also noted on gravekeeping_* cards). REF_CONTAINS_TYPE correctly checks the set of banished cards for both an attack action card (types Action+Attack) and a non-attack action card (types Action, not_types Attack)."
+}

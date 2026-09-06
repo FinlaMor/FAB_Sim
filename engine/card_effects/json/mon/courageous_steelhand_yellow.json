@@ -1,0 +1,22 @@
+{
+  "slug": "courageous_steelhand_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "charge"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "amount": 2,
+          "mod": "add"
+        }
+      ]
+    }
+  ],
+  "_comment": "'If you've charged this turn, target attack gains +2{p}.' Light Warrior Attack Reaction; printed_keywords is empty.\n\nSHAPE: ATTACK_REACTION with no target block - 'target attack' is unrestricted, and during the reaction window the current attack IS the target; MODIFY_ATTACK add 2 lands in combat.power_mods (effect_types.py:4123-4158) so later recalculations keep it. Unfiltered shape copied from shipped hnt/to_the_point_red.json, which also shows the effect-level-conditions gate; here the condition sits at ABILITY level because 'If you've charged this turn' scopes the whole ability - both are checked at resolution.\n\nCHARGE MARKER VERIFIED END TO END: canonical effect_keywords.charge (CR 8.5.29) calls _record_turn_event(state, player_id, \"charge\", slug, types, classes, talents) AFTER replacement/cancel checks (effect_keywords.py:2366-2372), and the recorder writes the BARE marker did_this_turn:charge alongside per-qualifier ones (effect_keywords.py:597-606), so the unqualified reader EVENT_THIS_TURN {event: charge} (condition_types.py:1070-1112, marker string built at :1109, counted against the controller's current_turn_effects) matches any charge this turn. The Charge keyword's own implementation routes through this function via ability_keywords.effect_charge (:1677-1678), so only real charges set it - CR 8.5.29b holds.\n\nRELEASE NOTE 1 ('you can play this card even if you have not charged ... even if you charge later'): the hand-play offer for attack reactions runs _attack_reaction_legal_check (play.py:933-948), which tests only reaction step + attacker control and NEVER consults ability conditions - so the play is offered unconditionally, the condition fails at resolution, and no effect runs. Charging later in the turn cannot retroactively fire an already-resolved layer.\n\nRELEASE NOTE 2 ('charged multiple times ... only gains +1/2/3{p}'): the amount is the literal 2, not a count expression - multiple charges each wrote a marker but nothing counts them.\n\nNo gaps found; every clause expressible."
+}

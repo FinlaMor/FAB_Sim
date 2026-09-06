@@ -1,0 +1,15 @@
+{
+  "slug": "gauntlet_of_might",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [{"type": "DESTROY_SELF"}],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "might"},
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'Action - Destroy this: Create a Might token. **Go again**' (Brute / Guardian Equipment - Arms).\n\nactivation_cost pinned to 0 explicitly (DSL-authoritative): the ability has no {r} in its cost, and the pin stops the loader's printed-text fallback from misreading anything as an activation price. ACTIVATE timing requires action phase + action point (play.py:284), matching the printed '**Action** -'.\n\n'Destroy this' is the ability-level DESTROY_SELF cost (cost_types.py:43-51); _apply_activate checks then pays ability costs before dispatching ON_ACTIVATE (play.py:1288-1315).\n\nCREATE_TOKEN (effect_types.py:1942-2013) reads 'token' (slug) with count defaulting to 1 and player defaulting to SELF - exactly one Might for the controller. The token definition already exists at json/tokens/might.json, so no token authoring is owed.\n\nGo again: authored as GAIN keyword GO_AGAIN because the printed GoAgain DB keyword is INERT here - both engine payout paths require a 'card'-layer chain link (engine.py:2420-2444) or combat keywords at resolution (engine.py:721), and an equipment activation creates neither; _grant_go_again (effect_types.py:423-458) pays +1 AP directly outside combat (CR 8.3.5a). No double-pay risk.\n\nBlade Break is engine-implemented from the card DB keywords field and is deliberately not authored."
+}

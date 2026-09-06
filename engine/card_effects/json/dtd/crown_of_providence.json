@@ -1,0 +1,51 @@
+{
+  "slug": "crown_of_providence",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Put a card from your hand or arsenal on the bottom of your deck? (If you do, draw a card.)",
+          "effects": [
+            {
+              "type": "CHOOSE",
+              "amount": 1,
+              "options": [
+                {
+                  "name": "Hand",
+                  "effects": [
+                    {"type": "PUT_HAND_CARD_BOTTOM"}
+                  ]
+                },
+                {
+                  "name": "Arsenal",
+                  "effects": [
+                    {"type": "PUT_ARSENAL_BOTTOM", "player": "SELF"}
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "CONDITIONAL_EFFECT",
+              "when": [
+                {
+                  "type": "OR",
+                  "any": [
+                    {"type": "REF_EXISTS", "ref": "bottomed_from_hand"},
+                    {"type": "REF_EXISTS", "ref": "bottomed"}
+                  ]
+                }
+              ],
+              "then": [
+                {"type": "DRAW", "amount": 1}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When you defend with Crown of Providence, you may put a card from your hand or arsenal on the bottom of your deck. If you do, draw a card. / Blade Break' - Generic Equipment - Head.\n\nBLADE BREAK NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field - re-authoring it would be a defect.\n\nTRIGGER: ON_DEFEND is bridged from the engine 'defend' event and dispatched to the DEFENDING CARD ITSELF (engine._dsl_defend_listener, engine.py:1640-1646; play.py emits one defend event per declared defender at :1376), so defending equipment hears its own defend - no source-scoping condition needed (canopy_shelter_blue / battlefront_bastion precedent).\n\nMAY = the printed 'you may': declining runs nothing in the block, so no draw (release note 2). MAY reads prompt/effects/else (effect_types.py:3788-3856).\n\nHAND OR ARSENAL: no single primitive spans both zones (the cut_the_deck triage note says exactly this), so CHOOSE (effect_types.py:5107-5136) offers named options. PUT_HAND_CARD_BOTTOM defaults player SELF and asks which hand card (effect_types.py:1557-1616); its default optional=True adds an extra decline inside the hand branch - harmless, since declining there just means nothing moved and no draw, which is already reachable by declining the MAY. PUT_ARSENAL_BOTTOM takes 'player': 'SELF' EXPLICITLY because the handler DEFAULTS TO OPPONENT (effect_types.py:2334, the Disable printings were its first users) - omitting the key would bottom the opponent's arsenal card, the exact defect recorded on sunkwater_exoshell.\n\n'IF YOU DO': refs are scoped per ability execution (interpreter.run_ability push_refs), so sibling effects share them. PUT_HAND_CARD_BOTTOM sets ref 'bottomed_from_hand' ONLY when a card actually moved (effect_types.py:1610-1615); PUT_ARSENAL_BOTTOM sets 'bottomed' likewise (:2370-2376). The draw is a CONDITIONAL_EFFECT gated on OR(REF_EXISTS) over both names (handler at effect_types.py:3697-3724 reads when/then), copied from shipped mpg/sunkwater_exoshell.json whose comment explains why gating on 'arsenal non-empty' answers the wrong question. Empty hand AND empty arsenal -> nothing moved -> refs unset -> no draw, which is release note 1 verbatim."
+}

@@ -1,0 +1,27 @@
+{
+  "slug": "gravekeeping_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Banish a card from their graveyard?",
+          "effects": [
+            {
+              "type": "BANISH",
+              "player": "OPPONENT",
+              "from_zone": "GRAVEYARD",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks a hero, you may banish a card from their graveyard.' Generic Action - Attack (batch label NuuBlitzDeck; sibling printings already drafted as .drafts/gravekeeping_red.json and .drafts/gravekeeping_yellow.json - same shape, every claim re-verified against source this session).\n\nSHAPE: TRIGGERED + ON_ATTACK on an Action - Attack card (an Action - Attack is NOT an ATTACK_REACTION; that ability type never fires on one). ON_ATTACK is mapped at trigger_types.py:7 and fires when the card enters the combat chain even if the attack is later fully blocked, which is what 'when this attacks' means.\n\nHERO GATE (release note 2): ability-level conditions gate at resolution, and ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977, read this session - takes no required params) is false whenever combat.attack_target is set, which the engine does only for attacks declared at a permanent or ally. So 'does not trigger if you attack anything other than a hero' falls out of the condition; no extra plumbing.\n\nMAY + BANISH: MAY reads prompt/effects (effect_types.py:3788-3856); declining runs nothing, which is the printed 'you may'. Release note 1 settles WHEN both choices happen - when the triggered effect resolves on the stack - and that is exactly when these prompts run: the triggered layer resolves there, MAY asks yes/no then, and BANISH asks WHICH card over the graveyard's CURRENT contents at that same moment (pool built inside the handler, effect_types.py:1398-1412), not when the trigger was queued.\n\n'THEIR graveyard': BANISH reads player/from_zone/amount explicitly (effect_types.py:1313-1315); GRAVEYARD is in its zone map (:1380-1385) and player OPPONENT resolves relative to the controller, i.e. the attacked hero in this 2-player engine. No per-target object reference exists to name the attacked hero more precisely (same equivalence cold_snap_red shipped with for 'target hero').\n\nKNOWN DEVIATION, engine-wide and not fixable in JSON: for non-deck zones the BANISH handler asks the ZONE OWNER (the opponent) which of their cards to banish (_ask_player(state, tid, ...) at effect_types.py:1402-1404), whereas release note 1 says 'which card YOU choose' - the controller should pick. Flagging for review; every BANISH-from-opponent-zone card in the corpus shares this behaviour.\n\nNo printed keywords, so nothing else to author.\n\nSET FOLDER AT ADOPTION: derive from the card's own sets/setIdentifiers in card_data/slug_index.json (the red/yellow siblings record PartTheMistveil -> json/mst/); the batch's 'set' field is a deck label, not a set."
+}

@@ -1,0 +1,25 @@
+{
+  "slug": "concealed_pathogen",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "CARD_IS_FACE_DOWN"},
+        {"type": "IS_ACTIVE_PLAYER", "value": false},
+        {"type": "REACTION_THIS_LINK", "kind": "attack_reaction", "player": "ATTACKING"}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Trigger Concealed Pathogen? (make this public: destroy it and create a Bloodrot Pox under each opponent's control)",
+          "effects": [
+            {"type": "DESTROY_SELF"},
+            {"type": "CREATE_TOKEN", "token": "bloodrot_pox", "amount": 1, "player": "OPPONENT"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Cloaked** / While this is equipped face-down, when an attack hits you and its controller has played or activated an attack reaction this chain link, destroy this and create a Bloodrot Pox token under each opponent's control.'\n\nCLOAKED NOT AUTHORED: printed_keywords carries it - it fires from the card DB keywords field (face-down equip); re-authoring would be a defect.\n\nSHAPE (every handler read, not assumed): STATIC_TRIGGERED + ON_HIT - interpreter.py dispatches STATIC_TRIGGERED identically to TRIGGERED on the trigger event; conditions evaluate at resolution against the source card. CARD_IS_FACE_DOWN reads the equipment's face_down/is_public (condition_types.py:1327-1341) = 'equipped face-down'. IS_ACTIVE_PLAYER value:false (condition_types.py:811-821) is the 1v1 'an attack hits you' gate - the controller is not the active player, so they are the one being hit; there is no dedicated attack-target-is-my-controller condition. REACTION_THIS_LINK kind:'attack_reaction' player:'ATTACKING' (condition_types.py:1484-1515) = 'its controller has played or activated an attack reaction this chain link': the attack's controller is combat.attacker_id, and play.py _record_reaction_on_link/_reaction_kinds record exactly the string 'attack_reaction' for BOTH played Attack Reaction cards and activated ATTACK_REACTION abilities; the list lives on CombatState so it is chain-link-scoped by construction (a fresh CombatState per attack), which is what 'this chain link' demands.\n\nRELEASE NOTE 1 (triggering is OPTIONAL; declining leaves the card private/face-down) = MAY wrapper (effect_types.py:3788+): declining runs none of the block, so nothing is destroyed, no token is made, and the card is never made public. Note ability-level 'optional' is parsed by loader.py:104 but NEVER consumed by interpreter.py - MAY is the only real mechanism for an optional trigger. RELEASE NOTE 2 (destroy FIRST, then create tokens) = effect order inside the block, matching the printed sentence. 'each opponent's control' = player OPPONENT in 1v1 (CREATE_TOKEN resolves tid = 3-cid). Bloodrot Pox token def already exists at json/tokens/bloodrot_pox.json.\n\nEXECUTION-LAYER GAP - THE ABILITY CANNOT FIRE AS THE ENGINE STANDS (verified firsthand, engine.py:1391-1450): _dsl_hit_listener is the SINGLE ON_HIT dispatch point and it dispatches only to the attack card, the ATTACKER's hero, and the ATTACKER's permanent/equipment zones (_dsl_permanent_zones(attacker)). The DEFENDER's chest slot never receives ON_HIT, so this correctly-shaped ability is inert until that listener also broadcasts to the defender's zones - a generic engine change I am not permitted to make here. The JSON becomes fully live with zero edits once that pass exists."
+}

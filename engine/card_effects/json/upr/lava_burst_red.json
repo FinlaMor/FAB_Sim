@@ -1,0 +1,23 @@
+{
+ "slug": "lava_burst_red",
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_ATTACK",
+   "conditions": [
+    {
+     "type": "CHAIN_HIT_COUNT_GTE",
+     "amount": 4
+    }
+   ],
+   "effects": [
+    {
+     "type": "MODIFY_ATTACK",
+     "mod": "add",
+     "amount": 3
+    }
+   ]
+  }
+ ],
+ "_comment": "Rupture keyword fires from the card DB keywords field, no authoring needed. The pump is TRIGGERED + ON_ATTACK + MODIFY_ATTACK gated by CHAIN_HIT_COUNT_GTE 4 (chain link 4 or higher = 3 prior links). CHAIN_HIT_COUNT_GTE reads len(chain_links) >= amount-1, matching the release note: 'there must already be 3 chain links on the combat chain before you play this'. ON_ATTACK fires when the attack enters the combat chain, so the +3{p} applies for the attack's power calculation."
+}

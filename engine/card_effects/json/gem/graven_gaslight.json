@@ -1,0 +1,16 @@
+{
+  "slug": "graven_gaslight",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {"type": "SELF_IN_ZONE", "zone": "graveyard"}
+      ],
+      "effects": [
+        {"type": "MAY_DESTROY_SILVERS_TO_EQUIP", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - Destroy 2 Silver you control: Equip this. Activate this only while this is in your graveyard.' + '**Spellvoid 1**' (Assassin Equipment - Off-Hand, CompendiumOfRathe).\n\nSPELLVOID 1 NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field (ability_keywords.spellvoid); re-authoring it would be a defect.\n\nABILITY SHAPE copied from shipped dyn/blacktek_whisperers.json, which uses MAY_DESTROY_SILVERS_TO_EQUIP amount 2 for the identical destroy-2-Silvers-to-equip clause family. The effect (effect_types.py:4351-4379, read this session) finds slug-'silver' cards across the controller's permanents/items/tokens zones, asks yes/no, destroys exactly 2 via canonical destroy(), then equips this card. The printed colon-cost is expressed INSIDE that effect (its ask_yes_no gate), not as an ability-level cost array - authoring DESTROY_PERMANENT {asset: silver, amount: 2} as a cost AND the effect would destroy four Silvers per activation, and there is no generic EQUIP effect type in the DSL to pair a real cost with (confirmed by multiple .triage notes; MAY_DESTROY_SILVERS_TO_EQUIP is the only equip vehicle). 'Instant -' is ability_type INSTANT (instant timing per play._activation_is_action_speed); activation_cost 0 is DSL-authoritative since the ability has no {r} component.\n\n'ACTIVATE THIS ONLY WHILE THIS IS IN YOUR GRAVEYARD': SELF_IN_ZONE zone graveyard (condition_types.py:1544-1560) - CARD_IN_ZONE would count ANY graveyard card and answer a different question.\n\nGAP 1 - THE ACTIVATION IS NEVER OFFERED TODAY (blocking, engine-side): play._add_hero_dsl_activations scans the hero, equipment slots, weapons, items, auras, allies and permanents as activation sources (play.py:259-265) - the GRAVEYARD is not among them - so an INSTANT ability whose legal home zone is the graveyard can never be chosen. Authored faithfully so it starts working the moment a graveyard-source activation path exists; same gap flagged on the sibling .triage/graven_call.json.\n\nGAP 2 - WRONG EQUIP DESTINATION (handler-side): MAY_DESTROY_SILVERS_TO_EQUIP derives the slot from head/chest/arms/legs subtypes and defaults to \"arms\" (effect_types.py:4376-4378). Graven Gaslight is an OFF-HAND, which CR 3.16.2a equips into a WEAPON zone, so a successful activation would today put it in the arms slot. Not expressible in JSON; needs the handler to learn weapon-zone destinations.\n\nRELEASE NOTES (reactivating in response to itself with fresh Silvers; no re-equip if already in a weapon zone): generic engine behaviour of repeated activations and of equip-on-resolution - nothing authored here; note the handler does not itself check whether the card is already equipped, so that half depends on the future offering path honouring it."
+}

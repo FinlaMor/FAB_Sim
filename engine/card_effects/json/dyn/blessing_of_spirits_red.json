@@ -1,0 +1,20 @@
+{
+  "slug": "blessing_of_spirits_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_SELF"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token": "spectral_shield",
+          "amount": 3
+        }
+      ]
+    }
+  ],
+  "_comment": "'At the start of your turn, destroy Blessing of Spirits then create 3 Spectral Shield tokens.' Shape copied from dyn/blessing_of_focus_red (same set, same 'At the start of your turn, destroy...' wording, implemented). No IS_ACTIVE_PLAYER condition: trigger_types.py maps START_OF_TURN to an event that reaches only the turn player's cards, so 'your turn' is scoped by dispatch itself. Effects ordered destroy-then-create per the printed 'then'. CREATE_TOKEN handler reads 'token' (slug) and 'amount'; json/tokens/spectral_shield.json exists (its Ward comes from TOKEN_KEYWORDS). Ward 1 on this card is a printed keyword -> card DB keywords field, deliberately NOT authored here. Release note ('triggers and resolves during the start of turn phase, no priority') matches the engine's start-phase START_OF_TURN dispatch."
+}

@@ -1,0 +1,33 @@
+{
+ "slug": "lightning_overload_yellow",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "effects": [
+    {
+     "type": "DEAL_ARCANE",
+     "amount": 3,
+     "target": "ANY_TARGET"
+    },
+    {
+     "type": "CONDITIONAL_EFFECT",
+     "when": [
+      {
+       "type": "EVENT_THIS_TURN",
+       "event": "graveyard",
+       "qualifier": "instant"
+      }
+     ],
+     "then": [
+      {
+       "type": "CREATE_TOKEN",
+       "token": "lightning_flow",
+       "amount": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "_comment": "Lightning Wizard Action (Instant). Deal 3 arcane damage to any target. Starfall - If an instant card has been put into your graveyard this turn, create a Lightning Flow token. Starfall keyword fires from card DB but is a clause marker only; CONDITIONAL_EFFECT + EVENT_THIS_TURN graveyard/instant is the documented pattern (DSL_REFERENCE). DEAL_ARCANE target ANY_TARGET supported by handler (comet_collision_red finding). Release note: target declared at play, Starfall checked at resolution, no priority between effects; if target no longer exists, token still created. Token lightning_flow needs its own JSON in json/tokens/. GAP: play-time target declaration for 'any target' not fully expressible in DSL (cosmic_suture_red precedent)."
+}

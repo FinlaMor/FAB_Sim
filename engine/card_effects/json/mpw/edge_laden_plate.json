@@ -1,0 +1,19 @@
+{
+  "slug": "edge_laden_plate",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {"type": "EVENT_THIS_TURN", "event": "sharpen"}
+      ],
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Instant - Destroy this: Gain {r}. Activate this only if you've sharpened a sword this turn. / Battleworn.'\n\nSHAPE copied from the sibling draft .drafts/bruised_leather.json - the identical 'Instant - Destroy this: <payoff>. Activate this only if <condition>' chest equipment.\n\nWIRING: INSTANT maps to ON_ACTIVATE; play._add_hero_dsl_activations scans player.chest among its sources and offers INSTANT abilities at any priority window, checking ability conditions BEFORE offering (play.py:306-309), so 'Activate this only if...' gates the OFFER itself rather than fizzling at resolution - exactly the printed restriction. The ability-level cost array compiles to AbilityDef.costs; DESTROY_SELF is a real cost type (cost_types.py:43-51) whose pay routes through canonical destroy(), which resolves the chest slot zone. A cost, not an effect: it must be able to block/price the activation. GAIN asset RESOURCE_POINTS amount 1 routes to effect_gain_resources (effect_types.py:4869-4889). activation_cost 0 is the CARD-LEVEL field; the printed text has no {r} of its own (the {r} GAINED is the effect, not a cost).\n\nGATE SPELLING: EVENT_THIS_TURN event=sharpen, BARE form (no qualifier). Producer verified live, not assumed from triage: the SHARPEN effect records _record_turn_event(state, cid, 'sharpen', target_slug) once per sharpen applied (effect_types.py:5212-5215) - the comment there states this turn event is recorded 'here and nowhere else', so a power counter arriving by any other route does not open the window. The qualifier is the WEAPON'S SLUG, not a subtype, so no qualified form could match; the bare marker is the only readable shape. Residual imprecision, disclosed: the printed gate says 'a SWORD' and the bare marker would also admit a sharpen applied to a non-sword - but the SHARPEN handler defaults subtype='Sword' (effect_types.py:5172) and scans only weapon1/weapon2 for that subtype, so in this corpus every sharpen marker IS a sword sharpen. Release note ('a weapon is still considered sharpened even if the +1{p} counters no longer exist on it') holds by construction: the marker records the sharpen EVENT, not the counters.\n\nBATTLEWORN deliberately NOT authored: it is in printed_keywords and fires from the card DB keywords field (ability_keywords.battleworn); re-authoring a printed keyword is a defect."
+}

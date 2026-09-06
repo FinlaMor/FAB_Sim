@@ -1,0 +1,33 @@
+{
+  "slug": "electrify_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "player": "SELF",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+              {"type": "ATTACK_TARGET_IS_HERO"},
+              {"type": "NOT", "inner_type": "FLAG_SET", "flag": "electrify_spent"}
+            ],
+            "effects": [
+              {"type": "DEAL_GENERIC", "amount": 3},
+              {"type": "SET_FLAG", "flag": "electrify_spent"}
+            ]
+          }
+        },
+        {
+          "type": "DRAW",
+          "amount": 1,
+          "conditions": [{"type": "PLAYED_FROM_ARSENAL"}]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next time an attack action card hits a hero this turn, it deals 3 damage to them. / If Electrify is played from arsenal, draw a card. / **Go again**' Lightning Action (LexiBlitzDeck).\n\nGo again is a printed keyword (printed_keywords) firing from the card DB keywords field - deliberately NOT authored.\n\nCLAUSE 1 VEHICLE - DEVIATION FROM TRIAGE, which named DELAYED_TRIGGERED + ON_HIT on the card itself: that can never fire. DELAYED_TRIGGERED has no arming machinery (interpreter.py:171 dispatches it exactly like TRIGGERED), and after resolution this action card sits in the graveyard while the engine dispatches ON_HIT only to combat.attack_card, the attacker's hero, and the attacker's equipment/permanents (engine.py:1410-1450) - a graveyard card hears nothing. The working vehicle for this exact sentence family is INJECT_TRIGGER scope=TURN, copied from .drafts/chill_to_the_bone_blue.json ('The next time an Ice or Elemental attack hits a hero this turn ...'), which documents the shipped-shape precedent blizzard_bolt_blue. The hook lives on player.turn_attack_hooks and is re-applied to every attack until end of turn (engine.py:1238-1281). The NESTED trigger dict is REQUIRED so inner conditions are evaluated per-hit rather than popped as an effect-level gate at registration (effect_types.py:2103-2119).\n\n'THE NEXT time' needs a fire-once gate: NOT FLAG_SET / SET_FLAG pair, per chill_to_the_bone_blue and burn_up__shock_red - injected triggers fire with card=combat.attack_card (engine.py:1414-1423), so without the flag every qualifying hit this turn would deal 3.\n\n'AN ATTACK ACTION CARD': ATTACK_TYPE_IN [\"Action\"] (handler condition_types.py:273-294 reads 'types', tests types AND subtypes of combat.attack_card) - excludes weapon attacks, which the printed text does too. ATTACK_TARGET_IS_HERO (parameterless, condition_types.py:1960) restricts to hits on a hero.\n\n'DEALS 3 DAMAGE TO THEM': DEAL_GENERIC amount 3 with its DEFAULT target OPPONENT - injected effects run with card=combat.attack_card, so _controller_id resolves to the attacker and OPPONENT is the defending hero that was hit. Generic (not arcane) damage per release note 2, and the attack action card is the damage source (effect_types.py:2825-2833 passes the attack card to effect_deal_damage), per release note 1.\n\nCLAUSE 2: DRAW amount 1 with an EFFECT-LEVEL conditions array gated on PLAYED_FROM_ARSENAL (parameterless; condition_types.py:789-809 reads played_from_zone/prev_zone of the played card). Effect-level gates are enforced per-effect in the resolution loop (interpreter.py:149-159), which is the right moment - 'if Electrify IS PLAYED from arsenal' is known once at resolution.\n\nNo gaps beyond those disclosed."
+}

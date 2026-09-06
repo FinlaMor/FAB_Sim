@@ -1,0 +1,24 @@
+{
+  "slug": "hammer_of_havenhold",
+  "activation_cost": 3,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {"type": "ATTACK"}
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "CARD_IN_ZONE", "zone": "pitch", "subtypes": ["Chivalry"]}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "Printed text: 'Once per Turn Action - {r}{r}{r}: Attack / If you have a Chivalry in your pitch zone, this gets +1{p}.' Guardian Weapon - Hammer (1H). No printed keywords, so nothing is omitted there.\n\nATTACK ABILITY: card-level activation_cost 3 + per_turn 1 are the DSL-authoritative fields the loader reads (loader.py:153-161) and _add_weapon_attacks consumes (play.py:86-115: requires is_weapon + printed power + activation_cost; per-turn limit via has_per_turn_limit/activations) to offer the {r}{r}{r} once-per-turn attack. The ACTIVATE ability with an ATTACK effect mainly declares the ability per DSL_REFERENCE; _add_hero_dsl_activations deliberately skips ATTACK-effect abilities (play.py:279-283) so the engine's weapon-attack path is the only offerer and nothing double-offers. Spelling copied from the adopted sledge_of_anvilheim.json.\n\nPITCH-ZONE BONUS: WHILE_STATIC fires only on RECALC_ATTACK_POWER (interpreter.py:186-202), and the recalc listener dispatches to weapon1/weapon2 (engine.py:1733-1740), so a hammer in a weapon zone is re-evaluated on every power recalculation. SOURCE_IS_ATTACK restricts it to this weapon's own attack (condition_types.py:381-387) - 'THIS gets +1{p}', not any attack. CARD_IN_ZONE reads zone via getattr(player, 'pitch') (condition_types.py:935), matches subtypes case-insensitively against types+subtypes (887-889, 944-948), and defaults to at-least-one matching card (994). MODIFY_ATTACK from a WHILE_STATIC lands in the stage-8 static window so it never accumulates on power_mods (effect_types.py:4137-4143).\n\nRELEASE-NOTE TYPO: the printing says 'Chivarly'; the correct subtype name 'Chivalry' is authored here. One data-side caveat the JSON cannot control: the matcher compares against whatever subtypes the card DB carries, so if any Chivalry card's DB entry carries the typo'd subtype string it will not match - that would be a slug_index data fix, not a JSON one."
+}

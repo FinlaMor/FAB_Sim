@@ -1,0 +1,66 @@
+{
+ "slug": "line_it_up_yellow",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "effects": [
+    {
+     "type": "MODIFY_NEXT_ATTACK",
+     "mod": "add",
+     "amount": 3,
+     "filter": [
+      {
+       "type": "ATTACK_SUBTYPE_IN",
+       "subtypes": [
+        "Arrow"
+       ]
+      }
+     ],
+     "scope": "TURN"
+    },
+    {
+     "type": "LOOK_AT",
+     "zone": "ARSENAL",
+     "player": "SELF",
+     "amount": "ALL",
+     "filter": {
+      "subtype": "Arrow",
+      "face_down": true
+     },
+     "into": "face_down_arrows"
+    },
+    {
+     "type": "MAY",
+     "conditions": [
+      {
+       "type": "REF_EXISTS",
+       "ref": "face_down_arrows"
+      }
+     ],
+     "effects": [
+      {
+       "type": "SELECT_FROM_REF",
+       "ref": "face_down_arrows",
+       "mode": "ANY",
+       "min": 1,
+       "max": 1,
+       "into": "chosen_arrow"
+      },
+      {
+       "type": "FLIP_REF",
+       "ref": "chosen_arrow",
+       "face_up": true
+      },
+      {
+       "type": "PUT_COUNTER_REF",
+       "ref": "chosen_arrow",
+       "counter_type": "aim",
+       "amount": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "_comment": "LOOK_AT filter uses object syntax {subtype, face_down}. SELECT_FROM_REF needed for player choice among face-down arrows. Go Again is printed keyword only (no JSON needed). MAY gates the optional block on REF_EXISTS."
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "elliptical_conflux_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "embodiment_of_lightning"
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this leaves the arena, create an Embodiment of Lightning token. / **Ward 2**' Lightning Illusionist Instant - Aura (ArmoryDeckZyggy).\n\nWARD 2 NOT AUTHORED: Ward is in printed_keywords - numbered keywords fire from the card DB keywords field (ability_keywords.ward); re-authoring it would be a defect. Release note 2 (destroying it while applying its own Ward prevention can cause this trigger) needs no modelling here: that route is still a destruction, and destruction is exactly what fires the trigger below.\n\nTRIGGER: TRIGGERED + ON_LEAVE_PLAY, shape copied from .drafts/edge_of_their_seats_blue/red (same 'When this leaves the arena' clause family) whose precedent traces to SHIPPED aps/act_of_glory_blue.json. Engine listener _dsl_leaves_arena_listener (engine.py:1560-1576) dispatches ON_LEAVE_PLAY to the leaving card itself off the 'leaves_arena' event emitted by canonical destroy() - so every destruction route fires it, including Ward self-destruction per release note 2 ('You will add this triggered effect to the stack the next time effects can be added to the stack').\n\nDISCLOSED ENGINE GAP, not fixable in JSON: leaving by BANISH or return-to-hand emits no leaves_arena event, so those routes named in release note 1 ('destroyed, when it is banished, etc.') do not fire the trigger today; the listener comment already records this as a known gap. Destruction is the dominant route for a Ward aura.\n\nTOKEN: CREATE_TOKEN (handler effect_types.py:1942-2013 reads token/count/player/destination/counters) with slug 'embodiment_of_lightning'; count defaults to 1, controller defaults to SELF. A definition already exists at json/tokens/embodiment_of_lightning.json (verified this session), so no MissingCardImplementation at resolution; zone routing derives from the card-DB template's subtypes (Aura -> player.auras).\n\nNo other functional text on the card."
+}

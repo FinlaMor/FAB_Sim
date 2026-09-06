@@ -1,0 +1,59 @@
+{
+  "slug": "deadwood_rumbler_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "DISCARD_RANDOM",
+          "amount": 1
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "REF_POWER_GTE",
+              "ref": "discarded",
+              "amount": 6
+            }
+          ],
+          "then": [
+            {
+              "type": "CHOOSE",
+              "amount": 1,
+              "options": [
+                {
+                  "name": "Banish from your graveyard",
+                  "effects": [
+                    {
+                      "type": "BANISH",
+                      "from_zone": "GRAVEYARD",
+                      "player": "SELF",
+                      "amount": 1
+                    }
+                  ]
+                },
+                {
+                  "name": "Banish from their graveyard",
+                  "effects": [
+                    {
+                      "type": "BANISH",
+                      "from_zone": "GRAVEYARD",
+                      "player": "OPPONENT",
+                      "amount": 1
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, banish a card from a graveyard.' + printed **Blood Debt**.\n\nDEVIATION FROM THE TRIAGE LIST, which named DISCARDED_CARD_POWER_GTE for the gate: that condition (condition_types.py:1046-1052) reads getattr(event, 'power') - it tests whatever object the ability was DISPATCHED with, and for a PLAY ability that is not the discarded card, so the gate would be false in every real resolution. The verified path is the one DISCARD_RANDOM was built for: its handler (effect_types.py:5013-5030) stores the card actually discarded under the ref 'discarded' - the comment there cites this exact wording family ('If a card with 6 or more {p} IS DISCARDED THIS WAY') - and REF_POWER_GTE (condition_types.py:2090-2118) reads a ref param and tests power >= threshold, any entry of a list ref satisfying it. CONDITIONAL (effect_types.py:3697-3724) evaluates 'when' at branch-run time, i.e. after the discard, matching the release note that nobody has priority mid-resolution.\n\nORDER: effects run in array order, so DRAW precedes DISCARD_RANDOM precedes the gate ('draw THEN discard').\n\nTHE BANISH: mandatory per release notes, from ANY player's graveyard, may be the just-discarded card (which lands in your own graveyard). BANISH (effect_types.py:1301-1417) reads from_zone/player/amount and prompts the controller to pick the card from the chosen graveyard; spelling copied from shipped pen/deep_recesses_of_existence_blue.json. A single BANISH names ONE player's zone, so 'a graveyard' is authored as CHOOSE (effect_types.py:5107-5136, reads amount/options; options are named effect blocks) between the two graveyards.\n\nKNOWN IMPRECISION: CHOOSE cannot make an option unavailable, so with exactly one non-empty graveyard the player can pick the empty side and dodge a banish the release notes call mandatory (both empty forces a pointless prompt but no-ops correctly, since BANISH breaks on an empty pool). A conditional-options mechanism would fix this; flagged rather than approximated further.\n\nPRINTED KEYWORD NOT AUTHORED: BloodDebt fires from the card DB keywords field."
+}

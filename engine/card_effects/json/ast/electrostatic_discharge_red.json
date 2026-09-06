@@ -1,0 +1,21 @@
+{
+  "slug": "electrostatic_discharge_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {"type": "ATTACK_COST_LTE", "cost": 1},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next attack action card you play this turn with cost 1 or less gets +3{p}.' Lightning Instant.\n\nABILITY TYPE: an Instant CARD whose effect happens when you play it is PLAY - INSTANT means an activated ability with instant timing and would never fire (DSL_REFERENCE 'INSTANT is not \"the card is an Instant\"').\n\nSHAPE: MODIFY_NEXT_ATTACK add 3 with a filter - the DSL_REFERENCE example pattern, and the same three-condition filter as SHIPPED wtr/nimblism_yellow.json ('next attack action card with cost 1 or less'). Handler (effect_types.py:4592-4618) READS mod/amount/filter/scope - verified - and queues a one-shot entry on the CONTROLLER's dsl_queued_attack_mods (instant-speed cards buff their own controller by construction); consumption compiles the filter specs against each incoming attack and applies+consumes on first match. A played attack that fails the filter leaves the entry queued, so it waits for the next qualifying one ('the NEXT ... with cost 1 or less'); unused entries expire end of turn, which is 'this turn'. Scope left at default TURN.\n\nFILTER keys read out of their handlers this session: ATTACK_COST_LTE reads 'cost' (or 'amount') at condition_types.py:261-263 and tests _attack_card_cost (:92), which returns the PRINTED resource cost - release note ('Base cost is the printed cost value on a card') holds by construction, unaffected by cost modifiers in play. ATTACK_TYPE_IN reads 'types' and unions the attack card's types AND subtypes (:273-294); ATTACK_SUBTYPE_IN reads 'subtypes' (:296+). An attack action card is types=['Action'], subtypes=['Attack'], so the three together name precisely 'attack action card'; a weapon attack carries type Weapon and fails, so the buff cannot burn on a weapon attack.\n\nSibling drafts electrostatic_discharge_yellow/blue (+2/+1) already in .drafts use the identical shape. No printed keywords (printed_keywords empty); no gaps - every clause expressible."
+}

@@ -1,0 +1,26 @@
+{
+  "slug": "crowd_control_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Pay {r}{r}{r}? If you do, Crowd Control gets +1{d} for each opposing hero.",
+          "cost": [
+            {"type": "PAY_RESOURCES", "amount": 3}
+          ],
+          "effects": [
+            {
+              "type": "MODIFY_DEFENSE_VALUE",
+              "mod": "add",
+              "amount": {"type": "COUNT_OPPOSING_HEROES"}
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends, you may pay {r}{r}{r}. If you do, it gets +1{d} for each opposing hero.'\n\nDEVIATION FROM TRIAGE: it named PAY_OR_ELSE, but that handler runs on_failure when the payment is DECLINED - the opposite polarity of 'if you do, it gets +1{d}'. MAY with an embedded cost is the handler-documented shape for 'you may pay X. If you do, Y' (effect_types.py ~3825-3836: the cost gates the OPTION, can_pay must pass or the prompt is not even offered, pay runs on accept). PAY_RESOURCES (cost_types.py:691) reads 'amount' only.\n\nON_DEFEND is dispatched to the defending card itself, so the trigger fires on Crowd Control when it defends.\n\nPERSISTENCE: MODIFY_DEFENSE_VALUE untargeted appends to combat.defense_mods - which _recalculate_total_defense re-applies on every later pass - AND bumps the live total. A direct write (card.defense or bare total_defense) is wiped by the next recalculation, so the persistent form is the only correct one. Nuance: untargeted moves the defending TOTAL, not solely this card - identical while it defends alone, over-applies if further defenders are declared after the payment. The targeted variant was rejected because it writes obj.defense directly without recording defense_mods, i.e. it does not survive recalculation - wrong in the common case.\n\nAMOUNT: COUNT_OPPOSING_HEROES (_resolve_amount, effect_types.py:179) counts every other player entry, with an optional life comparison this card does not use. The release note's multiplayer refinement ('heroes that are not in your party that are left in the game') is not modelled; in 1v1 the count is exactly 1, which is the value that matters here."
+}

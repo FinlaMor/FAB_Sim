@@ -1,0 +1,49 @@
+{
+ "slug": "madcap_charger_blue",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "additional_cost": [
+    {
+     "type": "DISCARD_RANDOM"
+    }
+   ],
+   "effects": [
+    {
+     "type": "CONDITIONAL_EFFECT",
+     "when": [
+      {
+       "type": "DISCARDED_CARD_POWER_GTE",
+       "amount": 6
+      }
+     ],
+     "then": [
+      {
+       "type": "SET_FLAG",
+       "flag": "MADCAP_CHARGER_GO_AGAIN"
+      }
+     ],
+     "else": []
+    }
+   ]
+  },
+  {
+   "ability_type": "WHILE_STATIC",
+   "conditions": [
+    {
+     "type": "SOURCE_IS_ATTACK"
+    },
+    {
+     "type": "FLAG_SET",
+     "flag": "MADCAP_CHARGER_GO_AGAIN"
+    }
+   ],
+   "effects": [
+    {
+     "type": "GAIN",
+     "keyword": "GO_AGAIN"
+    }
+   ]
+  }
+ ]
+}

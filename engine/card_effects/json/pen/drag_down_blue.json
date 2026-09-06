@@ -1,0 +1,13 @@
+{
+  "slug": "drag_down_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": -1}
+      ]
+    }
+  ],
+  "_comment": "'When this defends an attack, it gets -1{p}.' Generic Defense Reaction.\n\nThe release note settles the pronoun: 'it' is the ATTACK Drag Down defends against, not Drag Down itself ('That attack will get the prescribed power decrease when this triggered effect resolves'). MODIFY_ATTACK (effect_types.py:4123, reads mod + amount) adjusts state.combat.attack_power, which during defence IS the attack being defended against; as a one-shot trigger it appends to combat.power_mods so the -1 survives later recalculations. Subtraction authored as negative amount per DSL_REFERENCE.\n\nShape copied from implemented tripwire_trap_red (cru): TRIGGERED + ON_DEFEND is the proven vehicle for 'when this defends' on a defense-reaction card. No conditions - the trigger is unconditional."
+}

@@ -1,0 +1,28 @@
+{
+  "slug": "hms_kraken_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "DESTROY_PERMANENT", "player": "OPPONENT", "subtype": "Item", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "CARD_IN_ZONE", "zones": ["pitch"], "color": "blue", "count_gte": 2}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1},
+        {"type": "GAIN", "keyword": "OVERPOWER"}
+      ]
+    }
+  ],
+  "_comment": "'When this hits a hero, destroy an item they control. / **High Tide** - If there are 2 or more blue cards in your pitch zone, this gets +1{p} and **overpower**.' Pirate Action - Attack (HighSeas). High Tide clause identical to the sibling draft .drafts/hms_marlin_yellow.json; clause 1 identical to .drafts/bam_bam_yellow.json. Every handler re-read this session.\n\nCLAUSE 1 (item destruction on hit): TRIGGERED + ON_HIT rides the attack card itself, so only Kraken's own attack hears it. ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977) is false when the attack was declared at a permanent or ally - the printed 'hits a hero'. Ability-level conditions are checked at resolution (interpreter pre-effects gate), which is official_release_notes 1's 'you will choose which item that hero controls to destroy WHEN THE TRIGGERED EFFECT RESOLVES'. DESTROY_PERMANENT (effect_types.py:2470-2571) reads player/subtype/amount: player OPPONENT pools the opposing player's permanents (items live there via SubZoneView), subtype Item filters them, and with several candidates it ASKS the controller which to destroy (:2550-2567) - the release-note choice. No items -> destroys nothing.\n\nCLAUSE 2 (High Tide): release note 2 says the pitch zone is checked CONSTANTLY, not just when it attacks - an always-checking property, so WHILE_STATIC, which the interpreter re-evaluates on every RECALC_ATTACK_POWER dispatch (interpreter.py:182+; recalc runs at attack declaration AND before damage, so a pitch zone that fills after the attack is made still yields the bonus during damage calculation). CARD_IN_ZONE (condition_types.py:844-996) reads zones/color/count_gte; zone 'pitch' resolves via getattr(player, 'pitch'), color 'blue' against card.color/base_color/pitch 1-2-3.\n\nWHY SOURCE_IS_ATTACK IS IN THE CONDITION LIST - IT IS LOAD-BEARING TWICE: (a) it scopes +1{p}/overpower to THIS card's own attack; (b) loader.conditional_keywords() (loader.py:283-293) strips a printed DB keyword ONLY from an ability whose conditions include SOURCE_IS_ATTACK, and the card DB ships Overpower unconditionally in keywords. With it present, engine._recalculate_attack_power removes the printed Overpower from every recalculation (engine.py:1902-1913) and this ability re-grants it only while High Tide holds - without it the ship would have overpower in every state and the authored grant would be a dead no-op behind it (the exact finding recorded on .review/vantage_point_red.json). GAIN keyword OVERPOWER routes canonical_keyword -> 'Overpower' -> combat.grant_keyword, idempotent per chain link (effect_types.py:4927-4941); MODIFY_ATTACK inside a WHILE_STATIC applies transiently in the stage-8 static window on recalc events (effect_types.py:4134-4144), never accumulating.\n\nOverpower appears in printed_keywords but is NOT unconditional on the printed card - it is the High Tide rider, handled by the conditional-grant machinery above rather than re-authored as a always-on static. HighTide itself has no JSON behaviour to author (the pitch-zone condition above IS the mechanic).",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

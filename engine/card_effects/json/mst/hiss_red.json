@@ -1,0 +1,26 @@
+{
+  "slug": "hiss_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_CLASS_IN", "classes": ["Assassin", "Mystic"]},
+          {"type": "ATTACK_TYPE_IN", "types": ["Action"]}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3},
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [{"type": "EVENT_THIS_TURN", "event": "pitch", "qualifier": "blue"}],
+          "then": [
+            {"type": "CREATE_TOKEN", "token": "slither", "amount": 1, "destination": "hand"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target Assassin or Mystic attack action card gets +3{p}. / If you've pitched a blue card this turn, create a Slither in your hand.' Mystic Assassin Attack Reaction (NuuBlitzDeck). Same shape as the sibling drafts .drafts/hiss_blue.json / .drafts/hiss_yellow.json (+3{p} is the red printing); every claim below re-verified against source this session.\n\nTARGETING: ability-level target.filter is compiled to target_filter by the loader and enforced by play._legality_check (play.py:416-431) when the reaction is offered - unplayable unless the current attack matches, which is CR 5.1.4 announce legality. Both filter conditions read state.combat.attack_card. ATTACK_CLASS_IN (condition_types.py:204-216) matches classes AND talents via _card_traits, so Assassin (a class) and Mystic (a talent) go in ONE 'classes' list - splitting them across separate keys would drop the second, since only the first-present key is read. ATTACK_TYPE_IN (condition_types.py:273-294) unions types with subtypes: an attack action card is types=['Action'], subtypes=['Attack'], so ['Action'] pins 'attack action card' and excludes weapon attacks (type Weapon).\n\n+3{p}: MODIFY_ATTACK add 3 (effect_types.py:4123-4158) appends to combat.power_mods and bumps live power, so later recalculations keep it; combat exists throughout the reaction step.\n\nPITCH GATE - PLACEMENT IS THE RELEASE NOTE: 'you will create a Slither ... if you've pitched a blue card BY THE TIME HISS RESOLVES'. Ability-level conditions would gate the +3{p} too, so the gate lives on CONDITIONAL_EFFECT's 'when' (effect_types.py:3697-3724 reads when/then/else; authoring 'conditions' there would be silently unread and run then unconditionally), evaluated when Hiss resolves. EVENT_THIS_TURN event=pitch qualifier=blue reads the marker canonical pitch() records AT PITCH TIME (effect_keywords.py:2714-2723, colour from card.color or the 1/2/3 pitch map) - a turn marker, so pitched cards no longer in the pitch zone (Potion of Deja Vu case) still count, exactly official_release_notes 1. Condition defaults to player SELF = the pitching player = Hiss's controller.\n\nSLITHER: CREATE_TOKEN (effect_types.py:1942-2013 reads token/count/player/destination) routes to canonical create_token with destination 'hand', which resolves getattr(controller, 'hand') and adds the token there (effect_keywords.py:372-376) - 'create a Slither in your hand'.\n\nDEPENDENCY, NOT THIS BATCH: create_token require_card()s the slug, so json/tokens/slither.json must be adopted before this card goes live (draft exists at .drafts/slither.json; DB template present: types [AttackReaction], keyword Ephemeral).\n\nprinted_keywords is empty - no conditional-keyword machinery applies.",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

@@ -1,0 +1,18 @@
+{
+  "slug": "crash_down_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 6,
+         "filter": [
+           {"type": "ATTACK_CLASS_IN", "classes": ["Guardian"]},
+           {"type": "ATTACK_TYPE_IN", "types": ["Action"]}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "'At the start of your turn, destroy this, then the next Guardian attack action card you play this turn gets +6{p}.'\n\nVehicle: TRIGGERED + START_OF_TURN on the aura itself. Verified _dsl_start_of_turn_listener dispatches START_OF_TURN to every card in the turn player's permanent zones and _dsl_permanent_zones explicitly includes player.auras (engine.py:1452-1466), so the trigger fires where this aura lives. Follows the harvest_season_blue review finding: an automatic 'at the start of your turn, destroy this' is a TRIGGERED ability, never ACTIVATE - interpreter.dispatch_event reads ability.trigger only for the TRIGGERED family, and ACTIVATE would have offered an optional manual activation instead.\n\nOrdering: DESTROY_SELF first, then MODIFY_NEXT_ATTACK - effects run in order within one ability resolution; the destroy removes the card from the auras zone but the queue entry is registered on the controller (effect_types.py:4604-4617), so it outlives its source as printed.\n\nFilter = 'Guardian attack action card': ATTACK_CLASS_IN reads classes/talents off combat.attack_card via _card_traits (condition_types.py:204-216); ATTACK_TYPE_IN ['Action'] excludes weapon attacks, whose card types are ['Weapon'] (condition_types.py:273-294). The queue is consumed by the first matching attack that turn (engine.py:1171-1198) and unused entries expire at end of turn, which is exactly the printed 'this turn'.\n\nAll three types the triage pass named exist and read the parameters authored here. No known gaps."
+}

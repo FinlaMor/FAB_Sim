@@ -1,0 +1,34 @@
+{
+  "slug": "boltn_shot_blue",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        { "type": "SOURCE_IS_ATTACK" },
+        { "type": "ATTACK_POWER_GT_BASE" }
+      ],
+      "effects": [
+        { "type": "GAIN", "keyword": "GO_AGAIN" }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              { "type": "ATTACK_POWER_GT_BASE" }
+            ],
+            "effects": [
+              { "type": "RELOAD" }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'If Bolt'n' Shot's {p} is greater than its base {p}, it has go again and \"If this hits, reload.\"' Blue printing; identical text to the red sibling .drafts/boltn_shot_red.json, whose shape this copies (no amount differs between printings).\n\nGoAgain appears in printed_keywords, so the conditional-keyword shape is mandatory: the engine applies every DB keyword unconditionally, and loader.conditional_keywords() (loader.py:255-296) strips the printed keyword ONLY for an ability whose conditions include SOURCE_IS_ATTACK and whose un-nested effects grant it via GAIN of a _GRANTABLE_KEYWORDS member - both hold here. Without this WHILE_STATIC the attack would have go again even unpumped.\n\nAbility type: the condition is always checking (Aggressive Pounce rule), so a WHILE_STATIC re-evaluated on every RECALC_ATTACK_POWER dispatch, not a TRIGGERED ON_ATTACK pump that would freeze the answer at declaration - a pump played as an attack reaction must still turn go again on. ATTACK_POWER_GT_BASE (condition_types.py:499-509) compares live combat.attack_power against base_attack_power recorded at declaration; GAIN GO_AGAIN routes through _grant_go_again's CR 8.3.5c dedupe so repeated recalcs do not pay twice.\n\nReload half: the printed 'Reload' keyword is INERT engine-side - build_keyword_triggers (triggers/triggers.py:221+) has no reload branch and no keyword static consumes it - so the injected trigger is the sole source of the behaviour and cannot double-fire with the DB keyword. Note Reload is NOT in _GRANTABLE_KEYWORDS, so conditional_keywords could never strip it even if it were live; nothing needs stripping today. The gate sits in the INJECTED trigger's NESTED conditions (a top-level conditions key would be popped by the loader as an effect-level gate evaluated once at registration), so it is evaluated AT HIT TIME and an attack-reaction pump that resolves after the injection still counts. Scope defaults to COMBAT: one-shot onto this card's own attack. RELOAD takes no parameters and calls effect_reload for the controller."
+}

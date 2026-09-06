@@ -1,0 +1,22 @@
+{
+  "slug": "burgeoning_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "PLAYED_FROM_ARSENAL"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'If this was played from arsenal, it gains +1{p}.' Same text as the red/blue printings; identical shape to .drafts/burgeoning_red.json.\n\nPump shape per DSL_REFERENCE: TRIGGERED + ON_ATTACK + MODIFY_ATTACK - an Action - Attack card is NOT an ATTACK_REACTION, and that ability type would never fire. Verified against handlers, not just the sibling: PLAYED_FROM_ARSENAL exists (condition_types.py:789), reads played_from_zone stamped by play.py at the moment of play with a prev_zone fallback, and its own comment says the two agree on the arsenal -> combat-chain move, so the gate is true exactly when this copy was played from arsenal. Ability-level conditions are checked at resolution, after the stamp exists. A hand play leaves the gate false, matching the release note ('You may still play Burgeoning from your hand. It would not gain the +1{p}.'). MODIFY_ATTACK reads mod/amount (effect_types.py:4123-4125) and records on combat.power_mods so the +1 survives later recalculations rather than being a one-off bump.\n\nprinted_keywords is empty, so no conditional-keyword machinery applies."
+}

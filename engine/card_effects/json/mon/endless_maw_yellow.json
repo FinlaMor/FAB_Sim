@@ -1,0 +1,19 @@
+{
+  "slug": "endless_maw_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {"type": "BANISH_RANDOM_FROM_GRAVEYARD", "amount": 3}
+      ],
+      "effects": [
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [{"type": "REF_POWER_GTE", "ref": "banished_cards", "amount": 6}],
+          "then": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}]
+        }
+      ]
+    }
+  ],
+  "_comment": "'As an additional cost to play Endless Maw, banish 3 random cards from your graveyard. / If a card with 6 or more {p} is banished this way, Endless Maw gains +3{p}.' + printed **Blood Debt**. Shadow Brute Action - Attack (Monarch).\n\nBLOOD DEBT NOT AUTHORED: BloodDebt is in printed_keywords and fires from the card DB keywords field; re-authoring it would be a defect.\n\nCOST: additional_cost BANISH_RANDOM_FROM_GRAVEYARD amount 3 (cost_types.py:192-224). Mandatory: can_pay requires >= 3 graveyard cards, so it BLOCKS the play when unpayable; pay banishes N random cards via canonical banish(origin_zone='graveyard') and records them under the 'banished_cards' ref via _record_banished. Costs are paid inside run_ability's reference scope (interpreter.py:31 push_refs, :48-52 cost payment), so the payoff effect in the same execution sees the ref.\n\nPAYOFF: CONDITIONAL_EFFECT reads when/then (effect_types.py:3697-3724; authoring 'conditions' would have been popped as an effect-level gate and skipped the branch entirely). REF_POWER_GTE (condition_types.py:2090-2118) was written for this exact '6 or more {p} banished this way' wording - it takes ref + amount and ANY list entry satisfying the threshold counts.\n\nDELIBERATE DEVIATION FROM THE TRIAGE LIST, which said TRIGGERED ON_ATTACK for the pump: (1) the text has no 'when' clause - same reading as the sibling dread_screamer_* drafts, whose printed first sentence is IDENTICAL apart from the payoff ('one flat PLAY resolution, not TRIGGERED ON_ATTACK'); (2) refs are scoped to ONE ability execution (context.py:74-105, pushed/popped by run_ability), so a separate ON_ATTACK execution could not see 'banished_cards' recorded during this play's cost payment - the gate would be false in every real resolution while looking implemented; (3) MODIFY_ATTACK works here: an attack action card resolves as an attack layer so state.combat exists, and the handler appends to combat.power_mods and bumps live power (effect_types.py:4123-4158), surviving later recalculations - the same combat-existence path the dread_screamer drafts verified for their GAIN GO_AGAIN payoff.\n\n'GAINS +3{p}' is a self-pump: MODIFY_ATTACK with no target modifies the current attack, which during this resolution IS Endless Maw's attack."
+}

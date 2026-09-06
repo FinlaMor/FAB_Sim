@@ -1,0 +1,32 @@
+{
+  "slug": "cogwerx_workshop_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "golden_cog", "amount": 1},
+        {
+          "type": "MAY",
+          "prompt": "Put a steam counter on up to 2 cogs you control?",
+          "conditions": [
+            {"type": "CARD_IN_ZONE", "zone": "permanents", "card_name": "cog", "count_gte": 1}
+          ],
+          "effects": [
+            {
+              "type": "PUT_COUNTER",
+              "counter_type": "steam",
+              "amount": 1,
+              "target": {
+                "controller": "SELF",
+                "zone": "ARENA",
+                "name": "Cog",
+                "amount": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Create a Golden Cog token. / Put a steam counter on up to 2 cogs you control.'\n\nONE PLAY ability, both paragraphs in resolution order. Release note 1 ('you can put a steam counter on the Golden Cog token created by this card's first ability') falls out of sequential resolution: effect 1 puts the token in permanents before effect 2's target search runs.\n\nCREATE_TOKEN reads token/count|amount/player/destination (effect_types.py:1942-1991); amount 1, destination omitted so the golden_cog template's subtypes route it (Item -> player.permanents). The token definition EXISTS at json/tokens/golden_cog.json.\n\nCOG IDENTIFICATION DEVIATES FROM TRIAGE, which named SUBTYPE_IN [Cog]: no card in the DB carries a Cog subtype (golden_cog's subtypes are ['Item']; reviewed sibling .drafts/cog_in_the_machine_red.json documented the same CardDB scan), so that filter matches nothing and the whole counter clause would be silently dead. Used name-substring matching instead: the object-target spec's 'name' key flattens and substring-matches name OR slug over the ARENA pool (_compile_object_target, effect_types.py:769-775), so 'Golden Cog', 'Master Cog' etc. all count as 'a cog you control'. Known imprecision: a permanent whose name/slug merely CONTAINS 'cog' would also match.\n\nRELEASE NOTE 'you can choose to not put any steam counters' = the MAY wrapper: declining runs nothing in the block, and with no cog in permanents the CARD_IN_ZONE gate means the prompt is not even offered.\n\nGAP - 'up to 2': on accepting, PUT_COUNTER's object-target pick loop (effect_types.py:792-799) is MANDATORY up to amount - with 2+ cogs you must place both counters; placing exactly 1 of 2+ is not expressible. SELECT_FROM_REF with min 0 would give a true 'up to' (STOP offered immediately, condition_types sibling handler at effect_types.py:3576-3584), but no effect can store arena/permanent cards into a ref for it to select from - LOOK_AT reaches only DECK_TOP/ARSENAL/HAND (effect_types.py:3390-3391). Release note 2's distinctness holds regardless: each pick removes the chosen card from the remaining pool, so two counters always land on two different cogs."
+}

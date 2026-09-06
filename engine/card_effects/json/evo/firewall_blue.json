@@ -1,0 +1,23 @@
+{
+  "slug": "firewall_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "REVEAL_TOP_DECK", "amount": 1, "into": "revealed"},
+        {"type": "CONDITIONAL",
+         "when": [
+           {"type": "REF_IS_TYPE", "ref": "revealed", "types": ["Evo"]}
+         ],
+         "then": [
+           {"type": "MOVE_REF", "ref": "revealed", "to_zone": "deck", "position": "top"}
+         ],
+         "else": [
+           {"type": "MOVE_REF", "ref": "revealed", "to_zone": "deck", "position": "bottom"}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "'When this defends, reveal the top card of your deck. If it's an Evo, put it on top of your deck. Otherwise, put it on the bottom.' Mechanologist Block (BrightLights).\n\nDEFEND TRIGGER: TRIGGERED + ON_DEFEND - trigger_types.py:9 maps it; equipment precedent torque_tuned_red (json/evo) uses the same shape for 'when this defends'.\n\nREVEAL: REVEAL_TOP_DECK (effect_types.py:2229-2256, read this session) reads amount and into - it peeks WITHOUT moving, marks the cards is_public, and stores them under ref 'revealed' as a list.\n\nEVO TEST: REF_IS_TYPE (condition_types.py:2011-2043, read this session) reads types/ref; it matches against types AND subtypes together ('Evo' is a subtype), and collapses a single-card list to that card, which is what REVEAL_TOP_DECK stores.\n\nBRANCH: CONDITIONAL (effect_types.py:3697-3724, read this session) - test goes under 'when' (NOT 'conditions', which the loader pops as an effect-level gate and would skip the else); then/else hold the two MOVE_REFs.\n\nPUT BACK: MOVE_REF (effect_types.py:3430-3471, read this session) reads ref/to_zone/position/player; position 'top'/'bottom', player defaults OWNER = the card's owner's deck, correct here since it is always your own deck. The 'put it on top' half is effectively a no-op move (the revealed card never left the top) - harmless, authored so both branches are explicit.\n\nEDGE: empty deck - REVEAL_TOP_DECK stores an empty list, REF_IS_TYPE returns False, the else MOVE_REF moves nothing. Behaviourally fine."
+}

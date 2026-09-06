@@ -1,0 +1,16 @@
+{
+  "slug": "beast_mode_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "EVENT_THIS_TURN", "event": "intimidate"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'If you've intimidated this turn, this gets +2{p}.' Yellow printing of beast_mode_red (same folder, same shape) - copied verbatim per the copy-an-existing-spelling rule; only the slug differs.\n\nKNOWN-DEAD GATE, flagged loudly: EVENT_THIS_TURN reads markers written by effect_keywords._record_turn_event, and NOTHING records an 'intimidate' marker - intimidate() (effect_keywords.py:1252-1306) emits EventType.INTIMIDATE without recording a turn marker. So as the engine stands this condition compiles but is false in every state: it fails closed (+2{p} never applies, never wrongly grants), but the printed behaviour is not achieved. The JSON becomes fully correct with ZERO edits the moment intimidate() records a generic marker (_record_turn_event(state, source_player_id, 'intimidate') alongside the existing emit - a one-line generic engine addition). That is why the gate uses the documented reader instead of a private flag: FLAG_SET 'INTIMIDATED_THIS_TURN' would be a flag nothing sets, the exact dead-flag class that got beast_mode_blue quarantined. When the producer lands it must record against source_player_id (SELF defaults to this card's controller) and unconditionally - CR 8.5.10a resolves intimidation even when no card was banished, matching the release note 'You do not have to banish a card to intimidate a player'; any intimidate source counts, including defend-triggered ones like Scowling Flesh Bag, because the marker is player-scoped for the whole turn.\n\nEverything else is verified live: TRIGGERED + ON_ATTACK + MODIFY_ATTACK is the DSL_REFERENCE-prescribed shape for an Action - Attack pump, and the release note 'not functional when this card is not attacking' holds because ON_ATTACK dispatches to this card only when it enters the combat chain as the attack - defending, discarded, banished or revealed states fire nothing. Ability conditions evaluate at resolution (interpreter._run_ability), i.e. as the attack is already on the chain, so MODIFY_ATTACK lands on THIS attack via combat.power_mods (effect_types.py:4059-4094) and survives later recalculations.\n\nprinted_keywords is empty for all three printings, so unlike aggressive_pounce there is no DB GoAgain contradiction to strip."
+}

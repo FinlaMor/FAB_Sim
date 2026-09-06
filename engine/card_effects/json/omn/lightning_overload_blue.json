@@ -1,0 +1,33 @@
+{
+ "slug": "lightning_overload_blue",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "effects": [
+    {
+     "type": "DEAL_ARCANE",
+     "amount": 2,
+     "target": "ANY_TARGET"
+    },
+    {
+     "type": "CONDITIONAL_EFFECT",
+     "when": [
+      {
+       "type": "EVENT_THIS_TURN",
+       "event": "graveyard",
+       "qualifier": "instant"
+      }
+     ],
+     "then": [
+      {
+       "type": "CREATE_TOKEN",
+       "token": "lightning_flow",
+       "amount": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "_comment": "Blue printing deals 2 arcane (4/3/2 red/yellow/blue). Starfall is a clause marker, not an engine keyword; EVENT_THIS_TURN graveyard/instant is the documented pattern. KNOWN GAP: play-time target declaration for 'any target' not expressible - prompted at resolution (same as red/yellow siblings)."
+}

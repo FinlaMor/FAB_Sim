@@ -1,0 +1,12 @@
+{
+  "slug": "celestial_cataclysm_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "BANISH", "from_zone": "SOUL", "amount": 3, "player": "SELF"}
+      ]
+    }
+  ],
+  "_comment": "Printed text: 'As an additional cost to play this, banish 3 cards from your soul.' Release note: 'You cannot play this card if you don't have at least 3 cards in your hero's soul.'\n\nUNEXPRESSIBLE CLAUSE: the mandatory additional COST. loader._compile_cost routes every cost/additional_cost/alternative_cost entry through cost_types.compile_cost (loader.py:93-110), and compile_cost has NO banish-from-zone branch - its only banish costs are graveyard-bound (BANISH_RANDOM_FROM_GRAVEYARD, BANISH_NAMED_GRAVEYARD_OPTIONAL, BANISH_FROM_GRAVEYARD). Authoring {\"type\":\"BANISH\",\"from_zone\":\"SOUL\"} as an additional_cost hits compile_cost's unknown-type ValueError (cost_types.py:734-736), fails the whole file at load, and the card counts as unimplemented - strictly worse than partly right.\n\nI also checked the escape hatch of gating play legality some other way: compile_card (loader.py:144-162) reads slug/abilities/play_cost/setup/activation_cost/per_turn/cost_modifiers ONLY - a top-level \"conditions\" key (which DSL_REFERENCE advertises for play restrictions) is silently unread, so SOUL_COUNT_GTE cannot gate play either. Ability-level conditions are checked at RESOLUTION, not play time, so they cannot block the play either.\n\nDRAFTED INSTEAD: the banish as the PLAY ability's resolution effect. The BANISH EFFECT does support the soul: its zone map has \"SOUL\": \"soul\" (effect_types.py:1380-1385), it reads from_zone + amount + player (default SELF, made explicit here), prompts the controller to choose each card, and breaks out banishing fewer if the soul runs short mid-loop.\n\nCONSEQUENCES, disclosed: (1) the release-note play restriction is NOT enforced - the card is playable with fewer than 3 souls and then banishes however many exist; (2) the banish lands at resolution rather than as cost payment, so opponents get priority before it happens. Sanctioned fix: add a generic mandatory BANISH cost type to cost_types.py taking from_zone+amount (can_pay: len(zone) >= amount so it blocks play); once added, move this single effect object into the ability's additional_cost unchanged.\n\nGoAgain appears in printed_keywords and the printed 'Go again' is unconditional, so it fires from the card DB keywords field and is deliberately NOT authored here."
+}

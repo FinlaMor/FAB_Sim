@@ -1,0 +1,26 @@
+{
+  "slug": "art_of_desire_soul_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "BANISH", "target": "OPPONENT_TOP_DECK"},
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "REF_PITCH_IS", "ref": "banished", "color": "yellow"}
+          ],
+          "then": [
+            {"type": "DRAW", "amount": 1},
+            {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "\"When this hits a hero, banish the top card of their deck. Whenever this banishes a yellow card, draw a card and gain 1{h}.\" Stealth is a printed keyword - it fires from the card DB keywords field and is deliberately NOT authored here.\n\nShape copied from the adopted sibling mst/art_of_desire_mind_blue.json (identical printed pattern, blue clause). 'Whenever THIS banishes' is not an ON_BANISH trigger (no such trigger name - dispatch would match nothing); it means the banish this card just did, so the payoff is a CONDITIONAL_EFFECT in the SAME ability, reading the `banished` ref that BANISH records via _record_banished (effect_types.py ~788-804). That scoping also satisfies release note three: another card's banish effect never sets this ability's ref, so it cannot trigger the payoff.\n\nRelease note two ('does not trigger if you hit anything other than a hero') is the ATTACK_TARGET_IS_HERO condition. Release note one (face-up into the owner's banished zone) follows from BANISH's default face-up banish, same as the adopted sibling.\n\nREF_PITCH_IS reads `color`/`colour` and maps yellow to pitch value 2 (condition_types.py ~1961-1965) - authored as color \"yellow\" per the text's wording. GAIN asset spelled LIFE_POINTS per DSL_REFERENCE CR 1.13.1 names; the handler accepts it (effect_types.py ~4809). The adopted sibling carries a vestigial duplicate `condition` key on its CONDITIONAL alongside `when`; per DSL_REFERENCE only `when` is the test, so this draft authors `when` alone."
+}

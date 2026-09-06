@@ -1,0 +1,23 @@
+{
+  "slug": "genis_wotchuneed",
+  "activation_cost": 2,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {"type": "PUT_HAND_CARD_BOTTOM", "player": "OPPONENT", "amount": 1},
+        {"type": "CONDITIONAL_EFFECT",
+         "when": [{"type": "REF_EXISTS", "ref": "bottomed_from_hand"}],
+         "then": [
+           {"type": "DRAW", "player": "OPPONENT", "amount": 1},
+           {"type": "CREATE_TOKEN", "token": "silver", "amount": 1}
+         ],
+         "else": [
+           {"type": "DRAW", "amount": 1}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "'Once per Turn Action - {r}{r}: Each other hero may put a card from their hand on the bottom of their deck. If they do, they draw a card and you create a Silver token. If you gain no Silver this way, draw a card. Go again.' (Merchant Hero - Young, Everfest).\n\nHERO ACTIVATED ABILITY: card-level activation_cost 2 / per_turn 1 - compile_card reads these from the TOP-LEVEL dict only (loader.py:153-154); offered by play._add_hero_dsl_activations.\n\nGO AGAIN NOT AUTHORED: GoAgain is in printed_keywords and fires from the card DB keywords field; engine.py:2322 grants the action point at layer resolution for any non-attack stack entry whose card has_go_again, which covers a hero's activated layer. (Contrast shipped sea/marlynn_treasure_hunter.json, whose 'Go again' lives only inside the ability text rather than the keyword field and therefore HAD to be authored.) Re-authoring a printed keyword is a defect.\n\nDEVIATION FROM THE TRIAGE SHAPE, deliberately: triage proposed PUT_HAND_CARD_BOTTOM with 'conditional_effect' DRAW - but 'conditional_effect' is read NOWHERE under engine/card_effects/dsl/ (grep: zero hits), so that shape compiles and then silently drops BOTH payoffs ('they draw' AND 'you create a Silver'). What the handler DOES do is store the ability-scoped ref 'bottomed_from_hand' after a card actually moves (effect_types.py:1610-1615) - never on decline, never on an empty hand. So the whole consequence sentence is ONE CONDITIONAL_EFFECT branching on REF_EXISTS bottomed_from_hand (condition_types.py:2212-2218 reads 'ref'; refs are scoped to one ability execution, engine/context.py:74-105, so no stale value leaks in).\n\n'IF YOU GAIN NO SILVER THIS WAY': in the printed causal chain you gain a Silver exactly when some other hero put a card on the bottom, so the else branch IS the no-Silver case - exact within this activation, unlike the triage's EVENT_THIS_TURN(create:silver) fallback, which would also see a Silver created by any OTHER effect earlier the same turn. Both payoffs verified: DRAW reads player via _effect_player_id, OPPONENT -> 3-cid (effect_types.py:826-827); CREATE_TOKEN reads token/count and defaults controller to SELF (effect_types.py:1947-1957), i.e. Genis's controller owns the Silver per 'you create'. json/tokens/silver.json already exists (require_card would raise otherwise).\n\nRELEASE NOTES: 'each player decides in clockwise-order starting from the turn player' collapses cleanly here - the engine is two-player everywhere (tid = 3 - cid), so 'each other hero' is the single opposing hero making one decision, which PUT_HAND_CARD_BOTTOM asks them directly (_ask_player(state, tid, ...) with DECLINE offered, optional defaulting True, effect_types.py:1570-1602).\n\nRESIDUAL GAP (edge): if a replacement effect canceled the Silver creation AFTER the opponent bottomed a card, the printed 'gain no Silver this way -> draw' would entitle the controller to the draw, but this draft keys the branch on the bottoming decision and would not draw it. Keying on the CreateTokenEvent outcome instead is not expressible in JSON today.\n\nSET FOLDER AT ADOPTION: Everfest -> json/evr/ (confirm EVR identifier in card_data/slug_index.json)."
+}

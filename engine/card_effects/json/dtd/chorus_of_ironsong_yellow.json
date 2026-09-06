@@ -1,0 +1,55 @@
+{
+  "slug": "chorus_of_ironsong_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_NAME_IN", "names": ["Dawnblade", "Dawnblade, Resplendent"]}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {"type": "DEFENDS_WITH_OTHER_HAND_CARD"}
+      ],
+      "effects": [
+        {
+          "type": "CHOOSE",
+          "amount": 1,
+          "options": [
+            {
+              "name": "Under your control",
+              "effects": [
+                {"type": "CREATE_TOKEN", "token": "courage", "amount": 1, "player": "SELF"}
+              ]
+            },
+            {
+              "name": "Under the opposing hero's control",
+              "effects": [
+                {"type": "CREATE_TOKEN", "token": "courage", "amount": 1, "player": "OPPONENT"}
+              ]
+            },
+            {
+              "name": "Under both heroes' control",
+              "effects": [
+                {"type": "CREATE_TOKEN", "token": "courage", "amount": 1, "player": "SELF"},
+                {"type": "CREATE_TOKEN", "token": "courage", "amount": 1, "player": "OPPONENT"}
+              ]
+            },
+            {
+              "name": "No token",
+              "effects": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Specialization and Unity are printed keywords -> card DB keywords field, deliberately NOT authored here (same treatment as the batch0 drafts). REACTION HALF: ATTACK_REACTION targeting the current attack, filtered by ATTACK_NAME_IN listing BOTH Dawnblade printings - the release note says any object named/monikered 'Dawnblade' is a legal target (e.g. Dawnblade, Resplendent), and ATTACK_NAME_IN normalises each name separately (_norm strips punctuation), so 'Dawnblade' alone would never match 'Dawnblade, Resplendent'. DEVIATION: the printed text pumps the WEAPON until end of turn (a second attack with it later the same turn would also get +1{p}); MODIFY_ATTACK binds to the current chain link (CombatState is recreated per link), so only this attack is pumped. NOT IMPLEMENTED - 'Damage this would deal can't be prevented': MAKE_NEXT_DAMAGE_UNPREVENTABLE compiles, but its replacement condition requires ev['source_player_id'] to equal the controller (effect_types.py, the _cond inside the MAKE_NEXT_DAMAGE_UNPREVENTABLE handler), and the engine's ONLY combat-damage replacement point (engine.py:2112) builds {'type','amount','target_player_id','damage_type'} with no source keys - so the registered replacement can never match attack damage; it fires only on damage routed through effect_keywords.deal_damage (the existing tests in tests/test_unpreventable_scope.py pass because they call deal_damage directly, not the engine's damage step). Authoring it would look implemented while doing nothing in real games. Expressing this clause needs the engine's combat damage event to carry source_player_id/damage_source_card, or a new generic type - both engine changes, so not done here. UNITY HALF: TRIGGERED ON_DEFEND fires via the 'defend' event dispatched to this defending card itself; DEFENDS_WITH_OTHER_HAND_CARD excludes this card and requires ANOTHER defender drawn from hand, so blocking with this alone does not fire. The release note's simultaneity requirement ('must become a defending card at the same time') is approximated: the condition reads combat.hand_defender_ids across all declared defenders, which covers compound defend-step declarations, but a defender added later by an effect is indistinguishable from a simultaneous one. 'Create a Courage token under ANY NUMBER of heroes' control' reads as one token per chosen hero (plural possessive), i.e. any subset of heroes - expressed as a CHOOSE over the four subsets possible in a 2-player game (self / opponent / both / no-one); an empty-effects option is proven (the_golden_son_yellow). Multi-hero UPF subsets beyond two are out of scope for this engine. courage token definition exists at json/tokens/courage.json."
+}

@@ -1,0 +1,91 @@
+{
+  "slug": "boom_grenade_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "target": "self",
+          "counter_type": "steam",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "COUNTER_GTE",
+              "counter_type": "steam",
+              "min": 1
+            }
+          ],
+          "then": [
+            {
+              "type": "MAY",
+              "prompt": "Remove a steam counter from Boom Grenade? (If not, it is destroyed.)",
+              "effects": [
+                {
+                  "type": "REMOVE_COUNTERS",
+                  "counter_type": "steam",
+                  "amount": 1
+                }
+              ],
+              "else": [
+                {
+                  "type": "DESTROY_SELF"
+                }
+              ]
+            }
+          ],
+          "else": [
+            {
+              "type": "DESTROY_SELF"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ANY_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "Mechanologist"
+          ]
+        },
+        {
+          "type": "ATTACK_TYPE_IN",
+          "types": [
+            "Action"
+          ]
+        },
+        {
+          "type": "ATTACK_CONTROLLED_BY_YOU"
+        },
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_SELF"
+        },
+        {
+          "type": "DEAL_GENERIC",
+          "amount": 3,
+          "target": "THEM"
+        }
+      ]
+    }
+  ],
+  "_comment": "Identical to .drafts/boom_grenade_blue.json except DEAL_GENERIC amount 3 vs 2 - see that file's comment for the full reasoning. Printed Crank is a card-DB keyword, not authored. Entry counter + upkeep destroy-unless-remove copy the shipped assembly_module_blue/teklo_core pattern (CONDITIONAL wraps MAY; gate on 'when', not ability-level conditions). ON_HIT reaches items via engine._dsl_hit_listener's broadcast over _dsl_permanent_zones(attacker); ATTACK_TARGET_IS_HERO is required because 'hit' fires for any damaged target. DEAL_GENERIC passes this card as the damage source (release note 2); DESTROY_SELF before DEAL_GENERIC in one execution still deals the damage (release note 3).\n\nON_HIT means 'when THIS hits' -- it is dispatched to the attack card itself. This card's text is 'when a <class> attack action card YOU CONTROL hits', which is the broadcast, and the engine has a separate trigger for it (ON_ANY_HIT, split out precisely so the two cannot be confused). On ON_HIT this equipment never heard another card's hit and the whole ability was dead. See tests/test_on_hit_is_not_broadcast.py."
+}

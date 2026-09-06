@@ -1,0 +1,18 @@
+{
+  "slug": "evo_tekloscope_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "TRANSFORM",
+          "to": "evo_tekloscope_blue",
+          "sources": [
+            {"zone": "head", "from": "Base", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If you have a base head equipped, **transform** it into this, then equip this. / Your Teklo Blaster attacks can target any opposing hero. / **Battleworn**' Mechanologist Action Equipment - Evo Head (BrightLights).\n\nBATTLEWORN deliberately NOT authored: it is in printed_keywords and fires from the card DB keywords field; re-authoring a printed keyword is a defect.\n\nTRANSFORM CLAUSE: PLAY + TRANSFORM with sources over the head slot (shape per .drafts/evo_heartdrive_blue.json, same clause family - this is the exact machinery Nitro Mechanoid's head source uses). The 'if you have a base head equipped' precondition is enforced BY the transform itself: sources [{zone: head, from: Base}] finds nothing in player.head without a Base-subtype piece and the handler returns all-or-nothing per CR 8.5.36d (effect_types.py:3929-3932). Triage's CONTROLS_SUBTYPE was deliberately NOT used - its handler scans player.permanents.cards only (condition_types.py:1868) and can never see equipment in the head slot zone. 'from': 'Base': _match tests exact membership in the normalized subtype set (effect_types.py:3911-3915), and card_data confirms base heads carry Base as a STANDALONE subtype (cogwerx_base_head -> ['Base','Head']).\n\nGAP 1 - 'then equip this' is NOT expressible: _do_transform creates the destination via create_token with no destination param (effect_types.py:1048-1068), so the new evo lands in player.permanents/tokens rather than equipped in the head slot; there is no generic EQUIP effect type in the DSL. Same gap already flagged on evo_heartdrive_blue and arcbane_grasp_blue.\n\nGAP 2 - 'Your Teklo Blaster attacks can target any opposing hero' is NOT expressible: it expands ATTACK-TARGET legality at declaration, and no DSL node reaches that pipeline - APPLY_CONTINUOUS modifications are LOSES/CANT_GAIN property strips, WHILE_STATIC re-evaluates only on RECALC_ATTACK_POWER (power, not targeting), MODIFY_ATTACKS_THIS_TOUCH power only, and nothing in dsl/ reads or widens a weapon's legal defenders. No-op in 1v1 regardless (one opposing hero); matters only in multiplayer. Needs a declarative static the combat target-declaration step consults.\n\nRelease note ('does not have the base subtype') is confirmed by card_data (['Evo','Head','NonAttack'] - no Base): other evos CANNOT transform into this, and nothing in this file needs to encode that."
+}

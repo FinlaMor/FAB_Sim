@@ -1,0 +1,65 @@
+{
+  "slug": "channel_mount_heroic_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+        {"type": "ATTACK_CONTROLLED_BY_YOU"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "BEGINNING_OF_END_PHASE",
+      "conditions": [
+        {"type": "IS_ACTIVE_PLAYER", "value": true}
+      ],
+      "effects": [
+        {"type": "PUT_COUNTER", "counter_type": "flow", "amount": 1},
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "pitch",
+              "player": "SELF",
+              "card_class": "Earth",
+              "count_gte": {"type": "COUNT_COUNTERS", "counter": "flow"}
+            }
+          ],
+          "then": [
+            {
+              "type": "MAY",
+              "prompt": "Channel Earth: put an Earth card from your pitch zone on the bottom of your deck for each flow counter (or destroy this)?",
+              "effects": [
+                {
+                  "type": "MOVE_MATCHING",
+                  "to_zone": "deck",
+                  "position": "bottom",
+                  "target": {
+                    "controller": "SELF",
+                    "zone": "PITCH",
+                    "amount": {"type": "COUNT_COUNTERS", "counter": "flow"},
+                    "filter": [
+                      {"type": "CARD_IS_TALENT", "talents": ["Earth"]}
+                    ]
+                  }
+                }
+              ],
+              "else": [
+                {"type": "DESTROY_PERMANENT", "target": "self"}
+              ]
+            }
+          ],
+          "else": [
+            {"type": "DESTROY_PERMANENT", "target": "self"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Two abilities. Every handler claim below was verified by reading the code this pass, not inherited.\n\nCLAUSE 1 - 'Attack action cards you control have +3{p}': WHILE_STATIC gated ATTACK_TYPE_IN ['Action'] + ATTACK_CONTROLLED_BY_YOU, firing MODIFY_ATTACK add 3. WHILE_STATIC fires only on RECALC_ATTACK_POWER (interpreter.py ~186-202) so the mod lands in the stage-8 static window without accumulating; the recalc listener dispatches to p.auras among its zones (engine.py ~1720-1740), so the aura is heard. ATTACK_TYPE_IN unions the attack card's types AND subtypes (condition_types.py ~273-294), so ['Action'] names exactly attack action cards - weapon attacks carry type Weapon and do not match. Both conditions read combat.attack_card, which is what an arena-wide pump needs. Release note 'if CMH is removed before damage, the attack loses the +3{p}' holds by construction: the static re-derives on every recalculation and stops once the aura is gone.\n\nRelease-note GAP (unexpressible): 'This affects both attacking AND DEFENDING attack action cards you control.' RECALC_ATTACK_POWER can only modify the CURRENT attack's power; a DEFENDING card's power is modelled nowhere (defenders contribute {d}, tracked separately), so the defending half has no DSL form. The attacking half - the clause's practical effect - is implemented.\n\nCLAUSE 2 - Channel Earth upkeep, AUTHORED despite .triage/channel_mount_heroic_red.json claiming no authoring is needed: that note says channel_upkeep (ability_keywords.py:726) implements it from the DB keywords field. Verified false - channel_upkeep is imported (triggers/triggers.py:44) but NEVER CALLED anywhere; nothing dispatches a bare 'Channel' keyword. Unauthored, the upkeep would silently never run.\n\nShape: TRIGGERED BEGINNING_OF_END_PHASE -> PUT_COUNTER flow 1 -> CONDITIONAL -> MAY{MOVE_MATCHING} else DESTROY_PERMANENT self.\n- IS_ACTIVE_PLAYER gate is REQUIRED: the end-phase listener deliberately dispatches to BOTH players' permanent zones incl. auras (engine.py ~1495-1503, _dsl_permanent_zones ~1452-1459); without the gate the aura channels on the opponent's end phase too - exactly the wrong-player/scope defect .review/channel_iceloch_glaze_blue.json records against the shipped sibling.\n- PUT_COUNTER precedes the pay check ('put a flow counter THEN ... for each flow counter ON IT'), so the count includes the one just added. Counters accumulate and are never removed - the text removes none.\n- Pre-check CARD_IN_ZONE zone:'pitch' card_class:'Earth' count_gte:{COUNT_COUNTERS flow}: Player.pitch is a real zone; card_class goes through _card_traits (classes+talents+colour, colour is never 'earth'); count_gte resolves expression dicts (condition_types.py ~989-993). Fewer Earth cards than counters -> else -> destroyed: partial payment cannot happen, matching 'for each flow counter'.\n- Payment MOVE_MATCHING with canonical object target {controller SELF, zone PITCH, filter [CARD_IS_TALENT Earth], amount {COUNT_COUNTERS flow}}: PITCH is in the object-target zone vocabulary (_object_zone_cards -> player.pitch.cards); the filter compiles per candidate; amount resolves per execution; picks prompt via _ask_player; put_object position 'bottom' appends (effect_keywords.put_object).\n- MAY's else gives decline->destroyed, the printed 'destroy it unless'; the outer CONDITIONAL else covers the cannot-pay case. Both destroy paths are DESTROY_PERMANENT target self, which routes through canonical destroy().\n- Release notes 'Fusion cards are not Earth cards' / 'only Earth ELEMENT cards count': the filter matches the printed Earth TALENT; a card carrying only an Earth-fusion keyword does not carry the talent, so it correctly does not count. If any DB entry mislabels this it is a data issue, not a DSL one.\n\nKNOWN ENGINE-SIDE WARTS (flagged, not fixable from JSON): (1) COUNT_COUNTERS reads the PLAYER-level counter dict keyed (slug, zone, kind) - if this aura is destroyed and another copy later played, the new copy inherits the dead copy's flow count on its first end phase. (2) Two copies in play simultaneously share that key, so each pays for both. Both affect every Channel aura authored this way; a card-level counter amount expression would close them generically.\n\nGo again NOT authored: printed GoAgain is unconditional, fires from the card DB keywords field.\n\nAdoption note: batch lists set Promos - file under that set's folder at adoption time."
+}

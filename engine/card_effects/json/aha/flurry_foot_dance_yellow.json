@@ -1,0 +1,17 @@
+{
+  "slug": "flurry_foot_dance_yellow",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "conditions": [
+        {"type": "IS_DEFENDING_CARD"},
+        {"type": "CONTROLS_TOKEN_TYPE", "token": "flurry"}
+      ],
+      "effects": [
+        {"type": "MODIFY_DEFENSE", "mod": "add", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'While this is defending, if you control a Flurry token, this gets +2{d}.'\n\nSHAPE: copied from the shipped defence statics (pen/basalt_boots.json et al., verified by .review/gloves_of_azure_waves.json) - WHILE_STATIC naming trigger RECALC_DEFENSE + IS_DEFENDING_CARD -> MODIFY_DEFENSE.\n\nNAMING THE TRIGGER MATTERS: interpreter.dispatch_event runs a WHILE_STATIC only on the recalculation it names (interpreter.py:186-202); unnamed it defaults to RECALC_ATTACK_POWER, where combat.defense_recalc_card is None and MODIFY_DEFENSE falls back to changing its own source card's {d} while nothing is being defended (effect_types.py:2695-2699). engine._recalculate_total_defense resets each declared defender to base {d} first and re-applies statics once per defender, so the bonus cannot stack across recalculations, and MODIFY_DEFENSE moves the DEFENDING CARD's own {d} (effect_types.py:2678-2714), which is what survives into total_defense.\n\nIS_DEFENDING_CARD (condition_types.py:564-604, self variant: combat.defense_recalc_card is this card) scopes the effect to THIS defender. Mandatory, not decorative: the RECALC_DEFENSE dispatch reaches both heroes and all permanents/equipment zones of BOTH players once per every defender evaluated, so without it this static would add +2{d} to each other defending card in turn - the documented .draft-review/beckon_applause defect.\n\nCONTROLS_TOKEN_TYPE reads 'token' (slug) or 'token_type' (display name) plus amount (condition_types.py:1725-1747); 'flurry' is the token's actual slug in card_data/slug_index.json. It searches all permanents plus equipment/weapon slots, so a Flurry token however created satisfies it; the condition re-evaluates at every defence recalculation, so gaining or losing the token mid-combat updates the {d} correctly.\n\nNOTE, not a gap in this card: json/tokens/flurry.json does not exist yet (.triage/flurry_foot_dance_yellow.json records this as separate authoring work). Until some card creates Flurry tokens the condition simply reads false and the legs defend at printed {d}."
+}

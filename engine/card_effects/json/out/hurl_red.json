@@ -1,0 +1,45 @@
+{
+  "slug": "hurl_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "SET_FLAG",
+          "flag": "hurl_rider_unpaid",
+          "value": false
+        },
+        {
+          "type": "PAY_OR_ELSE",
+          "player": "SELF",
+          "resources": 1,
+          "on_failure": [
+            {
+              "type": "SET_FLAG",
+              "flag": "hurl_rider_unpaid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "NOT",
+          "inner_type": "FLAG_SET",
+          "flag": "hurl_rider_unpaid"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DAGGER_DEALS_DAMAGE_AND_DESTROY",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "Implementation copied verbatim from hurl_yellow, whose printed functional text is identical to this card's once each card's own name is substituted out. Everything that differs between them -- cost, pitch, power, colour -- comes from the card DB, not from this file, so the DSL is the same card twice.\n\nTHE COPY IS PINNED, not trusted: tests/test_copied_card_implementations.py asserts that these abilities still match hurl_yellow's and that the two printed texts still agree, so a later edit to one cannot silently leave the other behind. That is the insult_to_injury failure -- three printings of one sentence with three different implementations, the blue one missing a gate the others had.",
+  "_copied_from": "hurl_yellow"
+}

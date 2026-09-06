@@ -1,0 +1,34 @@
+{
+ "slug": "longsword_leggings",
+ "abilities": [
+  {
+   "ability_type": "ACTIVATE",
+   "cost": [
+    {
+     "type": "DESTROY_SELF"
+    }
+   ],
+   "effects": [
+    {
+     "type": "CHOOSE",
+     "amount": 1,
+     "options": [
+      [
+       {
+        "type": "CREATE_TOKEN",
+        "token": "blade_dance"
+       }
+      ],
+      [
+       {
+        "type": "CREATE_TOKEN",
+        "token": "flurry"
+       }
+      ]
+     ]
+    }
+   ]
+  }
+ ],
+ "_comment": "Battleworn is a printed keyword (DB keywords Battleworn) and fires from the card DB - NOT authored. 'Action - Destroy this' is an action-speed activated ability on legs equipment: ACTIVATE (offered by play._add_hero_dsl_activations for player.legs), with DESTROY_SELF as the ability-level cost (cost_types.py:43, routes canonical destroy()). The release note confirms the player chooses Blade Dance or Flurry, so CHOOSE with two CREATE_TOKEN options. Token slugs blade_dance and flurry verified in card_data."
+}

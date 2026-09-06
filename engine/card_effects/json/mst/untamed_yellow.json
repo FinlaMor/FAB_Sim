@@ -1,0 +1,37 @@
+{
+  "slug": "untamed_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "_comment": "'When this attacks, the next Crouching Tiger you play this combat chain gets +1{p}.' ON_ATTACK is dispatched by _dsl_attacking_listener (engine.py:1524-1529) to combat.attack_card - this card IS the attack when it fires.",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_CARD",
+          "amount": 0,
+          "filter": [
+            {
+              "type": "CARD_IS_NAMED",
+              "name": "Crouching Tiger"
+            }
+          ],
+          "grant_abilities": [
+            {
+              "ability_type": "TRIGGERED",
+              "trigger": "ON_ATTACK",
+              "effects": [
+                {
+                  "type": "MODIFY_ATTACK",
+                  "mod": "add",
+                  "amount": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Implementation copied verbatim from growl_red, whose printed functional text is identical to this card's once each card's own name is substituted out. Everything that differs between them -- cost, pitch, power, colour -- comes from the card DB, not from this file, so the DSL is the same card twice.\n\nTHE COPY IS PINNED, not trusted: tests/test_copied_card_implementations.py asserts that these abilities still match growl_red's and that the two printed texts still agree, so a later edit to one cannot silently leave the other behind. That is the insult_to_injury failure -- three printings of one sentence with three different implementations, the blue one missing a gate the others had.",
+  "_copied_from": "growl_red"
+}

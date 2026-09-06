@@ -1,0 +1,21 @@
+{
+  "slug": "combustible_courier_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "scope": "CHAIN",
+          "filter": [
+            {"type": "ATTACK_WAS_BOOSTED"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If Combustible Courier hits, the next attack you boost this combat chain gains +3{p}.' + printed Boost. Yellow printing of combustible_courier_blue (.drafts/combustible_courier_blue.json; red also present) - identical printed text including the +3{p}; shape re-verified against the handlers rather than copied blind.\n\nBOOST NOT AUTHORED: printed_keywords carries Boost - it fires from the card DB keywords field via ability_keywords.boost (CR 8.3.9); re-authoring it would be a defect. The go again a Mechanologist gains from boosting is that keyword function's own payout.\n\nTRIGGER: TRIGGERED + ON_HIT, UNGATED - the text says 'hits', not 'hits a hero', so there is deliberately no ATTACK_TARGET_IS_HERO gate; a hit into an ally or aura qualifies too. Courier hits during its OWN attack, so the buff lands on a LATER attack of the same chain (e.g. the follow-up attack after the boost's go again).\n\nPUMP: MODIFY_NEXT_ATTACK reads mod/amount/filter/scope (effect_types.py:4592-4618) and queues a one-shot entry on the controller's dsl_queued_attack_mods. Consumption (engine.py:1175-1236) compiles the filter specs against each incoming attack; ATTACK_WAS_BOOSTED reads combat.attack_card.was_boosted (condition_types.py:1175-1192), which boost() sets on the attack card when the boost cost is paid - i.e. before the attack enters the chain and the queue is consulted. An attack declared WITHOUT boosting fails the filter and leaves the entry queued, so it waits for the next boosted one: exactly 'the next attack you BOOST'.\n\nSCOPE CHAIN is what makes 'this combat chain' hold: queued entries marked scope CHAIN are dropped at chain close (engine.py:794-802) instead of surviving into a later chain of the same turn.\n\nNo gaps; every clause expressible."
+}

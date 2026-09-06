@@ -1,0 +1,29 @@
+{
+  "slug": "compass_of_sunken_depths",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "TAP_SELF"}
+      ],
+      "effects": [
+        {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "SELF", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_ANY_TURN",
+      "effects": [
+        {
+          "type": "GRANT_KEYWORD_TO_PLAYED",
+          "keyword": "GO_AGAIN",
+          "filter": [
+            {"type": "PLAYED_FROM_ZONE", "zone": "graveyard"},
+            {"type": "HAS_KEYWORD", "keyword": "watery grave"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - {t}: Look at the top card of your deck. / The first card with watery grave you play from your graveyard each turn gets **go again**.'\n\nCLAUSE 1: release note ('instant activated ability ... whenever you have priority ... you look at the top of your deck at that time') is exactly ability_type INSTANT - an activated ability with instant timing, offered by play._add_hero_dsl_activations which scans equipment/weapon zones among its sources (play.py:259-265) and offers INSTANT at any priority window (play.py:244). TAP_SELF cost exists (cost_types.py:320-326): can_pay blocks while tapped, pay taps. LOOK_AT reads zone/player/amount (effect_types.py:3356-3415); player SELF is passed EXPLICITLY because the handler defaults to OPPONENT, which would make '{t}: look at the top card of YOUR deck' an information leak in the wrong direction.\n\nGo Again NOT authored as a printed keyword: printed_keywords carries GoAgain, but it belongs to the SECOND sentence's grant, not to the compass itself - the equipment never has go again; it hands it out. Nothing unconditional to strip.\n\nCLAUSE 2 - DEVIATION FROM THE TRIAGE LIST, disclosed: triage proposed TRIGGERED ON_CARD_PLAYED + once_per_turn + PLAYED_FROM_ZONE/HAS_KEYWORD conditions + GRANT_KEYWORD_TO_PLAYED. That trigger is INERT here: _dsl_card_played_listener dispatches ON_CARD_PLAYED to the playing player's HERO slug only (engine.py:1685-1698) - the same dispatch gap .drafts/channel_thunder_steppe_yellow.json documents - so an ability authored on this equipment loads cleanly and can never fire. Inert is worse than absent.\n\nAUTHORED SHAPE instead: START_OF_ANY_TURN re-registers the grant at the start of EVERY turn - the listener fans out to BOTH players' permanent zones including equipment slots (engine.py:1475-1481, _dsl_permanent_zones :1452-1459) - and dsl_play_keyword_grants is cleared in each end phase (engine.py:931-932), so exactly one fresh grant is live per turn. That 'each turn' cadence is why START_OF_ANY_TURN and not START_OF_TURN (which only reaches the active player's zones, leaving the opponent's turn - where a watery-grave INSTANT could be played from the graveyard - uncovered).\n\nGrant filter verified against consumption: _cost_mod_matches compiles the raw specs against each played card (play.py:625-643); PLAYED_FROM_ZONE reads play.py's played_from_zone stamp (condition_types.py:1596-1617); HAS_KEYWORD normalises 'watery grave' against stored 'WateryGrave' (condition_types.py:824-842). Go-again payout consumes matching grants at BOTH layer sites - non-attack layers engine.py:2425-2444, attack keywords engine.py:1917-1930.\n\nKNOWN APPROXIMATION: 'the FIRST card ... each turn' is over-granted - GRANT_KEYWORD_TO_PLAYED is turn-scoped and matched against EVERY qualifying play until the end-phase clear (its own docstring, effect_types.py:4788-4796), so a second watery-grave card played from the graveyard in the same turn also gets go again. Even the triage's ON_CARD_PLAYED shape would over-grant identically: firing once_per_turn on the first qualifying play still queues an all-matching turn grant. The exact text needs a ONE-SHOT play-grant pinned to the triggering object (the pinning MODIFY_NEXT_CARD_COST already has via object_ref; the play-grant queue does not) plus ON_CARD_PLAYED fan-out to equipment. Same gap class documented in .drafts/channel_thunder_steppe_yellow.json.\n\nSET FOLDER: batch lists set ArmoryDeckGravyBones - derive the adoption folder from the card's sets/setIdentifiers in card_data/slug_index.json per IMPLEMENTATION_GUIDE step 4."
+}

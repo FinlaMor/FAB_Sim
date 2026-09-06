@@ -1,0 +1,36 @@
+{
+  "slug": "art_of_the_dragon_claw_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "CARD_IS_TALENT",
+          "talent": "Draconic"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "COMBAT",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              }
+            ],
+            "effects": [
+              {
+                "type": "DESTROY_ARSENAL",
+                "player": "OPPONENT"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, if it is Draconic, it gets \"When this hits a hero, destroy all cards in their arsenal.\"' Release notes: the trigger fires when it resolves on the stack and becomes the attacking card (ON_ATTACK fires on entering the combat chain - same moment), and Draconic is checked WHEN THE TRIGGER RESOLVES - so the gate is ability-level 'conditions' (resolution-time), not target.filter or a play restriction. Gate is CARD_IS_TALENT, whose handler (_card_traits) reads classes+talents+colour of the SOURCE card - Draconic is a talent, and this is the type the triage pass named. Deliberately NOT copied from shipped sibling fab/art_of_the_dragon_scale_red.json, which gates the identical clause with HAS_KEYWORD 'Draconic': HAS_KEYWORD reads card.keywords only, and talents do not live there, so that gate looks dead for a talent carried in the talents field. CAVEAT for adopters: if this printing's slug_index entry files Draconic under keywords rather than talents, swap the gate to HAS_KEYWORD - one or the other must match where the DB actually stores it. The granted ability is INJECT_TRIGGER scope COMBAT (one-shot onto the current attack = 'it gets ...' for this attack only), with the inner trigger as a NESTED dict because the loader pops a top-level 'conditions' key as an effect-level registration gate - the nested form is required for the per-hit ATTACK_TARGET_IS_HERO check ('hits a hero'). DESTROY_ARSENAL handler loops ALL cards in the arsenal ('destroy all cards'), player OPPONENT resolves relative to the controller = the hit hero in a two-player game. All types confirmed present and parameter-read: CARD_IS_TALENT (condition_types.py), INJECT_TRIGGER nested-dict path (effect_types.py), ATTACK_TARGET_IS_HERO, DESTROY_ARSENAL (reads player/target, defaults OPPONENT). No printed keywords on this card, so no conditional-keyword concern."
+}

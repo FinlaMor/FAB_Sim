@@ -1,0 +1,20 @@
+{
+  "slug": "blazing_aether_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "target": "HERO",
+          "amount": {
+            "type": "DAMAGE_DEALT_THIS_TURN",
+            "damage_type": "arcane",
+            "target": "hero"
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "Specialization is a deck-construction restriction (per release notes), not an ability - it fires from the card DB keywords field and is deliberately not authored here. Two known approximations: (1) 'that hero' - the DAMAGE_DEALT_THIS_TURN tally keys on damage_type:hero-category only (effect_keywords.py writes 'total'/'arcane'/'hero'/'arcane:hero'), so X counts arcane damage dealt to ANY hero this turn, not specifically the chosen target. In 1v1 against the opposing hero this matches the printed text unless you dealt arcane damage to your own hero earlier the same turn, which would overcount. No per-target-hero expression exists in _resolve_amount. (2) 'target hero' - DEAL_ARCANE resolves its target by role string ('HERO' -> opposing player via _damage_target_player), not a play-time declared hero, so legally targeting yourself or choosing between heroes is not expressible; drafted as the standard case (opposing hero). Amount resolves at effect-execution time, so X correctly excludes this card's own damage."
+}

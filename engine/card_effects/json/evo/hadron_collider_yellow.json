@@ -1,0 +1,57 @@
+{
+  "slug": "hadron_collider_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "_comment": "'This enters the arena with 3 steam counters.' ON_ENTER_PLAY is dispatched from Zone.add on every arena entry (state.py:293-310). Same shape as shipped teklo_core_blue.",
+      "effects": [
+        {"type": "PUT_COUNTER", "target": "self", "counter_type": "steam", "amount": 3}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "_comment": "No steam counters left -> nothing can be removed, so it is simply destroyed (release note). COUNTER_LTE 0 is the 'has none' test Teklo Core uses; COUNTER_GTE 0 would be true always.",
+      "conditions": [
+        {"type": "COUNTER_LTE", "counter_type": "steam", "amount": 0}
+      ],
+      "effects": [
+        {"type": "DESTROY_SELF"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "_comment": "'At the start of your turn, destroy this unless you remove a steam counter from it.' Removal is the optional half (release note 1): MAY offers it, declining runs the else block (DESTROY_SELF). The COUNTER_GTE gate is ability-level so the prompt is never offered with nothing to remove; the zero-counter case is the sibling ability above. Items receive START_OF_TURN via _dsl_permanent_zones (engine.py:1452-1459 includes player.items), turn player's cards only - 'your turn'.",
+      "conditions": [
+        {"type": "COUNTER_GTE", "counter_type": "steam", "min": 1}
+      ],
+      "effects": [
+        {"type": "MAY",
+         "prompt": "Remove a steam counter from Hadron Collider? (Otherwise it is destroyed.)",
+         "effects": [
+           {"type": "REMOVE_COUNTERS", "counter_type": "steam", "amount": 1}
+         ],
+         "else": [
+           {"type": "DESTROY_SELF"}
+         ]}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "_comment": "'When you boost an attack, destroy this. If you do, the attack gets +X{p}, where X is the number of steam counters on this.'\n\nWHY THIS TRIGGER (not ON_ATTACK): _dsl_attacking_listener dispatches ON_ATTACK ONLY to the attacking card's slug (engine.py:1524-1529 passes event.card), so an ON_ATTACK trigger authored on this item would load cleanly and NEVER fire. ON_PLAY_ACTIVATE_ATTACK rides the same 'attacking' event but is dispatched to every zone in _dsl_permanent_zones of the ATTACKER (engine.py:1553-1558), items included, and fires once per attack - which also satisfies release note 2 that a Twin Drive double boost must not pay twice (one attack = one 'attacking' event = one trigger, and the first one destroys this).\n\nCONDITIONS: ATTACKER_CONTROLLED_BY_YOU + ATTACK_WAS_BOOSTED narrow it to MY boosted attacks ('when YOU boost an attack'). ATTACK_WAS_BOOSTED reads combat.attack_card.was_boosted (condition_types.py:1175-1192); boost() stamps it at cost-payment time (ability_keywords.py:505) before the attack step emits 'attacking', so the flag is already set when this fires.\n\nEFFECT ORDER: MODIFY_ATTACK deliberately precedes DESTROY_SELF, reversing the printed clause order. COUNT_COUNTERS resolves against the player-level counter tally keyed by (slug, zone, kind) (effect_types.py:310-327); destroying first changes the card's zone and risks reading 0. Destruction here is mandatory and cannot fail (the item is in play when the trigger fires), so 'if you do' holds either way - the pump is not offered independently of the destroy, per release note 2.",
+      "conditions": [
+        {"type": "ATTACKER_CONTROLLED_BY_YOU"},
+        {"type": "ATTACK_WAS_BOOSTED"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add",
+         "amount": {"type": "COUNT_COUNTERS", "counter": "steam"}},
+        {"type": "DESTROY_SELF"}
+      ]
+    }
+  ],
+  "_comment": "Hadron Collider - Mechanologist Action - Item (Bright Lights). Sibling-colour copy of .drafts/hadron_collider_blue.json with 3 steam counters instead of 2; handler line references re-verified in this session.\n\nNOT AUTHORED: **Crank** is in printed_keywords and comes from the card database.\n\nVERIFIED AGAINST THE COMPILER: PUT_COUNTER reads counter_type/amount/target-self (effect_types.py:2015-2058); COUNTER_LTE/COUNTER_GTE read counter_type + amount/min against the card's own tally, which is the authority over the staleable player-level dict (condition_types.py:998-1030); MAY reads prompt/effects/else (effect_types.py:3788-3856); REMOVE_COUNTERS effect reads counter_type/amount, defaulting to the source card (effect_types.py:5032-5050); MODIFY_ATTACK resolves dynamic amounts and records one-shot mods on combat.power_mods so they survive recalcs (effect_types.py:4123-4158); DESTROY_SELF routes through canonical destroy() (effect_types.py:2470-2498).\n\nRESIDUAL NUANCE: 'when you boost an attack' fires at the attack step rather than interrupting mid-boost; observable board outcome (destroy + pump the boosted attack) is the same."
+}

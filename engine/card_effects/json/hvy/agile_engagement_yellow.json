@@ -1,0 +1,17 @@
+{
+  "slug": "agile_engagement_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_CLASS_IN", "classes": ["Warrior"]}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "Same shape as agile_engagement_blue/red (+2{p} for yellow): ATTACK_REACTION + target.filter ATTACK_CLASS_IN ['Warrior'] + MODIFY_ATTACK add, spelling copied from shipped wtr/pummel_red. GAP on clause 2 ('If it's defended by an attack action card, create an Agility token') - NOT expressible today, deliberately NOT authored rather than authored dead (full reasoning in agile_engagement_blue._comment): an INJECT_TRIGGER with inner ON_DEFEND is inert because combat.injected_triggers consumers (engine.py ~1414, ~1753) keep only ON_HIT/ON_DEAL_DAMAGE entries, and no condition can test 'the defending card is an Attack action card' outside the defense-recalc pass (DEFENDING_CARD_IS needs combat.defense_recalc_card; CARD_TYPE_IN is documented in DSL_REFERENCE but unimplemented in condition_types.py). Would become authorable as INJECT_TRIGGER {scope COMBAT, trigger {trigger_type ON_DEFEND, conditions [{type DEFENDING_CARD_IS, types [Action, Attack]}], effects [{type CREATE_TOKEN, token agility}]}} once those two generic gaps close; json/tokens/agility.json already exists."
+}

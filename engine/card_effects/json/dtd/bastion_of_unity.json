@@ -1,0 +1,17 @@
+{
+  "slug": "bastion_of_unity",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "conditions": [
+        {"type": "IS_DEFENDING_CARD"},
+        {"type": "REPRISE"}
+      ],
+      "effects": [
+        {"type": "MODIFY_DEFENSE", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Unity - When this defends together with a card from hand, this gets +1{d} until end of turn.' / 'Temper'\n\nTemper is a printed keyword and fires from the card DB keywords field - deliberately NOT authored.\n\nThe Unity clause follows the shipped pen/basalt_boots.json pattern: WHILE_STATIC naming trigger RECALC_DEFENSE, because engine._recalculate_total_defense resets each defender to its base {d} before re-applying statics - a one-shot bump written at defend time would be wiped before damage, while a static re-applies on every recalculation pass and survives into total_defense. IS_DEFENDING_CARD scopes MODIFY_DEFENSE to the defender currently being evaluated (this card); without it the recalc dispatch reaches every source once per defender and the bonus would leak onto other defenders. REPRISE reads combat.defender_used_hand_card ('the defending hero has defended with a card from hand this chain link') - since Bastion is itself equipment, a hand card among the defenders IS 'defends together with a card from hand'.\n\nKNOWN APPROXIMATIONS, flagged: (1) Printed '+1{d} until end of turn' persists through later chain links of the same turn even if Bastion then defends WITHOUT a hand card (release note 3: each defend-together adds another +1 that lasts all turn). This static re-evaluates per chain link, so the bonus applies exactly while defending together; within any single link where the condition holds the total defense is identical, but the cross-link persistence/accumulation is not expressible as a static. (2) REPRISE also becomes true if a defense reaction played from hand joins the link AFTER Bastion declares; release note 1 requires becoming defending cards at the same time, so this slightly over-includes. (3) Release note 3's '-1{d} counter after each combat chain closes' is Temper's own behaviour from the DB keyword - nothing authored here."
+}

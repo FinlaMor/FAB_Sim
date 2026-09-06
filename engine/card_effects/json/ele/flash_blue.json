@@ -1,0 +1,21 @@
+{
+  "slug": "flash_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GRANT_NEXT_CARD",
+          "keyword": "Go Again",
+          "amount": 0,
+          "filter": [
+            {"type": "CARD_IS_TYPE", "card_type": "Action"},
+            {"type": "NOT", "inner_type": "CARD_IS_TYPE", "card_type": "Attack"},
+            {"type": "CARD_COST_GTE", "amount": 2}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next action card you play this turn with cost 2 or greater gets go again.' + printed Go again.\n\nPRINTED GO AGAIN IS NOT AUTHORED: printed_keywords carries GoAgain - the card's own unconditional 'Go again' line pays +1 action point when this resolves as a non-attack card layer (engine.py:2420-2444; card.has_go_again at card.py:382-383 normalises camelCase 'GoAgain'). Authoring a bare GO_AGAIN/GAIN-keyword effect on top would double-pay: _grant_go_again (effect_types.py:423-458) outside combat adds +1 AP with no dedup against that payout - the exact 'keyword-reimplemented / 2 action points instead of 1' defect class recorded in .review/draw_swords_red.json, .review/high_roller_yellow.json ('omit it') and .review/cut_from_the_same_cloth_red.json.\n\nTHE GRANT: GRANT_NEXT_CARD (alias of MODIFY_NEXT_CARD_COST, effect_types.py:4665-4743) queues a ONE-SHOT entry on player.dsl_queued_card_mods, consumed by the first matching PLAYED card (play.py:1713-1747), which appends 'Go Again' to that card's keywords (:1726-1729); the layer-resolution payout then reads it off the played card (engine.py:2420-2444). Unused entries are cleared at end of turn (engine.py:933-934) = 'this turn'.\n\namount IS AUTHORED AS 0, DELIBERATELY: the compile-side default is 1 (effect_types.py:4681) and _calculate_resource_cost SUBTRACTS the stored amount from the next matching card's cost (play.py:1447-1451) - omitting it would silently add an unprinted {r} discount.\n\nFILTER PARAMS VERIFIED AGAINST HANDLERS: CARD_IS_TYPE reads 'card_type' against types UNION subtypes (condition_types.py:1309-1325) - 'Action' is a type. CARD_COST_GTE reads 'amount' (or 'cost') against the candidate's own printed cost (condition_types.py:1219-1255) - 'cost 2 or greater' = GTE 2. NOT compiles the flattened inner_type form with sibling params (condition_types.py:2220-2239).\n\nRELEASE NOTE 1 IS THE NOT-ATTACK FILTER: 'You may give a non-attack action card go again.' Without it an attack action costing 2+ would CONSUME the one-shot grant and gain a keyword that can never pay out for it (the layer payout requires not entry.is_attack, engine.py:2420), wasting the grant on a non-qualifying card; the filter keeps the entry queued for the next qualifying non-attack action instead."
+}

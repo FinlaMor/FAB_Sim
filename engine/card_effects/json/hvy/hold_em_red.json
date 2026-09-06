@@ -1,0 +1,32 @@
+{
+  "slug": "hold_em_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Warrior"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ],
+  "_substituted": {
+    "from": "1",
+    "to": "3"
+  },
+  "_derived_from": "hold_em_blue",
+  "_comment": "Derived from hold_em_blue, whose printed functional text is identical to this card's apart from ONE number (3 here, 1 there) -- the usual shape of a colour variant. That number appears exactly once in hold_em_blue's abilities, and every number in those abilities also appears in its printed text, so which JSON value the text changed is not in doubt; it is substituted here and recorded in _substituted.\n\nTHE DERIVATION IS PINNED, not trusted: tests/test_number_substituted_copies.py re-applies the same substitution to hold_em_blue's current abilities and asserts it still yields these, and that the two printed texts still differ in exactly that one number. An edit to either card that breaks the correspondence fails there rather than leaving the pair silently out of step -- the insult_to_injury failure, where three printings of one sentence got three implementations and the blue one was missing a gate."
+}

@@ -1,0 +1,45 @@
+{
+  "slug": "conquer_the_icy_terrain_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_ELSE",
+          "player": "OPPONENT",
+          "resources": 2,
+          "on_failure": [
+            {
+              "type": "MAY",
+              "prompt": "Destroy a frozen card in their arsenal or a frozen non-hero permanent they control?",
+              "effects": [
+                {
+                  "type": "DESTROY_MATCHING",
+                  "target": {
+                    "controller": "OPPONENT",
+                    "zones": ["ARSENAL", "ARENA"],
+                    "amount": 1,
+                    "filter": [
+                      {
+                        "type": "OR",
+                        "any": [
+                          {"type": "HAS_COUNTER", "counter": "__frozen__"},
+                          {"type": "HAS_COUNTER", "counter": "__frozen_while__"}
+                        ]
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits a hero' = TRIGGERED ON_HIT gated by ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977, no params; false when the attack was declared at a permanent/ally). Ability-level conditions are checked at resolution.\n\nRelease note followed: the pay choice belongs to the DEFENDING hero and is made when the triggered effect resolves - PAY_OR_ELSE with player OPPONENT (= the hit hero under this gate) asks pay/decline only if they hold >= 2 resources (effect_types.py:3247-3252); fewer resources skips the ask and runs on_failure, which is 'may pay' with an empty wallet. If they don't pay, MY destroy is optional ('you may ... or you may do nothing at all') - hence MAY wrapping DESTROY_MATCHING: declining runs nothing, and an empty pool also destroys nothing. on_failure effects resolve with player params relative to the same source card (effect_types.py:3210-3212), so the nested MAY prompts ME, the attacker.\n\nDEVIATION FROM THE BATCH PRIMITIVES, disclosed: LOOK_AT(ARSENAL)+SELECT_FROM_REF+DESTROY_REF cannot express this - LOOK_AT's filter supports only keyword/subtype/face_down (effect_types.py:3394-3407), so 'frozen' is unfilterable there and the destroy would offer unfrozen arsenal cards too. DESTROY_MATCHING's object-target spec is the right tool: _compile_object_target (effect_types.py:675-804) takes controller/zones/amount/filter, pools ARSENAL+ARENA into ONE pick-one prompt (_ask_player), and applies ordinary condition specs per CANDIDATE. ARENA = player.permanents.cards (effect_types.py:463-464), which holds items/auras/allies/tokens and NOT the hero, so 'non-hero permanent' is automatic; reading note: 'permanent' taken to include every arena object that is not the hero, which is what the printed 'non-hero' qualifier is excluding.\n\nThe frozen predicate: the sibling triage note (.triage/conquer_the_icy_terrain_yellow.json) claims no per-candidate frozen condition exists - STALE. HAS_COUNTER (condition_types.py:1368-1380) reads counter/counter_type/kind and tests the candidate's own counters; discrete freezes write card.counters['__frozen__'] (effect_keywords.py:2511) and continuous freezes write card.counters['__frozen_while__'] = CONTINUOUS_FREEZE onto the frozen objects themselves (play.py:805, 848). OR threads the candidate through each arm (condition_types.py:1901-1915), so both freeze kinds qualify and nothing else does."
+}

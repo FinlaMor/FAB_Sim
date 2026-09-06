@@ -1,0 +1,24 @@
+{
+ "slug": "low_blow_red",
+ "abilities": [
+  {
+   "ability_type": "WHILE_STATIC",
+   "conditions": [
+    {
+     "type": "SOURCE_IS_ATTACK"
+    },
+    {
+     "type": "IS_BOOED"
+    }
+   ],
+   "effects": [
+    {
+     "type": "MODIFY_ATTACK",
+     "mod": "add",
+     "amount": 3
+    }
+   ]
+  }
+ ],
+ "_comment": "Release notes demand an always-checking continuous effect (a boo arriving after the attack starts still grants +3; not functional while defending or on the stack; no recalc after the damage step) - WHILE_STATIC, not the PLAY-time mocking_blow shape. Matches shipped big_bully_red's boo-conditioned static."
+}

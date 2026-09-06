@@ -1,0 +1,13 @@
+{
+  "slug": "cross_the_line_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {"type": "CHARGE", "amount": 1, "optional": true}
+      ],
+      "effects": []
+    }
+  ],
+  "_comment": "'As an additional cost to play Cross the Line, you may **charge** your hero's soul.' Light Warrior Action - Attack.\n\nCOST, NOT EFFECT: 'as an additional cost to play' is additional_cost on the PLAY ability - a cost can block the play, an effect cannot. Shape copied from shipped dtd/beaming_bravado_yellow.json (identical sentence family, '27 cards share this shape' per its comment) and .drafts/bolt_of_courage_*; both prove the spelling compiles.\n\nCHARGE cost handler (cost_types.py:266-318) READS amount and optional/may - verified this session. With optional truthy, can_pay always returns True so the optional cost never blocks the play (correct for 'you may'), and pay asks via ask_optional then routes through effect_keywords.charge, stamping the charged card's colour on the played card (dsl_charged_color) for any 'charged this way' payoff - Cross the Line has none.\n\nBOOLEAN true, NOT the string \"TRUE\": this branch does bool(params.get(\"optional\")), so ANY non-empty string - including \"FALSE\" - would read as optional. The corpus precedent (bolt_of_courage_*, beaming_bravado_*) authors a real boolean; copied that.\n\nPRINTED KEYWORD 'Charge' NOT RE-AUTHORED as behaviour: triggers.py:370-371 maps keyword 'charge' to `pass  # Card-specific - charge conditions vary per card`, i.e. the DB keyword is deliberately inert and the card-specific JSON (this additional_cost) is the only implementation. Authoring it here is not double-charging.\n\nEMPTY effects list is intentional and compiles: the charge IS the whole card; beaming_bravado's comment states an ability carrying only a cost 'compiles fine and resolves as a no-op'. The card being an Attack action is engine business (it attacks when played); no ATTACK effect is authored for attack action cards."
+}

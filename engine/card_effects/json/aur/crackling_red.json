@@ -1,0 +1,26 @@
+{
+  "slug": "crackling_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "play",
+          "qualifier": "lightning"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Lightning Flow** - If you've played a Lightning card this turn, this gets +1{p}.'\n\nThe Flow keyword itself is in printed_keywords and fires from the card DB keywords field - deliberately NOT authored here (triage note: 'Flow fires from the DB keywords field, no authoring'). Note 'Lightning Flow' elsewhere in this corpus is an AURA TOKEN (json/tokens/lightning_flow.json) - unrelated to this keyword line; do not confuse them.\n\nRelease notes settle the ability type: 'Whether you've played a Lightning card this turn is checked while this is attacking on the combat chain' and a Lightning card played before damage calculation still counts - the condition is ALWAYS CHECKING during the attack, so this is a static re-evaluated on RECALC_ATTACK_POWER (WHILE_STATIC), not a triggered ON_ATTACK check frozen at declaration. This is the Aggressive Pounce lesson: always-checking means static.\n\nShape is shipped pen/savage_claw.json (the documented WHILE_STATIC power-conditional): conditions gate it, MODIFY_ATTACK add 1 lands in the stage-8 static window so it is never double-applied. SOURCE_IS_ATTACK keeps the buff on Crackling's own attack only.\n\nThe condition: play.py (~1085) records every played card's slug/name/types/subtypes/classes/TALENTS/colour as turn-event qualifiers via _record_turn_event (verified at play.py:1085-1101); EVENT_THIS_TURN folds its qualifier through _norm (strips non-alnum, lowercases), so qualifier 'lightning' matches any played card with the Lightning talent (condition_types.py:1070-1112).\n\nIdentical shape to sibling draft .drafts/crackling_yellow.json; red and yellow printings share the +1{p} amount."
+}

@@ -1,0 +1,26 @@
+{
+ "slug": "long_shot_blue",
+ "abilities": [
+  {
+   "ability_type": "WHILE_STATIC",
+   "conditions": [
+    {
+     "type": "SOURCE_IS_ATTACK"
+    },
+    {
+     "type": "COUNTER_GTE",
+     "counter": "aim",
+     "amount": 1
+    }
+   ],
+   "effects": [
+    {
+     "type": "MODIFY_ATTACK",
+     "mod": "add",
+     "amount": 2
+    }
+   ]
+  }
+ ],
+ "_comment": "Shipped azl/sedation_shot_blue pattern. COUNTER_GTE min 1 is binary, so multiple aim counters grant exactly one +2 per the release note."
+}

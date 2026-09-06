@@ -1,0 +1,21 @@
+{
+  "slug": "head_shot_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PUT_FACEUP_IN_ARSENAL",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {"type": "ATTACK_NAME_IN", "names": ["Head Shot"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this is put into your arsenal face up, it gains +2{p} until end of turn.' Ranger Action - Arrow Attack (ArcaneRising); no printed keywords, so the Arrow attack body comes from the card DB and nothing else is authored.\n\nSHAPE copied from .drafts/head_shot_blue.json - the same card at another colour, which itself copies .drafts/dry_powder_shot_red.json ('this turn' vs 'until end of turn' is the same span here, since an unused queued mod expires at end of turn either way).\n\nDEVIATION FROM THE TRIAGE LIST, disclosed: triage named MODIFY_ATTACKS_THIS_TURN; this draft uses MODIFY_NEXT_ATTACK for consistency with the red/blue siblings. Equivalent here: MODIFY_NEXT_ATTACK (effect_types.py:4592-4618 reads mod/amount/filter/scope; scope omitted = TURN default) queues a one-shot entry consumed by the first matching attack that turn and unused entries expire end of turn (engine.py:921-922) - exactly 'until end of turn' while the arrow sits in arsenal.\n\nTRIGGER: ON_PUT_FACEUP_IN_ARSENAL (trigger_types.py:63-67) exists for exactly this wording - origin-agnostic, dispatched from Zone.add only when a card is ADDED to the arsenal face-up, with card=the moved card, so the card itself hears it. A flip-in-place never passes through Zone.add and cannot falsely fire.\n\nFILTER: ATTACK_NAME_IN (condition_types.py:218-232; alias ATTACK_IS_NAMED; reads names/name/card_name) strips the colour suffix from the attack's slug before matching, so the yellow printing matches its own name 'Head Shot'.\n\nFIDELITY GAP, minor (same disclosure as the red/blue siblings): the text says IT gains +2{p}, but the DSL queue filters attacks by NAME, not object identity - if two copies of Head Shot enter arsenals the same turn, the buff lands on whichever attacks first rather than being bound to the copy that triggered. No condition type matches 'this exact card object' in the filter vocabulary; ATTACK_NAME_IN is the tightest available selector.",
+  "_source_batch": "_batch3.json"
+}

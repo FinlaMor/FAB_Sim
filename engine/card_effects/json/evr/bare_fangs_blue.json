@@ -1,0 +1,37 @@
+{
+  "slug": "bare_fangs_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "DISCARD_RANDOM",
+          "amount": 1
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "REF_POWER_GTE",
+              "ref": "discarded",
+              "amount": 6
+            }
+          ],
+          "then": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, Bare Fangs gains +2{p}.' TRIGGERED ON_ATTACK + MODIFY_ATTACK is the documented shape for an Action - Attack self-pump (an attack action card is NOT an ATTACK_REACTION). DELIBERATE DEVIATION FROM TRIAGE: it listed DISCARDED_CARD_POWER_GTE, but the .review findings on smashing_performance_yellow / ram_raider_yellow / breakneck_battery_red established that condition reads .power off the DISPATCHING EVENT - here the ON_ATTACK event, which carries no discarded card - so as an effect-level gate it is false in every state (a dead gate that ships looking implemented). DISCARD_RANDOM stores the card actually discarded under ref 'discarded' (effect_types.py:4925-4927) precisely so an in-ability check can express 'THIS WAY'; REF_POWER_GTE(ref 'discarded', amount 6) is list-friendly and satisfied by any entry. Empty hand: effect_discard returns nothing, ref never set, get_ref None -> condition false -> no pump, while draw/discard still resolve. Draw-then-discard order matches printed text and runs atomically inside one ability resolution, which is what the release note ('no plays or activations between the draw and the discard') describes."
+}

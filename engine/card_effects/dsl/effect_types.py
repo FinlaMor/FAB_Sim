@@ -523,13 +523,21 @@ def _hand_card_filter(params):
     name = _first(params, "card_name", "name")
     keyword = _first(params, "keyword")
     klass = _first(params, "class_filter", "card_class")
+    # "banish a SHADOW card from your hand", "discard an ICE card" -- Shadow and
+    # Ice are TALENTS, not classes, and the class check read `c.classes` only,
+    # so every such filter matched nothing and the cost could never be paid.
+    # Class and talent names are disjoint in FAB (no class is called Shadow, no
+    # talent is called Runeblade), so one key matching either is unambiguous --
+    # and it is what an author reaches for, since the printed text spells both
+    # the same way. An explicit `talent` key is accepted too.
+    talent = _first(params, "talent", "talent_filter", "card_talent")
     specs = [compile_condition((f.get("type") or "none"), f)
              for f in (params.get("filter") or []) if isinstance(f, dict)]
-    if not any((color, kind, name, keyword, klass)) and not specs:
+    if not any((color, kind, name, keyword, klass, talent)) and not specs:
         return None
 
     def _matches(c, state=None, _co=color, _k=kind, _n=name, _kw=keyword,
-                 _cl=klass, _sp=specs):
+                 _cl=klass, _sp=specs, _ta=talent):
         if _co:
             # Card.color is None on a real card until something sets it; the
             # PRINTED colour lives on base_color (raw_color before that). A
@@ -552,7 +560,12 @@ def _hand_card_filter(params):
                 return False
         if _cl:
             have = {_norm(x) for x in (getattr(c, "classes", None) or [])}
+            have |= {_norm(x) for x in (getattr(c, "talents", None) or [])}
             if _norm(_cl) not in have:
+                return False
+        if _ta:
+            have = {_norm(x) for x in (getattr(c, "talents", None) or [])}
+            if _norm(_ta) not in have:
                 return False
         for fn in _sp:
             # Ordinary DSL conditions, evaluated with the CANDIDATE as the card
@@ -625,8 +638,16 @@ def _permanent_filter(params):
             have |= {_norm(x) for x in (getattr(c, "types", None) or [])}
             if _norm(_sub) not in have:
                 return False
-        if _tok is not None and bool(getattr(c, "is_token", False)) is not bool(_tok):
-            return False
+        if _tok is not None:
+    # `is_token` is not an attribute anything sets. The corpus marks a
+    # token by putting "Token" in its types, which is what state._is_token
+    # reads -- so this test was constant: `token: true` matched NOTHING
+    # and `token: false` matched EVERYTHING. "Destroy an aura token they
+    # control" destroyed any aura, and an exclude-tokens filter excluded
+    # nothing. Routed through the canonical check.
+            from engine.state import _is_token
+            if _is_token(c) is not bool(_tok):
+                return False
         if _max is not None:
             cost = getattr(c, "raw_cost", None)
             if cost is None:
@@ -1761,11 +1782,20 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         # whose deck is searched was not expressible at all, so a card that
         # raids the opponent's deck raided its own.
         whose = str(params.get("player") or "SELF").upper()
+        # What a search FOUND is the subject of the next sentence often enough
+        # that the ref has to exist: "search your deck for a card with combo,
+        # banish it face up ... YOU MAY PLAY IT THIS TURN" (Katsu), "...then put
+        # IT on top" (Iris of the Blossom). Three cards named `record_as`/`into`
+        # here and the handler read neither, so the follow-up clause pointed at
+        # a ref nothing wrote and silently did nothing. Defaults to "searched"
+        # so the follow-up works without the author having to name it.
+        record_as = _first(params, "record_as", "into", "store_as",
+                           default="searched")
 
         def _fn(card, event, state, _ft=filter_types, _fsc=filter_slug_contains,
                 _sub=subtype, _max=max_cost, _dest=destination, _n=count,
                 _ref=from_ref, _cls=card_class, _name=want_name,
-                _kw=want_keyword, _who=whose):
+                _kw=want_keyword, _who=whose, _rec=record_as):
             from engine.card_effects.ability_keywords import _controller_id
             from engine.effect_keywords import shuffle as effect_shuffle
             cid = _controller_id(card)
@@ -1861,6 +1891,13 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 put_object(state, target, _zone,
                            destination_player_id=cid, source_player_id=cid,
                            is_public=True, position=_pos)
+
+            # Record what was found, so "you may play IT this turn" / "put IT
+            # on top" can name it. Written even when the search failed to find
+            # (an empty list), so a follow-up reads "nothing" rather than a
+            # stale value left by an earlier search this resolution.
+            from engine.context import set_ref
+            set_ref(_rec, chosen[0] if len(chosen) == 1 else list(chosen))
         return _fn
 
     if etype == "SEARCH_GRAVEYARD":
@@ -2780,8 +2817,11 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                     return False
                 if want and want not in [s.lower() for s in (getattr(c, "subtypes", None) or [])]:
                     return False
-                if _tok is not None and bool(getattr(c, "is_token", False)) is not bool(_tok):
-                    return False
+                if _tok is not None:
+                    # See _permanent_filter: is_token is never set.
+                    from engine.state import _is_token
+                    if _is_token(c) is not bool(_tok):
+                        return False
                 if cap is not None:
                     # A token has no printed cost; "cost X or less" is satisfied
                     # by a costless permanent, so None reads as 0 rather than

@@ -1,0 +1,13 @@
+{
+  "slug": "herald_of_tenacity_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {"type": "PUT_SELF_IN_ZONE"}
+      ]
+    }
+  ],
+  "_comment": "'**Dominate** / When this hits, put it into your hero's soul. / **Phantasm**' (Light Illusionist Action - Attack).\n\nDOMINATE AND PHANTASM NOT AUTHORED: both are printed keywords on the card itself (first and last lines of the text) and fire from the card DB keywords field (card_data lists [\"Dominate\", \"Phantasm\"]) via the engine's keyword implementations - re-authoring them would be a defect.\n\nSOUL CLAUSE: TRIGGERED + ON_HIT + PUT_SELF_IN_ZONE. The handler (effect_types.py:1618-1639, read this session) reads zone/to_zone/destination with a DEFAULT of \"soul\" for this etype - the bare spelling is exactly 'put it into your hero's soul'; it moves THIS card to its CONTROLLER's soul via put_object. No 'position' param authored: zone default (append) is fine for a soul, which is an unordered pile for count purposes.\n\nNOT OPTIONAL: official_release_note 4 says 'you must put it into your hero's soul. This effect is not optional', so there is deliberately no MAY wrapper and no optional flag.\n\nRELEASE-NOTE INTERACTIONS NOT DRAFTED (engine-side, not expressible in JSON): notes 1-3 describe consequences of the soul move mid-chain-link-resolution - the combat chain not closing while the card sits in the soul, Phantasm ceasing to function as a triggered ability once there, and Last Known Information still granting an action point if the attack had go again before the move. Whether the engine's put_object path models these is a question for the engine's chain-close/soul routing, not for this draft; the JSON expresses the printed sentence itself."
+}

@@ -1,0 +1,20 @@
+{
+  "slug": "electryn_joltstep_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {"type": "ATTACK_CLASS_IN", "classes": ["Runeblade", "Lightning"]}
+          ]
+        },
+        {"type": "CREATE_TOKEN", "token": "lightning_flow", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Your next Runeblade or Lightning attack this turn gets +3{p}. / Create a Lightning Flow token. / Go again' Lightning Runeblade Action (GEM).\n\nGO AGAIN NOT AUTHORED: GoAgain is in printed_keywords as an UNCONDITIONAL line of the text, so it fires from the card DB keywords field - re-authoring it would be a defect. No SOURCE_IS_ATTACK conditional-keyword machinery applies because nothing gates it.\n\nPUMP: MODIFY_NEXT_ATTACK reads mod/amount/filter/scope (effect_types.py:4592-4618) and queues a one-shot entry on the CONTROLLER's dsl_queued_attack_mods; consumption (engine.py:1175-1236) compiles each filter spec and evaluates it against the incoming attack card, applying+consuming on first match; a non-matching attack leaves the entry queued, and unused entries expire end of turn (engine.py:921-922) = 'this turn'. Scope left at default TURN.\n\n'RUNEBLADE OR LIGHTNING' IN ONE CONDITION: ATTACK_CLASS_IN reads the first-present key among classes/class/talent/talents (condition_types.py:204-216 via _as_list) and matches against _card_traits(attack_card) = classes AND talents AND colour. Both values therefore go in ONE 'classes' list - splitting them across 'classes' and 'talent' keys would drop the second value, because only the first present key is read. Runeblade is a class, Lightning a talent; both match here. The text says 'attack', not 'attack action card', so there is deliberately no Action-type filter - a Runeblade weapon attack qualifies too.\n\nTOKEN: CREATE_TOKEN reads token/count|amount/player/destination (effect_types.py:1942-2013); player defaults SELF, destination omitted routes by the template's subtypes - json/tokens/lightning_flow.json EXISTS (empty stub, aura token), so require_card passes and the token enters controller.auras. Effect order follows the printed sentence: pump, then token.\n\nNo gaps; every clause expressible."
+}

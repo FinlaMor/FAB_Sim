@@ -1,0 +1,15 @@
+{
+  "slug": "dissolve_reality_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "PUT_ARSENAL_BOTTOM", "player": "SELF"},
+        {"type": "PUT_ARSENAL_BOTTOM", "player": "OPPONENT"},
+        {"type": "CREATE_TOKEN", "token": "ponder", "player": "SELF"},
+        {"type": "CREATE_TOKEN", "token": "ponder", "player": "OPPONENT"}
+      ]
+    }
+  ],
+  "_comment": "'Each hero puts all cards in their arsenal on the bottom of their deck and creates a Ponder token. / Go again.'\n\nGo again is a printed keyword (printed_keywords) firing from the card DB keywords field - deliberately NOT authored; re-authoring it would be a defect.\n\n'Each hero': PUT_ARSENAL_BOTTOM handles ONE player per effect and DEFAULTS TO OPPONENT (effect_types.py:2334 - the Disable printings were its first users), so 'player': 'SELF' is passed EXPLICITLY on the first node; omitting it would bottom my own card twice and never touch the opponent's arsenal (the exact defect recorded on sunkwater_exoshell). The FAB arsenal holds at most one card, so one node per hero IS 'all cards in their arsenal'; an empty arsenal early-returns without touching later effects (effect_types.py:2350-2352).\n\nRelease note ('Each hero creates a Ponder token regardless of whether they've put a card from their arsenal on the bottom of their deck'): the tokens are separate unconditional CREATE_TOKEN nodes, not riders on the puts - a no-op put cannot suppress them.\n\nCREATE_TOKEN reads token/count/player (effect_types.py:1942-2013); count defaults to 1. json/tokens/ponder.json exists, so no MissingCardImplementation at resolution.\n\nNo gaps; every clause expressible."
+}

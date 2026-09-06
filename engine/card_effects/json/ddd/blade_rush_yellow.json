@@ -1,0 +1,28 @@
+{
+  "slug": "blade_rush_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GRANT_NEXT_ATTACK_KEYWORD",
+          "keyword": "Go Again",
+          "filter": [
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Sword"]}
+          ]
+        },
+        {
+          "type": "MODIFY_ATTACKS_THIS_TURN",
+          "amount": 1,
+          "mod": "add",
+          "scope": "TURN",
+          "filter": [
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Sword"]},
+            {"type": "ATTACK_ORDINAL_EQ", "amount": 2}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your first sword attack this turn gets go again' is modelled as a one-shot GRANT_NEXT_ATTACK_KEYWORD (handler effect_types.py:4735 reads keyword/filter/scope; consumed by engine._apply_turn_attack_effects on the first attack matching filter, cleared end of turn). Exact when Blade Rush is played before any sword attack this turn - the normal play. KNOWN GAP: if played AFTER a sword attack this turn, printed text grants nothing (the first already happened) but this draft would grant to the next sword attack; no play-time condition exists to test 'no sword attack yet this turn' (ATTACK_ORDINAL_* need live combat). 'Second sword attack +1{p}' uses MODIFY_ATTACKS_THIS_TURN (effect_types.py:2149 reads amount/mod/scope/player/filter; hook conditions re-evaluated per attack at engine.py:1252). KNOWN GAP: ATTACK_ORDINAL_EQ counts ALL of that player's attacks, not only swords - exact on all-sword turns (Dorinthea's normal case), off on mixed-weapon turns. The card's own printed Go again (last line) is an unconditional DB keyword and is deliberately NOT authored here."
+}

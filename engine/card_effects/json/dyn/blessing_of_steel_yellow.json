@@ -1,0 +1,25 @@
+{
+  "slug": "blessing_of_steel_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "DESTROY_SELF"
+        },
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'At the start of your turn, destroy Blessing of Steel then your next weapon attack this turn gains +2{p}.' Shape copied from shipped dyn/blessing_of_focus_red (same set, same Aura, same 'At the start of your turn, destroy...' wording). START_OF_TURN needs no IS_ACTIVE_PLAYER gate: engine._dsl_start_of_turn_listener dispatches it only to the TURN PLAYER's arena zones, and auras are among them (_dsl_permanent_zones includes player.auras) - verified, not assumed. Effect order follows the printed sentence: DESTROY_SELF first (effect form verified at effect_types.py:2406 - bare form destroys the source via canonical destroy()), then MODIFY_NEXT_ATTACK queues on the controller's dsl_queued_attack_mods (handler reads mod/amount/filter/scope, effect_types.py:4511), so destroying the aura first cannot unqueue the pump. One-shot consumption by the first qualifying attack IS the release note ('applies to the next weapon attack only ... not to any additional weapon attacks'); unused mods expire end of turn. filter ATTACK_IS_WEAPON takes no params and reads combat.from_weapon (condition_types.py:198). All four triage primitives used as named; no gaps."
+}

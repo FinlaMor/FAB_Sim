@@ -1,0 +1,31 @@
+{
+  "slug": "hell_hammer",
+  "activation_cost": 2,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {"type": "ATTACK"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {"type": "SET_FLAG", "flag": "hell_hammer_attacked", "scope": "CURRENT"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_COMBAT_CLOSE",
+      "conditions": [
+        {"type": "FLAG_SET", "flag": "hell_hammer_attacked"}
+      ],
+      "effects": [
+        {"type": "PUT_SELF_IN_ZONE", "zone": "banished"}
+      ]
+    }
+  ],
+  "_comment": "'Once per Turn Action - {r}{r}: Attack / When the combat chain closes, if you've attacked with this, banish it. / Blood Debt.' Shadow Brute Weapon - Hammer (2H) (DuskTillDawn).\n\nBLOODDEBT NOT AUTHORED: printed keyword firing from the card DB keywords field; re-authoring it would be a defect.\n\nATTACK ABILITY: '{r}{r}, Once per Turn Action' is card-level activation_cost 2 + per_turn 1 (loader.py:153-154 reads both off the top-level dict; card.py:519-520 applies them to the runtime card). The ACTIVATE ability carrying ATTACK declares the text and builds the attack proxy (effect_types.py:5139-5160); play._add_weapon_attacks already offers the attack itself from printed power + activation cost and play._add_hero_dsl_activations SKIPS ATTACK-effect abilities, so no double-fire - shipped dyn/merciless_battleaxe.json is the exact shape.\n\n'IF YOU'VE ATTACKED WITH THIS': ON_ATTACK is dispatched keyed to the attacking card's slug off the 'attacking' emit (engine.py:578 -> _dsl_attacking_listener, engine.py:1524-1529), and a weapon ATTACKS AS ITSELF (play.py:118-119 card=wc; engine.py:521 puts that object on the combat chain), so the Hammer hears its own attack - the same machinery merciless_battleaxe's shipped ON_ATTACK relies on. SET_FLAG scope CURRENT writes player.current_turn_effects (effect_types.py:2075-2101), cleared only at end-of-turn cleanup (engine.py:909), so the flag cannot leak into a later turn; combat always closes within the turn it was created, so CURRENT spans the whole printed window. FLAG_SET (condition_types.py:1032-1037) reads the same store for the same controller.\n\nRELEASE NOTE 1 HOLDS BY CONSTRUCTION: 'considered to have attacked if its attack ability is resolved on the stack (and you went from the layer step to the attack step)' - 'attacking' fires inside _attack_step only AFTER the layer->attack-step transition (engine.py:564-578). A Spectra-targeted attack whose target left the arena closes the chain straight from _attack_step (engine.py:495-513) WITHOUT emitting 'attacking' and without live combat, so the flag is never set and the banish never fires - exactly 'you are not considered to have attacked with this'.\n\n'BANISH IT': DELIBERATE DEVIATION FROM THE TRIAGE LIST, which said 'BANISH (self)'. BANISH{target:'self'} resolves through _zone_target_spec to (SELF, no-zone) and falls back to TOP_DECK - it would mill the controller's own deck rather than banish the weapon (the defect class documented on .drafts/devotion_never_dies_red.json). PUT_SELF_IN_ZONE {zone: 'banished'} (effect_types.py:1618-1639) is the established spelling for relocating an attacking card. Timing verified end to end: ON_COMBAT_CLOSE dispatches to combat.attack_card while combat still exists (engine.py:1620-1627), triggered layers resolve at _resolve_all_triggers (engine.py:782) BEFORE _close_combat_chain (engine.py:786), and the close pass then sees zone != combat_chain (relocated, engine.py:2234-2236) and skips the graveyard - the documented Herald-of-Protection path. The weapon ends banished exactly once.\n\nDISCLOSED NUANCE (multi-link chains): ON_COMBAT_CLOSE dispatches ONLY to the current attack card's slug (engine.py:1626-1627). If the Hammer attacks on link 1 and a DIFFERENT card owns the last link of the same chain, this close trigger never fires although the Hammer did attack. Exact for single-link chains - the dominant case for a once-per-turn 2H weapon - and the nearest expressible form; same disclosed limitation as .drafts/eloquent_eulogy_red.json."
+}

@@ -1,0 +1,25 @@
+{
+  "slug": "hiss_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_CLASS_IN", "classes": ["Assassin", "Mystic"]},
+          {"type": "ATTACK_TYPE_IN", "types": ["Action"]}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2},
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [{"type": "EVENT_THIS_TURN", "event": "pitch", "qualifier": "blue"}],
+          "then": [
+            {"type": "CREATE_TOKEN", "token": "slither", "amount": 1, "destination": "hand"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target Assassin or Mystic attack action card gets +2{p}. / If you've pitched a blue card this turn, create a Slither in your hand.' Mystic Assassin Attack Reaction (NuuBlitzDeck). Yellow printing; the red sibling is +1 and blue +2 per their triage notes - amounts differ only.\n\nTARGET: ability-level target.filter, compiled to target_filter by the loader (loader.py:113) and enforced when play.py offers ATTACK_REACTION plays (play.py:286-430). ATTACK_CLASS_IN reads classes (also class/talent/talents) and matches via _card_traits over classes AND talents (condition_types.py:204-216) - Assassin is a CLASS and Mystic is a TALENT, so one condition catches both, exactly the trap its comment describes. ATTACK_TYPE_IN reads types and tests types+subtypes lowercased (condition_types.py:273-293); 'Action' pins 'attack action card'. Shipped precedent for this exact shape on an ATTACK_REACTION: hnt/incision_yellow.json (target.filter ATTACK_TYPE_IN + MODIFY_ATTACK). MODIFY_ATTACK reads mod/amount (effect_types.py:4123-4158) and bumps the current attack - in the reaction step the targeted attack IS combat.attack_card.\n\nPITCHED-BLUE CLAUSE: EVENT_THIS_TURN event=pitch qualifier=blue. The canonical pitch() records a turn event with the card's colour at PITCH TIME (effect_keywords.py:2714-2723, _PITCH_COLOUR {1:red,2:yellow,3:blue}), so cards no longer in the pitch zone still count - exactly official_release_notes 1 (Potion of Deja Vu case). The condition defaults player SELF resolved against the source card's controller; pitch events are recorded under the pitching player, which is me. Gate shape is CONDITIONAL_EFFECT when/then (effect_types.py:3697-3724 reads when/then/else; no else authored since the text has none) rather than two effects - gating a second CREATE_TOKEN copy would be fine here, but CONDITIONAL keeps the if-branch explicit.\n\nSLITHER DEPENDENCY: CREATE_TOKEN routes through canonical create_token, which require_card()s the token slug (effect_keywords.py:266-276) - 'slither' exists in the card DB (Mystic Assassin Attack Reaction token) but had NO DSL definition anywhere, so the first resolution would raise MissingCardImplementation. Drafted alongside as .drafts/slither.json; adopt it with this card. destination 'hand' resolves via getattr(controller, 'hand') in create_token's destination branch (effect_keywords.py:372-376).\n\nNo printed keywords."
+}

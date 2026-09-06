@@ -1,0 +1,14 @@
+{
+  "slug": "claw_of_vynserakai",
+  "activation_cost": 1,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {"type": "ATTACK"}
+      ]
+    }
+  ],
+  "_comment": "'Once per Turn Action - {r}: Attack.' Card-level activation_cost 1 and per_turn 1 are DSL-authoritative; play._add_weapon_attacks offers the attack for a weapon with printed power + activation_cost while per-turn activations remain. The ACTIVATE ability carrying an ATTACK effect follows the shipped weapon precedents (cintari_saber draft, cru/sledge_of_anvilheim, dyn/merciless_battleaxe) - it declares the ability rather than creating a second attack path. Spellvoid 1 is a printed keyword -> card DB keywords field, deliberately NOT authored here."
+}

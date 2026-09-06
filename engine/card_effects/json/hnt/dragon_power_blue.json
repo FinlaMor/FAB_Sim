@@ -1,0 +1,12 @@
+{
+  "slug": "dragon_power_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [{"type": "CARD_IS_TALENT", "talent": "Draconic"}],
+      "effects": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}]
+    }
+  ],
+  "_comment": "'When this attacks, if it is Draconic, it gets +3{p}.' Ninja Action - Attack; printed_keywords empty. Blue printing of .drafts/dragon_power_red.json (identical text) - shape copied verbatim per the copy-an-existing-spelling rule, then re-verified against source this session.\n\nTRIGGERED + ON_ATTACK + MODIFY_ATTACK is the DSL_REFERENCE-prescribed shape for an Action - Attack self-pump (an attack action card is NOT an ATTACK_REACTION - that ability_type never fires on one). Release note ('triggers when it resolves on the stack and becomes an attacking card'; Draconic 'checked when this trigger resolves') maps exactly: ON_ATTACK is dispatched to combat.attack_card once it IS the attacking card (trigger_types.py:7), and ability-level conditions evaluate at RESOLUTION time, not play time - so a later-talent edge resolves correctly too.\n\nCARD_IS_TALENT (condition_types.py:1286-1307) reads 'talent'/'talents' and asks about THIS card's classes/talents via _card_traits (:49-64, includes talents). The ON_ATTACK dispatch target is the attack card itself, i.e. Dragon Power, so 'Draconic' normalises against its own talents list - precisely 'if IT is Draconic'. ATTACK_CLASS_IN was rejected: it reads combat.attack_card from any context, which coincides here but says something else.\n\nMODIFY_ATTACK (effect_types.py:4123-4158) reads mod/amount only; its one-shot trigger path appends to combat.power_mods so the +3 survives every later recalculation (defend/damage steps) without double-applying.\n\nNo printed keywords; nothing else to author. No known gaps."
+}

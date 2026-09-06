@@ -1,0 +1,50 @@
+{
+  "slug": "assembly_module_blue",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {"type": "PUT_COUNTER", "target": "self", "counter_type": "steam", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "COUNTER_GTE", "counter_type": "steam", "min": 1}
+          ],
+          "then": [
+            {
+              "type": "MAY",
+              "prompt": "Remove a steam counter from Assembly Module? (If not, it is destroyed.)",
+              "effects": [
+                {"type": "REMOVE_COUNTERS", "counter_type": "steam", "amount": 1}
+              ],
+              "else": [
+                {"type": "DESTROY_SELF"}
+              ]
+            }
+          ],
+          "else": [
+            {"type": "DESTROY_SELF"}
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "TAP_SELF"}
+      ],
+      "effects": [
+        {"type": "SEARCH_DECK", "name": "Hyper Driver", "destination": "permanents"}
+      ]
+    }
+  ],
+  "_comment": "Three clauses. (1) 'Enters the arena with a steam counter': ON_ENTER_PLAY + PUT_COUNTER, the shipped arc/teklo_core_blue.json pattern (a plain STATIC never places counters); PUT_COUNTER's 'target' is unread and lands on the source card, so 'target':'self' is a harmless no-op kept for teklo consistency. (2) Upkeep: CONDITIONAL wraps MAY so both edges are right - with a steam counter the MAY offers remove-or-destroy (declining runs MAY's else = DESTROY_SELF), matching the release note 'You choose whether or not to remove... If you don't remove a steam counter, you will destroy Assembly Module'; with zero counters (another effect stripped them) the CONDITIONAL else destroys it, since removal is then impossible. The gate deliberately sits on the CONDITIONAL's when, NOT as ability-level conditions (those are checked at resolution and would skip the whole branch including the destroy) and NOT on the MAY itself (the loader pops those into an effect-level gate, which would skip the destroy too). COUNTER_GTE reads counter_type/min (condition_types.py ~970); MAY reads prompt/effects/else (effect_types.py ~3724); REMOVE_COUNTERS defaults its target to this card. START_OF_TURN reaches only the turn player's permanents (trigger_types.py note), which is exactly 'At the start of YOUR turn'. (3) 'Action - {t}: Search your deck for a Hyper Driver, put it into the arena, then shuffle': ACTIVATE + TAP_SELF cost (bubba_lubba_run_aground_yellow precedent; items are permanents so recalculate_activatable offers it); SEARCH_DECK reads name for a specific-card search and shuffles before placement, which the release notes make immaterial ('no priority between any of the effects'); fail-to-find is built in. destination is 'permanents' - the real zone name items live in (Player.zone_by_name has no 'arena' key; the .review/imposing_visage_blue.json finding shows 'arena' silently cancels the move). Card-level activation_cost 0 because {t} is a non-resource cost carried by the ability-level TAP_SELF, per DSL_REFERENCE. Printed Crank keyword comes from the card DB keywords field, not authored. Note: the batch's printed_text says 'stream counter' once and 'steam counter' once; steam is the Mechanologist counter kind used by Teklo Core et al., so 'steam' is used throughout."
+}

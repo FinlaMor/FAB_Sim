@@ -1,0 +1,44 @@
+{
+  "slug": "pyroglyphic_protection_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "ATTACK_TYPE_IN",
+          "types": [
+            "ARCANE"
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": -1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    }
+  ],
+  "_substituted": {
+    "from": "3",
+    "to": "1"
+  },
+  "_derived_from": "pyroglyphic_protection_red",
+  "_comment": "Derived from pyroglyphic_protection_red, whose printed functional text is identical to this card's apart from ONE number (1 here, 3 there) -- the usual shape of a colour variant. That number appears exactly once in pyroglyphic_protection_red's abilities, and every number in those abilities also appears in its printed text, so which JSON value the text changed is not in doubt; it is substituted here and recorded in _substituted.\n\nTHE DERIVATION IS PINNED, not trusted: tests/test_number_substituted_copies.py re-applies the same substitution to pyroglyphic_protection_red's current abilities and asserts it still yields these, and that the two printed texts still differ in exactly that one number. An edit to either card that breaks the correspondence fails there rather than leaving the pair silently out of step -- the insult_to_injury failure, where three printings of one sentence got three implementations and the blue one was missing a gate."
+}

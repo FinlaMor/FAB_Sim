@@ -1,0 +1,36 @@
+{
+  "slug": "crumble_to_eternity_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Put a -1{d} counter on an equipment?",
+          "effects": [
+            {
+              "type": "PUT_COUNTER",
+              "counter_type": "minus_defense",
+              "amount": 1,
+              "target": {
+                "controller": "ANY",
+                "zone": "EQUIPMENT",
+                "amount": 1
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_ACTION_PHASE",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {"type": "GRANT_NEXT_ATTACK_KEYWORD", "keyword": "Dominate"}
+      ]
+    }
+  ],
+  "_comment": "'When this enters the arena, you may put a -1{d} counter on an equipment.' / 'At the beginning of your action phase, destroy this, then your next attack this turn gets dominate.'\n\nENTER-PLAY: ON_ENTER_PLAY is dispatched from Zone.add (state.py:309) -- the one choke-point every arena entry passes through -- so an Aura entering play hears it. 'You may' is MAY wrapping the put: declining runs nothing in the block (effect_types.py:3788). PUT_COUNTER reads counter_type/amount/target (effect_types.py:2015-2058); the target spec {'controller': 'ANY', 'zone': 'EQUIPMENT', 'amount': 1} scans BOTH heroes' equipment slots and asks the controller to choose one, which is the printed unqualified 'an equipment'. Zone EQUIPMENT includes off-hand equipment sitting in weapon zones but excludes weapons proper (_object_zone_cards, effect_types.py:461+). counter_type 'minus_defense' is in DEFENSE_COUNTER_KINDS (ability_keywords.py:211), so the counter routes through _apply_defense_counter and actually reduces the equipment's {d} instead of being inert bookkeeping.\n\nUPKEEP: START_OF_ACTION_PHASE (CR 4.3.1) is dispatched to the ACTIVE player's permanent zones INCLUDING player.auras (engine.py:1514-1522, _dsl_permanent_zones at :1452), so the aura fires on its controller's action phase only -- matching 'YOUR action phase'. Effects run in order: DESTROY_SELF (cost_types.py:43-style destroy via canonical destroy()), then GRANT_NEXT_ATTACK_KEYWORD queues mod grant_keyword on dsl_queued_attack_mods, consumed one-shot by _apply_turn_attack_effects (engine.py:1199-1207 -> combat.grant_keyword) on the first attack that turn. Scope defaults to TURN ('this turn'); unused entries expire end of turn.\n\nKEYWORD SPELLING: 'Dominate' exact-cased, per .drafts/craterhoof.json whose comment verified actions.py/engine.py test membership as 'Dominate'.\n\nPRINTED KEYWORDS DELIBERATELY NOT AUTHORED: Dominate in printed_keywords belongs to this card's triggered text, not to the aura itself -- an aura never attacks so the unconditional DB keyword is behaviourally inert here, and the SOURCE_IS_ATTACK conditional-keyword strip does not apply because neither clause gates on THIS card attacking (one grants to another object, one is a resolution payoff) -- same reasoning documented on craterhoof. Specialization is a deckbuilding restriction only (glistening_steelblade triage note), no behaviour to implement.\n\nNo known gaps."
+}

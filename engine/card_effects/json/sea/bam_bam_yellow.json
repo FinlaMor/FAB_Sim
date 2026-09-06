@@ -1,0 +1,39 @@
+{
+  "slug": "bam_bam_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "DESTROY_PERMANENT", "player": "OPPONENT", "subtype": "Item", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DISCARD_SELF"}
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "player": "SELF",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "WEAPON_SUBTYPE_IN", "values": ["Club"]},
+              {"type": "ATTACK_TARGET_IS_HERO"}
+            ],
+            "effects": [
+              {"type": "DESTROY_PERMANENT", "player": "OPPONENT", "subtype": "Item", "amount": 1}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "Two clauses. (1) 'When this hits a hero, destroy an item they control': TRIGGERED ON_HIT gated by ATTACK_TARGET_IS_HERO (the condition is false for ally/permanent targets; without it the item destruction fires on hits the printed text excludes). DESTROY_PERMANENT player OPPONENT subtype Item pools the opposing player's permanents filtered to subtype Item - items live in player.permanents via SubZoneView(player.permanents, 'Item'), so the pool finds them. Release note 'You will select which item you will destroy at the time the triggered effect resolves' matches the handler: with multiple candidates it asks the controller which to destroy. No items -> destroys nothing. (2) 'Instant - Discard this: Your club attacks this turn get ...': INSTANT + cost DISCARD_SELF - the from-hand instant shape play._add_hand_instant_activations offers (ripple_away_blue precedent); DISCARD_SELF's can_pay requires the card in hand, matching the release note 'can only be activated from your hand'. The grant is INJECT_TRIGGER scope TURN with a NESTED trigger dict (required so the inner conditions survive to be evaluated per-hit rather than being popped as an effect-level gate at registration). Inner conditions gate each hit: WEAPON_SUBTYPE_IN values [Club] reads the current combat's weapon/attack-card subtypes, and ATTACK_TARGET_IS_HERO carries the quoted text's 'hits a hero'. The hook lives on the controller's turn_attack_hooks so it covers only their attacks this turn ('YOUR club attacks'). The injected destroy resolves OPPONENT relative to the attacking card's controller at hit time = the club wielder = 'they'. printed_keywords is empty - nothing keyword-side to avoid re-authoring."
+}

@@ -1,0 +1,23 @@
+{
+  "slug": "electryn_joltstep_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "filter": [
+            {"type": "ATTACK_CLASS_IN", "classes": ["Runeblade", "Lightning"]}
+          ]
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token": "lightning_flow"
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next Runeblade or Lightning attack this turn gets +1{p}. Create a Lightning Flow token. Go again'.\n\nOne PLAY ability, effects in printed order.\n\nPUMP: MODIFY_NEXT_ATTACK (handler effect_types.py:4592-4618 reads mod/amount/filter/scope) queues a one-shot on the controller's dsl_queued_attack_mods; engine._apply_turn_attack_effects consumes it on the first attack whose card matches the filter and leaves it queued otherwise, so a non-matching attack does not burn the +1 - exact 'next Runeblade or Lightning attack' semantics. Unused entries expire at end of turn.\n\n'Runeblade OR Lightning' as ONE ATTACK_CLASS_IN with two entries - deliberate simplification of triage's OR(ATTACK_CLASS_IN / CARD_IS_TALENT): the handler reads classes/class/talent/talents keys and matches against _card_traits(attack_card), which unions CLASSES AND TALENTS (condition_types.py:204-216, whose own comment cites the talents trap). Runeblade is a class, Lightning is a talent; one condition covers both, so no OR wrapper is needed. Weapons attack as themselves, so a Lightning-talented weapon attack matches too.\n\nTOKEN: CREATE_TOKEN (handler effect_types.py:1942-2013 reads token/count|amount/player/destination); 'lightning_flow' is already the slug of json/tokens/lightning_flow.json, which EXISTS, so no destination param is needed - zone routing derives from the template subtypes. Default count 1, default controller SELF.\n\nGoAgain is in printed_keywords: it fires from the card DB keywords field and is deliberately NOT authored here (re-authoring a printed keyword is a defect). No known gaps."
+}

@@ -1,0 +1,15 @@
+{
+  "slug": "adrenaline_rush_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {"type": "HEALTH_LT_OPP"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}
+      ]
+    }
+  ],
+  "_comment": "'When you play this, if you have less {h} than an opposing hero, this gets +3{p}.' Shape copied from reckless_arithmetic_blue (PLAY + MODIFY_ATTACK on an Action - Attack); the handler records the mod on CombatState.power_mods so it survives later recalculations. HEALTH_LT_OPP (condition_types.py) takes no params and compares controller life < opposing hero life (two-player). Ability-level conditions are checked at resolution, which matches 'if you have less {h}' being tested when the card is played. No other clauses."
+}

@@ -1,0 +1,21 @@
+{
+  "slug": "figment_of_triumph_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACKS_THIS_TURN",
+          "amount": -1,
+          "scope": "TURN",
+          "player": "OPPONENT",
+          "filter": [
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Legendary** / When this enters the arena, attack action cards your opponents control get -1{p} this turn.' Light Illusionist Instant - Figment (DuskTillDawn).\n\nLEGENDARY NOT AUTHORED: printed keyword (printed_keywords), fires from the card DB keywords field - re-authoring it would be a defect.\n\nETB TRIGGER: TRIGGERED + ON_ENTER_PLAY, dispatched from Zone.add on real arena entry from a non-arena zone (state.py ~293-310) - covers resolving on the stack when played AND being put into the arena by another effect. Same template-types caveat as the sibling figment_of_erudition_yellow draft: card_data was permission-blocked this session, so arena-entry ROUTING for a Figment could not be confirmed from the DB (see that file's _comment).\n\nDEBUFF follows the triage shape, every param read out of its handler this session: MODIFY_ATTACKS_THIS_TURN (effect_types.py:2201-2227) reads amount/mod/scope/player/filter. amount -1 with default mod 'add' signs to -1; player OPPONENT resolves to the opposing player and appends {kind: power_mod, amount: -1, conditions} to THEIR turn_attack_hooks; scope TURN (default, authored explicitly). Consumption verified at engine.py:1238-1259: the hook is re-applied to EVERY attack for the rest of the turn (hooks are not consumed), its condition specs compiled per attack against combat.attack_card, each match appending a stage-7.5 power effect of -1; hooks expire via the end-of-turn clear, which is the printed 'this turn'.\n\nFILTER names 'attack action card': ATTACK_TYPE_IN reads 'types' and unions the attack card's types AND subtypes (condition_types.py:273-294) - an attack action card is types=['Action'], subtypes=['Attack'], so ['Action'] matches exactly those; weapon attacks carry type Weapon and fail, so weapons are not reduced.\n\nKNOWN APPROXIMATION vs the printed wording: the text debuffs the CARDS themselves, which would also reduce an opponent attack action card ALREADY on the combat chain when this Instant resolves mid-chain. The hook mechanism applies only when each attack is declared (_apply_turn_attack_effects runs at chain entry), so attacks declared BEFORE this entered the arena are not retroactively reduced; every attack declared after is. 'Your opponents' plural collapses to the single OPPONENT in 1v1."
+}

@@ -1,0 +1,22 @@
+{
+  "slug": "biting_gale_blue",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {"type": "FLAG_SET", "flag": "fused_biting_gale_blue"}
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_ELSE",
+          "player": "OPPONENT",
+          "resources": 2,
+          "on_failure": [
+            {"type": "DISCARD", "player": "OPPONENT", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "DELIBERATE DEVIATION FROM TRIAGE: it named PITCHED_FOR_THIS for the 'was fused' gate, and that condition is wrong here. PITCHED_FOR_THIS reads card.pitched_for_this, which play._pitch_for_cost stamps ONLY on cards pitched to pay the resource cost (play.py:1606-1614). The engine's fusion() (ability_keywords.py:582-607) is a REVEAL from hand - it never pitches and never touches pitched_for_this - so PITCHED_FOR_THIS would be false whenever Biting Gale WAS fused, and could be true when it was NOT (any Ice card pitched merely to pay cost). The live idiom, verified against shipped cards siy/aether_icevein_blue.json and lgs/volzar_the_lightning_rod.json ('The engine records fusion as fused_<slug> ... all lowercase') and review notes (.review/inspire_lightning_yellow: 'verified: fusion() records fused_<slug>, FLAG_SET reads current_turn_effects'; .review/chilling_icevein_red confirms the exact marker name): ability_keywords.fusion writes 'fused_<card.slug>' into controller.current_turn_effects, and FLAG_SET (condition_types.py:1004-1009) tests exactly s.players[_controller_id(c)].current_turn_effects. Flag name is per-printing because fusion() keys it on card.slug.\n\nTiming holds: Ice Fusion itself fires engine-side from the DB keywords field (triggers.py:318-331 maps '<X> Fusion' keywords; no authoring), i.e. as an additional cost at PLAY time, while ability-level conditions evaluate at RESOLUTION - so by the time this defense reaction resolves, the flag is already set or permanently absent. Playing the card unfused stays legal: ability conditions gate only the payoff at resolution, not the play (the card still defends with its printed {d}).\n\nPAY_OR_ELSE (effect_types.py:3143-3193): player OPPONENT resolves relative to the source card's controller - the defender - so OPPONENT is the attacking hero, who is asked pay/decline when they hold >= 2 resources and otherwise goes straight to the failure branch, matching 'discards a card unless they pay {r}{r}'. on_failure effect player params are relative to the SAME source card, so DISCARD player=OPPONENT hits the same hero that was asked to pay. Release note 'if you have no cards in hand you can still elect to discard instead of paying' needs no JSON: _ask_player offers pay/decline regardless of hand size, and declining with an empty hand discards nothing.\n\nYellow printing (biting_gale_yellow) is identical except slug and flag name."
+}

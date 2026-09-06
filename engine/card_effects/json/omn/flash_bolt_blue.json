@@ -1,0 +1,16 @@
+{
+  "slug": "flash_bolt_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1,
+          "target": "OPPONENT"
+        }
+      ]
+    }
+  ],
+  "_comment": "'Deal 1 arcane damage to target hero.' target OPPONENT is the spelling the other 57 arcane-to-target-hero cards use; DEAL_ARCANE routes through effect_keywords.deal_damage so Arcane Barrier and prevention shields see it."
+}

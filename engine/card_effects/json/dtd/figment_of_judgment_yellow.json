@@ -1,0 +1,27 @@
+{
+  "slug": "figment_of_judgment_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Turn a card in any banished zone face-down?",
+          "effects": [
+            {
+              "type": "FLIP_MATCHING",
+              "face_up": false,
+              "target": {
+                "controller": "ANY",
+                "zone": "BANISHED",
+                "amount": 1
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Legendary** / When this enters the arena, you may turn a card in any banished zone face-down.' Light Illusionist Instant - Figment (DuskTillDawn).\n\nLEGENDARY NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field - re-authoring it would be a defect.\n\nETB TRIGGER: TRIGGERED + ON_ENTER_PLAY, mapped at trigger_types.py:30 and dispatched from Zone.add on real arena entry from a non-arena zone (state.py ~293-310) - covers resolving on the stack when played AND being put into the arena by another effect. Same shape as the sibling drafts figment_of_erudition_yellow / figment_of_triumph_yellow.\n\nOPTIONAL CLAUSE: MAY (effect_types.py:3788-3856, read this session) - declining runs nothing in the block, which is the whole of 'you may'.\n\nFLIP: FLIP_MATCHING (effect_types.py:3490-3506, read this session) reads face_up (default False, authored explicitly) and a canonical object target compiled by _compile_object_target (:675-804). Target {'controller': 'ANY', 'zone': 'BANISHED', 'amount': 1}: controller ANY scans BOTH heroes' zones (pids [cid, 3-cid], :754-757) - the printed unqualified 'any banished zone'; _object_zone_cards handles BANISHED directly (:493-494, returns player.banished.cards); amount 1 asks the controller to choose one card; an empty pool on both sides returns [] and nothing flips. The flip sets is_public=False (and face_down=True where the attribute exists) = 'face-down'.\n\nWARTS DISCLOSED: (1) the shared chooser offers slugs, so face-DOWN banished cards are named in the prompt - hidden information the paper game would not reveal; engine-level, not expressible in JSON. (2) The yes/no prompt is offered even when both banished zones are empty; accepting then flips nothing, behaviourally identical to declining. (3) Same residual routing caveat as the sibling erudition draft: ON_ENTER_PLAY fires only if the Figment actually enters the arena, which depends on the DB carrying 'Figment' where the resolution router looks; card_data/slug_index.json was not readable this session to confirm."
+}

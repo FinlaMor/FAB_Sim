@@ -1,0 +1,51 @@
+{
+  "slug": "gutshot_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": ["Sword"]
+            }
+          ]
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_SUBTYPE_IN",
+                "subtypes": ["Sword"]
+              },
+              {
+                "type": "NOT",
+                "inner_type": "FLAG_SET",
+                "flag": "gutshot_wager_spent"
+              }
+            ],
+            "effects": [
+              {
+                "type": "WAGER",
+                "prize": "blade_dance"
+              },
+              {
+                "type": "SET_FLAG",
+                "flag": "gutshot_wager_spent",
+                "scope": "CURRENT"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "GAP: the printed text puts the wager on 'When this attacks', but injected triggers are only ever fired at ON_HIT and ON_DEAL_DAMAGE (engine.py iterates combat.injected_triggers in the hit listener and the damage-dealt listener; nothing consumes an injected ON_ATTACK). So the wager is registered on the sword attack's HIT, not its attack declaration: a fully blocked sword attack never wagers, and per CR 8.5.46 the defender should have won the prize in that case. No expressible attack-time injection exists. The NOT FLAG_SET / SET_FLAG pair inside the injected trigger makes it fire once ('your NEXT sword attack') instead of on every sword attack this turn - the TURN-scope hook itself is never consumed. Known minor deviation: playing two Gutshots in one turn shares the flag, so only one wager registers where paper would register two. Release notes honoured: no target condition, so attacks targeting allies wager too (the hit event fires for card targets as well as heroes), and the wager is mandatory (no optional flag). 'Go again' is an unconditional printed keyword - it comes from the card DB and is deliberately not authored. The DB also lists 'Wager' as a keyword on this card; no keyword trigger is built for Wager, so that entry is inert and the injected trigger carries the real behaviour. Prize token blade_dance must have a JSON definition (a draft already sits in .drafts/blade_dance.json)."
+}

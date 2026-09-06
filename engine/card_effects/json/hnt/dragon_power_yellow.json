@@ -1,0 +1,16 @@
+{
+  "slug": "dragon_power_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "ATTACK_CLASS_IN", "classes": ["Draconic"]}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, if it is Draconic, it gets +3{p}.' Ninja Action - Attack.\n\nPump modelled as TRIGGERED + ON_ATTACK + MODIFY_ATTACK per DSL_REFERENCE (an Action - Attack card is NOT an ATTACK_REACTION); ON_ATTACK reaches the attacking card itself via _dsl_attacking_listener (engine.py:1524-1529). Shape matches implemented pound_town_blue (ako).\n\nDraconic is a TALENT, not a class, but ATTACK_CLASS_IN (condition_types.py:204-216) deliberately matches talents as well as classes via _card_traits(attack_card) - its own comment cites 'Ice or Elemental attack action card' as the same case. It reads the 'classes' key (also accepts talent/talents); DSL_REFERENCE's documented spelling used.\n\nTiming: ability-level conditions are checked at RESOLUTION (IMPLEMENTATION_GUIDE), which is exactly what release note 2 requires ('whether it is a card with the Draconic talent supertype is checked when this trigger resolves'). MODIFY_ATTACK as a one-shot trigger appends to combat.power_mods so the +3 survives later recalculations and is a replaceable gain."
+}

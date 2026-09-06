@@ -1,0 +1,17 @@
+{
+  "slug": "dumpster_dive_blue",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_ATTACK_POWER",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "BOOST_BANISHED_IS", "types": ["Item", "Equipment"]}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Boost** / If an item or equipment was banished from boosting this, this gets +1{p}.' Mechanologist Action - Attack.\n\nSHAPE copied from SHIPPED evo/sprocket_rocket_blue.json, whose printed text carries the same clause, and re-verified against the handlers here: WHILE_STATIC on RECALC_ATTACK_POWER (the only event a WHILE_STATIC ability fires on - interpreter.py:186), confined to this card's own attack by SOURCE_IS_ATTACK (condition_types.py:381), gated by BOOST_BANISHED_IS types [Item, Equipment], pumping MODIFY_ATTACK add 1. MODIFY_ATTACK (effect_types.py:4123-4158) detects the recalculate_attack_power event and applies transiently in the stage-8 static window instead of appending to combat.power_mods, so repeated recalculations never stack it.\n\nBOOST_BANISHED_IS (condition_types.py:1147-1173) was written for exactly this wording: boost() records what it banished on the boosted card's boost_banished list, and the condition matches each banished card's types UNION subtypes via _norm, so 'Item'/'Equipment' match the DB spellings and subtypes like 'Evo' would too. Release note 1 satisfied: only the banished card's TYPE is checked, so it need not be a Mechanologist card. Release note 2 satisfied: boost_banished lives on THIS card, so cards banished for other cards' boost costs are invisible to it.\n\nPrinted **Boost** is in printed_keywords and fires from the card DB keywords field (the banish-top-of-deck boost cost is engine-side, ability_keywords.boost) - deliberately NOT authored; re-authoring a printed keyword is a defect. The +1{p} needs no SOURCE_IS_ATTACK-style conditional-keyword strip: it is a power bonus authored in JSON, not a printed keyword the DB applies unconditionally."
+}

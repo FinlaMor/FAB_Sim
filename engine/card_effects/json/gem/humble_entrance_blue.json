@@ -1,0 +1,12 @@
+{
+  "slug": "humble_entrance_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "toughness", "amount": 3}
+      ]
+    }
+  ],
+  "_comment": "'Create 3 Toughness tokens. Go again.' Revered Action (GEM).\n\nGO AGAIN NOT AUTHORED: unconditional printed keyword (printed_keywords carries GoAgain), so it fires from the card DB keywords field when the card layer resolves - re-authoring it would be a defect. Contrast hold_firm.json, where the same trailing text HAD to be authored because that card's ability is an equipment ACTIVATION the DB keyword never covers; Humble Entrance is a played action card, the case the DB keyword handles.\n\nCREATE_TOKEN (effect_types.py:1942-2013) reads token/count|amount/player - amount 3, default SELF control, template-derived destination. Spelling copied from .drafts/hold_firm.json (identical clause). json/tokens/toughness.json exists, so resolution cannot raise MissingCardImplementation.\n\nTriage list named GO_AGAIN as a primitive; deliberately not followed for the reason above."
+}

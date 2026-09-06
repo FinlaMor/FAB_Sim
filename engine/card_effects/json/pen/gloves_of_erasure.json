@@ -1,0 +1,13 @@
+{
+  "slug": "gloves_of_erasure",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "effects": [
+        {"type": "DESTROY_PERMANENT", "subtype": "Aura", "player": "ANY", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'When this leaves the arena, destroy target aura token.' / '**Blade Break**' Wizard Equipment - Arms (CompendiumOfRathe).\n\nBLADE BREAK NOT AUTHORED: printed keyword (printed_keywords carries BladeBreak), fires from the card DB keywords field; re-authoring it would be a defect.\n\nTRIGGER: TRIGGERED + ON_LEAVE_PLAY, the shipped spelling (pen/robe_of_resourcefulness.json et al.). The engine listener (_dsl_leaves_arena_listener, engine.py:1560-1576) rides the 'leaves_arena' event that canonical destroy() emits and dispatches ON_LEAVE_PLAY keyed by this slug - so destruction via Blade Break, the route this equipment actually takes, fires it. Documented engine gap in that listener, stated not fixed: banishing the equipment or returning it to hand emits no 'leaves_arena', so those leave routes do not trigger today.\n\nDESTROY CLAUSE - DEVIATION FROM THE TRIAGE LIST, deliberate: it named an ability-level target.filter with CARD_IS_TYPE/SUBTYPE_IN [\"Aura\"]. Targeted-trigger DECLARATION is a known engine gap (the release notes' 'you must target an aura token when you add the triggered effect to the stack; with no legal target the trigger never goes on' is not expressible for a TRIGGERED ability), so the authored form resolves at leave time instead: DESTROY_PERMANENT {subtype: Aura, player: ANY, amount: 1} (handler effect_types.py:2470-2571, read this session). 'ANY' scans both players' permanents.cards - where aura tokens live, auras being a SubZoneView over the one permanents zone (state.py:867-869) - so the printed text's lack of a controller restriction ('target aura token', not 'aura token they control') is honoured; with several eligible it ASKS which to destroy (_ask_player), and with none it destroys nothing - failing closed toward the release notes' no-legal-target case.\n\n'token': true DELIBERATELY NOT AUTHORED: the filter reads getattr(c, 'is_token') (effect_types.py:2533), which nothing in the engine ever sets - tokens are marked by 'Token' in types - so it would exclude every real aura token and destroy nothing (documented defect class in .draft-review/bash_brute_red.json and bash_guardian_red.json). Subtype Aura alone is the closest expressible form; over-breadth only if a non-token Aura permanent were ever in an arena."
+}

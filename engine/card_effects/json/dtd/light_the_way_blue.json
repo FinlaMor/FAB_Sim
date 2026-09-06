@@ -1,0 +1,40 @@
+{
+  "slug": "light_the_way_blue",
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "CHARGE",
+          "amount": 1,
+          "optional": true
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "CHARGED_THIS_WAY",
+                "color": "yellow"
+              }
+            ],
+            "effects": [
+              {
+                "type": "GAIN",
+                "keyword": "GO_AGAIN"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "Implementation copied verbatim from light_the_way_red, whose printed functional text is identical to this card's once each card's own name is substituted out. Everything that differs between them -- cost, pitch, power, colour -- comes from the card DB, not from this file, so the DSL is the same card twice.\n\nTHE COPY IS PINNED, not trusted: tests/test_copied_card_implementations.py asserts that these abilities still match light_the_way_red's and that the two printed texts still agree, so a later edit to one cannot silently leave the other behind. That is the insult_to_injury failure -- three printings of one sentence with three different implementations, the blue one missing a gate the others had.",
+  "_copied_from": "light_the_way_red"
+}

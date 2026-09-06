@@ -1,0 +1,34 @@
+{
+  "slug": "bulls_eye_bracers",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Put an arrow card from your hand face up into your arsenal?",
+          "conditions": [
+            {"type": "CARD_IN_ZONE", "zone": "arsenal", "amount": 0}
+          ],
+          "effects": [
+            {"type": "LOOK_AT", "zone": "HAND", "player": "SELF",
+             "filter": {"subtype": "Arrow"}, "into": "arrows"},
+            {"type": "SELECT_FROM_REF", "ref": "arrows", "mode": "ANY",
+             "min": 0, "max": 1, "into": "chosen"},
+            {"type": "MOVE_REF", "ref": "chosen", "to_zone": "arsenal"},
+            {"type": "FLIP_REF", "ref": "chosen", "face_up": true},
+            {"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 1,
+             "conditions": [{"type": "REF_EXISTS", "ref": "chosen"}],
+             "filter": [{"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Arrow"]}]}
+          ]
+        },
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - Destroy Bull's Eye Bracers: ...' is one ACTIVATE ability. Card-level activation_cost 0 (no {r} printed; the action point is the usual activation cost per CR 5.1.6b and the ability's Go again refunds it). Cost DESTROY_SELF is a real cost type (cost_types.py 'Destroy <this>: ...') and is paid before the effects run; the effects still resolve off the destroyed object.\n\nArcane Barrier 1 and the DB-listed GoAgain are card-database keywords - NOT authored here. The 'Go again' that ends the ACTIVATED ability's text is authored explicitly as GAIN keyword GO_AGAIN, because the printed keyword is inert on an equipment activation (same shape the diamond triage note prescribes).\n\n'If you have no cards in your arsenal' scopes only the optional put, not the whole ability - activating with a full arsenal still destroys the Bracers and gains go again. Authored as conditions ON the MAY: the loader pops them into EffectDef.conditions, so the prompt is not even offered when the arsenal is occupied while the rest of the ability resolves. Spelled 'amount': 0 deliberately, NOT 'count_gte': 0 - the CARD_IN_ZONE handler converts a bare amount 0 into count_eq 0 = 'exactly none'; count_gte 0 would be vacuously true and remove the restriction entirely.\n\nPut chain: LOOK_AT(HAND, SELF, filter subtype Arrow) stores matches without moving them; SELECT_FROM_REF min 0 max 1 is the choice (STOP offered immediately since min is 0); MOVE_REF to_zone 'arsenal'; FLIP_REF face_up true sets is_public, which is what face-up arsenal tracking reads. The +1{p} sits INSIDE the MAY and is gated on REF_EXISTS 'chosen' (an empty list counts as not-exists), so accepting the prompt with no arrow in hand cannot queue a phantom buff.\n\nKNOWN APPROXIMATION - 'It gains +1{p} until end of turn' binds the specific card just placed; the DSL can only queue 'the next Arrow attack this turn gets +1' (MODIFY_NEXT_ATTACK + ATTACK_SUBTYPE_IN filter; unused mods expire at end of turn, which supplies 'until end of turn'). Because the put required an empty arsenal, the placed arrow is normally that next arrow attack; the edge case where another arrow is played from hand first and takes the buff instead is not expressible without per-card future-attack modifiers."
+}

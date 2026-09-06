@@ -1,0 +1,44 @@
+{
+  "slug": "dual_threat_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "EVENT_THIS_TURN", "event": "attack", "qualifier": "weapon"}
+          ],
+          "then": [
+            {
+              "type": "MODIFY_NEXT_ATTACK",
+              "mod": "add",
+              "amount": 3,
+              "filter": [
+                {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+                {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+              ]
+            }
+          ]
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "EVENT_THIS_TURN", "event": "attack", "qualifier": "attack"}
+          ],
+          "then": [
+            {
+              "type": "MODIFY_NEXT_ATTACK",
+              "mod": "add",
+              "amount": 3,
+              "filter": [
+                {"type": "ATTACK_IS_WEAPON"}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If you've attacked with a weapon this turn, the next attack action card you play this turn gets +3{p}. If you've attacked with an attack action card this turn, your next weapon attack this turn gets +3{p}. Go again' Generic Action. A prior-pass draft of this file existed; every claim below re-verified against source this session before rewriting.\n\nGO AGAIN NOT AUTHORED: GoAgain is in printed_keywords as an UNCONDITIONAL line of the text, so it fires from the card DB keywords field - re-authoring it would be a defect. No SOURCE_IS_ATTACK conditional-keyword machinery applies (that is only for a PRINTED keyword gated on a condition).\n\nTIMING IS THE RELEASE NOTE: both gates are checked when Dual Threat resolves ('Whether you've attacked with a weapon this turn is checked when Dual Threat resolves. The same is true of ... an attack action card'). CONDITIONAL_EFFECT (effect_types.py:3697-3724) reads 'when'/'then' and evaluates the when-list at resolution - exactly that. ('conditions' would be popped by the loader as an effect-level gate; 'when' is the documented test key.) The two clauses are independent effects, so both can fire from one resolution.\n\nGATE PRODUCERS VERIFIED END TO END: engine.py:570-576 records one 'attack' turn event PER ATTACK, qualified by 'weapon'/'nonweapon' (combat.from_weapon) plus the attack card's slug, subtypes, classes and talents; record_turn_event_for_player (effect_keywords.py:582-606) expands list qualifiers element-wise into markers, and its _norm_ident folds identically to the reader's _norm (both strip non-alphanumerics + lowercase), so marker matching is exact.\n- Clause 1 gate EVENT_THIS_TURN{attack, weapon}: spelling copied from shipped evr/in_the_swing_blue.json and cru/push_forward_yellow.json ('if you've attacked with a weapon this turn').\n- Clause 2 gate EVENT_THIS_TURN{attack, attack}: an attack action card is subtypes=['Attack'], giving marker did_this_turn:attack:attack; weapons carry weapon subtypes (Sword/Hammer/... never 'Attack') and allies none, so this reads exactly 'attacked with an attack action card'. EVENT_THIS_TURN (condition_types.py:1070-1112) reads event/qualifier/count/player/exact; count defaults >=1.\n\nPAYOFFS: MODIFY_NEXT_ATTACK (effect_types.py:4592-4618) READS mod/amount/filter/scope and queues a one-shot entry on the CONTROLLER's dsl_queued_attack_mods, consumed at the next attack declaration (engine.py:1175-1236) whose filter matches; non-matching attacks leave it queued; unused entries expire end of turn = 'this turn'. Scope left at default TURN.\n- Clause 1 filter names 'attack action card': ATTACK_TYPE_IN reads 'types' and unions the attack card's types AND subtypes (condition_types.py:273-294); ATTACK_SUBTYPE_IN reads 'subtypes' (:296+) and unions likewise. An attack action card is types=['Action'], subtypes=['Attack']; a weapon attack fails the Action test, so the buff cannot land on a weapon - exactly the printed restriction. Filter shape copied from shipped wtr/nimblism_red.json / .drafts/come_to_fight_red.json (same sentence family).\n- Clause 2 filter ATTACK_IS_WEAPON (condition_types.py:198) reads combat.from_weapon - 'your next weapon attack'. Precedent: shipped dyn/blessing_of_steel_yellow.json ('your next weapon attack this turn gains +2{p}').\n\nNo gaps; every clause expressible."
+}

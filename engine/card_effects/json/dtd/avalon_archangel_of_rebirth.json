@@ -1,0 +1,42 @@
+{
+  "slug": "avalon_archangel_of_rebirth",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "effects": [
+        {"type": "ATTACK"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Banish a card from your soul? If you do, put a yellow card from your graveyard on top of your deck.",
+          "conditions": [
+            {"type": "CARD_IN_ZONE", "zone": "soul", "count_gte": 1}
+          ],
+          "effects": [
+            {"type": "BANISH", "from_zone": "SOUL", "amount": 1},
+            {
+              "type": "BANISH",
+              "from_zone": "GRAVEYARD",
+              "amount": 1,
+              "color": "yellow",
+              "record_as": "avalon_reborn"
+            },
+            {
+              "type": "MOVE_REF",
+              "ref": "avalon_reborn",
+              "to_zone": "deck",
+              "position": "top"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Once per Turn Action - {r}{r}: Attack' copies the adopted sibling suraya_archangel_of_erudition (same family, same shape): ACTIVATE + ability-level activation_cost 2 + ATTACK effect. The attack itself is offered by the engine's ally path (actions.py regex-matches the printed 'Action - {r}{r}: Attack' functional text and prices it via _ally_attack_resource_cost); the DSL ATTACK effect is declarative -- _add_hero_dsl_activations deliberately skips ATTACK-effect abilities so nothing double-fires.\n\n'When Avalon attacks, you may banish ... If you do, ...': one MAY block holding both clauses -- declining runs neither, which is the printed 'if you do'. CARD_IN_ZONE(soul, count_gte>=1) gates the prompt so it is not offered with an empty soul (the controller's own soul; CARD_IN_ZONE defaults player SELF).\n\n'Put a YELLOW card from your graveyard on top of your deck' is composed as BANISH(from_zone GRAVEYARD, color yellow, record_as) + MOVE_REF(position top). This is the only colour-filtered graveyard selection in the DSL (_hand_card_filter's colour vocabulary is read by DISCARD and BANISH only). Two alternatives rejected: SEARCH_GRAVEYARD reads no colour/pitch filter at all, and although it accepts destination deck_top it passes NO position to put_object, whose zone-default is BOTTOM -- so that route drops 'yellow' AND bottoms the card. MODELLING ARTIFACT of the chosen route: the yellow card passes through the banished zone for an instant before MOVE_REF puts it on top of the deck. Net zones match the printed text (graveyard -> top of deck); any banish-intermediate triggers firing on it would be a rules divergence. If no yellow card is in the graveyard the BANISH pool is empty, the ref is never set, and MOVE_REF no-ops (fail-to-find, CR 8.5.19 style).\n\nWard 4 is a printed keyword carried on the card DB's keywords field -- engine-implemented, deliberately NOT authored here."
+}

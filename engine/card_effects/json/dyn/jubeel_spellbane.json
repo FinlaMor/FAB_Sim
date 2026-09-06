@@ -1,0 +1,25 @@
+{
+  "slug": "jubeel_spellbane",
+  "activation_cost": 1,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {"type": "ATTACK"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"},
+        {"type": "NOT", "inner_type": "CONTROLS_TOKEN_TYPE", "token": "spellbane_aegis"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "spellbane_aegis", "count": 1}
+      ]
+    }
+  ],
+  "_comment": "Warrior Weapon - Sword (2H) (Dynasty). '**Once per Turn Action** - {r}: **Attack** / Whenever this hits a hero and you don't control a Spellbane Aegis, create a Spellbane Aegis token.'\n\nWEAPON ATTACK: card-level activation_cost 1 + per_turn 1 are DSL-authoritative (loader.py reads them; play._add_weapon_attacks offers the attack when the card is a weapon with printed power and activation_cost). The ACTIVATE ability carrying an ATTACK effect follows the shipped weapon precedents (cintari_saber, dawnblade, etc.) — it declares the ability rather than creating a second attack path. Only the card-level activation_cost field is needed; any ability-level cost would be a double-charge.\n\nON_HIT TRIGGER: TRIGGERED + ON_HIT fires from combat.attack_card when net_damage > 0 (engine.py:2116-2142). For a weapon attack, attack_card IS the weapon itself (weapons attack as themselves), so Jubeel hears its own hits. ATTACK_TARGET_IS_HERO (condition_types.py:1960) reads the attack target — must be a hero, not a permanent or ally.\n\nTOKEN CHECK: NOT wrapping CONTROLS_TOKEN_TYPE (condition_types.py:1725-1793) with token 'spellbane_aegis'. The condition reads player permanents + equipment/weapon slots, matching by slug or subtype. The release note confirms: 'The condition of whether you control a Spellbane Aegis token is checked at the time Jubeel, Spellbane hits. If you control a Spellbane Aegis token at the time Jubeel, Spellbane hits, this effect does not trigger.' The NOT gate ensures the ON_HIT ability only resolves when the controller does NOT control a Spellbane Aegis token.\n\nCREATE_TOKEN: token 'spellbane_aegis' (effect_types.py:1957-2000, reads token/count/player/destination). Token definition exists at json/tokens/spellbane_aegis.json (abilities: [], printed keyword Spellvoid 1 comes from card DB). Token routing to the permanents zone derives from the template subtypes (Aura). Count 1 is the default but stated explicitly.\n\nNO PRINTED KEYWORDS: printed_keywords is empty. No Battleworn, no Go Again — the weapon has no inherent keywords to author."
+}

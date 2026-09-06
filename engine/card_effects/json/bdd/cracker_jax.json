@@ -1,0 +1,33 @@
+{
+  "slug": "cracker_jax",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {"type": "DESTROY_PERMANENT", "target": "self"}
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_CARD",
+          "amount": 0,
+          "filter": [
+            {"type": "CARD_IS_ATTACK", "value": true},
+            {"type": "CARD_IS_TYPE", "card_type": "Action"}
+          ],
+          "grant_abilities": [
+            {
+              "ability_type": "TRIGGERED",
+              "trigger": "ON_ATTACK",
+              "effects": [
+                {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+              ]
+            }
+          ]
+        },
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - Destroy this: The next attack action card you play this turn gets +1{p}. **Go again**' Generic Equipment - Arms.\n\nDEVIATION FROM TRIAGE, disclosed: triage said 'GO_AGAIN via keywords field', but the printed-keyword payout at engine.py:2420 fires ONLY for layer_type=='card' layers, and _apply_activate creates layer_type='activated' (play.py:1253) - so the DB GoAgain keyword can never pay out for this ACTIVATION, and without an authored grant the ability would consume an action point and return none, ending the turn early. Release note 1 says the ability 'provides an action point from go again upon resolution', so GAIN keyword GO_AGAIN is authored: both spellings route to _grant_go_again (effect_types.py:4927-4941), which outside combat pays +1 action point directly (CR 8.3.5a, effect_types.py:441-458). No double-pay risk: the 'card'-layer payout does not apply to activated layers, and no other path consults this equipment's keywords.\n\nSHAPE: ACTIVATE ('Action -' = action-speed activation, offered by play._add_dsl_activations in the action phase with an action point; calming_cloak precedent for INSTANT-speed, misfire_dampener/unicycle for the destroy-self cost). activation_cost 0 - no {r} in the text; the action point is timing, not a resource, so it is NOT modelled as PAY_RESOURCES. Cost spelling follows the two shipped cards ({DESTROY_PERMANENT, target self}) rather than the equivalent DESTROY_SELF cost branch (cost_types.py:43).\n\nTHE PUMP: MODIFY_NEXT_CARD queues a ONE-SHOT entry on player.dsl_queued_card_mods (effect_types.py:4665+ reads amount/filter/grant_abilities), consumed by the first matching PLAYED card (play.py:1713-1747); unused entries expire end of turn (engine.py:933-934) = 'this turn'. amount IS AUTHORED AS 0, DELIBERATELY: the compile-side default is 1 (effect_types.py:4681) and _calculate_resource_cost SUBTRACTS the stored amount from the next matching card's cost - omitting it would add an unprinted {r} discount. The +1{p} rides in grant_abilities as a TRIGGERED ON_ATTACK MODIFY_ATTACK, NOT on_consume: on_consume runs at PLAY time where MODIFY_ATTACK returns early outside combat (effect_types.py:4127), while grant_abilities attaches the ability to the consuming copy (play.py stores raw dicts on card.granted_abilities) so the pump lands when the attack is made (captains_call_blue precedent, mode A).\n\nFILTER: CARD_IS_ATTACK value:true checks \"Attack\" in subtypes (condition_types.py:1451+, reads 'value'); CARD_IS_TYPE unions types and subtypes so 'Action' matches the type line (condition_types.py:1309+). Together they name precisely 'attack action card'. Release note 2 ('does not affect weapon attacks') holds structurally: weapon attacks are not played cards, so the card-play queue never sees them.\n\nPrinted GoAgain stays in the DB keywords field untouched - it is simply inert on this card's only ability path, per the layer-type analysis above."
+}

@@ -1,0 +1,42 @@
+{
+  "slug": "cut_the_deck_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_CLASS_IN", "classes": ["Warrior"]}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3},
+        {
+          "type": "CONDITIONAL",
+          "when": [{"type": "CONTROLS_ATTACK_ACTION", "player": "OPPONENT"}],
+          "then": [
+            {"type": "DRAW", "amount": 1},
+            {
+              "type": "CHOOSE",
+              "amount": 1,
+              "options": [
+                {
+                  "name": "Put a card from your hand on the bottom of your deck",
+                  "effects": [
+                    {"type": "PUT_HAND_CARD_BOTTOM", "player": "SELF", "optional": false, "amount": 1}
+                  ]
+                },
+                {
+                  "name": "Put your arsenal card on the bottom of your deck",
+                  "effects": [
+                    {"type": "PUT_ARSENAL_BOTTOM", "player": "SELF"}
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target Warrior attack gets +3{p}. If it's defended by an attack action card, draw a card, then put a card from your hand or arsenal on the bottom of your deck.' - Warrior Attack Reaction.\n\nCLAUSE 1: ATTACK_REACTION + target.filter ATTACK_CLASS_IN ['Warrior'] + MODIFY_ATTACK add, spelling copied from shipped wtr/pummel_red (also .drafts/agile_engagement_*). ATTACK_CLASS_IN reads the 'classes' key (condition_types.py:204-216) and matches the live attack's class/talents via _card_traits.\n\nDEVIATION FROM TRIAGE on the gate: the triage pass named DEFENDING_CARD_IS, but that condition reads combat.defense_recalc_card - set ONLY inside _recalculate_total_defense around the RECALC_DEFENSE dispatches - and its non-self form returns False everywhere else (condition_types.py:564-627). As a gate at this reaction's resolution it would be dead in every game. CONTROLS_ATTACK_ACTION with player OPPONENT is the verified route (.drafts/agile_engagement_blue.json reached the same conclusion for the identical printed clause): condition_types.py:398-431 reads 'player'/'opponent' and calls controlled_attack_action_cards (ability_keywords.py:113-132), which returns exactly the Action-type + Attack-subtype cards the defender controls ON THE CHAIN - i.e. what they defended with. By reaction-step resolution the defend step has run, so combat.defending_cards is populated; evaluating once at resolution matches release note 1 ('checked at the time Cut the Deck resolves'). Residual approximation: a defender added LATER in the same reaction step is not seen; blocks from the normal defend step are.\n\nThe gate wraps ONLY the payoff (CONDITIONAL when/then, effect_types.py:3697-3724). An ability-level condition would gate the whole ability and suppress the unconditional +3{p}.\n\nORDER: draw THEN bottom, per printed text. DRAW defaults to SELF (effect_types.py:1222-1249); an empty deck draws 0 and the bottom-put still runs - release note 4 says the put is mandatory if able even without the draw.\n\nHAND-OR-ARSENAL: runtime CHOOSE between the two bottom effects (handler effect_types.py:5107-5136 takes named option blocks). PUT_HAND_CARD_BOTTOM carries optional:false as a JSON BOOLEAN - the handler tests Python truthiness (params.get('optional', True), effect_types.py:1573), so the guide's string 'FALSE' would read truthy and leave it optional; false makes it mandatory, empty hand still no-ops safely (effect_types.py:1594-1595). PUT_ARSENAL_BOTTOM MUST carry player SELF: its default is OPPONENT (effect_types.py:2334, from the Disable printings) and silence would bottom the opponent's arsenal card. It bottoms pool[0] with no choice offered - fine, an arsenal holds at most one card.\n\nKNOWN APPROXIMATION: CHOOSE cannot gate an option on availability - a player could pick the hand option with an empty hand and bottom nothing although the arsenal held a card ('if able' would force the arsenal). No per-option condition exists in the DSL; flagged rather than worked around.\n\nRe-verified against handlers this session (ability type mapping, target filter keys, gate condition params, draw/discard defaults, optional truthiness, PUT_ARSENAL_BOTTOM default player); no gaps beyond the stated approximation."
+}

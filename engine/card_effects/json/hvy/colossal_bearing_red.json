@@ -1,0 +1,27 @@
+{
+  "slug": "colossal_bearing_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"},
+        {"type": "SELF_ATTACK_POWER_GTE", "amount": 13}
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_MATCHING",
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "EQUIPMENT",
+            "amount": 1,
+            "filter": [
+              {"type": "DEFENSE_LTE", "amount": 1}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Tower** - If this has 13 or more {p}, it gets \"When this hits a hero, destroy an equipment they control with 1 or less {d}.\"'\n\nTOWER NOT AUTHORED: it is in printed_keywords and is engine-side (ability_keywords.check_tower, CR 8.4.13) per the triage pass - authoring it would be a defect.\n\nGRANTED TRIGGER: TRIGGERED + ON_HIT with ability-level conditions (checked at resolution, interpreter.py:54-58). ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977) reads no params here - false when the attack was declared at a permanent/ally, true for hero attacks. SELF_ATTACK_POWER_GTE (condition_types.py:487-497) reads 'amount' and tests the LIVE combat.attack_power at the moment ON_HIT resolves.\n\nRELEASE NOTE FALLS OUT OF THE TIMING: power pumped before the damage step is already in combat.attack_power when ON_HIT fires, so the trigger fires; pumping after the damage step cannot retroactively re-run an ON_HIT that already resolved. No extra machinery needed.\n\nDESTROY: DESTROY_MATCHING (effect_types.py:2396-2415) reads only a canonical object target via _compile_object_target (effect_types.py:675-804). controller OPPONENT + zone EQUIPMENT pools the defender's body slots plus non-weapon cards in their weapon zones (off-hands count as equipment per CR 2.10.6a - effect_types.py:465-480); DEFENSE_LTE reads amount/value (condition_types.py:1427-1449) and tests CURRENT defence of each CANDIDATE, which is the printed reading of 'with 1 or less {d}'. amount 1 prompts the attacker to choose one (_ask_player, effect_types.py:792-799); an empty pool destroys nothing, matching the conditional text.\n\nRe-verified against handlers this session (types, param names, zone pooling, timing); no gaps found - the card's only printed text is the Tower line."
+}

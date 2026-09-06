@@ -1,0 +1,37 @@
+{
+  "slug": "bare_fangs_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "DISCARD_RANDOM",
+          "amount": 1
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "REF_POWER_GTE",
+              "ref": "discarded",
+              "amount": 6
+            }
+          ],
+          "then": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, Bare Fangs gains +2{p}.' Identical printed text to the sibling draft .drafts/bare_fangs_blue.json (and red); same +2{p} here per the batch's printed_text. Every handler claim re-verified directly by this session: TRIGGERED ON_ATTACK + MODIFY_ATTACK is the documented shape for an Action - Attack self-pump (an attack action card is NOT an ATTACK_REACTION); under a one-shot trigger MODIFY_ATTACK records into combat.power_mods so it survives later recalculations (effect_types.py ~4081-4093). DELIBERATE DEVIATION FROM TRIAGE: it listed DISCARDED_CARD_POWER_GTE, but that condition reads .power off the DISPATCHING EVENT (condition_types.py:1018-1024) - here the ON_ATTACK event, which carries no discarded card - so as a gate it would be false in every state while looking implemented. DISCARD_RANDOM stores the card actually discarded under ref 'discarded' (effect_types.py:4925-4927), which is what makes 'THIS WAY' expressible; REF_POWER_GTE(ref 'discarded', amount 6) reads 'ref'+'amount' and any list entry satisfies it (condition_types.py:2017-2045). CONDITIONAL reads when/then - NOT conditions, which the loader pops as an effect-level gate (effect_types.py:3633-3660). Empty hand edge: effect_discard returns nothing, the ref is never set, get_ref None -> condition false -> no pump, while draw/discard still resolve. Draw-then-discard order matches the printed text and runs atomically inside one ability resolution - which is what release note 1 ('you cannot play cards or activate abilities after drawing the card but before discarding') describes. Release note 2 (cannot defend with Bare Fangs, no defense property) is a card-DB fact, not behaviour - nothing authored."
+}

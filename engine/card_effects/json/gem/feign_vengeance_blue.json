@@ -1,0 +1,16 @@
+{
+  "slug": "feign_vengeance_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_CHAIN_LINK_RESOLVE",
+      "conditions": [
+        {"type": "DEFENDING_CARD_COUNT", "amount": 1, "comparison": "gte"}
+      ],
+      "effects": [
+        {"type": "DRAW", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'When this chain link resolves, if there is a card defending this, draw a card. / **Go again**' Ninja Action - Attack (CompendiumOfRathe).\n\nGoAgain is a printed keyword (printed_keywords) firing from the card DB keywords field - deliberately NOT authored. It is unconditional in the printed text, so no conditional-keyword shape applies either.\n\nTRIGGER + TIMING: ON_CHAIN_LINK_RESOLVE is dispatched to combat.attack_card only (_dsl_chain_link_resolve_listener, engine.py:1629-1638); this attack action card IS the attack card when its chain link resolves, which is exactly release note 1 ('triggers when its chain link resolves on the stack'). Same shape as the shipped hvy/send_packing_yellow.json second ability.\n\nCONDITION TIMING: release note says the defending-card check happens 'when the triggered effect resolves'. Ability-level conditions are evaluated inside _run_ability at resolution (interpreter.py:54-58), not when the trigger is queued - so DEFENDING_CARD_COUNT reads combat.defending_cards at resolution time, as ruled.\n\n'there is a card defending this' = DEFENDING_CARD_COUNT amount 1 comparison gte with no equipment filter, i.e. any declared defender counts (condition_types.py:629-670). DRAW reads amount/player and defaults to SELF (effect_types.py:1222-1249)."
+}

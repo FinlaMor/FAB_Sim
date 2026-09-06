@@ -1,0 +1,52 @@
+{
+ "slug": "katsu",
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_HIT",
+   "once_per_turn": "katsu_combo",
+   "conditions": [
+    {
+     "type": "ATTACK_TYPE_IN",
+     "types": [
+      "Action"
+     ]
+    },
+    {
+     "type": "ATTACK_CONTROLLED_BY_YOU"
+    }
+   ],
+   "effects": [
+    {
+     "type": "MAY",
+     "prompt": "Discard a card with cost 0 to search for a combo card?",
+     "cost": [
+      {
+       "type": "DISCARD_CARD",
+       "amount": 1,
+       "filter": [
+        {
+         "type": "CARD_COST_LTE",
+         "amount": 0
+        }
+       ]
+      }
+     ],
+     "effects": [
+      {
+       "type": "SEARCH_DECK",
+       "keyword": "combo",
+       "destination": "banished",
+       "amount": 1
+      },
+      {
+       "type": "GRANT_PLAY_FROM_BANISHED",
+       "ref": "searched"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "_comment": "Ninja Hero - Young (HistoryPack1). 'The first time an attack action card you control hits each turn, you may discard a card with cost 0. If you do, search your deck for a card with combo, banish it face up, then shuffle your deck. You may play it this turn.'\n\nTRIGGER: TRIGGERED ON_HIT with once_per_turn='katsu_combo' (ability-level key, checked after all other gates per interpreter.py:69-85). Conditions: ATTACK_TYPE_IN ['Action'] (condition_types.py:273-294 reads types+subtypes, so 'Action' matches attack action cards) and ATTACK_CONTROLLED_BY_YOU (condition_types.py:389-396) ensure only your attack action cards count.\n\nMAY WRAPPER: The 'you may discard... If you do' is a single MAY block whose cost is DISCARD_CARD with a filter for cost 0 (CARD_COST_LTE 0 via _hand_card_filter's generic condition-spec escape hatch at effect_types.py:498). Declining the prompt runs nothing, so 'if you do' needs no separate plumbing.\n\nSEARCH_DECK: keyword 'combo' finds a card with the combo keyword; destination 'banished' routes it to the banished zone face-up (effect_types.py:1728, banish destination has no face_up param; banished-zone visibility is cosmetic). The handler shuffles the deck after.\n\nGRANT_PLAY_FROM_BANISHED: uses the ref 'searched' that SEARCH_DECK stores the found card under (effect_types.py:4232 reads ref/power_mod). This appends to player.playable_from_banished, which play.py consults and clears at start of next turn â€” matching 'this turn'.\n\nKNOWN GAP: 'banish it face up' â€” SEARCH_DECK's banish destination has no face_up param; the card goes to banished zone but face-up state is not explicitly set. Cosmetic only.\n\nPRINTED KEYWORDS: none listed, so no keyword abilities to suppress."
+}

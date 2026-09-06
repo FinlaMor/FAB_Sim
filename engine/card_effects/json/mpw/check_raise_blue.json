@@ -1,0 +1,19 @@
+{
+  "slug": "check_raise_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {"type": "ATTACK_HAS_KEYWORD", "keyword": "wager"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next time an attack you control wagers this turn, it gets +2{p}.' One PLAY ability: MODIFY_NEXT_ATTACK add 2, filter [{ATTACK_HAS_KEYWORD, keyword: wager}]. Every link checked against the handlers, not copied:\n\n- Handler (effect_types.py ~4592-4618) reads mod/amount/filter/scope and queues a one-shot entry on the CONTROLLER's dsl_queued_attack_mods. It never reads 'target'/'player' - the controller default is what makes 'you control' hold.\n- Consumption (engine._apply_turn_attack_effects, entered at engine.py:542): player = state.active() (engine.py:1015), so the queue is consulted only while THIS player is attacking; filter specs are compiled per incoming attack and evaluated against combat.attack_card. A non-matching attack leaves the entry queued (engine.py:1234-1235 keeps it in 'remaining'), so it waits for the next WAGERING attack rather than burning on any attack - the printed 'next time ... wagers'.\n- combat.keywords is seeded with the attack's PRINTED keywords (CombatState built at engine.py:529 with keywords=list(attack_card.keywords)) BEFORE the queue runs (:542), so ATTACK_HAS_KEYWORD (reads combat.keywords, normalises separators - condition_types.py ~1881) sees Wager at declaration time.\n- 'This turn': unused entries are cleared at end of turn (engine.py:920-922).\n- Data check: 'Wager' is a real printed keyword on attack cards in slug_index (51 cards carry it; attack actions include bet_big_red, drink_em_under_the_table_red), so the filter matches live attacks, not nothing.\n\nGo again is NOT authored: printed_keywords carries GoAgain (unconditional in the text), it fires from the card DB keywords field; re-authoring a printed keyword is a defect.\n\nKNOWN APPROXIMATION: an attack that wagers only via ANOTHER card's WAGER effect (no Wager keyword printed on the attack itself) does not match the filter - no DSL condition queries combat.wagers directly. Per CR 8.5.46a an attack is considered to have wagered when its wager effect is generated, so for keyword-wager attacks next-qualifying-attack equals next-wagering-attack; the gap is only the indirect case.\n\nAdoption note: batch lists set MasteryPackWarrior - file under that set's folder at adoption time."
+}

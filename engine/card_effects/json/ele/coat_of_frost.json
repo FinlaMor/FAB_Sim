@@ -1,0 +1,31 @@
+{
+  "slug": "coat_of_frost",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [{"type": "DESTROY_SELF"}],
+      "effects": [
+        {
+          "type": "CHOOSE",
+          "amount": 1,
+          "options": [
+            {
+              "name": "Yourself",
+              "effects": [
+                {"type": "CREATE_TOKEN", "token": "frostbite", "amount": 1, "player": "SELF"}
+              ]
+            },
+            {
+              "name": "Opposing hero",
+              "effects": [
+                {"type": "CREATE_TOKEN", "token": "frostbite", "amount": 1, "player": "OPPONENT"}
+              ]
+            }
+          ]
+        },
+        {"type": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'Action - Destroy Coat of Frost: Create a Frostbite token under target hero's control. Go again'\n\nVehicle: equipment activated ability with Action timing -> ability_type ACTIVATE (maps to ON_ACTIVATE, trigger_types.py:114; offered by play._add_hero_dsl_activations for chest equipment, action phase + action point + empty stack - which is what the 'Action -' line prints). 'Destroy Coat of Frost' is before the colon, so it is the ability-level cost [{\"type\": \"DESTROY_SELF\"}] (cost_types.py:43; paid at play.py ~1288-1296 before the effects run). Shape precedent: .drafts/clarity_potion_blue.json (same sentence family, Instant flavour).\n\n'Under target hero's control' with release note 'You may target yourself': CREATE_TOKEN (effect_types.py:1942) reads only token/count|amount/player|controller/destination - its player param splits SELF vs OPPONENT (OPPONENT/DEFENDING/DEFENDER/TARGET_HERO all map to the other hero, :1971-1972) and it reads NO declared target ref, so an ability-level target object would be an unread parameter that silently does nothing. The expressible form of 'choose a hero' is CHOOSE (effect_types.py:5107 reads amount/options; each option dict's name+effects are read) between a player=SELF option and a player=OPPONENT option - a resolution-time choice over only parameters the handler actually reads.\n\n'Go again': authored as {\"type\": \"GO_AGAIN\"} - _grant_go_again (effect_types.py:423) takes the 8.3.5a non-attack-layer path (no combat during an action-phase activation) and pays its controller 1 AP directly, with the 8.3.5c no-double-grant guard. The printed GoAgain in the card DB is inert for an equipped chest piece (equipment is never played as a card and never attacks, so no keyword path ever consumes it), and loader.conditional_keywords does not strip it here because this grant is not SOURCE_IS_ATTACK-gated - correctly, since the printed sentence is not conditional. No double-pay risk: the DB keyword never fires.\n\nRelease notes: both players may respond before the token is created - ordinary stack/priority, nothing to author.\n\nGAP - MISSING TOKEN DEFINITION: json/tokens/frostbite.json does not exist anywhere under json/ (glob confirmed; matches the standing .review findings on blizzard_bolt_*/chill_to_the_bone_*/snow_under_yellow/icy_encounter_blue). create_token calls require_card('frostbite') (effect_keywords.py:276), so the FIRST resolution of this ability raises MissingCardImplementation until the token definition is authored alongside adoption. It cannot be added from .drafts/. The Frostbite aura's text per the release note ('Elemental Aura - Cards and activated abilities you control cost an additional {r}') will need authoring at that time."
+}

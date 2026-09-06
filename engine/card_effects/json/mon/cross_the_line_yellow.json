@@ -1,0 +1,13 @@
+{
+  "slug": "cross_the_line_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {"type": "CHARGE", "amount": 1, "optional": true}
+      ],
+      "effects": []
+    }
+  ],
+  "_comment": "'As an additional cost to play Cross the Line, you may **charge** your hero's soul.' Light Warrior Action - Attack; yellow printing, word-for-word identical to the red/blue siblings .drafts/cross_the_line_red.json and .drafts/cross_the_line_blue.json, whose verified shape this copies (no amount differs between printings).\n\nCOST, NOT EFFECT: 'as an additional cost to play' is additional_cost on the PLAY ability - a cost can block the play, an effect cannot. Shape copied from shipped dtd/beaming_bravado_yellow.json / dtd/light_the_way_red.json (the same sentence family; '27 cards share this shape' per the CHARGE handler's own comment) and the sibling drafts; all prove the spelling compiles.\n\nCHARGE cost handler (cost_types.py:266-318) READS amount and optional/may - verified this session. With optional truthy, can_pay returns True unconditionally so the optional cost NEVER blocks the play (that is the printed 'you may'), and pay asks which hand card to charge via ask_optional, then routes through canonical effect_keywords.charge (CR 8.5.29), stamping the charged card's colour on the played card (dsl_charged_color). Cross the Line has no 'charged this way' payoff, so the stamp is simply unused.\n\nBOOLEAN true, NOT the string \"TRUE\": this branch does bool(params.get(\"optional\")) (cost_types.py:280), so ANY non-empty string - including \"FALSE\" - would read as optional. The corpus precedent authors a real boolean; copied that. (A mandatory cost would omit the key entirely.)\n\nPRINTED KEYWORD 'Charge' NOT RE-AUTHORED as behaviour: triggers.py maps keyword 'charge' to `pass  # Card-specific - charge conditions vary per card` - the DB keyword is deliberately inert and this additional_cost is the only implementation, so authoring it here is not double-charging.\n\nEMPTY effects list is intentional and compiles: the charge IS the whole card; beaming_bravado's comment records that an ability carrying only a cost 'compiles fine and resolves as a no-op'. The card being an Attack action is engine business (it attacks when played); no ATTACK effect is authored for attack action cards."
+}

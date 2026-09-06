@@ -1,0 +1,18 @@
+{
+  "slug": "big_blinder_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Sword"]}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3},
+        {"type": "WAGER", "prize": "flurry"}
+      ]
+    }
+  ],
+  "_comment": "Yellow printing of big_blinder_blue; differs only in the power boost (+3 vs +2). See big_blinder_blue.json for the full reasoning: WAGER's prize param covers winner-creates-token via engine._resolve_wagers, so no ON_WAGER_RESOLVED/CREATE_TOKEN ability is authored."
+}

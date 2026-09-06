@@ -1,0 +1,16 @@
+{
+  "slug": "battlefield_blitz_blue",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "EVENT_THIS_TURN", "event": "charge"}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'If you've charged this turn, Battlefield Blitz gains go again.'\n\nGoAgain appears in printed_keywords, so the conditional-keyword shape is mandatory: the engine applies the DB's printed keyword unconditionally, and loader.conditional_keywords() strips it ONLY for an ability whose conditions include SOURCE_IS_ATTACK and whose DIRECT effects grant it - without this WHILE_STATIC the attack would have go again on every play.\n\nDEVIATION FROM TRIAGE: triage named CARD_WAS_CHARGED, but that condition tests the was_charged attribute ON THIS CARD (condition_types.py ~1147-1163) - charge() marks the card that was charged (effect_keywords.py ~2349), and Blitz is not what gets charged; the printed text asks whether the PLAYER has charged this turn. charge() records a 'charge' turn event against the charging player (effect_keywords.py ~2350-2354), and EVENT_THIS_TURN event=charge reads exactly that bare marker (_record_turn_event writes one marker for the event itself plus one per qualifier; condition_types.py ~1042-1084; player defaults to SELF = this card's controller). No qualifier: any charge counts.\n\nTiming: the static re-fires on every RECALC_ATTACK_POWER dispatch (declaration, after reactions, at damage calculation), so a charge from earlier this turn satisfies the gate by resolution, when state.combat.keywords is consulted for go again."
+}

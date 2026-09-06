@@ -1,0 +1,64 @@
+{
+  "slug": "backup_protocol_yel_yellow",
+  "activation_cost": 2,
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {"type": "PUT_COUNTER", "target": "self", "counter_type": "steam", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "COUNTER_GTE", "counter_type": "steam", "min": 1}
+          ],
+          "then": [
+            {
+              "type": "MAY",
+              "prompt": "Remove a steam counter from Backup Protocol: YEL? (If not, it is destroyed.)",
+              "effects": [
+                {"type": "REMOVE_COUNTERS", "counter_type": "steam", "amount": 1}
+              ],
+              "else": [
+                {"type": "DESTROY_SELF"}
+              ]
+            }
+          ],
+          "else": [
+            {"type": "DESTROY_SELF"}
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "from_zone": "GRAVEYARD",
+          "player": "SELF",
+          "amount": 1,
+          "color": "yellow",
+          "class_filter": "Mechanologist",
+          "subtype": "Attack",
+          "record_as": "retrieved"
+        },
+        {
+          "type": "MOVE_REF",
+          "ref": "retrieved",
+          "to_zone": "hand"
+        }
+      ]
+    }
+  ],
+  "_comment": "Identical shape to .drafts/backup_protocol_blu_blue.json with colour yellow. Crank itself is engine-side from the card DB keywords field - not authored. (1) Entry steam counter: TRIGGERED ON_ENTER_PLAY + PUT_COUNTER (shipped arc/teklo_core_blue.json pattern). (2) Upkeep: CONDITIONAL(COUNTER_GTE steam min 1) wraps MAY so declining the removal destroys the item (MAY else = DESTROY_SELF) and a zero-counter state also destroys it (CONDITIONAL else); gate deliberately on 'when', not ability-level conditions or MAY-level conditions, both of which would skip the destroy as well. (3) Instant: card-level activation_cost 2 carries the {r}{r} (no PAY_RESOURCES - it would double-charge); DESTROY_SELF ability cost; retrieval is BANISH(from GRAVEYARD, color yellow + class_filter Mechanologist + subtype Attack) + MOVE_REF(hand) because SEARCH_GRAVEYARD has no colour/class filter. Artifact: retrieved card transits the banished zone for an instant (banish events fire on it); net zones match printed text. Empty pool = fail to find, MOVE_REF no-ops."
+}

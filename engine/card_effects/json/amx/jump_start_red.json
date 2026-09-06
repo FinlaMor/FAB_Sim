@@ -1,0 +1,14 @@
+{
+  "slug": "jump_start_red",
+  "cost_modifiers": [
+    {
+      "condition": {
+        "type": "CONTROLS_TOKEN_TYPE",
+        "token": "hyper_driver"
+      },
+      "delta": -1
+    }
+  ],
+  "abilities": [],
+  "_comment": "'If you control a Hyper Driver, this costs {r} less to play. Boost' -- Boost is a printed keyword and fires from the card DB, deliberately not authored.\n\nTHE COST REDUCTION IS A COST, NOT AN EFFECT, so it lives in the card-level `cost_modifiers` that play.py consults when deciding what is legal and what it costs; written as an ON_PLAY effect it would apply after the price had already been paid. CONTROLS_TOKEN_TYPE takes `token` (singular) -- the plural spelling is unread and the condition would be false in every state. hyper_driver is an ITEM token (token_meta.ITEM_TOKENS), so it sits in the items zone that the condition scans."
+}

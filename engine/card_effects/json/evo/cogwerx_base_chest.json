@@ -1,0 +1,31 @@
+{
+  "slug": "cogwerx_base_chest",
+  "activation_cost": 1,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_EQUIP",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter_type": "steam",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {"type": "FLAG_SET", "flag": "boosted_this_turn"}
+      ],
+      "cost": [
+        {"type": "REMOVE_COUNTERS", "counter_type": "steam", "amount": 1}
+      ],
+      "effects": [
+        {"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'When this is equipped, put a steam counter on it. / Once per Turn Instant - {r}, remove a steam counter from this: Gain {r}{r}. Activate this ability only if you've boosted this turn.'\n\nDirect sibling of the adopted evo/cogwerx_base_arms.json (same ON_EQUIP steam counter, same gated INSTANT); only the payoff differs - GAIN RESOURCE_POINTS 2 instead of MODIFY_NEXT_ATTACK.\n\nEvery handler re-verified against source this session: PUT_COUNTER reads counter_type/amount and defaults target to the source card (effect_types.py:2015-2058); GAIN reads asset/amount and routes RESOURCE_POINTS to effect_gain_resources (:4869-4889); the REMOVE_COUNTERS COST reads counter_type/amount (cost_types.py:548-573); FLAG_SET reads raw membership in the controller's current_turn_effects (condition_types.py:1032-1037); ability_keywords.boost appends exactly the marker 'boosted_this_turn' once per boost, unconditionally (ability_keywords.py:514) - so release note 1 ('the banished card does not have to be a Mechanologist') holds: any paid boost sets it. The triage suggestion DID_THIS_TURN('boost') was wrong: EVENT_THIS_TURN's event set has no 'boost'.\n\nPLACEMENT: activation_cost/per_turn are authored at CARD level, not inside the INSTANT ability. compile_card reads them from the top-level dict only (loader.py:153-154); an ability-level copy lands unread in ab_params (loader.py:120-125) - the adopted arms.json carries them ability-level, which is inert there; do not copy that placement.\n\nCOST LOOP CLOSED: effect_put_counter writes BOTH card.counters and the player-level (slug, zone, kind) tally (ability_keywords.py:1653-1660), and the cost's can_pay sums that player-level tally (cost_types.py:556-560), so the steam counter put on equip is visible to the cost. KNOWN WRINKLE: the cost's pay decrements only the player-level dict (cost_types.py:561-572), leaving card.counters stale - harmless here (one counter, per_turn 1, once-per-turn blocks a second activation), but a future card-level COUNTER_GTE read on this equipment would over-count after activation."
+}

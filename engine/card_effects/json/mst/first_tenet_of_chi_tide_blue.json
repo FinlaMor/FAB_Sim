@@ -1,0 +1,19 @@
+{
+  "slug": "first_tenet_of_chi_tide_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {"type": "CARD_IS_COLOR", "color": "blue"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next blue attack this turn gets +2{p}. / **Go again**' Mystic Action (PartTheMistveil).\n\nGO AGAIN NOT AUTHORED: GoAgain is in printed_keywords as an UNCONDITIONAL line of the text (its own printed line, not an 'if X, this gets go again' rider), so it fires from the card DB keywords field; re-authoring it would be a defect, and no SOURCE_IS_ATTACK conditional-keyword machinery applies because nothing gates it.\n\nPUMP: MODIFY_NEXT_ATTACK reads mod/amount/filter/scope (effect_types.py:4592-4618, read this session) and queues a one-shot entry on the CONTROLLER's dsl_queued_attack_mods; scope left at default TURN, which is the printed 'this turn'. Consumption verified at engine.py:1175-1236: each filter spec is compiled and evaluated against combat.attack_card (fn(attack_card, None, state), engine.py:1183); the first matching attack consumes the entry, a non-matching attack leaves it queued, and unused entries expire end of turn - exactly 'the NEXT blue attack this turn'.\n\n'BLUE' IS A COLOUR FILTER: CARD_IS_COLOR (condition_types.py:1460-1474, read this session) reads 'color' and derives colour from the card's pitch value when absent (1 red / 2 yellow / 3 blue), so a blue attack action card matches on its own colour. Spelling copied from shipped lgs/beckoning_mistblade.json, whose comment addresses this exact wording ('the next BLUE attack ... CARD_IS_COLOR asks the attack card's own colour, which is what the queue filter is evaluated against'). The text says 'attack', not 'attack action card', so there is deliberately no ATTACK_TYPE_IN Action term - a blue weapon attack would qualify too.\n\nShape distinction vs the shipped sibling eng/first_tenet_of_chi_moon_blue.json noted: that card GRANTS AN ABILITY to the next blue attack (MODIFY_NEXT_CARD + grant_ability); this printing pumps power, which is the MODIFY_NEXT_ATTACK queue. The slug's own .triage note names this exact shape.\n\nRe-verified against source this session (handler params, condition params, consumption path); body unchanged from the prior-pass draft. No gaps; every clause expressible."
+}

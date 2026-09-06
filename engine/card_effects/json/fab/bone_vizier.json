@@ -1,0 +1,25 @@
+{
+  "slug": "bone_vizier",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEATH",
+      "effects": [
+        { "type": "REVEAL_TOP_DECK", "amount": 1, "into": "revealed_top" },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            { "type": "REF_POWER_GTE", "ref": "revealed_top", "amount": 6 }
+          ],
+          "then": [
+            { "type": "PUT_REF_TOP", "ref": "revealed_top" }
+          ],
+          "else": [
+            { "type": "PUT_REF_BOTTOM", "ref": "revealed_top" }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When Bone Vizier is destroyed, reveal the top card of your deck. If it has 6 or more {p}, put it on top of your deck. Otherwise, put it on the bottom.'\n\nTrigger: TRIGGERED + ON_DEATH ('when this is destroyed'), the spelling shipped cards use (evr/phantasmal_haze_red.json et al.); the ability resolves fully even though the source has left play (same situation as .drafts/blessing_of_deliverance_blue.json's destroy-then-reveal clause).\n\nReveal: REVEAL_TOP_DECK amount 1 with 'into' stores the revealed card under the ref - without 'into' the handler stores nothing and both later clauses would have nothing to test or move (the failure mode recorded for berserk_yellow in .review). The handler reads the CONTROLLER's own deck, which matches 'your deck'.\n\nBranch: CONDITIONAL_EFFECT reads when/then/else (NOT 'conditions', which the loader pops as an effect-level gate and would skip the else branch entirely). REF_POWER_GTE reads 'ref' (default 'banished_cards' - must be named explicitly here) and 'amount'; it tests power falling back to base_power, which is what a deck card carries. PUT_REF_TOP/PUT_REF_BOTTOM read 'ref' and default player OWNER - the owner of the revealed card is Bone Vizier's controller, so the default is correct and needs no override.\n\nEdge cases fail closed: an empty deck stores an empty list, REF_POWER_GTE finds no qualifying entry and answers False, and PUT_REF_BOTTOM returns early on an empty target - no crash, no move. PUT_REF_TOP on a card already sitting on top of the deck is the printed no-op ('put it on top'); the reveal itself never moved it.\n\nBlade Break appears in printed_keywords: it fires from the card DB keywords field via build_keyword_triggers and is deliberately NOT authored here - authoring it again would be a defect."
+}

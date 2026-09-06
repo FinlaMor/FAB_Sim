@@ -1,0 +1,49 @@
+{
+  "slug": "blessing_of_patience_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "CHOOSE",
+          "amount": 1,
+          "options": [
+            {
+              "name": "This hero gains 3{h}",
+              "effects": [
+                {
+                  "type": "GAIN",
+                  "asset": "LIFE_POINTS",
+                  "amount": 3,
+                  "player": "SELF"
+                }
+              ]
+            },
+            {
+              "name": "Opposing hero gains 3{h}",
+              "effects": [
+                {
+                  "type": "GAIN",
+                  "asset": "LIFE_POINTS",
+                  "amount": 3,
+                  "player": "OPPONENT"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Same shape as blessing_of_patience_yellow (which copies the authored Dynasty siblings blessing_of_aether_blue / blessing_of_savagery_blue), amount 3 per the red printing. Release notes settle the modelling: the trigger fires and resolves during the start-of-turn phase with no priority, and 'target hero' is chosen at trigger time, not when played - any hero including your own. Trigger-time targeting is approximated by a resolution-time CHOOSE between SELF and OPPONENT GAINs; equivalent here because the ability resolves immediately in the start phase with no intervening priority. GAIN reads player (effect_types.py:4795) and resolves it via _effect_player_id. LIMITATION: 'any hero' is two-player-only in this shape - triggered-layer target declaration is a listed engine gap, so a multiplayer game could not target an arbitrary third hero. Destroy-then-gain order matches the printed text; effects run sequentially and resolve fully even though the source left play."
+}

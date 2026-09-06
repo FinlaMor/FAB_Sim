@@ -1,0 +1,27 @@
+{
+  "slug": "hatchet_of_body",
+  "activation_cost": 1,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {"type": "ATTACK"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "LAST_CHAIN_ATTACK", "name": "Hatchet of Mind"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1},
+        {"type": "MODIFY_ATTACKS_THIS_TURN", "mod": "add", "amount": 1,
+         "scope": "TURN", "player": "SELF",
+         "filter": [{"type": "ATTACK_NAME_IN", "names": ["Hatchet of Body"]}]}
+      ]
+    }
+  ],
+  "_comment": "Hatchet of Body - Warrior Weapon - Axe (1H), BoltynBlitzDeck.\n\nATTACK ABILITY: 'Once per Turn Action - {r}: Attack' is card-level activation_cost 1 + per_turn 1 (loader.py:153-154 reads both off the top-level dict). The ACTIVATE ability carrying ATTACK declares the text and builds the attack proxy (effect_types.py:5139-5160); play._add_weapon_attacks already offers the attack itself from printed power + activation cost and _add_hero_dsl_activations SKIPS ATTACK-effect abilities, so no double-fire - shipped merciless_battleaxe is the exact shape.\n\nTRIGGER VEHICLE: ON_ATTACK is dispatched keyed to the attacking card's slug (_dsl_attacking_listener, engine.py:1524-1529) and a weapon attacks AS ITSELF, so the weapon hears its own attack - same machinery merciless_battleaxe's shipped ON_ATTACK relies on. Conditions evaluate at that resolution; LAST_CHAIN_ATTACK reads chain_links[-1] with colour-suffix-stripped name matching (condition_types.py:1619-1676), and chain_links accumulate across combat chains within a turn, clearing only at turn start (engine.py:351 append :2163) - so chain_links[-1] IS 'the last attack this turn', which is what this printing says (the .triage note worried the condition was chain-scoped; verified against source: for this engine the two readings coincide).\n\nPUMP DELIVERY DEVIATES FROM THE TRIAGE LIST (which named bare MODIFY_ATTACK), deliberately, per release note: '+1{p} lasts until end of turn. If you attack with this weapon again it will still have the +{p}. (It can also gain another instance of +1{p} if the criteria is met)'. A one-shot MODIFY_ATTACK alone dies with the current CombatState and fails the persistence half. The pair authored here reproduces the note exactly: (1) MODIFY_ATTACK add 1 lands on the CURRENT attack (combat exists when 'attacking' fires at engine.py:578; recorded on combat.power_mods so it survives recalcs, effect_types.py:4123-4158). (2) MODIFY_ATTACKS_THIS_TURN queues a persistent +1 hook filtered to Hatchet of Body attacks; hooks are consumed in _apply_turn_attack_effects at attack creation (engine.py:542, consumption :1243-1259) which runs BEFORE 'attacking' (:578), so a hook queued during this trigger applies to every LATER matching attack this turn and expires at the end-of-turn clear (:913) - the printed span. Verified sequence: Body #1 (after Mind) = +1 one-shot; Body #2 (after Mind again) = +1 hook + +1 new instance = +2; a later Body NOT preceded by Mind keeps its gained instances (+2) and gains nothing new - exactly the note. Hooks are not consumed on fire, so instances stack correctly.\n\nFilter param check: ATTACK_NAME_IN reads names/name/card_name and strips colour suffixes (condition_types.py:218-232); combat.attack_card IS hatchet_of_body for its own attacks. KNOWN LIMITATION (name- vs object-binding, shared with the head_shot drafts): the hook matches any card NAMED Hatchet of Body; two copies equipped would each feed the other's persistence. No object-identity filter exists in the vocabulary."
+}

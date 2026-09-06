@@ -1,0 +1,24 @@
+{
+  "slug": "gear_turner_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Search your deck for a cog to put into the arena?",
+          "effects": [
+            {
+              "type": "SEARCH_DECK",
+              "subtype": "Cog",
+              "destination": "permanents",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits, you may search your deck for a cog, put it into the arena, then shuffle.' Mechanologist Action - Attack (OmensOfTheThirdAge). No printed keywords.\n\nTRIGGER: TRIGGERED + ON_HIT, UNGATED - release note 1 ('triggers when it hits (e.g. heroes or allies)') names ally hits explicitly, so there is deliberately no ATTACK_TARGET_IS_HERO gate. ON_HIT is mapped at trigger_types.py:6.\n\nOPTIONALITY: MAY (effect_types.py:3788+, read this session) supplies release note 1's 'you choose whether or not to search' - declining runs nothing in the block.\n\nDELIBERATE DEVIATION FROM THE TRIAGE LIST (it named LOOK_AT + SELECT_FROM_REF + MOVE_REF): SEARCH_DECK (effect_types.py:1668-1833, read this session) implements the whole clause and matches all four release notes where the LOOK_AT chain does not:\n- Fail-to-find is built in (ask_optional with FAIL_TO_FIND, :1791-1807) - release note 4 ('you can fail to find a cog even if you still have one in your deck').\n- effect_shuffle runs UNCONDITIONALLY before placement (:1815), found or not - release note 4 ('you will still shuffle your deck afterwards').\n- The chosen card goes through put_object -> Zone.add, so entry rules and identity-replacement effects see it (release note 3, 'Copper Cogs entering with 2 steam counters'); no priority between the steps is plain sequential resolution of one effects list (release note 2).\n- subtype filter reads 'subtype' and tests case-insensitively against the candidate's subtypes (:1770-1773).\n\nDESTINATION 'permanents', not 'arena': Player.zone_by_name (state.py:1023-1033, read this session) has no 'arena' key - 'permanents' IS the arena zone and holds items; put_object resolves it via get_zone. Same spelling the shipped arc/pour_the_mold_blue.json precedent uses for items entering the arena. SEARCH_GRAVEYARD's own handler maps its 'arena' input to 'permanents' for the same reason (:1884-1885).\n\nDATA GAP, DISCLOSED: this card_data snapshot contains NO cards with a Cog subtype (scanned slug_index by_slug: zero hits for 'cog' in any subtypes list; Copper/Golden/Titanium Cogs are absent from the DB entirely). So as the data stands the search always fails-to-find and shuffles - it fails closed, never wrongly. Authored per the printed text with subtype 'Cog'; the filter starts matching automatically if cog cards enter the DB carrying that subtype. No JSON change needed then.\n\namount 1 = 'a cog'. No other clauses in the printed text."
+}

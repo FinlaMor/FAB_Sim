@@ -1,0 +1,23 @@
+{
+  "slug": "helm_of_safe_haven",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "REVEAL_TOP_DECK", "amount": 1, "into": "revealed"},
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "REF_IS_TYPE", "ref": "revealed", "types": ["Attack"]}
+          ],
+          "then": [
+            {"type": "ADD_DEFEND", "target": {"ref": "revealed"}},
+            {"type": "DISCARD", "player": "SELF", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends, reveal the top card of your deck. If it is an attack action card, add it to this chain link as a defending card and discard a card.' + printed **Blade Break**. Generic Equipment - Head (CompendiumOfRathe).\n\nBlade Break NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field via build_keyword_triggers - re-authoring it would be a defect.\n\nTRIGGER: ON_DEFEND is dispatched by engine._dsl_defend_listener (engine.py:1640-1646) to the actual defending card object's own slug, so the equipment receives its own defend event.\n\nREVEAL: REVEAL_TOP_DECK amount 1 with 'into' stores the revealed list under the ref (handler effect_types.py:2229-2256 READS amount/gain_life/cost_gte/into - verified); without 'into' nothing is stored and the branch could never test the card. The reveal does NOT move the card, so when the branch fails (or the add is prevented) the card remains on top of the deck - exactly release note 2.\n\nBRANCH: CONDITIONAL/IF reads when/then/else (effect_types.py:3697-3724) - 'when', NOT 'conditions', which the loader pops into an effect-level gate and would skip the whole branch. REF_IS_TYPE reads 'ref' and 'types' and tests types AND subtypes merged (condition_types.py:2011-2043); 'attack action card' is expressed as types ['Attack'] because the Attack subtype appears only on attack action cards (same reading the merciful_retribution triage prescribes). A single-card list ref collapses to that entry (:2032-2033), so the one-card reveal tests cleanly; an empty deck stores an empty list, the condition answers False, and the branch is skipped - fails closed with no crash.\n\nADD: ADD_DEFEND takes an optional object target - _object_target_spec accepts a dict carrying 'ref' (effect_types.py:665-668) and _compile_object_target pools from get_ref (effect_types.py:760-763), so target {\"ref\": \"revealed\"} adds the REVEALED CARD rather than the helm itself (the no-target default). It routes through canonical effect_keywords.add_defend, which moves the card from deck onto the chain link.\n\nDISCARD ORDER: DISCARD amount 1 SELF runs unconditionally inside the then-branch after ADD_DEFEND, matching release note 2 - if overpower or similar prevents the revealed card from being added, the discard still happens. Release note 3 ('no priority between the effects') describes engine resolution sequencing, not card behaviour - effects run in order, nothing to author."
+}

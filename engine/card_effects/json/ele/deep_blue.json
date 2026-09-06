@@ -1,0 +1,18 @@
+{
+  "slug": "deep_blue",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "PUT_HAND_CARD_BOTTOM"},
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 3},
+        {"type": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - Put a card from your hand on the bottom of your deck, destroy Deep Blue: Gain {r}{r}{r}. **Go again**' Generic Equipment - Chest.\n\nOFFERING: ACTIVATE is the action-speed activation ('Action -' prefix): play._add_hero_dsl_activations scans player.chest among its sources (play.py:262-264) and offers it in the action phase with an action point and an empty stack (play.py:284). Ability-level 'cost' is the parsed list form (loader.py:108); each cost's check_fn gates the offer (play.py:311-313).\n\nactivation_cost 0 SET EXPLICITLY: nothing sits before the colon, so the ability is free to activate; the DSL-authoritative field stops the loader's printed-text heuristic from misreading the '{r}{r}{r}' inside the GAIN clause as an activation price. It is deliberately NOT modelled as a PAY_RESOURCES cost - that would double-charge.\n\nCOSTS in printed order: PUT_HAND_CARD_BOTTOM (cost_types.py:244-264 - can_pay requires >=1 hand card, so release note 3 'you cannot activate Deep Blue if there are no cards in your hand' falls out of cost legality rather than needing a condition; pay moves the chosen card to the bottom of the deck, agent choice via state.cost_choices with random fallback; this is the same handler enlightened_strike_red's play cost uses) then DESTROY_SELF (cost_types.py:43-51 - canonical destroy(), which resolves the chest slot). Release note 2 ('putting a card on the bottom is part of the cost') is why both clauses live here and not in effects. Release note 1 (no reveal): the handler moves the card without any reveal step - nothing to suppress.\n\nEFFECTS in printed order: GAIN RESOURCE_POINTS 3 routes through effect_gain_resources (effect_types.py:4887-4889), then GO_AGAIN - the dedicated effect type (effect_types.py:4943-4963) whose non-combat path pays its controller 1 action point after resolution per CR 8.3.5a; that code exists precisely because activated equipment abilities printing 'Go again' were dropping the point into a nonexistent combat.\n\nPRINTED KEYWORD DELIBERATELY NOT AUTHORED AND NOT STRIPPED: GoAgain in printed_keywords is the DB flattening the bolded word inside the activation sentence - the card never has go again as a property; activating it grants one. loader.conditional_keywords (loader.py:255-296) strips only SOURCE_IS_ATTACK-gated self-grants, so no shape applies here; the unconditional DB keyword on chest equipment is inert (equipment is never played and never becomes combat.attack_card).\n\nNo gaps; every clause expressible."
+}

@@ -1,0 +1,20 @@
+{
+  "slug": "head_shot_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PUT_FACEUP_IN_ARSENAL",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            { "type": "ATTACK_SUBTYPE_IN", "subtypes": ["Arrow"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this is put into your arsenal face up' = TRIGGERED + ON_PUT_FACEUP_IN_ARSENAL, the origin-agnostic trigger dispatched from Zone.add (same shape as the adopted spire_sniping_red / scouting_shot_red). No conditions needed: the trigger only exists for face-up arsenal placement.\n\n'+2{p} until end of turn': MODIFY_NEXT_ATTACK queues a one-shot mod consumed by the first matching attack; unused mods are cleared at the turn boundary, which is the 'until end of turn' span. Head Shot is itself an Arrow attack played out of the arsenal, so in the normal line its own attack consumes the mod.\n\nGAP: 'it gains' names THIS card, but the DSL has no per-card identity condition for a next-attack filter - SOURCE_IS_ATTACK compares the candidate against combat.attack_card (trivially true inside the filter evaluation) and no condition matches a slug. The Arrow-subtype filter is the narrowest expressible approximation: if another ARROW attacks before Head Shot this turn, that attack wrongly takes the +2. A no-filter version was rejected because it is strictly worse (any attack could consume it). Exact fix would be an ATTACK_IS_SOURCE-style condition readable by the dsl_queued_attack_mods filter evaluation - generic engine work, noted here rather than attempted.\n\nNo printed keywords; nothing else to author."
+}

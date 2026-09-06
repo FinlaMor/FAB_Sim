@@ -1,0 +1,33 @@
+{
+  "slug": "embolden_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zone": "permanents", "filter_types": ["Aura"], "count_gte": 2}
+      ],
+      "effects": [
+        {"type": "DRAW", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_ACTION_PHASE",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 5,
+          "filter": [
+            {"type": "ATTACK_CLASS_IN", "classes": ["Guardian"]},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Go again** / When this enters the arena, if you control another non-token aura, draw a card. / At the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +5{p}.' Guardian Action - Aura (MasteryPackGuardian). Red printing of the family already drafted as .drafts/embolden_blue.json (+3{p}); same skeleton, amount 5.\n\nGO AGAIN NOT AUTHORED: unconditional printed keyword (printed_keywords) - fires from the card DB keywords field; re-authoring it would be a defect. No SOURCE_IS_ATTACK machinery applies because nothing gates it.\n\nETB GATE - DEVIATION FROM THE SIBLING DRAFT embolden_blue's VEHICLE CHOICE, and a CORRECTION of its reasoning: this file originally used CONTROLS_SUBTYPE subtype=Aura exclude_self=true, but that handler reads ONLY each permanent's 'subtypes' field (condition_types.py:1873), while the engine's aura-entry branch tests \"Aura\" in card.TYPES (engine.py:2341-2342) - if the DB stores Aura in types only, the subtypes-only match finds nothing and the draw is dead. CARD_IN_ZONE's filter_types tests types AND subtypes together (condition_types.py:944-948), so it gates correctly under either storage; that robustness is why it is used here. 'ANOTHER' is expressed as count_gte 2: ON_ENTER_PLAY dispatches from Zone.add AFTER the card joins the zone (state.py:304-310), so Embolden itself is already in player.permanents when its own trigger resolves - count >= 2 means self plus at least one other aura-shaped permanent. CARD_IN_ZONE defaults player to SELF = 'you control' (condition_types.py:844-996). Played auras DO sit in permanents.cards: engine.py:2402-2405 adds them there on resolution (player.auras is only a SubZoneView over that parent, state.py:869).\n\nDISCLOSED GAP - 'non-token' is INEXPRESSIBLE, and embolden_blue's claim that tokens fall out of zone routing is WRONG: create_token appends 'Aura' to an aura token's types and adds it via controller.auras.add, whose SubZoneView.add writes into the PARENT permanents zone (effect_keywords.py:377-379; state.py:459-461). So a Frostbite or Lightning Flow under my control counts toward count_gte 2 and over-fires the draw versus release note 3. No counting condition excludes tokens: CARD_IN_ZONE filters cost/power/types/color/class/keywords/face_up/name only; CONTROLS_SUBTYPE filters subtype/class; DESTROY_PERMANENT's 'token' flag exists for destroy pools, not counts. Closest expressible form chosen over no gate at all (which would draw unconditionally); a token-exclusion filter on CARD_IN_ZONE is the generic fix.\n\nDRAW handler reads amount/player (effect_types.py:1222+); default SELF = controller draws.\n\nUPKEEP: START_OF_ACTION_PHASE, not START_OF_TURN - 'at the beginning of your ACTION PHASE' is CR 4.3.1 wording (trigger_types.py:58); the listener dispatches to the ACTIVE player's permanent zones including player.permanents (engine.py:1514-1522, _dsl_permanent_zones :1452), so the aura fires on its controller's action phase only. Shape verified against .drafts/draw_a_crowd_blue.json (identical printed sentence) and shipped crash_down_yellow (+5{p}, same clause family). ORDER: DESTROY_SELF first, then the pump, following the printed sentence; destroying first cannot unqueue the pump because MODIFY_NEXT_ATTACK queues on the controller's dsl_queued_attack_mods (handler effect_types.py:4592-4618 reads mod/amount/filter/scope), consumed by the first matching attack that turn, unused entries expiring end of turn = 'this turn'.\n\nPUMP FILTER - all three entries required by release note 2 ('only Guardian attack actions; not weapon attacks, not non-Guardian attack actions'): ATTACK_CLASS_IN ['Guardian'] matches the attack card's classes AND talents via _card_traits (condition_types.py:204-216); ATTACK_TYPE_IN ['Action'] + ATTACK_SUBTYPE_IN ['Attack'] together exclude weapon attacks (a weapon attack's card carries type Weapon, subtypes like Sword/Hammer - never the Attack subtype). Filter specs are evaluated per future attack against combat.attack_card (pass-through data, engine._apply_turn_attack_effects)."
+}

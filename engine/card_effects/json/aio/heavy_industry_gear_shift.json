@@ -1,0 +1,22 @@
+{
+  "slug": "heavy_industry_gear_shift",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_PERMANENT", "target": "self"}
+      ],
+      "effects": [
+        {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "SELF", "amount": 2, "into": "top_two"},
+        {"type": "BANISH_REF", "ref": "top_two", "from_zone": "deck"},
+        {
+          "type": "GAIN",
+          "asset": "ACTION_POINTS",
+          "amount": {"type": "COUNT_REF", "ref": "top_two", "class": "Mechanologist"}
+        }
+      ]
+    }
+  ],
+  "_comment": "'Action - Destroy this: Banish the top 2 cards of your deck. Gain 1 action point for each Mechanologist card banished this way.' ACTIVATE equipment ability (offered by play._add_hero_dsl_activations); the destroy is the ability COST (cost_types.py DESTROY_PERMANENT target 'self' resolves the legs slot), not an effect. activation_cost 0 explicit: no {r} in the text.\n\nLOOK_AT player SELF is explicit -- the handler defaults to OPPONENT. amount 2 stores a LIST in the ref; BANISH_REF iterates it. from_zone 'deck' is REQUIRED: LOOK_AT peeks without moving, and the BANISH_REF handler comment warns that without an origin zone banish() adds to the banished zone while leaving the card in the deck (present in both at once).\n\n'banished this way': COUNT_REF over the same ref equals the banished set because BANISH_REF unconditionally banishes everything stored; class filter uses the 'class' key (handler reads card_class or class, matching against classes+talents -- Mechanologist is a class). Fewer than 2 cards in deck: LOOK_AT stores the shorter list and every step degrades gracefully.\n\nBattleworn is in printed_keywords and comes from the card DB keywords field; deliberately NOT authored here."
+}

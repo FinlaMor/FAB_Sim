@@ -1,0 +1,37 @@
+{
+  "slug": "everbloom__life_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {"type": "MELD_SIDE", "side": "top"}
+      ],
+      "effects": [
+        {
+          "type": "MOVE_MATCHING",
+          "to_zone": "deck",
+          "position": "bottom",
+          "target": {
+            "controller": "ANY",
+            "zone": "GRAVEYARD",
+            "amount": 1,
+            "filter": [
+              {"type": "CARD_IS_TYPE", "card_type": "Action"},
+              {"type": "CARD_COST_LT", "amount": {"type": "LIFE_GAINED_THIS_TURN"}}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {"type": "MELD_SIDE", "side": "bottom"}
+      ],
+      "effects": [
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Meld** / Choose an action card in a graveyard with cost less than the total {h} you've gained this turn. Put it on the bottom of its owner's deck. **Go again** // Gain 1{h}'\n\nMELD NOT AUTHORED: printed Meld comes from the DB keywords field - actions.py generates the top/bottom/both play actions and play.py stamps card.meld_side; re-authoring it would be a defect. Two PLAY abilities gated on MELD_SIDE, copied from shipped lgs/vaporize__shock_yellow.json (and .drafts/comet_storm__shock_red.json): MELD_SIDE is also true when 'both' was played (condition_types.py:1562-1577), so each half resolves exactly once per printed sentence.\n\nTOP HALF: 'a graveyard' = either graveyard -> MOVE_MATCHING target {controller: ANY, zone: GRAVEYARD} - GRAVEYARD is a valid _object_zone_cards pool (effect_types.py:493) and ANY scans both players (effect_types.py:754-755). 'action card' = CARD_IS_TYPE Action (reads types AND subtypes, condition_types.py:1309-1325). 'cost less than X' = CARD_COST_LT, the strict form added for exactly this wording (condition_types.py:1219-1254); X = LIFE_GAINED_THIS_TURN, which gain() tallies (effect_keywords.py:986-987). 'bottom of its OWNER'S deck': MOVE_MATCHING destinations at obj.owner (effect_types.py:3610) and position 'bottom' maps to zone-append (put_object, effect_keywords.py:1667). No qualifying card -> empty pool -> fail to find, nothing moves.\n\nCAVEAT (threshold owner, engine limitation): inside an object-target filter the CANDIDATE is passed as the condition's card argument (condition_types.py:1198-1200), and LIFE_GAINED_THIS_TURN resolves via _amount_controller(state, candidate) - so a candidate in the OPPONENT's graveyard is tested against the OPPONENT's life gained this turn, not yours. Own-graveyard candidates (the common case) resolve correctly. The only source-anchored cost condition is the COST EQUALITY variant (current_effect_source, condition_types.py:1206-1216); there is no source-anchored strict LT/GT. Not expressible in JSON today.\n\nGO AGAIN NOT AUTHORED: printed GoAgain comes from the DB keywords field and the engine grants it on card-layer resolution unconditionally (engine.py:2414-2419 normal path; meld-'both' path engine.py:2322). Authoring a GAIN GO_AGAIN effect would double-grant on top-half plays. KNOWN MODELING GAP: the printed keyword belongs to the TOP half only, but a bottom-only ('Life') play also grants it, because the DB keyword is unconditional and loader.conditional_keywords() only recognises SOURCE_IS_ATTACK gates - a meld-side gate is not expressible.\n\nBOTTOM HALF: Gain 1{h} = GAIN asset LIFE_POINTS (CR 1.13.1 spelling per DSL_REFERENCE)."
+}

@@ -1,0 +1,44 @@
+{
+  "slug": "battering_bolt_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "zone": "HAND",
+          "player": "OPPONENT",
+          "amount": "ALL",
+          "into": "revealed_hand"
+        },
+        {
+          "type": "DISCARD",
+          "player": "OPPONENT",
+          "amount": "ALL",
+          "filter": [
+            {
+              "type": "NOT",
+              "inner_type": "CARD_IS_TYPE",
+              "card_type": "Action"
+            }
+          ]
+        },
+        {
+          "type": "LOSE_LIFE",
+          "player": "OPPONENT",
+          "amount": {
+            "type": "COUNT_REF",
+            "ref": "discarded"
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'If Battering Bolt hits a hero' = TRIGGERED ON_HIT + ATTACK_TARGET_IS_HERO (condition_types.py:1932-1949): false when the attack was declared at a permanent or ally, true for a hero.\n\nDiscard half: DISCARD reads player/amount and builds its predicate through _hand_card_filter (effect_types.py:446-509), whose 'filter' key takes ordinary DSL condition specs evaluated with the CANDIDATE hand card as the card argument. NOT(inner_type CARD_IS_TYPE, card_type 'Action') keeps exactly the non-action cards - CARD_IS_TYPE matches types AND subtypes and 'Action' is a type (condition_types.py:1281-1297), so release note 2 ('Action cards are not discarded. All other card types are discarded including Attack Reactions, Defense Reactions, Instants, Mentors etc.') falls out: every non-Action card fails the inner test and passes the NOT. amount 'ALL' is spelled out in the handler (effect_types.py:1217) as the whole hand's count; effect_discard offers only matching cards and stops when none remain (ability_keywords.py:1538-1573), so action cards survive and everything else goes - the discarding player chooses the order among them, which cannot matter here since all matching cards are taken.\n\nLife half: DISCARD stores what it ACTUALLY discarded under the 'discarded' ref (effect_types.py:1230-1233), single card unwrapped or a list; LOSE_LIFE resolves its dict amount via _resolve_amount (effect_types.py:1121-1122) and COUNT_REF counts that ref (effect_types.py:139-177), handling both shapes. Because the filter already excluded actions, everything in the ref IS 'each card discarded this way', so no negative filter is needed on the count (COUNT_REF has no negated type filter). Empty hand or all-action hand discards nothing, the ref is never set, COUNT_REF returns 0, and no life is lost - matching 'then they lose 1{h} for each card discarded this way'.\n\nReveal half ('they reveal their hand'): modelled as LOOK_AT HAND / OPPONENT / ALL (handler at effect_types.py:3292-3351 fully supports this zone/player/amount), which exposes the entire hand into the ability's reference scope but does NOT set is_public - it is a LOOK, not a true CR reveal. No plain reveal-hand primitive exists: REVEAL_HAND_MARK_IF_TYPE couples the reveal to a mark side-effect this card must not have, and REVEAL_TOP_DECK is the wrong zone. The residual difference is information-only - every non-action card is immediately discarded face-up regardless - so no decision depends on the reveal; flagged rather than hacked around."
+}

@@ -6,7 +6,7 @@
       "conditions": [
         {
           "type": "FLAG_SET",
-          "flag": "fused_vela_flash_yellow"
+          "flag": "fused_vela_flash_blue"
         }
       ],
       "effects": [

@@ -1,0 +1,17 @@
+{
+  "slug": "bracken_rap_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "PITCHED_FOR_THIS", "talent": "Earth"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "might", "count": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Earth Bond** - When this attacks, if an Earth card was pitched to play this, create a Might token.' Yellow printing - identical printed text to bracken_rap_red.json (same .drafts folder), so copied verbatim per the copy-an-existing-spelling rule; only the slug differs and nothing here is per-printing keyed (no flags, no fusion marker).\n\nFull verification trail lives in bracken_rap_red.json's _comment. Short form: the Bond clause IS the authored content (ability_keywords.check_earth_bond is dead code, unwired to the DB keywords field); TRIGGERED + ON_ATTACK is the documented pattern for an Action - Attack card and fires when the card enters the combat chain (engine.py:1529), matching release note 1; PITCHED_FOR_THIS reads card.pitched_for_this stamped by play._pitch_for_cost (play.py:1613-1614) on cards pitched to pay THIS card's cost, satisfying release notes 2 (pitched while paying, not earlier) and 3 (a list of card references on the played card, unaffected by the pitched card later leaving the pitch zone); 'talent' param verified read (condition_types.py:329-330) and matched via _card_traits which includes talents (condition_types.py:49-64). CREATE_TOKEN reads token/count|amount/player/destination (effect_types.py:1942-1991), count defaults 1, controller SELF; json/tokens/might.json exists. No known gaps.",
+  "_source_batch": "_batch1.json"
+}

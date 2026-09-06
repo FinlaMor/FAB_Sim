@@ -1,0 +1,54 @@
+{
+  "slug": "eirinas_prayer_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "REVEAL_TOP_DECK",
+          "amount": 1,
+          "into": "revealed"
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "REF_EXISTS", "ref": "revealed"}
+          ],
+          "then": [
+            {
+              "type": "CONDITIONAL",
+              "when": [
+                {"type": "REF_PITCH_IS", "ref": "revealed", "pitch": 1}
+              ],
+              "then": [
+                {"type": "PREVENT_DAMAGE", "amount": 5, "damage_type": "arcane"}
+              ]
+            },
+            {
+              "type": "CONDITIONAL",
+              "when": [
+                {"type": "REF_PITCH_IS", "ref": "revealed", "pitch": 2}
+              ],
+              "then": [
+                {"type": "PREVENT_DAMAGE", "amount": 4, "damage_type": "arcane"}
+              ]
+            },
+            {
+              "type": "CONDITIONAL",
+              "when": [
+                {"type": "REF_PITCH_IS", "ref": "revealed", "pitch": 3}
+              ],
+              "then": [
+                {"type": "PREVENT_DAMAGE", "amount": 3, "damage_type": "arcane"}
+              ]
+            }
+          ],
+          "else": [
+            {"type": "PREVENT_DAMAGE", "amount": 6, "damage_type": "arcane"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Reveal the top card of your deck. Prevent the next X arcane damage that would be dealt to your hero this turn, where X is 6 minus the pitch value of the card revealed this way.' Red printing of .drafts/eirinas_prayer_blue.json (X = 4 minus pitch); identical shape, only the branch amounts differ (5/4/3, else 6). Every handler re-read from source this session rather than copied blind.\n\nABILITY TYPE: an Instant CARD whose effect happens when you play it is PLAY - INSTANT means an activated ability with instant timing and would never fire (DSL_REFERENCE 'INSTANT is not \"the card is an Instant\"').\n\nREVEAL_TOP_DECK (handler effect_types.py:2229-2256 reads amount/into) marks the top card public and stores it as a LIST under ref 'revealed'; an empty deck stores []. REF_PITCH_IS unwraps a single-element list and tests pitch 1/2/3 = red/yellow/blue (condition_types.py:1979-2009); REF_EXISTS gates the empty-deck case.\n\nWHY BRANCHED CONDITIONALS FOR X: _resolve_amount has arithmetic over ROLL/COUNT/event expressions but NO expression for 'pitch value of a referenced card', so '6 - pitch' cannot be computed inline - an invented token would silently resolve to 0. Pitch values are mutually exclusive, so three sibling CONDITIONALs under the REF_EXISTS then-branch are equivalent to an else-chain: no card revealed -> outer else -> prevent 6 (release note 3: 'will not get any minus ... will still prevent'); pitch 1/2/3 -> prevent 5/4/3.\n\nPREVENT_DAMAGE (handler effect_types.py:5254-5317 reads amount/damage_type/source_class) registers a one-shot CR 6.4.10 PREVENTION replacement on MY hero whose condition requires ev.target_player_id == controller, arcane damage only.\n\nTwo approximations inherent to the shared primitive, stated not hidden (same as the blue sibling and every prevention card in the corpus): (a) 'this turn' - ReplacementEffect has no lifespan and nothing purges unconsumed replacement effects at end of turn, so if no arcane damage arrives this turn the shield persists into later turns; (b) 'the next X arcane damage' across MULTIPLE events - the replacement reduces the first qualifying event by up to N and is then consumed, whereas the printed text would spread the prevention across successive events this turn. A single event larger than X behaves correctly. Fixing either needs generic replacement-expiry/partial-consumption work in effects.py, not card JSON."
+}

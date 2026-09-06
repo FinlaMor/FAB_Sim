@@ -1,0 +1,20 @@
+{
+  "slug": "gallantry_gold",
+  "activation_cost": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [{"type": "DESTROY_SELF"}],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACKS_THIS_TURN",
+          "amount": 1,
+          "mod": "add",
+          "filter": [{"type": "ATTACK_IS_WEAPON"}]
+        },
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - {r}, destroy Gallantry Gold: Your weapon attacks gain +1{p} this turn. **Go again**' (Warrior Equipment - Arms).\n\nThe {r} is card-level activation_cost: 1 - the loader reads activation_cost only at card level (loader.py:153, stamped onto the runtime card at card.py:519) and play.py charges it through the normal cost pipeline for ACTIVATE abilities. Deliberately NOT authored as a PAY_RESOURCES ability cost: DSL_REFERENCE warns that double-charges.\n\n'Destroy Gallantry Gold' is the ability-level DESTROY_SELF cost (cost_types.py:43-51); _apply_activate checks then pays ability costs before dispatching ON_ACTIVATE (play.py:1288-1315), and ACTIVATE timing requires action phase + action point (play.py:284), matching the printed '**Action** -'.\n\n'Your weapon attacks gain +1{p} this turn': MODIFY_ATTACKS_THIS_TURN (effect_types.py:2201-2227) stores a power_mod hook on the controller's turn_attack_hooks; engine re-applies hooks to EVERY attack that turn, compiling the filter per attack (engine.py:1243-1259), and ATTACK_IS_WEAPON (condition_types.py:198-199) reads combat.from_weapon. Scope/player left at defaults TURN/SELF = 'this turn', 'your'.\n\nGo again: authored as GAIN keyword GO_AGAIN because the printed GoAgain DB keyword is INERT here - both engine payout paths require a 'card'-layer chain link (engine.py:2420-2444) or combat keywords at resolution (engine.py:721), and an equipment activation creates neither; _grant_go_again (effect_types.py:423-458) pays +1 AP directly outside combat (CR 8.3.5a). No double-pay risk since no other path can pay it.\n\nBattleworn is engine-implemented from the card DB keywords field and is deliberately not authored."
+}

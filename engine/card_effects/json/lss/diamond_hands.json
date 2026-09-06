@@ -1,0 +1,17 @@
+{
+  "slug": "diamond_hands",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "BEGINNING_OF_END_PHASE",
+      "conditions": [
+        {"type": "IS_ACTIVE_PLAYER", "value": true},
+        {"type": "HAND_SIZE_GTE", "amount": 4}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "diamond", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Ruu'di Specialization** / At the beginning of your end phase, if you have 4 or more cards in hand, create a Diamond token. / **Blade Break**' Merchant Equipment - Arms.\n\nBLADE BREAK AND RUU'DI SPECIALIZATION NOT AUTHORED: both are in printed_keywords and fire from the card DB keywords field. Specialization is an equip-legality gate carried by the keywords field, not an effect; Blade Break is a keyword mechanic (ability_keywords.blade_break). Authoring either again would be a defect.\n\nEND-PHASE TRIGGER: TRIGGERED + BEGINNING_OF_END_PHASE is the shipped equipment shape (quickdodge_flexors.json). The event dispatches to BOTH players' permanent/equipment zones at EITHER hero's end phase (engine _dsl_start_of_end_phase_listener), so IS_ACTIVE_PLAYER value:true is REQUIRED to read 'YOUR end phase' - its absence is a documented defect class (channel_iceloch_glaze_blue review finding: fires twice per round without it).\n\nHAND SIZE: HAND_SIZE_GTE reads amount (condition_types.py:1119-1145); player defaults SELF, which for equipment is the controller - 'if YOU have 4 or more cards in hand'.\n\nTOKEN: CREATE_TOKEN reads token/count(/player/destination) (effect_types.py:1942-2013); amount 1 is the default and the handler resolves the slug through require_card.\n\nGAP - BLOCKING, NOT DSL: json/tokens/diamond.json does not exist, and create_token calls require_card(token_slug) at creation time (effect_keywords.py:266-276), so the first time this trigger fires the game raises MissingCardImplementation until that file is authored. It lives outside .drafts/, so this pass cannot write it. The card DB template exists (card_data/slug_index.json:97481, functionalText '**Action** - Destroy Diamond: Draw a card. **Go again**'), so the token definition itself composes from existing types: PLAY ability with a DESTROY_SELF cost + DRAW 1, Go again from the DB keywords field."
+}

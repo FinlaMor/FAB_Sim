@@ -1,0 +1,22 @@
+{
+  "slug": "constella_flowslide_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "lightning_flow", "amount": 1},
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "EVENT_THIS_TURN", "event": "graveyard", "qualifier": "instant"}
+          ],
+          "then": [
+            {"type": "DEAL_ARCANE", "amount": 1, "target": "OPPONENT"}
+          ],
+          "else": []
+        }
+      ]
+    }
+  ],
+  "_comment": "'Create a Lightning Flow token. **Starfall** - If an instant card has been put into your graveyard this turn, deal 1 arcane damage to target hero.'\n\nSHAPE: an Instant CARD whose effect happens when you play it is ability_type PLAY, not INSTANT (INSTANT = an activated ability with instant timing). CREATE_TOKEN handler reads token/count/player (effect_types.py:1942); no destination authored - zone routing derives from the card-DB template subtypes, and json/tokens/lightning_flow.json already exists.\n\nSTARFALL per DSL_REFERENCE's own recipe: CONDITIONAL_EFFECT with when EVENT_THIS_TURN event:'graveyard' qualifier:'instant'. The graveyard turn event is recorded in Zone.add so EVERY path into my graveyard counts, it records against the graveyard's OWNER (= 'your graveyard'), and qualifiers are the card's types so 'instant' matches the Instant type. One branch with then/else - NOT two condition-gated effects, which would stack instead of choosing (the +3/+5 'instead' trap).\n\nRELEASE NOTE 3 (no priority between the effects) = sequential effects inside one PLAY ability, which is this shape.\n\nGAP - 'deal 1 arcane damage to TARGET HERO' is only partially expressible. The release notes require declaring a hero target at play time, any hero including your own. The DSL cannot hand a play-time-declared target to DEAL_ARCANE: its target vocabulary (_damage_target_player, effect_types.py:907-931) resolves fixed roles only - OPPONENT/HERO/TARGET_HERO -> opposing player, ATTACKER variants -> combat attacker, anything else -> the controller - and StackEntry.declared_targets feed attack-card targeting, not spell resolution. Drafted as deal-to-opposing-hero ('target': 'OPPONENT'), the only meaningful 1v1 reading; self-targeting is unexpressible. I also deliberately did NOT author an ability-level target block: target_filter conditions evaluate against the SOURCE card at resolution (interpreter.py:42-45), so a CARD_IS_TYPE Hero filter there would test the Instant itself, fail, and make the whole ability never resolve."
+}

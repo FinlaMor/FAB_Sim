@@ -1,0 +1,11 @@
+{
+  "slug": "express_lightning_blue",
+  "cost": {
+    "play_activate": "PLAY",
+    "optional": true,
+    "type": "CHARGE",
+    "amount": 1
+  },
+  "abilities": [],
+  "_comment": "'As an additional cost to play Express Lightning, you may **charge** your hero's soul.' Light Warrior Action - Attack (Monarch). That sentence is the card's ENTIRE printed text, so the implementation is a top-level play cost plus an empty abilities array.\n\nCOST SHAPE: the top-level \"cost\" dict compiles to CardDef.play_cost (loader.py:148-151), is checked by _cost_check (play.py:567-569) and paid in _apply_play_card (play.py:1146-1147). The CHARGE cost handler (cost_types.py:266-318) reads amount (default 1) and optional/may; with optional truthy, can_pay returns True UNCONDITIONALLY, so declining the charge never blocks the play - printed 'you may' and official release note 1 verbatim. pay asks WHICH hand card via ask_optional and routes through canonical effect_keywords.charge (CR 8.5.29), which puts the card face up under the hero (release note 4).\n\n'optional' is boolean true, copied from shipped dtd/light_the_way_red.json (same handler, same key). NOTE for future editors: this handler bool()s the raw value, so the string \"FALSE\" would read as OPTIONAL - never author \"FALSE\" on a CHARGE cost.\n\nRELEASE NOTE 2 (only one card unless otherwise specified): amount 1.\nRELEASE NOTE 3 (a card may not charge itself) holds BY CONSTRUCTION, verified: _apply_play_card removes the played card from hand (play.py:1135-1138) BEFORE play_cost.pay_fn runs (:1146-1147), so the played card is never among the offered candidates.\nRELEASE NOTE 5 defines what counts as 'having charged' for cards that ASK about it; this card never asks, so nothing is authored for it.\n\nPRINTED KEYWORD NOT AUTHORED: Charge is in printed_keywords and fires from the card DB keywords field; the DB keyword carries no cost wiring, so the cost above is the whole implementation and nothing double-charges.\n\nEMPTY abilities ARRAY IS SANCTIONED: test_card_with_functional_text_implements_something counts a card-level cost as implementing something (tests/test_card_json_hygiene.py:196-201), whereas a PLAY ability carrying only a cost and no effects would fail test_every_ability_has_effects (:248-258)."
+}

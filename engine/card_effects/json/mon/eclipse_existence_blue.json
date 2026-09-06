@@ -1,0 +1,73 @@
+{
+  "slug": "eclipse_existence_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "conditions": [
+            {"type": "IS_ACTIVE_PLAYER"}
+          ],
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "TARGET_HERO_CLASS_IN", "classes": ["Light"]}
+            ],
+            "effects": [
+              {
+                "type": "MAY",
+                "prompt": "Banish a card from their soul?",
+                "effects": [
+                  {
+                    "type": "BANISH",
+                    "from_zone": "SOUL",
+                    "player": "OPPONENT",
+                    "record_as": "ee_soul_banished"
+                  },
+                  {
+                    "type": "CONDITIONAL",
+                    "when": [
+                      {"type": "REF_EXISTS", "ref": "ee_soul_banished"}
+                    ],
+                    "then": [
+                      {"type": "LOSE_LIFE", "player": "OPPONENT", "amount": 1}
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "AND",
+              "all": [
+                {"type": "HEALTH_GT_OPP"},
+                {"type": "OPPOSING_HERO_CLASS_IN", "classes": ["Light"]}
+              ]
+            }
+          ],
+          "then": [
+            {
+              "type": "MAY",
+              "prompt": "Banish an action card from your graveyard?",
+              "effects": [
+                {
+                  "type": "BANISH",
+                  "from_zone": "GRAVEYARD",
+                  "player": "SELF",
+                  "card_type": "Action"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Until end of turn, whenever an attack hits a Light hero, you may banish a card from their soul. If they do, they lose 1{h}.' + 'If you have more {h} than an opposing Light hero, you may banish an action card from your graveyard.'\n\nCLAUSE 1: INJECT_TRIGGER scope TURN with a NESTED trigger dict (handler effect_types.py ~2103 - the nesting is what keeps inner conditions per-hit instead of letting the loader pop them as a registration-time gate). Inner gate TARGET_HERO_CLASS_IN ['Light'] reads classes AND talents of the combat defender (condition_types.py ~1517), i.e. the hero being hit. Inside the fired trigger c = the attack card (engine.py ~1421), so controller-relative effects resolve against the attacker: MAY asks the Eclipse controller; BANISH player OPPONENT from SOUL (SOUL is whitelisted, effect_types.py ~1380) hits the defending hero's soul; LOSE_LIFE player OPPONENT takes 1{h} off that same hero.\n\n'If they do' gating: BANISH record_as is set ONLY when something was actually banished (effect_types.py ~1414), and REF_EXISTS treats an empty/stale-absent ref as False, so an empty soul or a declined prompt never costs the 1{h} - release notes 1 and 3. The ref name is ability-execution scoped and unique to this card, so another effect's soul banish cannot trigger the loss (release note 3).\n\nWHY THE IS_ACTIVE_PLAYER GATE ON THE INJECT: turn_attack_hooks are cleared only at the end of the HOOK OWNER'S turn (engine.py ~913 clears the ending active player's list), so an ungated hook installed on the opponent's turn would survive into my next turn and fire there - over-running 'until end of turn'. The effect-level conditions array sits on the INJECT_TRIGGER itself, where the loader pops it into an EffectDef gate enforced once at resolution/registration (interpreter.py ~149-159; same pattern as bolt_of_courage_red). Nothing observable is lost by not installing on the opponent's turn: only the active player can attack, and their attacks would hit ME (Shadow, not Light), so the inner condition could not pass anyway in any legal matchup.\n\nCLAUSE 2 - KNOWN GAP, flagged not hidden: OPPOSING_HERO_CLASS_IN shares TARGET_HERO_CLASS_IN's handler, which reads the CURRENT COMBAT's defender and returns False when combat is None (condition_types.py ~1531-1535). So the Light half of the gate is correct when Eclipse resolves during one of my own attacks, but (a) cast in an open action phase the banish option is never offered, and (b) cast on the opponent's turn it would inspect MY hero. There is NO controller-relative opposing-hero-class condition in condition_types.py today (grepped: it is the only hero-trait condition). Generic fix that would close this: give that handler a combat-None fallback to hero = players[3 - _controller_id(c)].hero. HEALTH_GT_OPP (condition_types.py ~768, no params) is exact for 'more {h}'. Clause 2 evaluates when the PLAY ability resolves per release note 4; BANISH card_type 'Action' filters types-or-subtypes via _hand_card_filter (effect_types.py ~498), which covers attack actions too.\n\nMinor engine deviation, accepted: BANISH asks the ZONE OWNER to pick which card leaves (_ask_player(state, tid, ...)), so on clause 1 the opponent picks which of their own soul cards goes rather than me; with soul cards face-down and fungible this is not observable in practice."
+}

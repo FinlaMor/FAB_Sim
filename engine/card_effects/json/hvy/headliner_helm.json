@@ -1,0 +1,15 @@
+{
+  "slug": "headliner_helm",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "DEFENSE_EQUALS",
+          "amount": {"type": "COUNT_OPPOSING_HEROES", "life": "GREATER"}
+        }
+      ]
+    }
+  ],
+  "_comment": "'Headliner Helm's {d} is equal to the number of opposing heroes with greater {h} than you.' / '**Blade Break**'\n\nShape copied verbatim from SHIPPED hvy/grandstand_legplates.json, whose printed text is this exact sentence and whose handler was written for it: play._apply_dynamic_defense (play.py:677-707) reads STATIC abilities holding DEFENSE_EQUALS at the one point a defending card's {d} is consumed (defend step, play.py:1368), resolves 'amount' through _resolve_amount, and writes card.defense/base_defense. Because it re-evaluates from live life totals on every consumption, official_release_notes 1 ('if an opposing hero goes from greater to less health than you, {d} will automatically be reduced') holds by construction - there is no snapshot to go stale.\n\nAmount expression COUNT_OPPOSING_HEROES (effect_types.py:179-195) reads 'life' and accepts GREATER/GT/MORE; it counts opposing players whose life > the controller's (0 in the usual even-health state, 1 when behind).\n\nBladeBreak appears in printed_keywords, so it fires from the card DB keywords field - authoring it again would be a defect per the batch instructions. Nothing else in the text."
+}

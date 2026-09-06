@@ -1,0 +1,24 @@
+{
+  "slug": "chowder_hearty_cook_yellow",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "TAP_SELF"}
+      ],
+      "effects": [
+        {"type": "ATTACK"}
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "TAP_SELF"}
+      ],
+      "effects": [
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "WateryGrave in printed_keywords fires from the card DB keywords field (engine._apply_watery_grave + triggers.py) - deliberately not authored.\n\nNo card-level activation_cost: nothing on the card costs {r}; both '{t}' costs are ability-level TAP_SELF cost entries (cost_types.py TAP_SELF: payable iff untapped).\n\nKNOWN ENGINE LIMITATION, flagged by the triage pass: this card has TWO activated abilities and play.py _apply_activate raises NotImplementedError for multi-activated-ability cards until Action carries an ability index. Both abilities are authored correctly; choosing between them needs that engine fix.\n\nAttack availability note: play._add_hero_dsl_activations deliberately skips abilities whose effect is ATTACK, and _add_weapon_attacks only scans weapon zones - an ally's attack is offered instead by the legacy actions.py ATTACK_ALLY path, whose functional_text regex ('**Action** - {t}: **Attack**') matches Chowder's printed text. The DSL ATTACK effect here declares the ability (and builds the proxy if ever invoked directly); it is not itself what offers the attack.\n\nThe instant's GAIN LIFE_POINTS resolves against the controller's hero (GAIN player default SELF = controller), matching the release note that the hero gains 1{h} and Chowder does not."
+}

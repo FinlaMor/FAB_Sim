@@ -1,0 +1,18 @@
+{
+  "slug": "evo_beta_base_arms_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "TRANSFORM",
+          "to": "evo_beta_base_arms_blue",
+          "sources": [
+            {"zone": "arms", "from": "Base", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If you have a base arms equipped, **transform** it into this, then equip this. / Evo arms cost you {r} less to play. / **Battleworn**' Mechanologist Action Equipment - Evo Base Arms (CompendiumOfRathe).\n\nBATTLEWORN deliberately NOT authored: it is in printed_keywords and fires from the card DB keywords field; re-authoring a printed keyword is a defect.\n\nTRANSFORM CLAUSE: PLAY + TRANSFORM with sources over the arms slot (shape per .drafts/evo_heartdrive_blue.json, same clause family). The 'if you have a base arms equipped' precondition is enforced BY the transform itself, not by a separate condition: sources [{zone: arms, from: Base}] finds nothing in player.arms without a Base-subtype piece and the handler returns all-or-nothing per CR 8.5.36d (effect_types.py:3929-3932). Triage's CONTROLS_SUBTYPE was deliberately NOT used - its handler scans player.permanents.cards only (condition_types.py:1868) and can never see equipment sitting in the arms slot zone. 'from': 'Base' (not 'Base Arms'): _match tests exact membership in the normalized subtype set (effect_types.py:3911-3915), and card_data confirms base pieces carry Base as a STANDALONE subtype (cogwerx_base_arms -> ['Arms','Base']); arcbane_grasp_blue's 'Base Arms' spelling matches nothing.\n\nGAP 1 - 'then equip this' is NOT expressible: _do_transform creates the destination via create_token with no destination param (effect_types.py:1048-1068), so the new evo lands in player.permanents/tokens rather than equipped in the arms slot; there is no generic EQUIP effect type in the DSL. Same gap already flagged on evo_heartdrive_blue and arcbane_grasp_blue.\n\nGAP 2 - 'Evo arms cost you {r} less to play' is NOT expressible, on three independent grounds: COST_MODIFIER is consulted only from the player's HERO def (play.py:1540 reads state.players[player_id].hero), it deltas ACTIVATION cost not play cost, and applies_to is compared to one exact slug (play.py:1551-1553) while 'Evo arms' is a subtype group. Authoring a COST_MODIFIER here would be an unread parameter on an ability the cost pipeline never consults from equipment - left out rather than shipped looking implemented. Needs a static play-cost delta by card filter readable by the cost pipeline from a non-hero source (same named gap as triage evo_beta_base_head/legs/chest_blue).\n\nRelease notes ('has the base subtype', 'can be transformed into another evo') are properties of this card's OWN subtypes - card_data confirms ['Arms','Base','Evo','NonAttack'] - and govern OTHER evos' transforms targeting this one; nothing to author in this file for them."
+}

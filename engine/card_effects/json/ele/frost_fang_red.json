@@ -1,0 +1,24 @@
+{
+  "slug": "frost_fang_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_ELSE",
+          "player": "OPPONENT",
+          "resources": 2,
+          "on_failure": [
+            {"type": "DISCARD", "player": "OPPONENT", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If Frost Fang hits a hero, they discard a card unless they pay {r}{r}.' Ice Action - Attack.\n\nShape copied from sibling printing .drafts/frost_fang_yellow.json; every claim re-verified against source this session. TRIGGERED + ON_HIT is the shipped 'hits' shape (ON_HIT fires only on net damage > 0); ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977) is false when the attack was declared at a permanent or ally - together they cover both halves of 'hits a hero'. Frost Fang IS combat.attack_card when its own chain link resolves, so no source-scoping is needed.\n\nTHE UNLESS: PAY_OR_ELSE reads player/resources/on_failure (effect_types.py:3207-3257, read this session). player=OPPONENT asks the defending hero; if they hold >= 2 resources they choose pay/decline, paying 2 on accept; declining - or holding fewer than 2, where no prompt is offered at all - runs on_failure. on_failure effect player params are relative to the same source card, so the inner DISCARD with player=OPPONENT hits the same hero that was asked to pay.\n\nRELEASE NOTE ('they can still elect to discard a card even if they do not have any cards in hand') is satisfied behaviourally, no special authoring: short on resources, the discard branch runs and removes nothing from an empty hand; able to pay, declining leads to the same no-op discard. The pay/decline prompt never consults hand size.\n\nNo printed keywords, so no conditional-keyword machinery applies.",
+  "_draft_status": "proposed"
+}

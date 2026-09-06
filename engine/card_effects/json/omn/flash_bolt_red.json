@@ -1,0 +1,12 @@
+{
+  "slug": "flash_bolt_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "DEAL_ARCANE", "amount": 3, "target": "OPPONENT"}
+      ]
+    }
+  ],
+  "_comment": "'Deal 3 arcane damage to target hero.' Lightning Wizard Instant (batch set label OmensOfTheThirdAge - pick the json/<set>/ folder from setIdentifiers at adoption).\n\nABILITY TYPE: an Instant CARD whose effect happens when you play it is PLAY, not INSTANT - INSTANT maps to ON_ACTIVATE and would never fire (DSL_REFERENCE: 'INSTANT is not \"the card is an Instant\"').\n\nSPELLING copied from shipped arc/aether_flare_blue.json, which authors the same sentence shape ('deal N arcane damage to ...') as DEAL_ARCANE amount/target on a PLAY ability; arc/zap_yellow.json is the bare form relying on the same default.\n\nDELIBERATE DEVIATION FROM THE BATCH TRIAGE LIST (it wrote 'player OPPONENT'): DEAL_ARCANE reads 'target', not 'player' - effect_types.py:1188-1219 reads params.get(\"target\", \"OPPONENT\") and resolves it through _damage_target_player (:907-931), which maps OPPONENT/HERO/TARGET_HERO to the opposing hero. The 'player' key on this effect is read ONLY as ally_player inside the ALLY/ANY branch (:1198-1199), so writing 'player': 'OPPONENT' here would be a silently unread parameter while the default still landed on the right hero by accident. 'target': 'OPPONENT' is explicit and read.\n\n'TARGET HERO': in a two-player game the only opposing hero IS the opponent's hero, which is what the handler damages (effect_deal_arcane resolves to that player's HERO). No target.filter declaration is authored - heroes are always legal targets and there is no choice to declare in 1v1; same treatment as zap_yellow and aether_flare_blue.\n\nNo known gaps."
+}

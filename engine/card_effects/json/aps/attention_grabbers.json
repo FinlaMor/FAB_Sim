@@ -1,0 +1,43 @@
+{
+  "slug": "attention_grabbers",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Remove a suspense counter from an aura you control to give this +2{d} this chain link?",
+          "conditions": [
+            {"type": "CONTROLS_SUBTYPE", "subtype": "Aura"}
+          ],
+          "effects": [
+            {
+              "type": "REMOVE_COUNTERS",
+              "counter_type": "suspense",
+              "amount": 1,
+              "target": {
+                "controller": "SELF",
+                "zone": "ARENA",
+                "amount": 1,
+                "filter": [
+                  {"type": "CARD_IS_TYPE", "card_type": "Aura"},
+                  {"type": "HAS_COUNTER", "counter": "suspense"}
+                ],
+                "record_as": "suspense_removed"
+              }
+            },
+            {
+              "type": "MODIFY_DEFENSE_VALUE",
+              "amount": 2,
+              "conditions": [
+                {"type": "REF_EXISTS", "ref": "suspense_removed"}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends, you may remove a suspense counter from an aura you control. If you do, this gets +2{d} this chain link.' Shape copied from shipped evo/infuse_alloy_yellow.json, which implements Galvanize - the same 'when this defends, you may <pay>; if you do, +2{d}' sentence - as TRIGGERED ON_DEFEND -> MAY -> [cost, MODIFY_DEFENSE_VALUE]. Declining runs nothing, so 'if you do' needs no plumbing (release note: optional effect, chosen at resolution; no priority between the effects - one atomic MAY block). The +2 is MODIFY_DEFENSE_VALUE (moves combat.defense_mods), not MODIFY_ATTACK-style per-card defense: the damage-step recalc RESETS each defender to printed {d} before re-applying mods (engine._recalculate_total_defense), so a naive per-card bump written at defend time is wiped before damage; defense_mods survive because recalc re-applies them, and CombatState is rebuilt per attack, which IS 'this chain link' scope. Since this equipment is a declared defender whenever its ON_DEFEND trigger fires, +2 to the defending total == this gets +2{d} for the link. Counter removal targets an aura via REMOVE_COUNTERS' object-target compiler (zone ARENA == permanents, which includes the auras SubZoneView); filter CARD_IS_TYPE Aura + HAS_COUNTER suspense, and the controller picks among several (_ask_player). The +2 sub-effect carries its own REF_EXISTS gate on record_as 'suspense_removed', so if the player accepts but no qualifying aura exists, the empty pool sets no ref and no +2 lands - the 'if you do' holds even in the degenerate case. KNOWN IMPRECISION, flagged: the MAY's outer gate is CONTROLS_SUBTYPE Aura, because no condition combines 'aura you control' WITH a counter test (CARD_IN_ZONE has cost/type/color/power/class/keyword/name filters but none for counters). So the prompt can be offered when you control an aura that has no suspense counter; declining is free and accepting then grants nothing (see REF_EXISTS above), so behaviour is correct - only the prompt is occasionally spurious. counter_type 'suspense' copied from the producer, aps/pleiades.json. Printed BladeBreak keyword fires from the card DB keywords field; deliberately NOT authored here (re-authoring a printed keyword is a defect). No known gaps."
+}

@@ -1,0 +1,17 @@
+{
+ "slug": "lightning_form_yellow",
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_HIT",
+   "effects": [
+    {
+     "type": "CREATE_TOKEN",
+     "token": "embodiment_of_lightning",
+     "amount": 1
+    }
+   ]
+  }
+ ],
+ "_comment": "Simple ON_HIT trigger creating an Embodiment of Lightning token. No printed keywords, no conditional logic. Token definition exists at json/tokens/embodiment_of_lightning.json. ON_HIT dispatches to combat.attack_card (this card while it attacks). CREATE_TOKEN reads token/count/player/destination; player defaults to SELF (the attacker), which is correct for 'create a token' under your control."
+}

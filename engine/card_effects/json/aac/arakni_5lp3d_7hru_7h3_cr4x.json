@@ -1,0 +1,28 @@
+{
+  "slug": "arakni_5lp3d_7hru_7h3_cr4x",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "GRANT_NEXT_ATTACK_KEYWORD",
+          "keyword": "GO_AGAIN",
+          "filter": [
+            {"type": "ATTACK_HAS_KEYWORD", "keyword": "stealth"}
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "\"The first attack with stealth each turn gets go again.\"\n\nClause shape: STATIC_TRIGGERED on START_OF_TURN queues GRANT_NEXT_ATTACK_KEYWORD {GO_AGAIN, filter ATTACK_HAS_KEYWORD stealth}. Every link verified against handlers: START_OF_TURN is dispatched to the ACTIVE player's zones INCLUDING hero_zone (_dsl_permanent_zones, engine.py ~1452-1466), so the queue happens only on Arakni's own turn - which is when its attacks happen. GRANT_NEXT_ATTACK_KEYWORD reads keyword/filter/scope (effect_types.py ~4735-4759; the triage pass flagged the filter as an unverified assumption - it does read filter). Consumption in _apply_turn_attack_effects (engine.py ~1199-1211) is ONE-SHOT on the first attack whose combat.keywords contain Stealth; a non-stealth first attack leaves the entry queued, so a later stealth attack that turn still gets it - exactly 'the FIRST attack WITH stealth'. Unused entries are cleared at end of turn (engine.py ~921-922) and re-queued next start of turn, so nothing leaks across turns. CombatState is created with the attack's printed keywords (engine.py 529) BEFORE the queue runs (542), so printed Stealth is visible to the filter.\n\nSecond ability is the mandated conditional-keyword shape, not behaviour: the card DB flattens this sentence into a printed GoAgain keyword, and the engine applies every printed keyword unconditionally. loader.conditional_keywords() (loader.py ~255-296) strips a printed keyword ONLY when an ability gated on SOURCE_IS_ATTACK grants it via GAIN, so this WHILE_STATIC exists to make that strip happen; the static itself never fires (a hero is never combat.attack_card). For a hero the printed keyword was inert anyway, so stripping keeps the DB honest rather than changing behaviour.\n\nEdge: an attack declared on the OPPONENT'S turn would get nothing, since START_OF_TURN reaches the hero only on its controller's turn. No current Arakni line produces an out-of-turn attack; noted for completeness."
+}

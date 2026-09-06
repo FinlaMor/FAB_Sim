@@ -1,0 +1,18 @@
+{
+  "slug": "soul_shackle",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_ACTION_PHASE",
+      "effects": [
+        {
+          "type": "BANISH",
+          "from_zone": "TOP_DECK",
+          "player": "SELF",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "Shadow Runeblade Token - Aura. 'At the beginning of your action phase, banish the top card of your deck.'\n\nTHIS FILE DID NOT EXIST, and Chane's once-per-turn signature ability creates it: effect_keywords.create_token calls require_card(token_slug), so every activation raised MissingCardImplementation and aborted the game. A missing token is a crash, not an approximation.\n\nSTART_OF_ACTION_PHASE (CR 4.3.1) is dispatched to the ACTIVE player's permanent zones including player.auras, so the aura fires on its controller's action phase only -- which is what 'YOUR action phase' means. BANISH from_zone TOP_DECK / player SELF is the spelling jack_o_lantern_blue uses for banishing off one's own deck; the bare `target` forms in the corpus all name the OPPONENT's deck.\n\nThe token has no printed keywords and no stats: an Aura carries neither, and both would come from the card DB rather than from here in any case."
+}

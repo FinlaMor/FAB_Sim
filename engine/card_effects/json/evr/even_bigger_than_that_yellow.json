@@ -1,0 +1,32 @@
+{
+  "slug": "even_bigger_than_that_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "target": {
+        "filter": [
+          {"type": "EVENT_THIS_TURN", "event": "damage", "qualifier": "physical"}
+        ]
+      },
+      "effects": [
+        {"type": "OPT", "amount": 2},
+        {"type": "REVEAL_TOP_DECK", "amount": 1, "into": "revealed"},
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "REF_POWER_GTE",
+              "ref": "revealed",
+              "amount": {"type": "SUM", "values": [{"type": "DAMAGE_DEALT_THIS_TURN", "damage_type": "physical"}, 1]}
+            }
+          ],
+          "then": [
+            {"type": "CREATE_TOKEN", "token": "quicken", "amount": 1},
+            {"type": "DRAW", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Play Even Bigger Than That! only if you've dealt {p} this turn. / **Opt 2**, then reveal the top card of your deck. If it has {p} greater than the amount of damage you've dealt this turn, create a Quicken token and draw a card.' Generic Instant (Everfest). Yellow printing: Opt 2 (blue sibling .drafts/even_bigger_than_that_blue.json is Opt 1; same shape otherwise, copied from it after independently re-verifying every claim against the handlers this session).\n\nPLAY RESTRICTION placement: compile_card reads NO top-level 'conditions' key (loader.py:144-162), and ability-level conditions are checked only at RESOLUTION - a restriction there would let an illegal copy leave the hand and fizzle. The live play-time gate is _legality_check (play.py:420-431, read this session): it evaluates every PLAY/ACTION/MODAL ability's target.filter with cond.fn(card, None, state) and rules the play ILLEGAL on failure; this Instant declares no real target, so the filter acts purely as 'play only if'. Pattern from doomsday_blue.json. run_ability re-checks the same filter at resolution - harmless.\n\nKNOWN GAP on that gate, fails closed in the primary state: the 'damage' turn marker is written ONLY by effect_keywords.deal_damage (:509, marker did_this_turn:damage:physical; format verified against _record_turn_event :597-606 this session). Combat attack damage is applied directly in engine._resolve_damage and records neither marker nor tally - so after ATTACKING, the commonest way to have dealt {p}, the gate is FALSE and the card unplayable, while non-attack physical damage wrongly satisfies it. Zero JSON edits needed the moment _resolve_damage records the marker; disclosed, not hidden.\n\nOPT: OPT amount 2 (handler effect_types.py:1288-1293 reads amount). Spelling copied from shipped evr/pry_yellow.json / arc/fate_foreseen_yellow.json. Residual risk: triggers/triggers.py builds an automatic ON_PLAY opt trigger from a DB keywords field spelled exactly 'Opt' - if this card's DB entry carries that spelling the Opt applies twice; the shipped Opt cards use this JSON shape, so corpus convention says authoring OPT here is correct.\n\nREVEAL: REVEAL_TOP_DECK amount 1 into 'revealed' (handler effect_types.py:2229-2256 reads amount/into, stores revealed card(s) as a LIST under the ref).\n\nTHE CONDITIONAL PAYOFF IS AUTHORED DEAD TODAY - loudly disclosed, kept deliberately: '{p} greater than the amount of damage you've dealt this turn' needs REF_POWER_GTE with a DYNAMIC threshold, but its handler coerces the threshold with raw int() (condition_types.py:2106-2110, read this session); int(dict) raises TypeError, is caught, returns False - so the amount expression FAILS CLOSED and Quicken + draw can never fire. This is exactly the form both triage notes suggested (SUM[DAMAGE_DEALT_THIS_TURN, 1]) and the limitation .triage/crash_down_the_gates_blue.json records. Authored anyway because the shape is right and needs ZERO JSON edits once REF_POWER_GTE routes its threshold through _numeric_amount (condition_types.py:67-89), which several conditions already use for expression thresholds. Until then the card resolves as Opt + reveal with no payoff; it can never fire spuriously. Strict comparison: '{p} greater than N' = power >= N+1, hence SUM[..., 1]. DAMAGE_DEALT_THIS_TURN (effect_types.py:121-129) reads key 'physical' off the deal_damage-only tally (effect_keywords.py:533-535 writes it), sharing the combat-damage gap above.\n\nBRANCH: CONDITIONAL_EFFECT reads when/then (effect_types.py:3697-3724); authoring 'conditions' would be popped as an effect-level gate and skip the branch entirely.\n\nTOKEN: json/tokens/quicken.json EXISTS (verified by glob); CREATE_TOKEN token quicken resolves. DRAW amount 1 needs no comment."
+}

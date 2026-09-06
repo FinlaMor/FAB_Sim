@@ -1,0 +1,35 @@
+{
+  "slug": "halo_of_lumina_light",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEATH",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Put a yellow aura from your banished zone into the arena?",
+          "conditions": [
+            {"type": "CARD_IN_ZONE", "zones": ["banished"], "filter_types": ["Aura"], "color": "yellow"}
+          ],
+          "effects": [
+            {
+              "type": "MOVE_MATCHING",
+              "to_zone": "auras",
+              "target": {
+                "controller": "SELF",
+                "zone": "BANISHED",
+                "amount": 1,
+                "filter": [
+                  {"type": "CARD_IS_COLOR", "color": "yellow"},
+                  {"type": "CARD_IS_TYPE", "subtypes": ["Aura"]}
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this is destroyed, you may put a yellow aura from your banished zone into the arena.' Light Illusionist Equipment - Head (ArmoryDeckLegendsPrism).\n\nSPELLVOID 2 NOT AUTHORED: printed_keywords carries Spellvoid and numbered keyword variants fire engine-side from the card DB keywords field - re-authoring it here would be a defect.\n\nTRIGGER: TRIGGERED + ON_DEATH is the spelling shipped cards use for 'when this is destroyed' (trigger_types.py:21-29 maps ON_DEATH/ON_DESTROY/ON_DESTROYED/WHEN_DESTROYED all to the ON_DEATH event; .drafts/coalescence_mirage_red.json is the same Illusionist death-trigger family with near-identical text). Dispatched from effect_keywords.destroy's 'destroyed' event, so leaving play by any non-destroy route never fires it.\n\nTHE MOVE: MOVE_MATCHING (effect_types.py:3593-3612) reads to_zone/position/target; its canonical object target (_compile_object_target :675-804) pools _object_zone_cards(SELF, BANISHED) - BANISHED is served directly at :493-494 - then evaluates the filter list with each CANDIDATE as the card argument (:776-778). CARD_IS_COLOR reads 'color'/'colour' and resolves via card.color or the pitch 1/2/3 map (:1460-1474), so a real yellow card matches on its printed pitch; CARD_IS_TYPE reads 'subtypes' among others and tests types AND subtypes (:1309-1325). amount 1 makes the controller choose which eligible aura when several are banished (_ask_player :792-799). to_zone 'auras' resolves via Player.zone_by_name (state.py:1030) through put_object -> Zone.add, where auras live; destination_player_id defaults to obj.owner (= me).\n\nGATE ON THE OFFER (improves on the coalescence_mirage wart): the MAY carries a conditions list, which the loader pops into EffectDef.conditions so the prompt is not even offered when it fails (MAY handler comment, effect_types.py:3794-3796). CARD_IN_ZONE (condition_types.py:844-996) reads zones/filter_types/color - filter_types tests types AND subtypes (:944-948) and color compares card.color / base_color / pitch map (:949-956) - so with no yellow aura in the banished zone the option does not exist, which is the printed behaviour rather than a prompt that flips nothing.\n\nResidual caveat shared with the family: the gate and the move re-scan the zone independently; nothing can intervene between them inside one ability resolution, so they cannot disagree in practice.",
+  "_source_batch": "_batch3.json"
+}

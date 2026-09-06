@@ -1,0 +1,12 @@
+{
+  "slug": "blink_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "GAIN", "asset": "ACTION_POINTS", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "Instant card whose effect happens on play, so PLAY (not INSTANT - that is for activated abilities with instant timing). GAIN handler reads 'asset'/'amount'; ACTION_POINTS routes through effect_keywords.gain. The release note ('you can only spend action points during your action phase') is CR timing context, not card behaviour - gaining an AP outside the action phase is legal and nothing to model."
+}

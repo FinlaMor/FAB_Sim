@@ -1,0 +1,14 @@
+{
+  "slug": "boots_to_the_boards",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "PAY_UP_TO", "max": 3},
+        {"type": "CREATE_TOKEN", "token": "toughness", "amount": {"type": "PAID_AMOUNT"}}
+      ]
+    }
+  ],
+  "_comment": "Printed Temper is a card-DB keyword - deliberately NOT authored. 'When this defends': engine._dsl_defend_listener dispatches ON_DEFEND to the actual defending card object, so the Legs equipment itself hears it. PAY_UP_TO (effect_types.py ~1468) reads max/asset: it caps the offer at available resources and offers choices cap..0 high-to-low, so paying 0 is declining - exactly the release note's optional 'you choose to pay up to {r}{r}{r} when the triggered effect resolves'. It stores state._paid_amount; CREATE_TOKEN resolves the dict amount through _resolve_amount -> PAID_AMOUNT -> state._paid_amount (the handler comment names this exact pairing for 'create that many Might tokens'), and an amount of 0 early-returns so declining creates nothing. json/tokens/toughness.json already exists. Release note 2 ('no priority between any of the effects') is satisfied by sequential resolution within one ability execution."
+}

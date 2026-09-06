@@ -1,0 +1,16 @@
+{
+  "slug": "falcon_wing_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "COUNTER_GTE", "counter_type": "aim", "min": 1}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'If Falcon Wing has an aim counter, it has +1{p}. / **Go again**' Ranger Action - Arrow Attack (AzaleaBlitzDeck). Red printing of the family already drafted as .drafts/falcon_wing_yellow.json; shape identical to the IMPLEMENTED azl/sedation_shot_blue.json static. Every handler claim below was re-verified against source this session.\n\nGO AGAIN NOT AUTHORED: unconditional printed keyword (printed_keywords carries GoAgain; no text gates it) - fires from the card DB keywords field; re-authoring it would be a defect. No conditional-keyword machinery applies either: loader.conditional_keywords strips a printed keyword only for an ability gated on SOURCE_IS_ATTACK whose effects GRANT the keyword via GAIN, and no GAIN keyword is authored here - so the printed always-on keyword stands, exactly as printed.\n\n+1{p} CLAUSE: the documented WHILE_STATIC shape for continuous attack-power statics (DSL_REFERENCE 'Continuous attack-power statics'). WHILE_STATIC is special-dispatched on RECALC_ATTACK_POWER only; within MODIFY_ATTACK the recalc branch applies the delta TRANSIENTLY in the stage-8 static window without accumulating on power_mods (effect_types.py:4134-4144, read this session), so re-running on every recalculation never stacks the bonus.\n\nCONDITION: COUNTER_GTE reads counter_type (or counter/type) and min (or amount) (condition_types.py:998-1030, read this session) and tests THIS card's own counters tally - the ability source IS Falcon Wing, so 'Falcon Wing has an aim counter' is exactly card.counters['aim'] >= 1. The card-level tally is the authority because it travels with the card through arsenal -> combat chain (the handler's own comment names this precise staleness case for a player-level dict). Counters land there via the canonical PUT_COUNTER primitive every aim-granting card routes through.\n\nSOURCE_IS_ATTACK is belt-and-braces over the plain sibling draft, making the shape identical to shipped sedation_shot_blue: today it is redundant for an Action - Attack card (which reaches a dispatched zone only by BEING combat.attack_card), but it pins the static to this card's own attack if dispatch ever widens.\n\nSCOPE VERIFIED, not assumed: engine._dsl_recalc_listener (engine.py:1720-1740, read this session) dispatches RECALC_ATTACK_POWER to the attack card, both heroes, and permanents/items/auras/allies/head/chest/arms/legs/weapon zones ONLY - hand, arsenal, graveyard and banished are absent - so an aimed Falcon Wing waiting in the arsenal is never evaluated against an unrelated attack; the static can only ever fire while Falcon Wing IS combat.attack_card, which is the printed 'it has +1{p}'.\n\nNo official_release_notes accompanied this card; no gap found."
+}

@@ -1,0 +1,26 @@
+{
+ "slug": "invoke_cromai_red",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "target": {
+    "filter": [
+     {
+      "type": "CONTROLS_TOKEN_TYPE",
+      "token": "ash",
+      "amount": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "type": "TRANSFORM",
+     "from": "ash",
+     "to": "cromai",
+     "amount": 1,
+     "up_to": false
+    }
+   ]
+  }
+ ]
+}

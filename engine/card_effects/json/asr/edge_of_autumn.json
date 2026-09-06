@@ -1,0 +1,16 @@
+{
+  "slug": "edge_of_autumn",
+  "activation_cost": 1,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {
+          "type": "ATTACK"
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Once per Turn Action** - {r}: **Attack**. **Go again**' Ninja Weapon - Sword (2H).\n\nThe whole printed text is the weapon's attack activation plus a keyword. 'Once per Turn Action - {r}' is authored as CARD-LEVEL activation_cost=1 + per_turn=1: compile_card reads both from the top-level dict (loader.py:153-154), and card.py:519-530 syncs them onto the runtime Card, where play._add_weapon_attacks consumes them to offer the attack (play.py:1513). Card-level is the DSL-authoritative spelling per DSL_REFERENCE; deliberately NOT also modelled as an ability-level cost or PAY_RESOURCES, which would double-charge. The ATTACK effect (effect_types.py:5139) takes no parameters and is here to declare the ability - its handler notes that weapon attacks are already engine-offered and that _add_hero_dsl_activations skips ATTACK abilities, so it cannot double-fire. ability_type ACTIVATE matches shipped weapons with identical text (cru/sledge_of_anvilheim.json, dyn/merciless_battleaxe.json).\n\nPrinted **Go again** is in printed_keywords and fires unconditionally from the card DB keywords field - deliberately NOT authored; re-authoring a printed keyword is a defect. It is unconditional here, so no SOURCE_IS_ATTACK conditional-keyword strip applies either.\n\nNo gaps found."
+}

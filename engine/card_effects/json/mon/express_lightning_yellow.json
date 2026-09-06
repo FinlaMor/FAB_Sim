@@ -1,0 +1,11 @@
+{
+  "slug": "express_lightning_yellow",
+  "cost": {
+    "play_activate": "PLAY",
+    "optional": true,
+    "type": "CHARGE",
+    "amount": 1
+  },
+  "abilities": [],
+  "_comment": "'As an additional cost to play Express Lightning, you may **charge** your hero's soul.' Light Warrior Action - Attack. The ENTIRE printed text is one optional additional play cost, so it is authored as the TOP-LEVEL cost dict - the sanctioned shape for a card whose only implementable clause is that cost (loader.compile_card wires raw['cost'] -> CardDef.play_cost at loader.py:148-151). Same shape as the sibling .drafts/express_lightning_red.json / _blue.json - identical sentence across printings.\n\nPLUMBING VERIFIED THIS SESSION: _compile_cost (loader.py:93-98) forwards every non-'type' key into params, so 'optional' reaches the handler; the CHARGE cost handler (cost_types.py:266-318) reads amount (default 1) and bool()s 'optional'/'may' RAW - hence 'optional' is authored as boolean true here. WARNING for future editors: the string \"FALSE\" would also read as OPTIONAL (bool('FALSE') is True); a mandatory CHARGE omits the key entirely. With optional set, can_pay returns True unconditionally, so DECLINING the charge never blocks the play - official release note 1 ('Charging is optional. You may play the card without charging') verbatim.\n\namount 1 is release note 2 ('You may only charge up to one card unless otherwise specified').\n\nRelease note 3 ('A card may not charge itself') holds BY CONSTRUCTION, not by authoring: the played card leaves its source zone before play_cost.pay_fn runs, so it is never among the hand cards the CHARGE prompt offers.\n\nRelease notes 4-5 need nothing authored: pay routes the chosen hand card through canonical effect_keywords.charge (face up under the hero, CR 8.5.29), where the 'considered to have charged' bookkeeping lives.\n\nCharge appears in printed_keywords and fires from the card DB keywords field - deliberately not re-authored; triggers.py maps the DB keyword to 'pass - card-specific', so there is no double-charge.\n\nAdoption note: batch lists set BoltynBlitzDeck - derive the folder from the card's own sets/setIdentifiers in card_data/slug_index.json at adoption time."
+}

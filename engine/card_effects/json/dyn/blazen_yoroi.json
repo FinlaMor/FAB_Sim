@@ -1,0 +1,17 @@
+{
+  "slug": "blazen_yoroi",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "conditions": [
+        {"type": "IS_DEFENDING_CARD"},
+        {"type": "ATTACK_ORDINAL_GTE", "amount": 4}
+      ],
+      "effects": [
+        {"type": "MODIFY_DEFENSE", "mod": "add", "amount": 4}
+      ]
+    }
+  ],
+  "_comment": "'While Blazen Yoroi is defending on chain link 4 or higher, it has +4{d}.' / Blade Break\n\nBlade Break is a printed keyword (printed_keywords) and fires from the card DB keywords field (ability_keywords.blade_break) - deliberately NOT authored here; authoring it again would be a defect.\n\nThe +4{d} clause copies the shipped pen/basalt_boots.json shape: WHILE_STATIC naming trigger RECALC_DEFENSE + IS_DEFENDING_CARD -> MODIFY_DEFENSE. engine._recalculate_total_defense resets each declared defender to its base {d}, then dispatches RECALC_DEFENSE once per defender to [that defender] + the attack card + both heroes + all permanents/equipment/weapon zones of BOTH players - chest is in that list (engine.py _dsl_permanent_zones / dispatch sites), so this equipment receives the dispatch when it defends. Naming the trigger matters: without it the static defaults to RECALC_ATTACK_POWER (interpreter.py:186-201), where combat.defense_recalc_card is None and MODIFY_DEFENSE falls back to its source card. IS_DEFENDING_CARD scopes the effect to combat.defense_recalc_card being this card (condition_types.py:536-599); without it the once-per-defender dispatch would let this static add +4{d} to every other defending card in turn. MODIFY_DEFENSE writes the defender card's own {d} (effect_types.py:2614-2650), which survives into total_defense; because each pass resets to base first, the static cannot stack across recalculations.\n\nCHAIN LINK NUMBER - approximation flagged: ATTACK_ORDINAL_GTE (per triage) reads the ATTACKER's attacks_this_turn (condition_types.py:644-655), incremented once per attack entering the chain (engine.py:539). Within a single combat chain that equals the current chain link ordinal (CombatState.link_id = len(chain_links)+1, engine.py:524), so 'chain link 4 or higher' holds from the fourth link on. DEVIATION FROM CR / RELEASE NOTE: the note says the chain link number RESETS when players close the chain by passing in succession and a new chain opens. This engine clears chain_links (engine.py:351) and attacks_this_turn (engine.py:345) only at start of turn, never at chain close, so a second chain opened in the same turn keeps counting - the condition would read link 5+ when the CR says link 1. The alternative CHAIN_HIT_COUNT_GTE(len(chain_links) >= N-1) shares the identical divergence, so no existing condition models the reset; fixing it is engine-side (reset chain_links on _close_step), not JSON-side."
+}

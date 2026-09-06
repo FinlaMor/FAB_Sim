@@ -1,0 +1,26 @@
+{
+  "slug": "crater_fist",
+  "activation_cost": 3,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACKS_THIS_TURN",
+          "amount": 2,
+          "mod": "add",
+          "scope": "TURN",
+          "player": "SELF",
+          "filter": [
+            {"type": "ATTACK_HAS_KEYWORD", "keyword": "crush"}
+          ]
+        },
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - {r}{r}{r}, destroy Crater Fist: Your attacks with **crush** gain +2{p} this turn. **Go again**' + printed **Temper**. Guardian Equipment - Arms.\n\nCOSTS: '{r}{r}{r}' is CARD-LEVEL activation_cost 3 - DSL-authoritative, read off the top-level dict only (loader.py:153); deliberately NOT also a PAY_RESOURCES ability cost, which would double-charge per IMPLEMENTATION_GUIDE. 'destroy Crater Fist' sits before the colon, so it is the ability-level COST [{DESTROY_SELF}] - cost_types.py:43 was written for exactly this 'Destroy <this>: ...' wording (can_pay always true; pay routes through canonical destroy(), which resolves the arms slot). Shipped precedent for the whole shape: arc/teklo_plasma_pistol.json (equipment ACTIVATE + GAIN keyword GO_AGAIN).\n\nOFFERING: play._add_hero_dsl_activations (play.py:238-265) scans head/chest/arms/legs for equipment ACTIVATE abilities and offers them in the action phase with an action point; affordability comes from the card-level activation_cost via the shared resource-cost gate.\n\nTHE PUMP: MODIFY_ATTACKS_THIS_TURN handler (effect_types.py:2201-2227) reads amount/mod/scope/player/filter and queues a turn-scoped hook on the controller's turn_attack_hooks; engine.py:1243-1259 re-compiles the hook conditions against each incoming attack and appends a stage-7 power effect, so EVERY crush attack this turn gets +2{p} (not just the next one) and the hook expires at the end-of-turn clear - the printed span. Filter ATTACK_HAS_KEYWORD (condition_types.py:1881-1891) normalises separators, so JSON 'crush' matches combat.keywords' title-cased 'Crush'; combat is live when hooks are evaluated (CombatState is created before _apply_turn_attack_effects runs).\n\nGO AGAIN: GAIN keyword GO_AGAIN routes to _grant_go_again (effect_types.py:4936 -> 4923-458), which outside combat pays 1 action point directly to the controller (CR 8.3.5a) - the exact spelling shipped on teklo_plasma_pistol's ACTIVATE. Deliberately NOT relying on the printed GoAgain DB keyword: the engine pays printed go again for card-type stack layers on resolution, not for activated layers, so without this effect the activation would end the turn early. (Known limit of _grant_go_again - if a combat were live it would grant onto that combat instead - is unreachable here: ACTIVATE needs the action phase and an empty stack, play.py:284.)\n\nTemper is a printed keyword implemented engine-side (ability_keywords.temper) and is deliberately NOT authored here."
+}

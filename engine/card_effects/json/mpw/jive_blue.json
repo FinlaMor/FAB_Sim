@@ -1,0 +1,16 @@
+{
+ "slug": "jive_blue",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "effects": [
+    {
+     "type": "CREATE_TOKEN",
+     "token": "blade_dance",
+     "amount": 1
+    }
+   ]
+  }
+ ],
+ "_comment": "Warrior Action - 'Create a Blade Dance token.' Simple PLAY ability. Printed keywords empty. Blade Dance token exists at .drafts/blade_dance.json (STATIC_TRIGGERED ON_PLAY_ACTIVATE_ATTACK with ATTACK_IS_WEAPON -> DESTROY_SELF + GAIN GO_AGAIN). CREATE_TOKEN reads token/amount/player/destination; defaults SELF control, template-derived zone."
+}

@@ -1,0 +1,69 @@
+{
+  "slug": "bingo_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        { "type": "SET_FLAG", "flag": "bingo_revealed_attack_action", "value": false }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        { "type": "ATTACK_TARGET_IS_HERO" }
+      ],
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "zone": "HAND",
+          "player": "OPPONENT",
+          "amount": 1,
+          "into": "revealed"
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            { "type": "REF_IS_TYPE", "ref": "revealed", "types": ["Action"] },
+            { "type": "REF_IS_TYPE", "ref": "revealed", "types": ["Attack"] }
+          ],
+          "then": [
+            { "type": "SET_FLAG", "flag": "bingo_revealed_attack_action" },
+            { "type": "GAIN", "keyword": "GO_AGAIN" }
+          ],
+          "else": [
+            {
+              "type": "CONDITIONAL_EFFECT",
+              "when": [
+                { "type": "REF_IS_TYPE", "ref": "revealed", "types": ["Action"] },
+                {
+                  "type": "NOT",
+                  "condition": {
+                    "type": "REF_IS_TYPE",
+                    "ref": "revealed",
+                    "types": ["Attack"]
+                  }
+                }
+              ],
+              "then": [
+                { "type": "DRAW", "amount": 1 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        { "type": "SOURCE_IS_ATTACK" },
+        { "type": "FLAG_SET", "flag": "bingo_revealed_attack_action" }
+      ],
+      "effects": [
+        { "type": "GAIN", "keyword": "GO_AGAIN" }
+      ]
+    }
+  ],
+  "_comment": "'When Bingo hits a hero, they reveal a card from their hand. If an attack action card is revealed this way, Bingo gains go again. If a non-attack action card is revealed this way, draw a card.'\n\nCONDITIONAL-KEYWORD SHAPE IS MANDATORY HERE: GoAgain appears in printed_keywords, and the engine applies every DB keyword unconditionally. loader.conditional_keywords() (loader.py:255-296) suppresses a printed keyword ONLY for an ability whose conditions include SOURCE_IS_ATTACK and whose DIRECT effects grant it via GAIN - the third ability satisfies both (go_again is in _GRANTABLE_KEYWORDS; the GAIN sits un-nested), and _recalculate_attack_power strips it at engine.py:1897-1900. Without that ability Bingo would have go again on every attack.\n\nBehaviour lives on the ON_HIT trigger, gated by ATTACK_TARGET_IS_HERO (release notes scope everything to hitting A HERO; the condition is false when the attack was declared at a permanent/ally). Branch structure: 'attack action' is two claims because REF_IS_TYPE matches types UNION subtypes - Action AND Attack. 'Non-attack action' is Action AND NOT Attack (the NOT combinator reads the nested 'condition' key, condition_types.py:2147-2166). An Instant satisfies neither branch, so nothing happens - release note 1. DRAW defaults player SELF = Bingo's controller draws, not the revealer - release note 3. Empty hand: LOOK_AT amount 1 stores None (effect_types.py:3349), REF_IS_TYPE returns False on a None ref (condition_types.py:2006), so both branches fail and neither effect runs - release note 2 for free.\n\nDEVIATION FROM TRIAGE (SELECT_FROM_REF): in paper the DEFENDER chooses which card to reveal. SELECT_FROM_REF prompts via _ask_player(state, cid, ...) with cid = the SOURCE card's controller (effect_types.py:3500) - Bingo's controller would make the choice, and its option list (card slugs) leaks the defender's entire hand to them. No DSL primitive asks the ZONE OWNER to choose a card to reveal (BANISH asks the owner but removes the card). LOOK_AT HAND amount 1 (top card of hand) is the non-leaky deterministic stand-in; the chooser gap is flagged, not silently guessed.\n\nFlag lifecycle: ability 1 clears the flag at each ON_ATTACK, so a hit that reveals a non-attack action cannot inherit the flag from an earlier Bingo attack this turn (go again makes second Bingo attacks the common case). Ordering verified: ON_ATTACK is dispatched from the 'attacking' emit at engine.py:578, BEFORE the first power recalculation at engine.py:599, so no recalc ever evaluates a stale flag. FLAG_SET/SET_FLAG are the engine-implemented pair (condition_types.py:1004; effect_types.py:2023-2049 reads value:false as clear).\n\nThe third ability is strip-satisfier plus belt-and-braces; the trigger does the real work. GAIN keyword writes into combat.keyword_effects (state.py:1294-1296), which every recalculation unions back into combat.keywords (engine.py:1903) before chain-link resolution consults them - so the hit-time grant survives later recalcs, and the static's own re-grants are membership-checked and idempotent."
+}

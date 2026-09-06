@@ -1,0 +1,21 @@
+{
+ "slug": "knock_em_off_their_feet_red",
+ "abilities": [
+  {
+   "ability_type": "STATIC_TRIGGERED",
+   "trigger": "ON_CRUSH",
+   "conditions": [
+    {
+     "type": "ATTACK_TARGET_IS_HERO"
+    }
+   ],
+   "effects": [
+    {
+     "type": "TAP",
+     "target": "OPPONENT_HERO"
+    }
+   ]
+  }
+ ],
+ "_comment": "Guardian Action - Attack - '**Crush** - When this deals 4 or more damage to a hero, {t} them.' Crush is a printed keyword (in printed_keywords) and fires from the card DB keywords field - NOT authored here. STATIC_TRIGGERED on ON_CRUSH (engine dispatches ON_CRUSH only when crush_check passes, i.e. hit damage >= 4). ATTACK_TARGET_IS_HERO condition gates 'to a hero' (crush_check reads only damage total, not target). TAP with target OPPONENT_HERO taps the defending hero ({t} them). No other abilities - the attack itself is handled by the engine for Action - Attack cards."
+}

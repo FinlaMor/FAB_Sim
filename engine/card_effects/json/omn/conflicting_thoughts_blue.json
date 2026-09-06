@@ -1,0 +1,13 @@
+{
+  "slug": "conflicting_thoughts_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {"type": "OPT", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, **opt 1**.'\n\nSHAPE: an Action - Attack card's when-this-attacks ability is TRIGGERED + ON_ATTACK (blackout_kick_red precedent; per DSL_REFERENCE an Action - Attack is never ATTACK_REACTION - that ability type would never fire). Release note ('triggers when it resolves on the stack and becomes an attacking card') = ON_ATTACK, which fires as the card enters the combat chain - that exact moment.\n\nOPT handler verified: effect_types.py:1288 reads 'amount' (default 1) and calls effect_opt (the CR opt primitive), so {\"type\": \"OPT\", \"amount\": 1} is the corpus spelling (clarity_potion_blue et al).\n\nNOT A DOUBLE-AUTHOR of the DB keyword (checked, not assumed): slug_index carries keywords [\"Opt\"] with no number, and build_keyword_triggers maps a bare 'opt' to an 'on_play' trigger (triggers/triggers.py:352-357). But attack action cards are not public at game start, so their keyword triggers register only when the card enters combat (engine.py:550) - AFTER the engine 'on_play' event has already fired at play time (play.py:1211). The keyword path is dead for this card as the engine stands; the DSL trigger authored here is the only live opt, and it fires at the release-note timing. If the keyword-registration order is ever fixed, this card would double-opt and one of the two paths should then be removed."
+}

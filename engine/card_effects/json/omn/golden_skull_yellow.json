@@ -1,0 +1,13 @@
+{
+  "slug": "golden_skull_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {"type": "GRANT_SUBTYPE", "subtype": "Gold"}
+      ]
+    }
+  ],
+  "_comment": "'**Go again** / This counts as a Gold. / **Watery Grave**' (Pirate Necromancer Action - Item).\n\nGoAgain and WateryGrave are both in printed_keywords and fire from the card DB keywords field - deliberately not authored (re-authoring a printed keyword is a defect).\n\n'THIS COUNTS AS A GOLD': GRANT_SUBTYPE Gold, shape copied from shipped hvy/aurum_aegis.json whose printed text carries the identical clause - with ONE deliberate change of vehicle. Aurum Aegis is starting equipment and uses TRIGGERED ON_EQUIP, but ON_EQUIP is dispatched only by the start-of-game listener to already-equipped cards; Golden Skull is an ITEM played mid-game, so an ON_EQUIP ability would be dead in every reachable state. ON_ENTER_PLAY instead is dispatched from Zone.add on arena entry from a non-arena zone (state.py:304-310, re-verified this session), which is how shipped items declare entry behaviour. GRANT_SUBTYPE reads 'subtype' (effect_types.py:4381-4393, re-verified) and appends 'Gold' to card.subtypes, so gold-count checks (CONTROLS_TOKEN_TYPE scans permanents plus equipment/weapon slots) and destroy-a-Gold costs (DESTROY_PERMANENT's asset filter matches name/slug) see the item - which is exactly what both release notes describe (objects that count as Gold contribute to 'controls less Gold' checks and may be chosen for destroy-Gold costs). As an Item it sits in permanents/items, which those scans cover.\n\nRELEASE NOTE ('Playing Golden Skull does not count as having created a Gold'): no ON_GOLD_CREATED trigger is authored here - correct by omission; nothing in this definition emits a token-created event.\n\nSET FOLDER AT ADOPTION: OmensOfTheThirdAge -> json/omn/."
+}

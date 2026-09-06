@@ -1,0 +1,26 @@
+{
+  "slug": "magmatic_carapace",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_CARD_PLAYED",
+      "conditions": [
+        { "type": "CARD_IS_TYPE", "types": ["Aura"] }
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Tap Magmatic Carapace and pay {r} to create a Seismic Surge token?",
+          "cost": [
+            { "type": "TAP_SELF" },
+            { "type": "PAY_RESOURCES", "amount": 1 }
+          ],
+          "effects": [
+            { "type": "CREATE_TOKEN", "token": "seismic_surge" }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Guardwell is a printed keyword (printed_keywords) and fires from the card DB keywords field; deliberately NOT authored here. STATIC_TRIGGERED with ON_CARD_PLAYED triggers whenever any card is played. CARD_IS_TYPE with types ['Aura'] filters for aura cards. MAY block with cost [TAP_SELF, PAY_RESOURCES amount 1] offers the optional tap + pay {r} (both required per release note: 'you must be able to both tap Magmatic Carapace and pay {r}'). If accepted, CREATE_TOKEN creates a Seismic Surge token. ENGINE GAP: ON_CARD_PLAYED is currently only dispatched to the player's hero (_dsl_card_played_listener in engine.py), not to equipment/permanents. This ability will not fire until the engine dispatches ON_CARD_PLAYED to all relevant permanents (similar to START_OF_ACTION_PHASE listener)."
+}

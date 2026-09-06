@@ -1,0 +1,43 @@
+{
+  "slug": "channel_thunder_steppe_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "BEGINNING_OF_END_PHASE",
+      "conditions": [
+        {"type": "IS_ACTIVE_PLAYER"}
+      ],
+      "effects": [
+        {"type": "PUT_COUNTER", "counter_type": "flow", "amount": 1},
+        {"type": "CONDITIONAL",
+         "when": [
+           {"type": "CARD_IN_ZONE", "zones": ["pitch"], "player": "SELF",
+            "card_class": "Lightning",
+            "count_gte": {"type": "COUNT_COUNTERS", "counter": "flow"}}
+         ],
+         "then": [
+           {"type": "MAY",
+            "prompt": "Channel Lightning - put a Lightning card from your pitch zone on the bottom of your deck for each flow counter on Channel Thunder Steppe?",
+            "effects": [
+              {"type": "MOVE_MATCHING",
+               "to_zone": "deck",
+               "position": "bottom",
+               "target": {
+                 "controller": "SELF",
+                 "zone": "PITCH",
+                 "amount": {"type": "COUNT_COUNTERS", "counter": "flow"},
+                 "filter": [{"type": "CARD_IS_TALENT", "talents": ["Lightning"]}]
+               }}
+            ],
+            "else": [
+              {"type": "DESTROY_SELF"}
+            ]}
+         ],
+         "else": [
+           {"type": "DESTROY_SELF"}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "'**Go again** / Whenever you play an action card, you may pay {r}. If you do, it gains go again. / **Channel Lightning** - At the beginning of your end phase, put a flow counter on Channel Thunder Steppe then destroy it unless you put a Lightning card from your pitch zone on the bottom of your deck for each flow counter on it.'\n\nNOT AUTHORED - 'Whenever you play an action card, you may pay {r}. If you do, it gains go again.' Two independent gaps, either one enough to leave the clause out:\n(1) DISPATCH: ON_CARD_PLAYED is sent to the playing player's HERO slug only (engine._dsl_card_played_listener, engine.py:1685-1698, registered :1795). The events that fan out to permanents do so via _dsl_permanent_zones - which does include player.auras (engine.py:1452-1459) - but the card-played listener is not one of them, so a TRIGGERED/STATIC_TRIGGERED ON_CARD_PLAYED ability authored on this aura loads cleanly and can never fire. Inert is worse than absent; authoring it anyway was rejected. The fix is generic (widen that listener like its siblings), i.e. an engine change this pass must not make.\n(2) GRANT SHAPE behind the dispatch gap: 'IT gains go again' names the card that caused the event, but the only play-grant effect, GRANT_KEYWORD_TO_PLAYED, queues a TURN-scoped grant matched against EVERY matching play until the end-of-turn clear (effect_types.py:4787-4814; engine.py:931-932). Paying once would give every later action this turn free go again - strictly stronger than printed. Expressing the sentence needs a one-shot grant pinned to the triggering object (the pinning MODIFY_NEXT_CARD_COST already has via object_ref) plus fix (1).\n\nAUTHORED - Channel Lightning. TRIGGERED BEGINNING_OF_END_PHASE reaches auras: _dsl_start_of_end_phase_listener dispatches to BOTH players' permanent zones incl. player.auras (engine.py:1495-1503), so the printed 'YOUR end phase' needs the IS_ACTIVE_PLAYER gate (condition_types.py:811-821) or the aura would also channel on the opponent's end phase.\n\nOrder inside the ability is the printed order: PUT_COUNTER flow 1 lands on the source (default target), THEN the payment test reads COUNT_COUNTERS(flow) including the counter just added - counters accumulate across turns if the upkeep is paid each time, as printed.\n\nThe destroy-unless branch is CONDITIONAL wrapping MAY, and the shape is deliberate: putting the existence test in MAY's own 'conditions' would NOT work, because the loader pops an effect's conditions into EffectDef.conditions and the interpreter SKIPS THE WHOLE EFFECT when they fail (interpreter.py:149-159) - the else/destroy would be skipped with it, leaving the aura alive having paid nothing. So CONDITIONAL owns the not-enough-Lightning case (when fails -> else -> DESTROY_SELF), and the inner MAY carries no conditions: offered whenever payment is possible, declining runs its else -> DESTROY_SELF. That is exactly 'destroy it unless you put ...'.\n\nPayment mechanics: CARD_IN_ZONE resolves player.pitch via getattr zone lookup (condition_types.py:934-935) and resolves count_gte as a dynamic expression (:983-993). MOVE_MATCHING's target spec can name PITCH (_OBJECT_TARGET_ZONES includes it, effect_types.py:418-420; _object_zone_cards :493-494), resolves 'amount' dynamically (:786), filters candidates per-card with CARD_IS_TALENT, and asks the controller which cards move. CARD_IS_TALENT ['Lightning'] matches the release note 'Only Lightning Element cards count... Elemental cards with Lightning fusion do not': the element lives in talents, fusion cards don't carry it.\n\nPrinted GoAgain on the aura itself is a DB keyword applied when the aura layer resolves - no authoring (and CR 8.3.5c dedup means it never stacks, per the release note)."
+}

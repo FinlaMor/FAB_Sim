@@ -1,0 +1,26 @@
+{
+ "slug": "knives_out_blue",
+ "abilities": [
+  {
+   "ability_type": "ATTACK_REACTION",
+   "effects": [
+    {
+     "type": "MODIFY_ATTACKS_THIS_TURN",
+     "mod": "add",
+     "amount": 1,
+     "scope": "TURN",
+     "player": "SELF",
+     "filter": [
+      {
+       "type": "ATTACK_SUBTYPE_IN",
+       "subtypes": [
+        "Dagger"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "_comment": "Assassin / Ninja Attack Reaction (Outsiders). 'Your daggers gain +1{p} this turn.'\n\nATTACK_REACTION: Played in the reaction step targeting the current attack. The release note confirms this can be played even if you are not currently attacking with a dagger â€” so no target.filter restricting to dagger attacks. The ability simply resolves and applies its effect.\n\nMODIFY_ATTACKS_THIS_TURN: Turn-scoped power modifier (effect_types.py:2201-2227). Reads amount/mod/scope/player/filter. Appends a power_mod hook to the controller's turn_attack_hooks; the engine re-applies hooks to every attack for the rest of the turn (engine.py:1243-1259), compiling the filter per attack. Filter ATTACK_SUBTYPE_IN with subtypes ['Dagger'] matches dagger attacks â€” daggers are WEAPONS which attack as themselves, so combat.attack_card carries the Dagger subtype (condition_types.py:296-316 unions subtypes+types plus from_weapon flag). scope TURN and player SELF (default) give 'your attacks this turn'. Unused hooks expire at end-of-turn clear (engine.py:913).\n\nNo printed keywords to author (printed_keywords empty)."
+}

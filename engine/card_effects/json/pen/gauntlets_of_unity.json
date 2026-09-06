@@ -1,0 +1,27 @@
+{
+  "slug": "gauntlets_of_unity",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {"type": "DEFENDS_WITH_OTHER_HAND_CARD"}
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 1,
+          "target": {
+            "zone": "DEFENDING",
+            "amount": "ALL",
+            "filter": [
+              {"type": "CARD_IS_NAMED", "name": "Gauntlets of Unity"}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Unity** - When this defends together with a card from hand, this gets +1{d} until end of turn.' + printed **Temper** (Warrior Equipment - Arms). Temper fires from the DB keywords field; Unity is realised by the TRIGGERED ability below.\n\nSHAPE COPIED from SHIPPED sup/right_behind_you_red.json, whose first clause is word-for-word the same mechanic ('When this defends together with another card from your hand, it gets +1{d}'). That card's _comment records why the naive spellings fail: a bare MODIFY_DEFENSE_VALUE moves the defending TOTAL, not this card, so the bonus is aimed through a target dict {zone: DEFENDING, filter: [CARD_IS_NAMED self]} - the handler's targeted branch (effect_types.py:2602-2649) picks the matching defending CARDS, bumps obj.defense, and recomputes total_defense from the defenders, which is 'THIS gets +1{d}'.\n\nTRIGGER TIMING: ON_DEFEND is dispatched to the actual defending card object (engine.py:1640-1646), so defending equipment receives it. DEFENDS_WITH_OTHER_HAND_CARD (condition_types.py:453-464) reads combat.hand_defender_ids and excludes the source card - exactly release note 1's 'defends TOGETHER with a card' (both become defending cards at the same time, i.e. share the chain link); blocking with this alone, even from hand, does not fire it.\n\nUNITY KEYWORD: no Python handler exists (grep of ability_keywords.py finds only temper) - the printed keyword line IS this ability text, so authoring the trigger implements the whole card. TEMPER NOT AUTHORED: engine-implemented from the card DB keywords field (ability_keywords.temper, ability_keywords.py:306).\n\nKNOWN GAP vs release note 3 ('each time you defend together in the same turn it gains an ADDITIONAL +1 until end of turn'): this shape applies +1 once per ON_DEFEND occurrence, but any LATER defence recalculation resets each defender to base before re-applying statics (see the MODIFY_DEFENSE handler note, effect_types.py:2678-2682), so a previous chain's +1 can be wiped when the next chain link commits defenders - the same exposure the shipped Right Behind You carries. In practice the ruling's cross-chain stacking is offset by Temper's -1{d} counter at every chain close, so '+1{d} while defending together this chain' is the net behaviour either way; expressing true until-end-of-turn persistence would need a recalc-surviving turn-scoped defense modifier the DSL does not currently have."
+}

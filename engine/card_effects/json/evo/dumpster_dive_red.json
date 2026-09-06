@@ -1,0 +1,17 @@
+{
+  "slug": "dumpster_dive_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_ATTACK_POWER",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "BOOST_BANISHED_IS", "types": ["Item", "Equipment"]}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Boost** / If an item or equipment was banished from boosting this, this gets +1{p}.' Mechanologist Action - Attack.\n\nSHAPE copied verbatim from SHIPPED evo/sprocket_rocket_blue.json (same printed clause) and re-checked against the handlers: WHILE_STATIC fires only on RECALC_ATTACK_POWER (interpreter.py), SOURCE_IS_ATTACK confines the pump to this card's own attack, BOOST_BANISHED_IS (condition_types.py:1147) matches each banished card's types UNION subtypes via _norm so 'Item'/'Equipment' hit the DB spellings, and MODIFY_ATTACK applies transiently in the stage-8 static window so repeated recalculations never stack.\n\nRelease notes satisfied by the condition's construction: (1) only the banished card's TYPE is tested, so it need not be a Mechanologist card; (2) boost() records what IT banished on THIS card's boost_banished list, so cards banished for other cards' boosts are invisible here.\n\nPrinted **Boost** is in printed_keywords and fires from the card DB keywords field (ability_keywords.boost) - deliberately NOT authored; re-authoring a printed keyword is a defect. The +1{p} is a JSON-authored power bonus, not a conditional printed keyword, so no conditional-keyword strip is needed."
+}

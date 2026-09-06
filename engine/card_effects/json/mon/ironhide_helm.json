@@ -1,0 +1,49 @@
+{
+ "slug": "ironhide_helm",
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_DEFEND",
+   "effects": [
+    {
+     "type": "MAY",
+     "prompt": "Pay {r} to gain +2{d} and destroy when the combat chain closes?",
+     "cost": [
+      {
+       "type": "PAY_RESOURCES",
+       "amount": 1
+      }
+     ],
+     "effects": [
+      {
+       "type": "MODIFY_DEFENSE",
+       "amount": 2,
+       "mod": "add"
+      },
+      {
+       "type": "SET_FLAG",
+       "flag": "ironhide_helm_boosted",
+       "scope": "CURRENT"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "ability_type": "DELAYED_TRIGGERED",
+   "trigger": "ON_COMBAT_CLOSE",
+   "conditions": [
+    {
+     "type": "FLAG_SET",
+     "flag": "ironhide_helm_boosted"
+    }
+   ],
+   "effects": [
+    {
+     "type": "DESTROY_SELF"
+    }
+   ]
+  }
+ ],
+ "_comment": "Follows the ironhide_legs pattern exactly. TRIGGERED ON_DEFEND fires when this equipment defends. MAY block with PAY_RESOURCES cost gates the option - declining runs nothing. On accept: MODIFY_DEFENSE +2 on this defending card, SET_FLAG 'ironhide_helm_boosted' (CURRENT scope = player.current_turn_effects). DELAYED_TRIGGERED ON_COMBAT_CLOSE gated by FLAG_SET destroys the equipment. ENGINE GAP: ON_COMBAT_CLOSE currently dispatches only to combat.attack_card (engine.py:1620-1627); defending equipment never receives it. JSON is semantically correct per printed text."
+}

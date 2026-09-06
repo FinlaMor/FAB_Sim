@@ -1,0 +1,41 @@
+{
+  "slug": "honed_for_honor_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "target": {
+        "filter": [
+          {"type": "CARD_IN_ZONE", "zones": ["weapon1", "weapon2"], "filter_types": ["Sword"], "count_gte": 1}
+        ]
+      },
+      "effects": [
+        {"type": "SHARPEN", "subtype": "Sword"},
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [{"type": "REF_COUNTER_GTE", "ref": "sharpened", "counter": "power", "amount": 3}],
+          "then": [
+            {
+              "type": "MAY",
+              "prompt": "Put an attack reaction card from your graveyard on top of your deck?",
+              "effects": [
+                {
+                  "type": "MOVE_MATCHING",
+                  "to_zone": "deck",
+                  "position": "top",
+                  "target": {
+                    "controller": "SELF",
+                    "zone": "GRAVEYARD",
+                    "amount": 1,
+                    "filter": [{"type": "CARD_IS_TYPE", "card_type": "Attack Reaction"}]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Sharpen** target sword you control. / If it has 3 or more +1{p} counters, you may put an attack reaction card from your graveyard on top of your deck. / **Go again**' Warrior Action (MasteryPackWarrior).\n\nNOT AUTHORED: Go again is a printed keyword (printed_keywords) and unconditional in the text - it fires from the card DB keywords field; re-authoring it would be a defect. The DB's 'Sharpen' keyword entry drives nothing engine-side (census: only the SHARPEN effect type and its 'sharpened' ref exist), so authoring SHARPEN below IS the implementation, not a double.\n\nPLAY-LEGALITY ('requires a sword in order to be played', release note 1): target.filter CARD_IN_ZONE zones [weapon1, weapon2] filter_types [Sword] count_gte 1. play._legality_check (play.py:416-431) evaluates PLAY abilities' target_filter at announce and refuses the play when it fails - CR 1.8.5/5.1.4. CARD_IN_ZONE (condition_types.py:844-996) resolves zone names via getattr(player, zone), so weapon1/weapon2 reach the weapon zones; filter_types tests types AND subtypes, and all 23 swords in the DB carry subtype Sword.\n\nSHARPEN (effect_types.py:5162-5218): picks among the controller's swords (asking which when both weapon zones hold one), puts +1{p} counters via effect_put_counter (writes card.counters['power'], ability_keywords.py:1653-1660), and stores its pick as ref 'sharpened'.\n\nTHRESHOLD ('if IT has 3 or more +1{p} counters', release note 2: evaluated at resolution, counting ALL +1{p} counters, 'not limited to sharpen effects'): CONDITIONAL_EFFECT 'when' REF_COUNTER_GTE ref sharpened counter power amount 3 (condition_types.py:1343-1366 reads ref/counter/amount and defaults ref to 'sharpened'). It reads the counter TALLY on the sharpened sword, not the sharpen event, so pre-existing power counters count - exactly the release note. The gate sits on CONDITIONAL's when, not ability-level conditions, so it scopes the second sentence only.\n\nTHE MOVE (release note 3 optional, choice at resolution): MAY wraps MOVE_MATCHING - declining runs nothing. MOVE_MATCHING (effect_types.py:3593-3612, docstring names this exact wording) takes to_zone deck position top and a canonical object target: controller SELF, zone GRAVEYARD (served by _object_zone_cards, effect_types.py:493), amount 1 -> _ask_player chooses WHICH attack reaction card at resolution; filter CARD_IS_TYPE 'Attack Reaction' normalises to 'attackreaction' and matches the DB types ['AttackReaction'] (condition_types.py:1309-1325). Release note 4 (empty deck): put_object into an empty deck makes it the top card. No eligible card in graveyard: pool empty, move no-ops.\n\nDEVIATION FROM THE TRIAGE LIST (SHARPEN/REF_COUNTER_GTE/MAY kept; SEARCH_GRAVEYARD+PUT_REF_TOP rejected), verified against handlers before deviating: SEARCH_GRAVEYARD shuffles every deck destination and passes no position (lands BOTTOM, not top) and stores no ref for PUT_REF_TOP to read; LOOK_AT offers no GRAVEYARD zone. Same verdict recorded on .drafts/helm_of_hindsight.json and .drafts/cadaverous_contraband_*.json for identical wordings.\n\nKNOWN APPROXIMATION: the sword-choice lives inside SHARPEN rather than an enumerated target declaration, so if the filtered sword left the weapon zones between play and resolution (no normal path does), SHARPEN would pick the other sword or no-op while the legality gate had seen the original.",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

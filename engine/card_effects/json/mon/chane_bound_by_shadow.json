@@ -1,0 +1,25 @@
+{
+  "slug": "chane_bound_by_shadow",
+  "activation_cost": 0,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "soul_shackle", "amount": 1},
+        {"type": "GRANT_NEXT_CARD",
+         "keywords": ["Go Again"],
+         "filter": [
+           {"type": "CARD_IS_TYPE", "card_types": ["Action"]},
+           {"type": "OR", "any": [
+             {"type": "CARD_IS_CLASS", "classes": ["Runeblade"]},
+             {"type": "CARD_IS_TALENT", "talents": ["Shadow"]}
+           ]}
+         ]},
+        {"type": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'Once per Turn Action - ...' = hero ACTIVATE (offered by play._add_hero_dsl_activations, which lists player.hero among its sources), card-level activation_cost 0 (no {r} in the text) and per_turn 1.\n\nDEVIATION, disclosed: 'Create a Soul Shackle token:' is printed as the activation COST (text before the colon), but cost_types.compile_cost has no CREATE_TOKEN branch - its branch list ends at PITCH and an unknown type raises ValueError at load (cost_types.py:734-736), which would make the whole file unimplemented. So token creation is drafted as the ability's FIRST EFFECT instead. Observable difference is negligible since creation cannot fail here, but the token arrives during resolution rather than as a cost payment.\n\nBLOCKER for whoever adopts this draft: effect_keywords.create_token calls require_card(token_slug), and json/tokens/soul_shackle.json does NOT exist (globbed json/tokens/ for 'soul'/'shackle': nothing). Activating this ability raises MissingCardImplementation until that token def is authored - it lives outside .drafts/ so I did not write it.\n\n'Your next Runeblade or Shadow action this turn gains go again' = GRANT_NEXT_CARD (alias of MODIFY_NEXT_CARD_COST, effect_types.py:4665-4743): queues a ONE-SHOT entry on player.dsl_queued_card_mods whose 'keywords' are appended verbatim to whichever played card consumes it (play.py:1726-1729); the layer-resolution payout then reads card.keywords against {'Go Again','Go again','go again'} (engine.py:2421-2444). This queue exists precisely because the attack-only queue cannot reach non-attack actions. Cleared end of turn (engine.py:933-934) = 'this turn'. Deliberately NOT GRANT_KEYWORD_TO_PLAYED despite the triage list: that type covers EVERY matching card for the rest of the turn (its own docstring, effect_types.py:4791-4792) and would over-grant vs printed 'next'. Filter semantics verified: _cost_mod_matches ANDs top-level specs against the played card (play.py:625-643); CARD_IS_TYPE matches types AND subtypes ('Action' is the type); CARD_IS_CLASS/CARD_IS_TALENT are one handler reading 'classes'/'talents' lists against the card's own traits (condition_types.py:1286-1307); OR compiles (condition_types.py:1901).\n\nTRAILING 'GO AGAIN' IS AUTHORED HERE - this REVERSES the previous revision of this draft, which omitted it claiming the DB GoAgain keyword pays at layer resolution. That payout is gated on entry.layer_type == 'card' (engine.py:2420), and a hero ACTIVATE never creates a stack layer: play._apply_activate dispatches ON_ACTIVATE immediately (play.py:1313-1315), so the DB keyword alone returns nothing and the activation would eat the action point silently. An explicit GO_AGAIN effect routes through _grant_go_again (effect_types.py:423-458): no combat during the action phase, so it pays +1 action point directly - CR 8.3.5a. No double-grant risk: there is no 'card' layer for the engine path to also fire on. (.drafts/azalea_ace_in_the_hole.json documents this same hero-activation mechanism.)\n\nPrinted GoAgain in the DB keywords field is this same embedded ability text, not an unconditional static - heroes are never played or attacked, so the field does nothing by itself here.",
+  "_note": "Second-pass rewrite: prior draft's only change is the added GO_AGAIN effect and the corrected justification; CREATE_TOKEN-as-effect deviation and soul_shackle token blocker carry over unchanged."
+}

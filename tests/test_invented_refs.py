@@ -226,6 +226,9 @@ ENGINE_REFS = {
     "bottomed_from_hand", "clash_revealed_opponent", "clash_revealed_self",
     "countered", "dagger", "destroyed", "destroyed_count", "discarded",
     "sharpened", "looked", "chosen", "named_card", "rest",
+    # SEARCH_DECK's default; see tests/test_search_deck_records_what_it_found.py
+    # for the behaviour that earns it a place on this list.
+    "searched",
 }
 #: Names a card writes for itself.
 WRITE_KEYS = ("into", "rest_into", "record_as", "store_as")

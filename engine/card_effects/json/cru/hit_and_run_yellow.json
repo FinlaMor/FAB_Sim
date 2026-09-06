@@ -1,0 +1,22 @@
+{
+  "slug": "hit_and_run_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GRANT_NEXT_ATTACK_KEYWORD",
+          "keyword": "Go Again",
+          "filter": [{"type": "ATTACK_IS_WEAPON"}]
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [{"type": "EVENT_THIS_TURN", "event": "attack", "qualifier": "weapon"}],
+          "then": [{"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 2}]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next weapon attack this turn gains **go again**. / If you have attacked with a weapon this turn, your next attack this turn gains +2{p}.' + printed **Go again**. Warrior Action (CrucibleOfWar).\n\nPRINTED GO AGAIN NOT AUTHORED: the trailing 'Go again' is this card's own unconditional keyword line (printed_keywords carries GoAgain; DB verified this session) and fires from the card DB keywords field; re-authoring it would double-grant. It is also not the conditional-keyword case - the first sentence grants go again to a DIFFERENT object (a future attack), so no SOURCE_IS_ATTACK / conditional_keywords() shape applies.\n\nABILITY TYPE: type_text is plain 'Warrior Action', NOT 'Action - Attack', so the effect rides a PLAY ability that resolves when the card is played (felling_swing family precedent).\n\nCLAUSE 1: GRANT_NEXT_ATTACK_KEYWORD (effect_types.py:4816-4840, read this session: reads keyword/filter/scope) queues a one-shot {'mod': 'grant_keyword'} on dsl_queued_attack_mods; 'Go Again' is the canonical spelling (the handler normalises GO_AGAIN to it, line 4824). Consumed by engine._apply_turn_attack_effects (engine.py:1199-1211, read this session) on the first attack whose filter matches - a non-weapon attack leaves the entry queued, which is exactly 'your NEXT weapon attack'. Filter ATTACK_IS_WEAPON (condition_types.py:198-199) reads combat.from_weapon, set for weapon attacks at declaration when the queue is consulted. Scope defaults to TURN; unused entries expire end of turn = 'this turn' (engine.py:921-922).\n\nCLAUSE 2: the gate is checked WHEN HIT AND RUN RESOLVES, which CONDITIONAL (effect_types.py:3697-3724; reads 'when'/'then' - authoring 'conditions' there would be silently unread and run then unconditionally) gives: EVENT_THIS_TURN with event 'attack', qualifier 'weapon'. Producer verified end to end: engine.py:570-576 records _record_turn_event(attacker_id, 'attack', 'weapon'|'nonweapon', ...) per attack (read this session), writing marker did_this_turn:attack:weapon; the condition builds the identical marker string against the CONTROLLER's current_turn_effects (condition_types.py:1070-1112). So a weapon attack earlier this turn passes; one later this turn does not - matching the printed 'if you HAVE attacked'. Spelling precedent: shipped evr/in_the_swing_blue.json and cru/push_forward_yellow.json gate the identical wording on this marker.\n\n+2{p}: MODIFY_NEXT_ATTACK add 2 with NO filter - the text says 'your next attack this turn', unrestricted, so any attack consumes it (handler effect_types.py:4592-4618 reads mod/amount/filter/scope; one-shot consumption at first match, unused entries expire end of turn).\n\nINDEPENDENT CLAUSES, disclosed: the two queue entries are consumed separately. If you have already attacked with a weapon this turn and your next attack is NOT a weapon, the +2 lands on it while the go-again entry stays queued for a later weapon attack - each clause is individually exact per its printed wording ('your NEXT WEAPON attack' vs 'your NEXT attack').\n\nShape copied from .drafts/hit_and_run_red.json (+3{p}), whose handler claims were re-verified against source this session rather than inherited.",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

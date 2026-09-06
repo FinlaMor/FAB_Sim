@@ -1,0 +1,23 @@
+{
+  "slug": "crash_down_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 5,
+          "filter": [
+            {"type": "ATTACK_CLASS_IN", "classes": ["Guardian"]},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'At the start of your turn, destroy this, then the next Guardian attack action card you play this turn gets +5{p}.' Guardian Action - Aura.\n\nA draft of this file already existed in .drafts/ from a prior loop pass; every claim in it was re-verified against source this session before rewriting.\n\nTRIGGER VEHICLE: START_OF_TURN is dispatched by engine._dsl_start_of_turn_listener (engine.py:1461-1466) to the ACTIVE player's zones only, and _dsl_permanent_zones (engine.py:1452-1459) includes player.auras - a played Aura sits there, so no IS_ACTIVE_PLAYER gate is needed and none is authored.\n\nEFFECT ORDER follows the printed sentence: DESTROY_SELF first (effect_types.py:2470 shares the DESTROY_PERMANENT branch; bare form destroys the source via canonical destroy(), which resolves the aura zone itself), then MODIFY_NEXT_ATTACK queues on the controller's dsl_queued_attack_mods (handler effect_types.py:4592-4618 READS mod/amount/filter/scope - verified). Destroying the aura first cannot unqueue the pump: the entry lives on the player, not the card. One-shot consumption by the first qualifying attack IS 'the next'; unused entries expire end of turn, which is 'this turn' (scope left at default TURN).\n\nFILTER names 'Guardian attack action card', each key read out of its handler this session: ATTACK_CLASS_IN reads 'classes' and matches them against the attack card's classes AND talents via _card_traits (condition_types.py:204-216); ATTACK_TYPE_IN reads 'types' and tests the attack card's types AND subtypes merged (273-294); ATTACK_SUBTYPE_IN reads 'subtypes' (296+). An attack action card is types=['Action'], subtypes=['Attack']; a weapon attack carries type Weapon and fails the Action test, so the buff cannot land on a weapon attack - exactly the printed 'attack action card'. The triage list named only CLASS_IN/TYPE_IN; SUBTYPE_IN added for exactness with the red sibling draft.\n\nNo printed keywords (printed_keywords empty); no play cost or conditions in the text; nothing else to author."
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "appalling_bearers",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DISCARD_CARD", "amount": 1, "subtype": "Zombie"},
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "PREVENT_DAMAGE", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "Costs are costs: 'Discard a zombie, destroy this' gates the activation (DISCARD_CARD can_pay requires a Zombie in hand - 'Zombie' is a subtype on the zombie ally cards, read via _hand_card_filter; DESTROY_SELF resolves the arms slot via canonical destroy). No damage_type on PREVENT_DAMAGE is deliberate - the text prevents any damage. Two known engine fidelity gaps, documented on sibling cards (well_grounded, misfire_dampener reviews) and true here too: the shield is consumed whole by the first damage event even if it absorbs less than 2, and an unused shield has no end-of-turn expiry because the type takes no span param - so prevention bought this turn can leak into later turns."
+}

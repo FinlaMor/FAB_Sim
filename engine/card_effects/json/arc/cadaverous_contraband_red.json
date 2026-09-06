@@ -1,0 +1,32 @@
+{
+  "slug": "cadaverous_contraband_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Put a non-attack action card from your graveyard on top of your deck?",
+          "effects": [
+            {
+              "type": "MOVE_MATCHING",
+              "to_zone": "deck",
+              "position": "top",
+              "target": {
+                "controller": "SELF",
+                "zone": "GRAVEYARD",
+                "amount": 1,
+                "filter": [
+                  { "type": "CARD_IS_TYPE", "card_type": "Action" },
+                  { "type": "NOT", "inner_type": "CARD_IS_TYPE", "card_type": "Attack" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If Cadaverous Contraband hits, you may put a non-attack action card from your graveyard on top of your deck.'\n\nTRIGGERED ON_HIT: ON_HIT is dispatched to the attack card itself (engine.py:1440-1450), so the attacking card receives its own hit trigger. The 'you may' is a MAY block; declining runs nothing.\n\nThe move is MOVE_MATCHING with a canonical object target rather than the triage pass's SEARCH_GRAVEYARD / SELECT_FROM_REF / PUT_REF_TOP chain, for two reasons. First, SEARCH_GRAVEYARD's destination map (effect_types.py:1884-1888) drops the position when it rewrites deck_top to zone 'deck', so the card would land at the zone default - the BOTTOM - and its filter_types use _matches_type_or_subtype, which cannot express the negation in 'non-attack'. Second, the ref chain would need LOOK_AT over a graveyard, and LOOK_AT only covers DECK_TOP/ARSENAL/HAND (effect_types.py:3390). MOVE_MATCHING's object target does both jobs: zone GRAVEYARD is a legal _OBJECT_TARGET_ZONES entry (_object_zone_cards serves it directly), position 'top' is forwarded to put_object, and the filter list is ordinary DSL conditions evaluated with each graveyard candidate as the card argument (_compile_object_target, effect_types.py:776-778). CARD_IS_TYPE 'Action' keeps action cards; NOT around CARD_IS_TYPE 'Attack' drops attack actions (condition_types.py:2220-2239 reads inner_type plus the flattened params).\n\nWith no eligible card in the graveyard the pool is empty and the effect is a no-op; the MAY prompt may still be offered once. Declaring the trigger out of existence when no legal target exists (release-note-style targeted-effect semantics) is not expressible for triggered layers - flagged rather than approximated with a gate, since gating the MAY on a condition makes the whole effect silently skip, which here happens to coincide with the right outcome but for the wrong mechanism."
+}

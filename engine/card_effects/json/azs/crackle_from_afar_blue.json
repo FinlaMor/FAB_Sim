@@ -1,0 +1,30 @@
+{
+  "slug": "crackle_from_afar_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "target": {
+        "filter": [
+          {
+            "type": "OR",
+            "any": [
+              {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+              {"type": "ATTACK_IS_WEAPON"}
+            ]
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Target the current attack for +1{p}?",
+          "effects": [
+            {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this enters the arena, up to 1 target attack gets +1{p}. / Ward 1' - Lightning Illusionist Instant - Aura.\n\nWARD 1 NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field - re-authoring it would be a defect.\n\nENTRY TRIGGER: TRIGGERED ON_ENTER_PLAY, dispatched from Zone.add on real arena entry (state.py ~304-310), which covers BOTH release-note-1 paths - resolving on the stack when played AND being put into the arena (or returned to it) by another card's effect.\n\nTARGETING: the ability-level target.filter compiles to target_filter and is checked at resolution before anything runs (interpreter.py:42-45) - it is the gate that asks whether a legal attack exists right now. ATTACK_TYPE_IN reads 'types' and checks the CURRENT combat.attack_card's types+subtypes (condition_types.py:273-294), so ['Action'] matches every attack action card; ATTACK_IS_WEAPON (condition_types.py:198-199) covers weapon attacks via combat.from_weapon; the OR is 'any attack'. Played outside combat there is no attack_card, the filter fails, and nothing happens - which is release note 2's zero-target case ('if you do not [target any attacks], the triggered effect is not added to the stack'), behaviourally identical because zero targets is then the only legal choice anyway.\n\n'UP TO 1' DECLINE: the triage pass flagged that zero-or-one targeting has no dedicated flag and blessed a MAY wrapper as the fallback - so when an attack DOES exist, MAY (effect_types.py:3788-3856) offers the pump and declining targets nothing, matching the printed 'up to'.\n\nPUMP: MODIFY_ATTACK add 1 takes mod/amount (effect_types.py:4123-4158); on a non-recalc event it appends to combat.power_mods AND bumps live power, so the +1 survives later recalculation mid-chain and is not double-counted."
+}

@@ -1,0 +1,12 @@
+{
+  "slug": "ghostly_visit_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {"type": "PLAYABLE_FROM_BANISHED"}
+      ]
+    }
+  ],
+  "_comment": "'You may play Ghostly Visit from your banished zone.' + printed **Blood Debt**. Shadow Action - Attack (Monarch).\n\nONLY AUTHORED CLAUSE is the play-from-banished permission: the declarative STATIC PLAYABLE_FROM_BANISHED, spelling copied from SHIPPED chn/rift_bind_blue.json and the sibling draft demonbound_gloomblade_red.json (same 'play this from your banished zone' + Blood Debt text). Verified engine-read, not resolved: play._self_playable_from_banished scans the declared statics and play.py consults it per banished card when offering plays. It takes no conditions; this clause is unconditional, so nothing is lost.\n\nBLOOD DEBT NOT AUTHORED: CR section 8 keyword on the card DB keywords field, implemented engine-side (ability_keywords.blood_debt) - re-authoring it would be a defect.\n\nNo other clauses in the printed text."
+}

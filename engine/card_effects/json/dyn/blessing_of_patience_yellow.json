@@ -1,0 +1,49 @@
+{
+  "slug": "blessing_of_patience_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "CHOOSE",
+          "amount": 1,
+          "options": [
+            {
+              "name": "This hero gains 2{h}",
+              "effects": [
+                {
+                  "type": "GAIN",
+                  "asset": "LIFE_POINTS",
+                  "amount": 2,
+                  "player": "SELF"
+                }
+              ]
+            },
+            {
+              "name": "Opposing hero gains 2{h}",
+              "effects": [
+                {
+                  "type": "GAIN",
+                  "asset": "LIFE_POINTS",
+                  "amount": 2,
+                  "player": "OPPONENT"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Same shape as blessing_of_patience_blue (copied from the authored Dynasty siblings blessing_of_aether_blue / blessing_of_savagery_blue) with amount 2 per the yellow printing. 'Target hero may be either hero, chosen at trigger time' is modelled as a runtime CHOOSE between SELF and OPPONENT gains because triggered-layer target declaration is a listed engine limitation."
+}

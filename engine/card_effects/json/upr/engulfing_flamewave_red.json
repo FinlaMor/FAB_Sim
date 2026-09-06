@@ -1,0 +1,29 @@
+{
+  "slug": "engulfing_flamewave_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {"type": "REVEAL_TOP_DECK", "amount": 1},
+        {
+          "type": "BANISH",
+          "from_zone": "TOP_DECK",
+          "amount": 1,
+          "target": {
+            "filter": [
+              {"type": "CARD_IS_TYPE", "card_type": "Action"},
+              {"type": "CARD_IS_TYPE", "card_type": "Attack"},
+              {
+                "type": "CARD_COST_LT",
+                "amount": {"type": "SUM", "values": [{"type": "COUNT_CHAIN_LINKS", "talent": "Draconic"}, 1]}
+              }
+            ]
+          }
+        },
+        {"type": "GRANT_PLAY_FROM_BANISHED"}
+      ]
+    }
+  ],
+  "_comment": "'When Engulfing Flamewave hits, reveal the top card of your deck. If it's an attack action card with cost less than number of Draconic chain links you control, banish it. You may play it this turn.' + printed go again. Draconic Ninja Action - Attack (Uprising).\n\nGO AGAIN NOT AUTHORED: unconditional printed keyword line, so it fires from the card DB keywords field; re-authoring it would be a defect and no SOURCE_IS_ATTACK conditional-keyword strip applies (nothing gates it).\n\nDELIBERATE DEVIATION FROM THE TRIAGE LIST (REF_IS_TYPE + CARD_COST_LT as conditions gating a MAY): CARD_COST_LT evaluates its condition CANDIDATE - _card_cost closes over c and reads c's own cost (condition_types.py:1219-1255) - so inside a MAY gate or CONDITIONAL when-list, where the candidate is the SOURCE card, it would test Engulfing Flamewave's cost against the chain-link count, not the revealed card's. The REF_* reader family has no cost member (full census: PITCH/TYPE/CONTAINS_TYPE/POWER/DEFENSE/COUNTER/EXISTS/MATCHES_OTHER). The one place a condition spec IS evaluated against an arbitrary candidate is an object-target FILTER: BANISH builds its predicate via _hand_card_filter (effect_types.py:1322-1333), whose {\"filter\": [...]} specs compile through compile_condition and run with the CANDIDATE as the card argument (effect_types.py:557-563) - so CARD_COST_LT over the deck-top card is exact there.\n\nBANISH SHAPE matches release note 1 ('you must banish if it qualifies; not optional'): from_zone TOP_DECK takes deck.cards[:1] with no prompt, and the filter SILENTLY EXCLUDES non-qualifying cards (the TOP_DECK branch filters rather than prompts, effect_types.py:1391-1396) - a revealed card that fails Action+Attack+cost stays on the deck, which is precisely 'if it's X, banish it'. optional is left unset so the banish is mandatory when something qualifies. CARD_IS_TYPE unions types AND subtypes, so 'Action' + 'Attack' together name exactly an attack action card.\n\nCOST THRESHOLD IS COUNT+1, deliberately: release-note-free but corpus-established (display_loyalty_red / demonstrate_devotion_red / burning_blade_dance_red, same Draconic family): a ChainLink appends to state.chain_links only AFTER the attack's damage resolves, so at hit time the count excludes Engulfing Flamewave itself, while the printed count includes it (it is itself a Draconic chain link you control). SUM[COUNT_CHAIN_LINKS talent Draconic, 1] corrects the off-by-one; first-attack case checks out: printed threshold 1 (itself) -> banish cost-0 attacks; engine 0 prior +1 = 1. COUNT_CHAIN_LINKS resolves controller via the candidate (deck-top card of this player) with combat.attacker_id fallback - the same player either way.\n\n'YOU MAY PLAY IT THIS TURN': GRANT_PLAY_FROM_BANISHED (alias PLAYABLE_FROM_BANISHED_REF, effect_types.py:4225-4269) reads ref default 'banished', which BANISH populates via _record_banished ONLY when a card actually moved - nothing banished, nothing unlocked. It appends to player.playable_from_banished, the list play.py consults for banished-zone plays; start_of_turn_refresh_player clears it, so an unplayed card remains banished (release note 2) and the permission expires with the turn. power_mod left unset (defaults 0 = no bump).\n\nREVEAL before BANISH, both reading the same untouched deck top (REVEAL_TOP_DECK peeks without moving); empty deck makes both no-ops. ON_HIT is dispatched to combat.attack_card, i.e. this card while it attacks; text says 'hits' unconditionally, so no ATTACK_TARGET_IS_HERO gate."
+}

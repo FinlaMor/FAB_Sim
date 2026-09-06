@@ -1,0 +1,25 @@
+{
+  "slug": "herald_of_sekem_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {"type": "LOOK_AT", "zone": "HAND", "player": "SELF", "amount": "ALL", "into": "hand_cards"},
+        {"type": "SELECT_FROM_REF", "ref": "hand_cards", "mode": "ANY", "min": 0, "max": 1, "into": "picked"},
+        {
+          "type": "MAY",
+          "prompt": "Put the chosen yellow card into your soul and deal 2 arcane damage?",
+          "conditions": [
+            {"type": "REF_PITCH_IS", "ref": "picked", "color": "yellow"}
+          ],
+          "effects": [
+            {"type": "MOVE_REF", "ref": "picked", "to_zone": "soul"},
+            {"type": "DEAL_ARCANE", "amount": 2, "target": "ANY"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, you may put a yellow card from your hand into your soul. If you do, deal 2 arcane damage to any target.' + printed **Phantasm** (Light Illusionist Action - Attack).\n\nPHANTASM NOT AUTHORED: printed keyword (printed_keywords) - fires from the card DB keywords field (ability_keywords.phantasm_check); re-authoring it would be a defect.\n\nTRIGGER: ON_ATTACK is dispatched with card=combat.attack_card (engine.py:1529), so the herald hears its own attack; the release note's timing ('triggered when it resolves and becomes attacking') is when this attack action enters the chain as the attack.\n\nYELLOW-CARD SELECTION: LOOK_AT's filter has no colour key ({keyword, subtype, face_down} only, effect_types.py:3364,3396-3405), so the hand is stored whole (amount ALL) and SELECT_FROM_REF min 0 max 1 makes the pick itself optional - STOP is offered immediately because len(chosen)=0 >= min (effect_types.py:3578-3584). REF_PITCH_IS unwraps a one-element list and tests pitch value via the colour alias, yellow=2 (condition_types.py:1979-2008); an empty pick or a non-yellow pick fails the test, the loader pops the MAY's conditions into its effect gate so the prompt is not even offered (effect_types.py:3794-3798), and nothing changes - exactly 'you may put a YELLOW card'.\n\nSOUL: a real engine zone (state.py:874, resolvable via zone_by_name state.py:1031). MOVE_REF defaults player OWNER, so the card goes to its owner's (= controller's) soul.\n\nDAMAGE: DEAL_ARCANE target ANY routes to _deal_arcane_to_objects (effect_types.py:1214-1216 -> :988-1040): pool is both heroes plus every ally in play, controller picks one, max_targets defaults 1, 'none' declines. amount 2.\n\nDEVIATION FROM THE RELEASE NOTE, flagged: the note says the target 'must be declared when you add this triggered effect to the stack'; triggered-layer target declaration is a known engine gap (engine AGENTS.md known limitations, CR audit open item), so targeting happens at RESOLUTION via the runtime choice inside _deal_arcane_to_objects instead. It fails flexible rather than dead - the pick is made among objects still in play at resolution - but a target that was legal at stack time and left play before resolution would be re-chosen rather than the effect fizzling, which is the one behavioural difference.\n\nUI INFIDELITY, minor: printed text offers one choice ('put a yellow card ...?'); the draft presents two (pick any card or stop, then confirm if yellow). No game state differs unless a yellow card actually moves to the soul."
+}

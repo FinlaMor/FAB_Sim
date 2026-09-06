@@ -1,0 +1,41 @@
+{
+  "slug": "affirm_loyalty_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_SUBTYPE_IN",
+            "subtypes": ["Dagger"]
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "CHAIN_LINKS_CONTROLLED_GTE",
+              "amount": 2,
+              "attribute": "Draconic"
+            }
+          ],
+          "then": [
+            {
+              "type": "CREATE_TOKEN",
+              "token": "fealty",
+              "count": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Target filter uses ATTACK_SUBTYPE_IN over the current attack's subtypes+types, same spelling as ironsong_response_blue; MODIFY_ATTACK hits the current attack the reaction targets. Known representation gap on clause 2: 'If you control 2 or more Draconic chain links' is evaluated when the reaction RESOLVES, but the engine appends a ChainLink only at the damage step (engine.py ~2137-2150), so the CURRENT attack is never in state.chain_links at that moment. If the targeted dagger attack is itself Draconic, the printed rules count it and this condition does not - a deck relying on dagger+one prior Draconic link will see no Fealty where the table would. Everything else is exact: CHAIN_LINKS_CONTROLLED_GTE reads amount + attribute (talents/classes/subtypes/keywords per stored link). Fealty token definition already exists (json/cin/fealty.json); CREATE_TOKEN spelling copied from pledge_fealty_red."
+}

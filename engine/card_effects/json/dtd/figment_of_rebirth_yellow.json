@@ -1,0 +1,40 @@
+{
+  "slug": "figment_of_rebirth_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Put a yellow action card from your graveyard on top of your deck?",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zones": ["GRAVEYARD"],
+              "filter_types": ["Action"],
+              "color": "yellow"
+            }
+          ],
+          "effects": [
+            {
+              "type": "MOVE_MATCHING",
+              "to_zone": "deck",
+              "position": "top",
+              "target": {
+                "controller": "SELF",
+                "zone": "GRAVEYARD",
+                "amount": 1,
+                "filter": [
+                  {"type": "CARD_IS_COLOR", "color": "yellow"},
+                  {"type": "CARD_IS_TYPE", "card_type": "Action"}
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Legendary** / When this enters the arena, you may put a yellow action card from your graveyard on top of your deck.' Light Illusionist Instant - Figment (DuskTillDawn).\n\nLEGENDARY NOT AUTHORED: printed_keywords carries it and it fires from the card DB keywords field - re-authoring it would be a defect.\n\nETB TRIGGER: TRIGGERED + ON_ENTER_PLAY, mapped at trigger_types.py:30 and dispatched from Zone.add on real arena entry (state.py ~293-310). Shape identical to the sibling drafts figment_of_judgment_yellow / figment_of_erudition_yellow / figment_of_triumph_yellow. Same residual caveat as those: the trigger fires only if the Figment actually enters the arena, which depends on the DB carrying 'Figment' where the resolution router looks.\n\nOPTIONAL CLAUSE: MAY (effect_types.py:3788-3856, read this session) - declining runs nothing in the block, which is the whole of 'you may'.\n\nGATE ON THE OFFER (improves on the sibling/cadaverous_contraband wart): the MAY carries a conditions list, which the loader pops into EffectDef.conditions so the prompt is not even offered when it fails (MAY handler comment, effect_types.py:3794-3796). CARD_IN_ZONE (condition_types.py:844-996, read this session) takes zones [GRAVEYARD] - resolved via getattr(player, 'graveyard') - filter_types ['Action'] tested against types AND subtypes, and color 'yellow' compared against card.color / base_color / the pitch 1-2-3 map (:890, :949-956, :910). With no eligible card the option does not exist, which is the printed behaviour rather than a prompt that flips nothing.\n\nTHE MOVE: MOVE_MATCHING (effect_types.py:3593-3612, read this session) exists for exactly 'put target <card matching X> from <zone> on top of your deck' (its own handler comment). Its canonical object target (compiled :675-804) pools _object_zone_cards(SELF, GRAVEYARD) - GRAVEYARD is served directly at :493 - then evaluates the filter list with each CANDIDATE as the card argument (:776-778): CARD_IS_COLOR reads 'color' and falls back to pitch 2 = yellow (condition_types.py:1460-1474); CARD_IS_TYPE reads 'card_type' and unions types AND subtypes (:1309-1325). amount 1 asks the controller which eligible card to take via _ask_player (:792-799) - the printed 'a yellow action card' choice. to_zone 'deck' + position 'top' forwards to put_object, where 'top' inserts at index 0 (verification recorded in .drafts/cadaverous_contraband_red.json).\n\nEdge cases fail closed: empty graveyard never offers the prompt (gate above); a graveyard holding only non-matching cards likewise. Triage note agreed on this composition and warned off SEARCH_GRAVEYARD (its deck destinations shuffle and it has no colour filter)."
+}

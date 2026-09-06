@@ -1,0 +1,41 @@
+{
+  "slug": "copper_cog_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {"type": "PUT_COUNTER", "counter_type": "steam", "amount": 2}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "COUNTER_GTE", "counter_type": "steam", "min": 1}
+          ],
+          "then": [
+            {
+              "type": "MAY",
+              "prompt": "Remove a steam counter from Copper Cog? (If not, it is destroyed.)",
+              "effects": [
+                {"type": "REMOVE_COUNTERS", "counter_type": "steam", "amount": 1}
+              ],
+              "else": [
+                {"type": "DESTROY_SELF"}
+              ]
+            }
+          ],
+          "else": [
+            {"type": "DESTROY_SELF"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Unlimited** / **Crank** / This enters the arena with 2 steam counters. At the start of your turn, destroy this unless you remove a steam counter from it.'\n\nENTRY CLAUSE: TRIGGERED ON_ENTER_PLAY + PUT_COUNTER steam 2 - the shipped teklo_core_blue.json shape for 'enters the arena with N counters' (a plain STATIC never places counters, and an entry grant happens exactly once). ON_ENTER_PLAY is dispatched from Zone.add (state.py:309), which fires for items entering player.permanents. PUT_COUNTER reads counter_type/amount and defaults its target to the source card (effect_types.py:2015-2051).\n\nUPKEEP CLAUSE: 'At the start of YOUR turn' - START_OF_TURN reaches only the ACTIVE player's zones and _dsl_permanent_zones includes player.items (engine.py:1452-1466), so the Cog (an Item) is reached on its controller's turn only. The gate sits on the CONDITIONAL_EFFECT's 'when', deliberately NOT as ability-level conditions (those are checked at resolution and a failed gate would skip the whole branch INCLUDING the destroy) and NOT on the MAY itself (the loader pops those into an effect-level gate that would skip the destroy too). With >=1 steam counter, MAY offers remove-or-destroy: MAY reads prompt/effects/else (effect_types.py:3788-3856), declining runs else = DESTROY_SELF - release note 3 ('Removing a steam counter is optional. If you choose not to remove a steam counter, it is simply destroyed') is MAY's decline path verbatim. With zero counters (another effect stripped them), removal is impossible so the CONDITIONAL's else destroys it - matching the printed 'destroy this unless you remove'. REMOVE_COUNTERS defaults its target to this card.\n\nNOT AUTHORED, on purpose: Crank is an engine keyword mechanic (ability_keywords.crank) fired from the card DB keywords field - re-authoring it in JSON would be a defect. Unlimited is a deckbuilding legality rule (release notes 1-2) with no in-game behaviour, so it has no ability either.\n\nNo activation_cost: nothing on the card costs {r} or taps; Crank costs come from the keyword implementation.",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

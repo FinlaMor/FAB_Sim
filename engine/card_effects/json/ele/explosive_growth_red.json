@@ -1,0 +1,45 @@
+{
+  "slug": "explosive_growth_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {"type": "DEAL_ARCANE", "amount": 1, "target": "TARGET_HERO"},
+        {"type": "CONDITIONAL",
+         "when": [
+           {"type": "FLAG_SET", "flag": "fused_explosive_growth_red"},
+           {"type": "EVENT_THIS_TURN", "event": "damage", "qualifier": "arcane"}
+         ],
+         "then": [
+           {"type": "INJECT_TRIGGER",
+            "scope": "CHAIN",
+            "trigger": {
+              "trigger_type": "ON_HIT",
+              "effects": [
+                {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+              ]
+            }}
+         ]}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEAL_DAMAGE",
+      "conditions": [
+        {"type": "FLAG_SET", "flag": "fused_explosive_growth_red"}
+      ],
+      "effects": [
+        {"type": "INJECT_TRIGGER",
+         "scope": "CHAIN",
+         "trigger": {
+           "trigger_type": "ON_HIT",
+           "effects": [
+             {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+           ]
+         }}
+      ]
+    }
+  ],
+  "_comment": "'**Earth Fusion** / If Explosive Growth was **fused**, whenever it deals damage, attacks gain +1{p} this combat chain. / When you attack with Explosive Growth, deal 1 arcane damage to target hero.' Elemental Runeblade Action - Attack (batch set label BriarBlitzDeck - pick the json/<set>/ folder from setIdentifiers at adoption).\n\nNOT AUTHORED: Earth Fusion is a printed keyword (printed_keywords) firing from the card DB keywords field as an optional additional cost at PLAY time (ability_keywords.fusion, ability_keywords.py:582-607, read this session). 'Was fused' gates on the marker fusion() writes - 'fused_<card.slug>' in the controller's current_turn_effects (:604-606) - via FLAG_SET (condition_types.py:1032-1037); per-printing name because fusion() keys it on card.slug. This matches the batch triage list, which named FLAG_SET here (unlike its siblings, it did NOT name PITCHED_FOR_THIS - correctly, since fusion() is a reveal that never pitches).\n\nTHE TWO DAMAGE INSTANCES. Printed paragraph 1 pays out once per damage INSTANCE this card deals (release notes 1-3: any and all instances incl. the arcane ping; 6 damage in one instance triggers once; multiple instances trigger multiple times). This card structurally produces exactly two instances when fused and hitting: (a) the arcane ping from paragraph 2, which resolves during the attack step BEFORE combat damage; (b) the attack's own combat damage.\n\nINSTANCE (a) CANNOT RIDE ON_DEAL_DAMAGE: engine._dsl_deal_damage_listener (engine.py:1742-1765, read this session) bridges ON_DEAL_DAMAGE only for COMBAT damage off the 'damage_dealt' event; ability damage flows through effect_keywords.deal_damage's generic 'damage' event, which has no DSL listener (same finding as .drafts/enion_surge_blue.json). So the ping instance is captured INSIDE the ON_ATTACK ability: DEAL_ARCANE first, then CONDITIONAL (effect_types.py reads when/then; 'when' not 'conditions' - conditions would be popped by the loader as an effect-level gate) whose when-list is [FLAG_SET fused_, EVENT_THIS_TURN {event: damage, qualifier: arcane}] - the exact documented example (condition_types.py:1070-1077), recorded by deal_damage only once damage is final past prevention, evaluated after the DEAL_ARCANE ran in the same sequential list (enion_surge precedent).\n\nDELIVERY OF '+1{p} THIS COMBAT CHAIN': INJECT_TRIGGER scope CHAIN (handler effect_types.py:2103-2199, read this session) with NESTED trigger dict {trigger_type: ON_HIT, effects: [MODIFY_ATTACK add 1]} - nested so the inner effects survive the loader's conditions-pop and compile per fire. CHAIN hooks live on Player.chain_attack_hooks, are re-applied to EVERY later attack on this combat chain including weapon attacks (release note 5), and are cleared at chain close ('this combat chain', not 'this turn'). The handler's direct-injection branch (:2180-2188) also covers the CURRENT attack, because _apply_turn_attack_effects already ran at declaration before this trigger resolves. Inner event is deliberately ON_HIT, not the triage note's RECALC_ATTACK_POWER: combat.injected_triggers is consumed ONLY by the hit listener (engine.py:1412-1423) and the damage listener (:1763-1772), which keep exclusively ON_HIT/ON_DEAL_DAMAGE entries - an injected RECALC entry would never fire (and MODIFY_ATTACK stacking per recalc would balloon power if it did). ON_HIT delivery is proven consumable (.drafts/edge_ahead_red.json wager rider) and lands pre-damage: MODIFY_ATTACK appends to combat.power_mods and survives recalculation through the damage step (dyed_silk_sleeves precedent), matching release note 4 ('it would gain its +{p} before the attack does damage').\n\nABILITY 2 (TRIGGERED ON_DEAL_DAMAGE, fused-gated at ability level - checked at resolution, interpreter.py:54-58) captures instance (b): ON_DEAL_DAMAGE is dispatched to the attack card itself (this card IS combat.attack_card during its own attack, engine.py:1753), once per net-damage instance, so a 6-damage hit fires once (note 2). Its INJECT covers all LATER links on the chain; its direct injection for the current attack arrives after that attack's hit already fired and is a harmless dead one-shot.\n\nNET BEHAVIOUR vs PRINTED: fused + ping lands + attack hits -> current attack +1{p} before its damage (from the ping instance), every later link on the chain +2{p} (two instances, notes 1/3); fused + fully blocked -> later links still +1{p} (the ping instance fired; printed agrees - the current attack's +1 is unobservable on a blocked attack); unfused -> nothing but the ping.\n\nDISCLOSED APPROXIMATIONS: (1) a later link's +1 materialises when THAT link hits - the power of a non-hitting attack is unobservable in this engine, but a card asking post-hoc about a whiffed attack's power would see it unpumped; (2) EVENT_THIS_TURN markers are player-scoped, so if unrelated arcane damage landed earlier this turn AND this ping was fully prevented, the ping-instance pump over-fires once; (3) 'target hero' resolves to the opposing hero at resolution (DEAL_ARCANE maps TARGET_HERO/OPPONENT/HERO identically, effect_types.py:907-931 docstring) - triggered-layer target declaration is a known engine gap, corpus convention (.drafts/etchings_of_arcana_red.json for the identical wording)."
+}

@@ -1,0 +1,32 @@
+{
+  "slug": "hood_of_red_sand",
+  "activation_cost": 1,
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "cost": [
+        {"type": "BANISH_FROM_GRAVEYARD", "amount": 1},
+        {"type": "BANISH_FROM_GRAVEYARD", "amount": 1},
+        {"type": "DESTROY_SELF"}
+      ],
+      "target": {
+        "filter": [
+          {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Sword"]}
+        ]
+      },
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "COMBAT",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "effects": [
+              {"type": "DRAW", "amount": 1}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Kassai Specialization** / **Attack Reaction** - {r}, banish a red and yellow card from your graveyard, destroy this: Target sword attack gets \"When this hits, draw a card.\" / **Battleworn**' Warrior Equipment - Head (HeavyHitters).\n\nPRINTED KEYWORDS NOT AUTHORED: Battleworn and Specialization are in printed_keywords and fire from the card DB keywords field; re-authoring either is a defect. Specialization is a deck-building restriction, not behaviour.\n\nCOSTS: the {r} is card-level activation_cost 1 (DSL-authoritative per DSL_REFERENCE; authoring it again as PAY_RESOURCES would double-charge). 'destroy this' is the ability-level DESTROY_SELF cost (cost_types.py:43-51, read this session; canonical destroy() resolves the head slot). Both are paid before effects run, per the text-before-colon convention.\n\nGAP - THE RED/YELLOW RESTRICTION ON THE BANISH IS NOT EXPRESSIBLE, disclosed loudly: the text banishes ONE RED and ONE YELLOW card (two cards), but no cost type filters a graveyard banish by colour. BANISH_FROM_GRAVEYARD (cost_types.py:603-689, handler read in full this session) reads only card_types/card_type, amount, name/card_name, pitch_power/power, optional and flag - its _eligible() has no colour/pitch test. Drafted as TWO unfiltered BANISH_FROM_GRAVEYARD entries so the printed two-card COUNT still gates play (can_pay requires >= 2 graveyard cards); until a colour filter exists on that cost, any two cards can pay, which is strictly more permissive than printed. Secondary engine limitation, same handler: the mandatory pay path takes eligible[:amount] without asking the player which cards to banish. Closing both needs one generic change - a colour/pitch filter param on the BANISH_FROM_GRAVEYARD cost - not card-specific code.\n\nTARGETING: ATTACK_REACTION activated ability on head equipment - play._add_hero_dsl_activations lists head among its sources and offers ATTACK_REACTION only to the ATTACKER in the combat reaction step, which is this card's window (Kassai reacting to her own sword attack). The ability's target defaults to state.combat.attack_card and target.filter gates the offer at play time; ATTACK_SUBTYPE_IN reads 'subtypes' (condition_types.py:296-316) and sword WEAPONS attack as themselves carrying the Sword subtype, so ['Sword'] matches exactly the printed 'target sword attack'.\n\nDELIVERY: INJECT_TRIGGER scope COMBAT (default) with the NESTED trigger dict - required shape, since a top-level conditions key would be popped by the loader as an effect-level gate evaluated once at registration (effect_types.py:2103-2119). Registered during the reaction step; combat.injected_triggers is consumed at the hit listener (engine.py:1412-1423, read this session) which fires ON_HIT entries with combat.attack_card as the source card, so the granted 'When this hits, draw a card' resolves at the hit, after the defend step - exactly the printed timing. DRAW (effect_types.py:1222-1249, reads amount/player) defaults player SELF, resolved against the attack card's controller = Hood's controller: the sword's controller draws, as printed. If the attack never hits, the injected trigger never fires - nothing to clean up.\n\nNo other gaps."
+}

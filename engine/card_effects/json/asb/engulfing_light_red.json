@@ -1,0 +1,37 @@
+{
+  "slug": "engulfing_light_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "CHARGE",
+          "amount": 1,
+          "optional": true
+        }
+      ],
+      "conditions": [
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "charge"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "COMBAT",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "effects": [
+              {
+                "type": "PUT_SELF_IN_ZONE",
+                "zone": "soul"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'As an additional cost to play Engulfing Light, you may charge your hero's soul. If you've charged this turn, Engulfing Light gains \"If this hits, put it into your hero's soul.\"' Light Warrior Action - Attack (ArmoryDeckBoltyn).\n\nPRINTED KEYWORD NOT AUTHORED: Charge is in printed_keywords and fires from the card DB keywords field; the sentence above it is the authored part.\n\nCOST: optional CHARGE as an additional_cost on the PLAY ability -- the shipped beaming_bravado_* shape (cost_types.py:266-318; an optional cost never blocks the play, and the player is asked which hand card to charge).\n\nGATE DEVIATES FROM THE SIBLING TRIAGE NOTES (engulfing_light_blue/yellow named CARD_WAS_CHARGED) deliberately, on the release notes: note 1 says 'Engulfing Light does not need to be the card to have charged ... If you have charged this turn due to another card, Engulfing Light still gains its effect.' That is a PLAYER-level question, which is EVENT_THIS_TURN event 'charge' (condition_types.py:1070-1112; charge() records the turn event in effect_keywords.py:2368-2372, CR 8.5.29a/b). CARD_WAS_CHARGED reads was_charged on THIS card -- the attack action -- when charging marks the HAND card that went to the soul, so it would be false even when this card's own cost was paid. The red printing's own triage note agrees (EVENT_THIS_TURN).\n\nTIMING: costs are paid at play time and ability conditions are checked at resolution, so a charge made by this card's own cost is already recorded when the gate evaluates -- the gate cannot miss its own cost.\n\nINJECT_TRIGGER scope COMBAT with a NESTED trigger dict (required shape): state.combat exists when an attack action's PLAY abilities resolve (engine.py creates CombatState at :522 before dispatching ON_PLAY at :555), so the one-shot lands in combat.injected_triggers and fires on this attack's hit. No inner condition: the gained trigger is unconditional, and per release note 5 it is NOT optional once charged -- hence bare PUT_SELF_IN_ZONE zone 'soul', the shipped spelling for moving an attacking card to the soul (herald_of_ravages_*, rising_solartide_*); inside the injected trigger the dispatched card IS Engulfing Light.\n\nNOT EXPRESSIBLE / ENGINE-SIDE (release notes 2-4): 'the chain link does not close and remains on the combat chain', 'the attack can not gain go again once in the soul', and the Last-Known-Information action point are chain-link-resolution mechanics of the engine, not card behaviour; no DSL effect touches them and none is needed for this text.\n\nAdopter note: batch labels the set 'ArmoryDeckBoltyn'; shipped Boltyn-armory cards (beaming_bravado_*, v_for_valor_yellow) live in json/dtd/ -- confirm against the card's own setIdentifiers per IMPLEMENTATION_GUIDE step 4."
+}

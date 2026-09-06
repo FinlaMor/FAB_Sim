@@ -1,0 +1,35 @@
+{
+  "slug": "hot_top",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {"type": "ATTACK_IS_WEAPON"}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Put an attack reaction card from your graveyard on top of your deck?",
+          "conditions": [
+            {"type": "CARD_IN_ZONE", "zones": ["GRAVEYARD"], "filter_types": ["AttackReaction"]}
+          ],
+          "effects": [
+            {
+              "type": "MOVE_MATCHING",
+              "to_zone": "deck",
+              "position": "top",
+              "target": {
+                "controller": "SELF",
+                "zone": "GRAVEYARD",
+                "amount": 1,
+                "filter": [{"type": "CARD_IS_TYPE", "card_type": "AttackReaction"}]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends a weapon attack, you may put an attack reaction card from your graveyard on top of your deck. / **Blade Break**' Warrior Equipment - Head (MasteryPackWarrior).\n\nBLADE BREAK NOT AUTHORED: printed keyword (printed_keywords) firing from the card DB keywords field; re-authoring it is a defect.\n\nTRIGGER: TRIGGERED + ON_DEFEND - the engine dispatches ON_DEFEND per defending card with that card as source (engine.py:1646), so the defending head hears its own trigger; same vehicle as .drafts/flameborn_retribution_red.json, equipment defending. ATTACK_IS_WEAPON reads combat.from_weapon (condition_types.py:198-199) - true exactly when defending a weapon attack, which is release note 1's restriction enforced by the condition rather than extra plumbing.\n\nDELIBERATE DEVIATION FROM THE TRIAGE LIST (it named SEARCH_GRAVEYARD), verified against the handler before deviating: SEARCH_GRAVEYARD (effect_types.py:1835-1892) defaults shuffle=True for every deck destination (:1854-1856) and passes NO position to put_object (:1886-1888), whose zone default appends to the BOTTOM (effect_keywords.py:1658, :1664-1669) - it can neither put the card ON TOP nor skip the shuffle, both of which the text requires. MOVE_MATCHING (effect_types.py:3593-3612) is the established composition for exactly this wording ('put target <card matching X> from <zone> on top of your deck' is its own docstring), used by .drafts/helm_of_hindsight.json (same head-equipment graveyard-to-deck-top clause family) and .drafts/figment_of_rebirth_yellow.json: position 'top' reaches put_object directly (:3609-3611).\n\nYOU MAY: MAY supplies the choice at resolution (release note 1: optional, chosen when the effect resolves); its conditions list gates the OFFER itself - no eligible attack reaction in the graveyard means no prompt at all (the loader pops MAY.conditions into EffectDef.conditions; MAY handler comment effect_types.py:3794-3796). Declining runs nothing in the block.\n\nTYPE FILTER: attack reaction cards store types ['AttackReaction'] in the card DB (verified against affirm_loyalty_red this session); CARD_IS_TYPE reads card_type and folds via _norm, which strips non-alphanumerics, so 'AttackReaction' and 'Attack Reaction' match alike (condition_types.py:1309-1325, :7-15). CARD_IN_ZONE filter_types tests types AND subtypes lowercased (:887-889, :944-948).\n\nRelease note 2 (empty deck still allowed): put_object into an empty deck zone works, and position top makes the moved card the top of the deck by construction."
+}

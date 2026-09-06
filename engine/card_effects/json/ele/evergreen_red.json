@@ -1,0 +1,17 @@
+{
+  "slug": "evergreen_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_COMBAT_CLOSE",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "PLAYED_FROM_ARSENAL"}
+      ],
+      "effects": [
+        {"type": "PUT_SELF_BOTTOM_DECK"}
+      ]
+    }
+  ],
+  "_comment": "'If Evergreen is played from arsenal, put it on the bottom of its owner's deck when the combat chain closes.' Earth Action - Attack (BriarBlitzDeck). Identical printed text to .drafts/evergreen_blue.json, which verified this exact shape end to end; only the slug differs.\n\nTIMING: ON_COMBAT_CLOSE is a mapped trigger (trigger_types.py:82); engine._dsl_combat_close_listener dispatches it to combat.attack_card WHILE COMBAT STILL EXISTS, and _close_step emits 'combat_chain_close' BEFORE _close_combat_chain moves the attack to the graveyard - so the ability resolves while Evergreen is still the attack card on the chain.\n\nPLAYED_FROM_ARSENAL (condition_types.py:789-809) reads card.played_from_zone, stamped by play.py at the moment of play and surviving the arsenal -> chain move (prev_zone fallback). True exactly when this copy was played from arsenal. SOURCE_IS_ATTACK matches the shipped close-step spelling on attack cards (evr/swing_big_red.json) and is true at dispatch by construction.\n\nPUT_SELF_BOTTOM_DECK (effect_types.py:1618-1639) moves THIS card via put_object with position None = append = bottom of the controller's deck (controller == owner here). The chain-close relocation is the documented Herald-of-Protection path: _close_combat_chain sees the card left the chain zone, drops stale membership, skips the graveyard - no duplication.\n\nNOT OPTIONAL per official release note ('the effect is not optional'): PUT_SELF_BOTTOM_DECK reads no optional parameter and is mandatory by default - correct as authored."
+}

@@ -1,0 +1,53 @@
+{
+  "slug": "call_down_the_lightning_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "player": "SELF",
+          "trigger": {
+            "trigger_type": "ON_DEAL_DAMAGE",
+            "conditions": [
+              {"type": "ATTACK_CONTROLLED_BY_YOU"},
+              {"type": "DEFENDER_USED_HAND_CARD"}
+            ],
+            "effects": [
+              {"type": "DEAL_GENERIC", "amount": 1, "target": "DEFENDING"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {"type": "DEFENDS_WITH_OTHER_HAND_CARD"}
+      ],
+      "effects": [
+        {
+          "type": "CHOOSE",
+          "amount": 1,
+          "options": [
+            {
+              "name": "Under your control",
+              "effects": [
+                {"type": "CREATE_TOKEN", "token": "embodiment_of_lightning", "token_type": "Embodiment of Lightning", "player": "SELF"}
+              ]
+            },
+            {
+              "name": "Under the opposing hero's control",
+              "effects": [
+                {"type": "CREATE_TOKEN", "token": "embodiment_of_lightning", "token_type": "Embodiment of Lightning", "player": "OPPONENT"}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Go again and Specialization are printed keywords -> card DB keywords field, deliberately NOT authored here. CLAUSE 1 ('Your attacks this turn get \"Whenever the defending hero adds 1 or more defending cards from hand to this chain link, this deals 1 damage to them.\"'): DEVIATION - the triage shape (INJECT_TRIGGER scope TURN with inner ON_DEFEND) is INERT in this engine: turn-scoped hooks are compiled into combat.injected_triggers, and only ON_HIT (engine.py:1414) and ON_DEAL_DAMAGE (engine.py:1764) ever consume that list; an injected ON_DEFEND would sit there unfired forever because _dsl_defend_listener dispatches ON_DEFEND only to the defending card object (engine.py:1640-1646), never to the attack. Drafted instead as an ON_DEAL_DAMAGE hook gated on DEFENDER_USED_HAND_CARD: when one of my attacks deals combat damage and the defender added hand cards to this chain link, it deals 1 more to them. Consequences of the deviation: (a) a FULLY BLOCKED attack takes no extra damage where the printed ability would already have dealt its 1 during the defend step; (b) multiple additions on one chain link (defend step + each resolving defense reaction, per the release note) collapse into a single 1-damage ping because DEFENDER_USED_HAND_CARD is a boolean, not a count; (c) when the attack does hit, net life totals match printed behaviour. CombatState is recreated per chain link (engine.py:522), so defender_used_hand_card is per-link as printed. Expressing the printed defend-step timing needs either an engine dispatch of defend events to the attack card or wider injected-trigger consumption - both engine changes, so not done here. CLAUSE 2 (Unity): TRIGGERED ON_DEFEND fires via the 'defend' event to this card itself; DEFENDS_WITH_OTHER_HAND_CARD (condition_types.py:453-464) is used over the triage's DEFENDER_USED_HAND_CARD because it excludes this card and requires ANOTHER hand-card defender - defending alone from hand must not create a token. Compound declaration ordering makes 'together with' hold: _apply_defend adds ALL co-declared cards to defending_cards/hand_defender_ids BEFORE emitting any defend events (play.py:1353-1376), and a defense reaction resolving later cannot re-trigger this because this card's own defend event has already fired. Token definition exists at json/tokens/embodiment_of_lightning.json; default destination (permanents) matches shipped aurora.json/briar.json/dashing_flashfoot_yellow.json. GAP: 'under any number of heroes' control' is not expressible - CREATE_TOKEN's player param only distinguishes SELF vs opponent-side, and CHOOSE picks exactly one option (choose_amt is read but never used for multi-select, effect_types.py:5126-5135) - so it is reduced to a pick-one-of-two between the two heroes; zero (declining entirely) and any hypothetical multi-hero case are unreachable without new DSL surface."
+}

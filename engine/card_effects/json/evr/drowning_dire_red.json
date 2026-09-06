@@ -1,0 +1,52 @@
+{
+  "slug": "drowning_dire_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "OR", "any": [
+          {"type": "EVENT_THIS_TURN", "event": "play", "qualifier": "Aura"},
+          {"type": "EVENT_THIS_TURN", "event": "create", "qualifier": "Aura"}
+        ]}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "DOMINATE"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Put a non-attack action card from your graveyard on the bottom of your deck?",
+          "effects": [
+            {
+              "type": "MOVE_MATCHING",
+              "to_zone": "deck",
+              "position": "bottom",
+              "target": {
+                "controller": "SELF",
+                "zone": "GRAVEYARD",
+                "amount": 1,
+                "filter": [
+                  {"type": "CARD_IS_TYPE", "card_type": "Action"},
+                  {"type": "CARD_IS_ATTACK", "value": false}
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If you have played or created an aura this turn, Drowning Dire gains dominate.' / 'When Drowning Dire hits, you may put a non-attack action card from your graveyard on the bottom of your deck.' Runeblade Action - Attack; printed_keywords carries Dominate.\n\nDominate clause: release note says continuously checking ('if you create an aura while Drowning Dire is attacking, it would still gain dominate'), so it is a WHILE_STATIC, not a triggered ability. Shape = SOURCE_IS_ATTACK + real condition + GAIN keyword, which is what loader.conditional_keywords() requires to suppress the printed DB Dominate (_GRANTABLE_KEYWORDS includes 'dominate'); engine._recalculate_attack_power then strips the printed keyword and lets this ability re-grant it on every recalculation whenever the conditions hold (engine.py comment at the conditional_keywords call documents exactly this design). GAIN routes canonical_keyword('DOMINATE') -> 'Dominate' -> combat.grant_keyword, which is where play.py's dominate check reads. Condition: EVENT_THIS_TURN event 'play' qualifier 'Aura' - play.py records each of the card's types as markers, so playing any aura card writes did_this_turn:play:aura; event 'create' covers aura TOKENS (Runechant etc.) - create_token records subtypes/types per token. Both normalise via the same alnum-lowercase fold, so 'Aura' matches 'aura'.\n\nGAP (minor): an aura that enters the arena by neither path - e.g. put there directly by an effect moving an existing aura card - records no marker and would not count. The two main paths (played from hand, created as a token) are covered.\n\nHit clause: MAY wraps MOVE_MATCHING. Target spec zone GRAVEYARD + controller SELF + amount 1 makes _compile_object_target ask which eligible card to take; filter CARD_IS_TYPE Action + CARD_IS_ATTACK value:false is the exact 'non-attack action card' pair used elsewhere in the corpus (is_attack is subtype-derived, so it works on graveyard cards). position 'bottom' is MOVE_MATCHING's default and put_object appends bottom-of-deck for it. I deviated from the triage list here: SEARCH_GRAVEYARD cannot express 'non-attack' (its filter_types matches types OR subtypes, so 'Action' offers attack actions too), and SELECT_FROM_REF/PUT_REF_BOTTOM would need a LOOK_AT first, whose zone vocabulary has no graveyard. Cosmetic only: the MAY prompt is offered even when the graveyard holds no eligible card; accepting it then moves nothing.",
+  "_verified_against": {
+    "condition_types.py": ["SOURCE_IS_ATTACK:381", "EVENT_THIS_TURN:1070 reads event/qualifier/count/player/exact", "OR:1902 reads 'any'", "CARD_IS_TYPE:1309 reads card_type", "CARD_IS_ATTACK:1451 reads value"],
+    "effect_types.py": ["GAIN:4869 keyword branch -> canonical_keyword -> combat.grant_keyword", "MAY:3788 reads prompt/effects", "MOVE_MATCHING:3593 reads to_zone/position/target"],
+    "loader.py": ["conditional_keywords:255 requires SOURCE_IS_ATTACK + grantable keyword"],
+    "engine.py": ["_recalculate_attack_power:1887 strips conditional keywords, emits recalculate_attack_power:1993"],
+    "effect_keywords.py": ["put_object:1648 position bottom = append", "_record_turn_event:609 one marker per qualifier"]
+  }
+}

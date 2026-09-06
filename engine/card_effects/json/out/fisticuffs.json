@@ -1,0 +1,21 @@
+{
+  "slug": "fisticuffs",
+  "activation_cost": 2,
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "target": {
+        "filter": [
+          {"type": "CONTROLS_ATTACK_ACTION"}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Attack Reaction** - {r}{r}, destroy Fisticuffs: Target attack action card gains +1{p}.' Generic Equipment - Arms (BenjiBlitzDeck). No printed keywords.\n\nCOST SPLIT: {r}{r} is the card-level activation_cost 2 (DSL-authoritative field; deliberately NOT re-authored as a PAY_RESOURCES-style cost, which would double-charge). 'destroy Fisticuffs' is the ability-level cost DESTROY_SELF - cost_types.py:43-51 compiles it with can_pay=True and pay=canonical destroy() of the source. It lives in cost, not effects, because destroying the equipment must be able to BLOCK the activation (a cost), not merely happen afterwards.\n\nOFFERING: play._add_hero_dsl_activations scans arms among its ability sources (play.py:262-265), so equipment activations are offered, not just heroes'; ATTACK_REACTION is offered only to the attacker in the combat reaction step (play.py:286-289). The ability's own DSL costs and resource affordability gate the offer (play.py:310-313, 337).\n\nTARGET: CONTROLS_ATTACK_ACTION (bare - default SELF) is the engine's vocabulary for 'attack action card you control' in this combat: controlled_attack_action_cards (ability_keywords.py:113-132) from the attacker's seat returns exactly the active attack action card they control, and play.py:324-332 enumerates one ACTIVATE_CARD action per legal target, so the +1{p} lands on the declared target.\n\nEFFECT: MODIFY_ATTACK reads mod/amount only (effect_types.py:4123-4158) and applies to the current attack - which IS the targeted card here, since mid-combat the only attack action card you control as attacker is the active attack. From a one-shot reaction it appends (_mod, val) to combat.power_mods so the pump survives later power recalculations within the chain link."
+}

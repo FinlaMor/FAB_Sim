@@ -1,0 +1,20 @@
+{
+ "slug": "limpit_hop_a_long_yellow",
+ "abilities": [
+  {
+   "ability_type": "ACTIVATE",
+   "activation_cost": 1,
+   "cost": [
+    {
+     "type": "TAP_SELF"
+    }
+   ],
+   "effects": [
+    {
+     "type": "ATTACK"
+    }
+   ]
+  }
+ ],
+ "_comment": "GoAgain and WateryGrave are printed keywords fired from the card DB (engine unions card.keywords into combat.keywords; _apply_watery_grave handles CR 8.3.41) - not authored. Ally attack offered engine-side by actions.py ATTACK_ALLY; the {r} cost is parsed from functional text by _ally_attack_resource_cost, so activation_cost here is documentary (placement follows shipped gem/pile_driver.json)."
+}

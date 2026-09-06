@@ -1,0 +1,16 @@
+{
+  "slug": "blaze_headlong_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        { "type": "SOURCE_IS_ATTACK" },
+        { "type": "EVENT_THIS_TURN", "event": "play", "qualifier": "red", "count": 2 }
+      ],
+      "effects": [
+        { "type": "GAIN", "keyword": "GO_AGAIN" }
+      ]
+    }
+  ],
+  "_comment": "'If you've played another red card this turn, this gets **go again**.' (Draconic Action - Attack)\n\nGoAgain appears in printed_keywords, so the conditional-keyword shape is MANDATORY: the engine applies every DB keyword unconditionally, and loader.conditional_keywords() (loader.py:255-296) suppresses the printed keyword ONLY for an ability whose conditions include SOURCE_IS_ATTACK and whose DIRECT effects grant it via GAIN - both hold here (go_again is in _GRANTABLE_KEYWORDS, loader.py:243-246; the GAIN sits un-nested on the WHILE_STATIC). Without this ability the attack would have go again on every play.\n\nAbility type: per the Aggressive Pounce rule, an 'if you've <done> X this turn, this gets go again' condition is always checking - a WHILE_STATIC re-evaluated on every RECALC_ATTACK_POWER dispatch (interpreter.py:186-201), not a TRIGGERED ON_ATTACK pump that would freeze the answer at declaration. SOURCE_IS_ATTACK scopes it to this card's own attack; GAIN keyword writes into state.combat.keywords (effect_types.py:4846-4852), consulted when the chain link resolves. Recalculations happen at declaration, after reactions and before damage, all before resolution pays the action point.\n\n'ANOTHER red card': EVENT_THIS_TURN event=play qualifier=red with count 2. play.py:1085-1101 records a 'play' turn marker per qualifier INCLUDING COLOUR (card.color or pitch-derived) at the moment of play, so by the time this card attacks its own red play is already among the markers; >=2 markers therefore means 'this card plus at least one other red card played this turn', which is exactly 'another'. This is the shipped spelling: fai/inflame_red.json uses the identical condition for the identical 'played another red card this turn' wording. Release note 2 ('as long as you play a red card before the link step of combat') falls out: any red play earlier in the turn is live by the first recalculation.\n\nDraconic in the type line is a talent carried in card data, not an ability - nothing to author."
+}

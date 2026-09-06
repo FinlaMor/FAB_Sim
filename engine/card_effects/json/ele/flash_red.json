@@ -1,0 +1,20 @@
+{
+  "slug": "flash_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GRANT_NEXT_CARD",
+          "keyword": "Go Again",
+          "amount": 0,
+          "filter": [
+            {"type": "CARD_IS_TYPE", "card_type": "Action"},
+            {"type": "CARD_COST_GTE", "amount": 0}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next action card you play this turn with cost 0 or greater gets go again.' Lightning Action (OscilioBlitzDeck).\n\nPRINTED GO AGAIN NOT AUTHORED: the trailing 'Go again' is an unconditional keyword line carried in printed_keywords - it fires from the card DB keywords field. Re-authoring it (e.g. as an explicit GO_AGAIN effect) grants a second action point on every play.\n\nSHAPE: GRANT_NEXT_CARD (alias of MODIFY_NEXT_CARD_COST, effect_types.py:4665-4743 reads keyword/amount/filter) queues a ONE-SHOT entry on player.dsl_queued_card_mods, consumed by the first matching PLAYED card - play.py:1726-1729 appends the keyword verbatim to that card's keywords, and unused entries expire end of turn (engine.py:933-934) = 'this turn'. GRANT_KEYWORD_TO_PLAYED was rejected: it is turn-scoped and matches EVERY qualifying card until the end-phase clear, which over-grants against 'the NEXT ... card'. Spelling copied from .drafts/flash_yellow.json, the sibling-colour draft of this exact card, which itself copies shipped pen/fasting_carcass_blue.json.\n\nAMOUNT 0 IS DELIBERATE: compile-side default is 1 and _calculate_resource_cost SUBTRACTS the stored amount from the next matching card's cost (play.py:1447-1451) - omitting it would add an unprinted {r} discount alongside the go again.\n\nFILTER PARAMS VERIFIED: _cost_mod_matches ANDs the specs against the card being played; CARD_IS_TYPE reads 'card_type' and unions types+subtypes ('Action' is a type; condition_types.py:1309-1325); CARD_COST_GTE reads 'amount' against the played card's own raw cost (condition_types.py:1215-1256). 'Cost 0 or greater' is kept as an explicit CARD_COST_GTE 0 for fidelity to the printed text even though it is trivially true of every card. Flash cannot consume its own grant: the queue is written when Flash's layer RESOLVES, after its own announce-time cost calculation has passed.\n\nSET FOLDER: batch labels this set OscilioBlitzDeck - derive the adoption folder from the card's sets/setIdentifiers in card_data/slug_index.json per IMPLEMENTATION_GUIDE step 4."
+}

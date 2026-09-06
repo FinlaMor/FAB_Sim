@@ -1,0 +1,45 @@
+{
+ "slug": "legacy_of_ikaru_blue",
+ "abilities": [
+  {
+   "ability_type": "ATTACK_REACTION",
+   "target": {
+    "filter": [
+     {
+      "type": "ATTACK_CLASS_IN",
+      "classes": [
+       "Ninja"
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "type": "MODIFY_ATTACK",
+     "mod": "add",
+     "amount": 1
+    },
+    {
+     "type": "INJECT_TRIGGER",
+     "scope": "COMBAT",
+     "trigger": {
+      "trigger_type": "ON_HIT",
+      "conditions": [
+       {
+        "type": "LAST_CHAIN_ATTACK",
+        "name": "Edge of Autumn"
+       }
+      ],
+      "effects": [
+       {
+        "type": "DRAW",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "_comment": "Ninja Attack Reaction. Targets a Ninja attack (ATTACK_CLASS_IN Ninja). Effect 1: MODIFY_ATTACK +1{p} on the targeted attack. Effect 2: INJECT_TRIGGER scope COMBAT (one-shot on current attack) injects a nested ON_HIT trigger. Nested trigger gated by LAST_CHAIN_ATTACK name 'Edge of Autumn' (matches the card name across all printings). On hit, if condition met: DRAW 1. No printed keywords to suppress."
+}

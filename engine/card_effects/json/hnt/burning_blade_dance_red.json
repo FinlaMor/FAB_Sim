@@ -1,0 +1,34 @@
+{
+  "slug": "burning_blade_dance_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        { "type": "SOURCE_IS_ATTACK" },
+        { "type": "CHAIN_LINKS_CONTROLLED_GTE", "amount": 1, "attribute": "Draconic" }
+      ],
+      "effects": [
+        { "type": "GAIN", "keyword": "GO_AGAIN" }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        { "type": "ATTACK_TARGET_IS_HERO" },
+        { "type": "CHAIN_LINKS_CONTROLLED_GTE", "amount": 1, "attribute": "Draconic" }
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Have target dagger you control deal 1 damage to them?",
+          "effects": [
+            { "type": "DAGGER_DEALS_DAMAGE", "amount": 1 },
+            { "type": "DESTROY_REF", "ref": "dagger" }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Action - Attack whose go again and on-hit rider are both gated on 'you control 2 or more Draconic chain links', where the card counts ITSELF (release note 1).\n\nGo again: printed_keywords lists GoAgain, so this uses the conditional-keyword shape - a WHILE_STATIC gated on SOURCE_IS_ATTACK granting GAIN keyword GO_AGAIN. loader.conditional_keywords() (loader.py:255-296) strips the printed unconditional keyword precisely because an ability gated on SOURCE_IS_ATTACK grants it, and the gate then governs. WHILE_STATIC fires on RECALC_ATTACK_POWER, which reaches the attack card; _grant_go_again puts 'Go Again' on the live combat and the engine pays the action point at the Resolution Step (CR 8.3.5b).\n\nWhy amount 1 and not 2: a ChainLink is appended to state.chain_links only AFTER the attack's damage resolves (engine.py:2148-2163), so during Burning Blade Dance's own attack/hit it is not yet among them. '2 or more Draconic chain links' counting itself therefore means >=1 PRIOR Draconic link, which is what CHAIN_LINKS_CONTROLLED_GTE amount 1 attribute Draconic tests (it filters links by attacker_id and matches the talent across talents/classes/subtypes/keywords). Both abilities use the same gate at the same timing, so one number serves both.\n\nOn-hit rider: TRIGGERED ON_HIT (an Action - Attack is not an ATTACK_REACTION) + ATTACK_TARGET_IS_HERO ('hits a hero'). The dagger sentence is DAGGER_DEALS_DAMAGE + DESTROY_REF ref:'dagger' rather than DAGGER_DEALS_DAMAGE_AND_DESTROY: that combined effect carries Flick Knives' 'isn't on the active chain link' exclusion, which this card's text does not have, and DAGGER_DEALS_DAMAGE deliberately stores the chosen dagger under ref 'dagger' for exactly this pairing (effect_types.py:2903-2938). It deals 1 generic damage from the chosen dagger, dispatches the dagger's own ON_HIT ('the dagger has hit'), then DESTROY_REF destroys it.\n\nGAP (release note 3): 'this is a targeted effect on an on-hit trigger; if you do not control a dagger this triggered effect does not get added to the stack'. Triggered-layer target declaration is a known engine limitation, so the target-at-stack-time legality is not modelled; the practical outcome matches - with no controlled dagger DAGGER_DEALS_DAMAGE finds none and nothing happens.\n\nMinor deviation: 'Destroy the dagger' runs whenever the option was taken, even if the damage was prevented; 'if damage is dealt this way' as a strict precondition is not expressible without wiring the destroy into the damage result. Same shape as shipped Flick Knives."
+}

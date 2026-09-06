@@ -1,0 +1,27 @@
+{
+  "slug": "flamecall_awakening_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "EVENT_THIS_TURN", "event": "play", "qualifier": "red", "count": 2}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Search your deck for a Phoenix Flame?",
+          "effects": [
+            {
+              "type": "SEARCH_DECK",
+              "name": "Phoenix Flame",
+              "destination": "hand",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When you attack with Flamecall Awakening, if you've played another red card this turn, you may search your deck for a Phoenix Flame, reveal it, put it into your hand, then shuffle.' Draconic Action - Attack (FaiBlitzDeck).\n\nPRINTED GO AGAIN NOT AUTHORED: unconditional keyword line, fires from the card DB keywords field; re-authoring it would be a defect. Nothing gates it, so no SOURCE_IS_ATTACK conditional-keyword strip applies either.\n\nCOUNT=2 IS DELIBERATE: the 'play' turn event is recorded at announce (play.py:1085-1101, carrying the card's colour as a qualifier; _record_turn_event normalises it to did_this_turn:play:red, effect_keywords.py:597-605), while ON_ATTACK fires later at the Attack Step - so by trigger time Flamecall itself is already counted as one red card played. count>=2 therefore means exactly 'another red card this turn'. EVENT_THIS_TURN reads event/qualifier/count (condition_types.py:1070-1112).\n\nOPTIONALITY: release note 3 says the whole triggered effect is optional - MAY (effect_types.py:3788-3856) offers the block and declining runs nothing, shuffle included. Release note 4 (fail-to-find still shuffles) is SEARCH_DECK's own behaviour: it calls effect_shuffle unconditionally after the choice loop (effect_types.py:1786-1815), chosen or not, and ask_optional gives the FAIL_TO_FIND sentinel.\n\nNAME MATCH: SEARCH_DECK reads 'name' (effect_types.py:1721) and matches flattened-substring against the drawn card's name OR slug, so 'Phoenix Flame' hits phoenix_flame_red/yellow/blue. destination 'hand' is the handler default and is an explicit read param; searched cards move public (is_public=True) = the printed reveal. No token definitions needed - it only ever fetches real deck cards."
+}

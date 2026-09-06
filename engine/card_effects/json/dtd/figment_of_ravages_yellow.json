@@ -1,0 +1,13 @@
+{
+  "slug": "figment_of_ravages_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {"type": "DEAL_ARCANE", "amount": 1, "target": "ANY"}
+      ]
+    }
+  ],
+  "_comment": "'**Legendary** / When this enters the arena, deal 1 arcane damage to any target.' Light Illusionist Instant - Figment (DuskTillDawn).\n\nLEGENDARY NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field - re-authoring it would be a defect.\n\nETB TRIGGER: TRIGGERED + ON_ENTER_PLAY, mapped at trigger_types.py:30 and dispatched from Zone.add on real arena entry - same shape as the sibling drafts figment_of_judgment_yellow / figment_of_erudition_yellow / figment_of_triumph_yellow.\n\nANY TARGET: DEAL_ARCANE (effect_types.py:1188-1219, read this session) with target 'ANY' routes to _deal_arcane_to_objects (:988-1040, read this session): the pool is BOTH heroes plus every ally on either side, and the controller is asked to pick one (max_targets defaults to 1, so no explicit max_targets needed - matches 'any target', singular). Spelling copied from the corpus majority (enion_surge_*, aether_hail_blue, burn_bare).\n\nRESIDUAL CAVEAT: the shared chooser offers slugs as labels and is offered even when the only legal targets are obvious; behaviourally correct, cosmetically rough. Engine-level, not expressible in JSON."
+}

@@ -7,7 +7,7 @@
       "conditions": [
         {
           "type": "FLAG_SET",
-          "flag": "fused_chilling_icevein_red"
+          "flag": "fused_chilling_icevein_blue"
         }
       ],
       "effects": [

@@ -1,0 +1,16 @@
+{
+  "slug": "falcon_wing_yellow",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "COUNTER_GTE", "counter_type": "aim", "min": 1}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'If Falcon Wing has an aim counter, it has +1{p}. / **Go again**' Ranger Action - Arrow Attack (Outsiders).\n\nGO AGAIN NOT AUTHORED: unconditional printed keyword (printed_keywords carries GoAgain; no clause gates it) - it fires from the card DB keywords field. Re-authoring it would be a defect, and the SOURCE_IS_ATTACK conditional-keyword shape does not apply because nothing conditions it.\n\n+1{p} CLAUSE: the documented WHILE_STATIC shape for continuous attack-power statics. WHILE_STATIC is special-dispatched ONLY on RECALC_ATTACK_POWER (interpreter.py:186-202); that event is emitted at the END of _recalculate_attack_power, so MODIFY_ATTACK takes its recalc branch - the delta applies TRANSIENTLY in the stage-8 static window and never accumulates on power_mods however many recalculations run (effect_types.py:4134-4144).\n\nCONDITIONS are ability-level, AND-gated in _run_ability (interpreter.py:54-58) before any effect runs:\n- COUNTER_GTE reads counter_type (or counter/type) and min (condition_types.py:998-1030) and tests THIS card's own tally: 'Falcon Wing has an aim counter' is exactly card.counters['aim'] >= 1. The card-level tally is authoritative because it travels with the card through arsenal -> combat chain - the handler's own comment names that precise staleness case. Spelling 'aim' matches shipped azl/sedation_shot_blue.json, azl/infecting_shot_blue.json.\n- SOURCE_IS_ATTACK (condition_types.py:381-387) is belt-and-braces: _dsl_recalc_listener dispatches to the attack card, both heroes, and permanents/items/auras/allies/equipment-slots/weapons ONLY (engine.py:1729-1735), so an aimed Falcon Wing sitting in hand/arsenal/graveyard/banished is never evaluated at all, and an Action - Attack card reaches the dispatch set only by BEING combat.attack_card. The condition pins the static to this card's own attack if dispatch ever widens.\n\nNo activation_cost authored: the attack itself is engine-offered from the card DB like any Action - Attack; the JSON implements only the printed rules text."
+}

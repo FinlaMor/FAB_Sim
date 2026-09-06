@@ -1,0 +1,19 @@
+{
+  "slug": "felling_swing_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 5,
+          "filter": [
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Axe"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next axe attack this turn gains +5{p}. / **Go again**' Warrior Action (Dynasty) - note the type_text is plain 'Warrior Action', NOT 'Action - Attack', so the pump rides a PLAY ability that resolves when the card is played.\n\nSHAPE copied from .drafts/felling_swing_red.json (+6), the same card's other printing; only the amount differs (5 here per this batch's printed_text).\n\nPUMP: MODIFY_NEXT_ATTACK reads mod/amount/filter/scope (effect_types.py:4592-4618, read this session); scope defaults to TURN, which is the printed 'this turn'. The mod is queued on the card's CONTROLLER and consumed by the FIRST matching attack only - the official release note ('applies to the next axe attack only. It does not apply to any additional axe attacks made that turn') is that one-shot consumption rule verbatim; nothing extra to author. The filter key is 'filter', never 'conditions' - conditions would be popped as an effect-level gate and evaluated NOW, when no axe attack exists.\n\nDEVIATION FROM TRIAGE, disclosed: triage named WEAPON_SUBTYPE_IN. That condition exists and would also match here (it reads combat.weapon or combat.attack_card subtypes, condition_types.py:234-248, read this session), but the red sibling uses ATTACK_SUBTYPE_IN, which unions the attack card's types AND subtypes plus the from_weapon flag - the same family as DSL_REFERENCE's documented 'next arrow / dagger / sword attack' filters, and Axe lives on WEAPONS, which attack as themselves carrying their weapon subtypes on combat.attack_card. Consistency with the sibling wins; both spellings match an axe weapon attack.\n\nGO AGAIN NOT AUTHORED, deliberately: it is unconditional printed text and appears in printed_keywords, so it fires from the card DB keywords field. Re-authoring it would be a defect, and the conditional-keyword (SOURCE_IS_ATTACK) wrapper is only for cards whose printed keyword is gated by a condition - this one has no condition.\n\nAdoption note: batch lists set Dynasty - derive the folder from the card's own sets/setIdentifiers in card_data/slug_index.json at adoption time."
+}

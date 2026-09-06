@@ -1,0 +1,50 @@
+{
+  "slug": "cloud_city_steamboat_yellow",
+  "per_turn": 2,
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Tap a cog you control?",
+          "cost": [
+            {"type": "TAP_PERMANENT", "subtype": "Cog"}
+          ],
+          "effects": [
+            {
+              "type": "PUT_COUNTER",
+              "counter_type": "steam",
+              "amount": 1,
+              "target": {
+                "controller": "SELF",
+                "zone": "ARENA",
+                "amount": 1,
+                "filter": [
+                  {"type": "SUBTYPE_IN", "subtypes": ["Cog"]}
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"}
+      ],
+      "cost": [
+        {"type": "TAP_PERMANENT", "subtype": "Cog"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'When this hits a hero, you may {t} a cog you control. If you do, put a steam counter on a cog you control.' / 'Twice per Turn Instant - {t} a cog you control: This gets +1{p}.'\n\nHIT TRIGGER: TRIGGERED + ON_HIT + ATTACK_TARGET_IS_HERO (the gate is mandatory - the generic 'hit' event also fires when the attack damaged an ally/aura instead of a hero). 'You may {t} ... If you do, ...' is MAY with a cost, the shipped hoist_em_up_red shape: MAY reads its cost (effect_types.py:3830-3849), payable is false when no UNTAPPED cog exists so the prompt is not even offered, and declining runs nothing - 'if you do' falls out for free. Cogs are items and items live in player.permanents (state.py:868, items = SubZoneView(permanents, \"Item\")), which is exactly the pool TAP_PERMANENT scans; subtype matching is case-insensitive against subtypes/types.\n\nThe steam counter goes through PUT_COUNTER's canonical dict target (_compile_object_target, effect_types.py:675+): zone ARENA pools player.permanents (includes items), SUBTYPE_IN reads 'subtypes' and tests types AND subtypes (condition_types.py:1309-1325), and the controller picks from ALL cogs you control, tapped or not - release note 2 ('you do not have to put the steam counter on the same cog you tapped').\n\nACTIVATED HALF: INSTANT + TAP_PERMANENT cost + MODIFY_ATTACK add 1. Gated SOURCE_IS_ATTACK (condition_types.py:381-387, combat.attack_card is this card) = release note 3's 'only while it is on the combat chain as an attacking card'; without that gate an off-chain activation would tap a cog for nothing, and activated while DEFENDING it would pump the OPPONENT's attack (MODIFY_ATTACK acts on the current combat).\n\n'per_turn' is CARD-LEVEL ONLY: _compile_ability never reads an ability-level per_turn key (loader.py:110-141 - it would land unread in params), so 'Twice per Turn' is authored top-level, where card.py:519-530 stamps has_per_turn_limit/activations=2, enforced at offer time (play.py:304) and decremented per activation (play.py:1265). Triggered abilities do not consume activations, so the limit lands only on the INSTANT.\n\nGAP (engine, not DSL): no action-generation path currently offers activations for a card that IS combat.attack_card - _add_hero_dsl_activations scans the hero and arena zones only (play.py:259-265), and during its legal window this card sits on the combat chain, not in those zones. Every piece compiles and is read, but as drafted the INSTANT will likely never be OFFERED; fixing that needs a generic offering path for the active attack card's own activated abilities. No printed keywords."
+}

@@ -1,0 +1,27 @@
+{
+  "slug": "fault_line_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "CARD_IN_ZONE", "zone": "arsenal", "count_gte": 1}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "PUT_CARDS_BOTTOM", "from_zones": ["arsenal"], "player": "SELF"},
+        {"type": "PUT_CARDS_BOTTOM", "from_zones": ["arsenal"], "player": "OPPONENT"}
+      ]
+    }
+  ],
+  "_comment": "'If you have a card in your arsenal, this gets +1{p}. / **Crush** - When this deals 4 or more damage to a hero, put all cards in all arsenals on bottom of their owner's deck.' Guardian Action - Attack (ArmoryDeckPleiades).\n\nABILITY 1 (+1{p}): the documented WHILE_STATIC shape for conditional continuous attack-power statics, matching release note 1 ('a conditional continuous effect that is always checking'). WHILE_STATIC fires ONLY on RECALC_ATTACK_POWER (interpreter.py:186-202, read this session) and its conditions gate it there, so a card entering or leaving the arsenal mid-attack is picked up at the next recalculation - the substance of notes 3/4 ('the damage will not be recalculated' during the damage step) is engine recalc timing, nothing to author. CARD_IN_ZONE reads zone/zones + count_gte and defaults player to SELF = the CONTROLLER's arsenal (condition_types.py:844-996, read this session). SOURCE_IS_ATTACK (condition_types.py:381) pins the static to Fault Line's own attack; an Action - Attack card reaches the RECALC dispatch set only as combat.attack_card, so it is belt-and-braces, and release note 2's 'not functional while defending' holds because a defending card is never the attack card.\n\nABILITY 2 (Crush): STATIC_TRIGGERED + ON_CRUSH, the shape of shipped wtr/disable_*.json and debilitate_*.json (TRIGGERED dispatches identically through interpreter.py:171-180; trigger_types.py:8 maps ON_CRUSH -> ON_CRUSH). The engine fires ON_CRUSH from the hit listener when crush_check passes - event damage >= 4 (ability_keywords.py:688-691, read this session) - so the printed 'deals 4 or more damage' half needs no authoring. crush_check reads ONLY the damage total, never the target, so ATTACK_TARGET_IS_HERO carries 'to a hero' (the documented .review/disable_blue / spinal_crush_red defect class); combat still exists at crush time (inside the hit dispatch) so the condition resolves.\n\nEFFECT DEVIATES FROM THE TRIAGE LIST, deliberately: it named PUT_ARSENAL_BOTTOM x2, but that handler moves exactly ONE card per arsenal (pool[0], effect_types.py:2325-2377, read this session), while the text says ALL cards and official note 6 explicitly covers multi-card arsenals. PUT_CARDS_BOTTOM (effect_types.py:3259-3349, read this session) with from_zones ['arsenal'] and NO amount moves every card in that arsenal to the bottom of the SAME player's deck (tid resolves SELF/OPPONENT; zone path does player.deck.add_bottom for each card) - a card in your arsenal is owned by you, so 'their owner's deck' holds for both halves.\n\nGAP (minor): note 6 says the resolving player CHOOSES the order cards go on the bottom when an arsenal holds several; PUT_CARDS_BOTTOM bottoms them in zone order with no choice prompt. Single-card arsenals - the overwhelmingly common state - are exact.\n\nCrush appears in printed_keywords and fires from the card DB keywords field - deliberately not re-authored here; only the payoff clause above is card-specific.\n\nAdoption note: batch lists set ArmoryDeckPleiades - derive the folder from the card's own sets/setIdentifiers in card_data/slug_index.json at adoption time."
+}

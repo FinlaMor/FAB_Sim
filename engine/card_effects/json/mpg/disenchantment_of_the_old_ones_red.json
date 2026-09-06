@@ -1,0 +1,25 @@
+{
+  "slug": "disenchantment_of_the_old_ones_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"},
+        {"type": "TARGET_HERO_CLASS_IN", "classes": ["Guardian"]}
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_MATCHING",
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "ARENA",
+            "amount": "ALL",
+            "filter": [{"type": "SUBTYPE_IN", "subtypes": ["Aura"]}]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Crush** - When this deals 4 or more damage to a Guardian hero, destroy all auras they control.' + printed **Heave 2**. Guardian Action - Attack (cost 6, power 10).\n\nPRINTED KEYWORDS NOT AUTHORED: Crush and Heave are in printed_keywords and fire from the card DB keywords field; re-authoring either would be a defect. Heave 2's cost/payment is keyword machinery, not card text to implement.\n\nTRIGGER: STATIC_TRIGGERED + ON_CRUSH, the shape of shipped wtr/disable_yellow.json and debilitate_yellow.json (and the draft precedent .drafts/buckling_blow_red.json, whose printed Crush clause is word-for-word the same skeleton). The engine dispatches ON_CRUSH only when crush_check passes - hit-event damage >= 4 (ability_keywords.py:688-691, dispatched at engine.py:1424-1428) - so the printed 'deals 4 or more damage' half needs no authoring.\n\nNARROWING TO 'A GUARDIAN HERO': crush_check reads only the damage total, not the target, so two ability-level conditions carry the rest, both verified against their handlers. ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977) makes the 4+ have gone to a HERO - combat.attack_target is set only for permanent/ally targets and None for a hero attack; combat still exists at crush time (inside the hit dispatch), so it resolves. TARGET_HERO_CLASS_IN reads 'classes' and tests the DEFENDING hero's classes AND talents (condition_types.py:1517-1542) - the hero on the receiving end, not the attack's class, which is exactly the printed distinction (ATTACK_CLASS_IN would wrongly ask whether the attack itself is a Guardian card). Both conditions are checked by the interpreter before effects run.\n\nDESTROY ALL AURAS: DEVIATES FROM THE TRIAGE LIST only in the filter type - it named CARD_SUBTYPE_IN, which does not exist anywhere under dsl/ (the real condition is SUBTYPE_IN/CARD_IS_TYPE, condition_types.py:1309-1325, reading types AND subtypes merged). DESTROY_MATCHING takes the canonical object target read by _compile_object_target (effect_types.py:675-804): controller OPPONENT resolves relative to this attack's controller = the damaged Guardian's side; amount \"ALL\" returns the whole filtered pool with no choice prompt (782-785); zone ARENA pools player.permanents.cards (461-464), which INCLUDES both played auras and aura tokens - player.auras is a SubZoneView OF permanents, not a separate zone (state.py:866-872); SUBTYPE_IN [Aura] keeps exactly those.\n\nKNOWN LIMIT vs release note 1: the note counts defending cards with the aura sub-type and aura-subtype cards on the stack among the destroyed objects. No object-target zone reaches the combat chain or the stack (_OBJECT_TARGET_ZONES, effect_types.py:418-420: arena/equipment/weapon/arsenal/hero/deck/graveyard/banished/hand/soul/pitch), so those two cases are not expressible with existing primitives; this draft destroys the arena auras (permanents + aura tokens), which is the common case. Release note 2 (destroying defending aura cards after the damage step does not recalculate the attack's damage) describes engine sequencing during resolution - nothing to author here."
+}

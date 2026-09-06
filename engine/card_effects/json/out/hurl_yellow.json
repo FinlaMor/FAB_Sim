@@ -1,0 +1,30 @@
+{
+  "slug": "hurl_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "SET_FLAG", "flag": "hurl_rider_unpaid", "value": false},
+        {
+          "type": "PAY_OR_ELSE",
+          "player": "SELF",
+          "resources": 1,
+          "on_failure": [
+            {"type": "SET_FLAG", "flag": "hurl_rider_unpaid"}
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "NOT", "inner_type": "FLAG_SET", "flag": "hurl_rider_unpaid"}
+      ],
+      "effects": [
+        {"type": "DAGGER_DEALS_DAMAGE_AND_DESTROY", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'As an additional cost to play Hurl, you may pay {r}. When you do, it gains \"When this attacks, target dagger you control deals 1 damage to target hero. If damage is dealt this way, the dagger has hit. Destroy the dagger.\" / **Go again**' Assassin/Ninja Action - Attack.\n\nGO AGAIN NOT AUTHORED: printed_keywords carries GoAgain and the printed go again is UNconditional (it is not gated on the payment), so the DB keyword applies it in every state - authoring it again would be a defect, and no conditional-keyword SOURCE_IS_ATTACK shape is needed.\n\nTHE PAYMENT GATE - deliberate deviation from the triage list, which said 'additional_cost [{PAY_RESOURCES, optional TRUE}]'. That cannot work: compile_cost's PAY_RESOURCES branch (cost_types.py:691-699) reads only amount - it never reads optional - so as an additional_cost it becomes a MANDATORY {r}, blocking the play at 0 resources and always charging. And no condition anywhere reads whether an optional cost was paid (the hurl_red/blue triage notes name this exact blocker; grep confirms nothing reads state._paid_amount). The expressible route is an inverted PAY_OR_ELSE (effect_types.py:3207-3257): asked 'Pay 1 ...?' when resources >= 1, paying deducts and sets nothing; declining OR having 0 resources runs on_failure, which sets turn flag hurl_rider_unpaid. The rider is a TRIGGERED ON_ATTACK ability gated NOT FLAG_SET - ability conditions are checked per dispatch (interpreter.py:54-58), and ON_ATTACK fires AFTER the attack's own PLAY resolution (engine.py:555 ON_PLAY -> :578 'attacking' emit), so the flag always reflects THIS play's decision. SET_FLAG value:false first CLEARS the marker at the start of each resolution, so two copies played in one turn gate independently (copy A declines -> its attack has no rider; copy B pays -> its attack has the rider).\n\nRIDER EFFECT: DAGGER_DEALS_DAMAGE_AND_DESTROY amount 1 (effect_types.py:2940-2970) is the printed sentence verbatim - asks which controlled dagger, deals 1 generic damage to the opposing hero, fires the dagger's own ON_HIT ('the dagger has hit'), then destroys it (to graveyard, per release note). Its Flick Knives exclusion of combat.attack_card from the dagger pool can never bite here: the attack card is Hurl itself, never a dagger.\n\nDISCLOSED APPROXIMATIONS: (1) release note says with no dagger the triggered effect 'does not get added to the stack'; ours adds it and it resolves to a silent no-op (ask_optional over an empty pool) - observably identical. (2) 'IF damage is dealt this way, the dagger has hit': the primitive dispatches the dagger's ON_HIT after deal_damage even if prevention reduced it to 0 - the same accepted deviation as shipped out/flick_knives.json on this exact primitive. (3) The prompt reads 'Pay 1 to avoid the effect?' (PAY_OR_ELSE's generic wording) - cosmetic; semantics match 'you may pay {r}'. (4) Printed text puts the payment at play time as an additional cost; ours asks during the attack's resolution onto the chain - for this engine those are one continuous window (CR 7.2.3 comment, engine.py:1505-1508) with no priority pass between, so no observable difference.\n\nNo gaps requiring engine changes."
+}

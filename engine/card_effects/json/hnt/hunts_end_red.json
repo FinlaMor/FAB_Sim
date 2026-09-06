@@ -1,0 +1,21 @@
+{
+  "slug": "hunts_end_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {"type": "CONTROLS_TOKEN_TYPE", "token": "fealty", "amount": 3}
+      ],
+      "target": {
+        "filter": [
+          {"type": "CONTROLS_TOKEN_TYPE", "token": "fealty", "amount": 3},
+          {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Dagger"]}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 4}
+      ]
+    }
+  ],
+  "_comment": "'Play this only if you control 3 or more Fealty tokens. / Target dagger attack gets +4{p}.' Draconic Warrior Attack Reaction (TheHunted, HNT101).\n\nPLAY RESTRICTION PLACEMENT - the one judgement call, flagged: 'Play this only if...' is a play-LEGALITY restriction. The triage note suggested card-level conditions, but compile_card (loader.py:144-162, read this session) reads NO top-level conditions field - authoring it there would be silently dead. Ability-level conditions alone are checked at RESOLUTION only, so the card would be playable in forbidden states and fizzle as a blank (the exact defect recorded on .draft-review/brothers_of_flame_red.json). So the Fealty gate is authored TWICE, the shape the fatal_engagement family shipped for the identical problem: (a) in target.filter, which _legality_check evaluates for every ATTACK_REACTION ability at play time with card = the played card and refuses the play if any condition fails (play.py:416-431, read this session); (b) mirrored in ability-level conditions for a resolution-time re-check (Fealty lost between play and resolution -> no pump). CONTROLS_TOKEN_TYPE's closure takes (card, event, state) and reads no event, so it evaluates correctly with event=None at legality time.\n\nCONTROLS_TOKEN_TYPE reads token (slug) or token_type (display name) plus amount, default comparison gte (condition_types.py:1725-1754); 'fealty' is the real token slug (present in card_data/slug_index.json). It scans permanents plus head/chest/arms/legs/weapon1/weapon2; aura-zone tokens are covered because player.auras is a SubZoneView delegating to the permanents parent zone.\n\n'TARGET DAGGER ATTACK': ATTACK_REACTION + target.filter ATTACK_SUBTYPE_IN [\"Dagger\"] - daggers are WEAPONS which attack as themselves, so combat.attack_card carries the Dagger subtype; the handler unions subtypes AND types plus a 'weapon' flag from combat.from_weapon (condition_types.py:296-316). This is the exact spelling shipped fng/blistering_blade_red.json uses for its identical 'Target dagger attack gets +N{p}' sentence.\n\n+4{p}: MODIFY_ATTACK mod add amount 4 (effect_types.py:4123-4158); from a one-shot reaction it appends to combat.power_mods so the pump survives later attack-power recalculations within the chain link.\n\nNOT AUTHORED: Draconic (talent) and Warrior (class) live on the type line in the card DB; printed_keywords is empty so no conditional-keyword machinery applies."
+}

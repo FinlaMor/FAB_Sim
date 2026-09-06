@@ -1,0 +1,22 @@
+{
+ "slug": "infect_blue",
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_HIT",
+   "conditions": [
+    {
+     "type": "ATTACK_TARGET_IS_HERO"
+    }
+   ],
+   "effects": [
+    {
+     "type": "CREATE_TOKEN",
+     "token": "bloodrot_pox",
+     "player": "OPPONENT"
+    }
+   ]
+  }
+ ],
+ "_comment": "Stealth from printed_keywords, not authored. bloodrot_pox token exists."
+}

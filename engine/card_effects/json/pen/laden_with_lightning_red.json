@@ -1,0 +1,32 @@
+{
+ "slug": "laden_with_lightning_red",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "effects": [
+    {
+     "type": "MODIFY_NEXT_ATTACK",
+     "mod": "add",
+     "amount": 3
+    },
+    {
+     "type": "CONDITIONAL_EFFECT",
+     "when": [
+      {
+       "type": "PITCHED_TO_PLAY_THIS",
+       "talent": "Lightning"
+      }
+     ],
+     "then": [
+      {
+       "type": "CREATE_TOKEN",
+       "token": "embodiment_of_lightning",
+       "amount": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "_comment": "Elemental Action (CompendiumOfRathe). 'Your next attack this turn gets +3{p}. Lightning Bond - If a Lightning card was pitched to play this, create an Embodiment of Lightning token. Go again'\n\nPRINTED KEYWORDS: Bond and GoAgain are in printed_keywords and fire from the card DB keywords field; re-authoring either would be a defect. Bond is a keyword marker only; the actual 'Lightning Bond' condition is implemented via PITCHED_TO_PLAY_THIS.\n\nABILITY TYPE: PLAY (not ACTION/ATTACK_REACTION) â€” type_text is 'Elemental Action', a non-attack action whose effect resolves when played.\n\nEFFECT 1: MODIFY_NEXT_ATTACK mod add amount 3, no filter â€” queues a one-shot +3{p} on the controller's next attack this turn (effect_types.py:4592-4618). Consumed by first qualifying attack; unused expires end of turn.\n\nEFFECT 2: CONDITIONAL_EFFECT with PITCHED_TO_PLAY_THIS talent Lightning (condition_types.py:318-362). The handler reads card.pitched_for_this stamped by play._pitch_for_cost and matches on class/talent/subtype/color. 'Lightning' is a talent/class on Lightning cards. If true: CREATE_TOKEN embodiment_of_lightning (effect_types.py:1942-2013). Release note: 'You must pitch at least one Lightning card while paying for this card's resource cost to meet the Lightning Bond condition. Using resources from previously pitched Lightning cards does not meet this condition.' The pitched_for_this list only contains cards pitched FOR THIS PLAY, so the condition is correctly scoped.\n\nGO AGAIN: Not authored â€” printed keyword, fires from card DB."
+}

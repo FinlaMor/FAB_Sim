@@ -1,0 +1,12 @@
+{
+  "slug": "call_to_the_grave_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "SEARCH_DECK", "destination": "graveyard", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Search your deck for a card, put it into your graveyard, then shuffle.' SEARCH_DECK reads 'destination' (effect_types.py ~1698) and put_object resolves the graveyard zone; the shuffle is built into the handler and runs BEFORE placement, so the order matches the printed text. Unfiltered search for any card. Printed Go again fires from the card DB keywords field - deliberately NOT re-authored here.\n\nDeviation, disclosed: the release note says you can't fail to find if any cards remain in your deck, but SEARCH_DECK always offers fail-to-find (ask_optional with a FAIL_TO_FIND sentinel, effect_types.py ~1797) regardless of deck size. Making the find mandatory when the deck is non-empty would need a no-fail flag on SEARCH_DECK; as authored, an agent can decline a legal find. Bounded: it only ever under-delivers a card the player searched for."
+}

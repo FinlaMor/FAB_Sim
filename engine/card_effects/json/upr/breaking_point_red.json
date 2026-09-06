@@ -1,0 +1,17 @@
+{
+  "slug": "breaking_point_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "CHAIN_HIT_COUNT_GTE", "amount": 4},
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "DESTROY_ARSENAL", "player": "DEFENDING"}
+      ]
+    }
+  ],
+  "_comment": "'**Rupture** - If Breaking Point is played as chain link 4 or higher, it has \"When this hits a hero, destroy all cards in their arsenal.\"'\n\nCHAIN-LINK GATE DEVIATES FROM THE TRIAGE LIST, which proposed ATTACK_ORDINAL_GTE: that condition (condition_types.py:672-683) reads player.attacks_this_turn, which counts EVERY attack this turn across all combat chains, while the printed text and the release note ('there must already be 3 chain links on the combat chain before you play this') test position on THIS chain. CHAIN_HIT_COUNT_GTE (condition_types.py:1039-1044) implements exactly len(chain_links) >= amount - 1, i.e. 'at least 3 prior links = playing as link 4+'. Its name says 'hit count' (its first user was mask_of_momentum) but its implementation is the chain-link-position test the card asks for. A link appends to chain_links AFTER its damage resolves (condition_types.py:1628-1630), so during this attack links[-1] is the previous attack and len(links) is the count of links before this one - correct at both play time and ON_HIT resolution.\n\nDIRECT ON_HIT INSTEAD OF THE TRIAGE LIST'S INJECT_TRIGGER(ON_HIT): a TRIGGERED ON_HIT ability on an Action - Attack card is dispatched to the attack card itself (engine.py:1409-1411), which is the same object the injection would ride, so the injected layer adds machinery without changing behaviour. Same shape as shipped break_tide_yellow's hit rider. Conditions are checked at resolution (hit time), which matches the release note's model of Rupture as fixed at play - nothing can change chain_links between playing the attack and its attack step.\n\nATTACK_TARGET_IS_HERO takes no params here (condition_types.py:1960-1977: hero attack leaves combat.attack_target None). DESTROY_ARSENAL reads player/target with default OPPONENT; 'their arsenal' = the hit hero = DEFENDING, which maps to the opponent side (effect_types.py:2994-3008) and destroys every card in the zone via canonical destroy().\n\nRupture itself is a printed keyword in the card DB with no engine behaviour of its own in this corpus; the gate above IS the implementation, so no keyword authoring is needed for it."
+}

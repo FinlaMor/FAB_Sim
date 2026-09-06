@@ -1,0 +1,42 @@
+{
+  "slug": "stains_of_the_redback_yellow",
+  "cost_modifiers": [
+    {
+      "condition": {
+        "type": "OPPONENT_IS_MARKED"
+      },
+      "delta": -1
+    }
+  ],
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "amount": 2,
+          "mod": "add"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "go again"
+        }
+      ],
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_HAS_KEYWORD",
+            "keyword": "stealth"
+          }
+        ]
+      },
+      "_comment": "If the defending hero is marked, this costs {r} less to play (cost_modifiers). Target attack with stealth gets +N{p} and go again."
+    }
+  ],
+  "_substituted": {
+    "from": "1",
+    "to": "2"
+  },
+  "_derived_from": "stains_of_the_redback_blue",
+  "_comment": "Derived from stains_of_the_redback_blue, whose printed functional text is identical to this card's apart from ONE number (2 here, 1 there) -- the usual shape of a colour variant. That number appears exactly once in stains_of_the_redback_blue's abilities, and every number in those abilities also appears in its printed text, so which JSON value the text changed is not in doubt; it is substituted here and recorded in _substituted.\n\nTHE DERIVATION IS PINNED, not trusted: tests/test_number_substituted_copies.py re-applies the same substitution to stains_of_the_redback_blue's current abilities and asserts it still yields these, and that the two printed texts still differ in exactly that one number. An edit to either card that breaks the correspondence fails there rather than leaving the pair silently out of step -- the insult_to_injury failure, where three printings of one sentence got three implementations and the blue one was missing a gate."
+}

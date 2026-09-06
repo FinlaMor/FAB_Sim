@@ -1,0 +1,44 @@
+{
+  "slug": "cerebellum_processor_blue",
+  "activation_cost": 0,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter_type": "steam",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "PAY_OR_ELSE",
+          "counter_type": "steam",
+          "amount": 1,
+          "on_failure": [
+            {
+              "type": "DESTROY_SELF"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Crank**' appears in printed_keywords: it fires from the card DB keywords field and is deliberately NOT authored (re-authoring a printed keyword is a defect).\n\n'This enters the arena with 2 steam counters': TRIGGERED ON_ENTER_PLAY + PUT_COUNTER steam 2. ON_ENTER_PLAY is dispatched from Zone.add on real arena entry from a non-arena zone (state.py ~293-310), which covers an item played from hand. PUT_COUNTER reads counter_type+amount and defaults its target to the source card (effect_types.py:2015-2058); effect_put_counter writes BOTH the card-level tally and the player-level (slug, zone, kind) entry (ability_keywords.py:1653-1660), which is what the upkeep read below needs.\n\n'At the start of your turn, destroy this unless you remove a steam counter from it': TRIGGERED START_OF_TURN + PAY_OR_ELSE counter_type=steam amount=1, on_failure DESTROY_SELF. START_OF_TURN is dispatched to the turn player's items (engine.py _dsl_permanent_zones includes player.items, engine.py:1452-1466). PAY_OR_ELSE's counter branch is this exact recurring pattern -- its own docstring names 'destroy this UNLESS you remove a steam counter from it' (effect_types.py:3207-3257): it offers pay/decline only when the player-level counter >= 1, removes via effect_remove_counter (which decrements both tallies), and runs DESTROY_SELF when unpaid -- including the zero-counters case, where no removal is possible and destruction is correct.\n\n'Once per Turn Action - 0: Draw a card': card-level activation_cost 0 + per_turn 1 (the DSL-authoritative fields; card.py:519-530 stamps them onto the runtime card as activation_cost / has_per_turn_limit+activations) plus an ACTIVATE ability with DRAW 1. play._add_hero_dsl_activations offers ACTIVATE abilities of player.items in the action phase with an action point, enforces the per-turn limit (play.py:304), and takes affordability from card.activation_cost (play.py:1513-1524), so 0 is always affordable. The card has exactly ONE activated ability, so the known multi-activated-ability NotImplementedError (engine AGENTS.md limitation 1) does not apply."
+}

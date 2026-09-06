@@ -1,0 +1,39 @@
+{
+  "slug": "hunt_a_killer_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Dagger"]}
+          ]
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "player": "SELF",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Dagger"]},
+              {"type": "NOT", "inner_type": "FLAG_SET", "flag": "hunt_a_killer_yellow_mark_rider"}
+            ],
+            "effects": [
+              {
+                "type": "CONDITIONAL_EFFECT",
+                "when": [{"type": "ATTACK_TARGET_IS_HERO"}],
+                "then": [{"type": "MARK"}]
+              },
+              {"type": "SET_FLAG", "flag": "hunt_a_killer_yellow_mark_rider"}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next dagger attack this turn gets +3{p} and \"When this hits a hero, mark them.\" / **Go again**' Warrior Action (TheHunted - derive the json/<set>/ folder from setIdentifiers at adoption).\n\nGO AGAIN NOT AUTHORED: GoAgain is in printed_keywords as an UNCONDITIONAL line of the text, so it fires from the card DB keywords field; re-authoring it would be a defect. It is also not the conditional-keyword case - nothing gates it, so no SOURCE_IS_ATTACK machinery applies.\n\nABILITY TYPE PLAY: type_text is plain 'Warrior Action', NOT 'Action - Attack', so the effects ride a PLAY ability resolving when the card is played (felling_swing/hit_and_run family precedent).\n\nPUMP: MODIFY_NEXT_ATTACK reads mod/amount/filter/scope (effect_types.py:4592-4618, read this session) and queues a one-shot entry on the CONTROLLER's dsl_queued_attack_mods; consumption (engine.py:1175-1236) compiles the filter against each incoming attack and applies+consumes on FIRST match - a non-dagger attack leaves it queued, which is exactly 'the NEXT dagger attack'. Unused entries expire end of turn = 'this turn'. Filter ATTACK_SUBTYPE_IN reads 'subtypes' and unions the attack card's types AND subtypes (condition_types.py:296-316); daggers are weapons, which attack as themselves carrying the Dagger subtype.\n\nMARK RIDER DEVIATES FROM A NAIVE READING OF THE TRIAGE LIST, deliberately and following adopted corpus precedent: INJECT_TRIGGER has no next-single-attack scope (COMBAT needs a current attack; TURN re-injects onto EVERY attack; CHAIN/NEXT_TURN wrong spans) - .triage/lace_with_bloodrot_red.json and .triage/ironsong_versus.json record the same sentence family as blocked on exactly this. The working composition, copied from .drafts/edge_ahead_red.json ('your next Warrior attack ... and \"When this attacks a hero...\"') and the high_striker/burn_up__shock fire-once idiom: scope TURN hook + NESTED trigger dict (required - a top-level conditions key would be popped by the loader as an effect-level gate evaluated once at registration, effect_types.py:2103-2119) whose inner conditions narrow to DAGGER attacks and a NOT FLAG_SET fire-once gate; the payoff MARK is wrapped in CONDITIONAL_EFFECT (effect_types.py:3697+, reads when/then - authoring 'conditions' there would be silently unread) gated on ATTACK_TARGET_IS_HERO, and SET_FLAG consumes the grant on the first qualifying dagger HIT regardless of target. Injected triggers fire with card=combat.attack_card, so MARK (defaults to the opposing hero, effect_types.py:1901-1924) and FLAG_SET resolve against the attacker - me, since the hook only arms while I am active.\n\nDISCLOSED APPROXIMATIONS: (1) if the next dagger attack is fully BLOCKED, ON_HIT never fires, the flag stays unset, and a LATER dagger attack that hits a hero still marks - paper loses the rider with the missed attack. Unavoidable: turn_attack_hooks deliver only on ON_HIT (injected ON_ATTACK entries are consumed by nothing, per .drafts/high_speed_impact_blue.json's listener census). (2) The rider binds to 'first dagger that hits', not object-identity to 'the next dagger' - same class of approximation disclosed in .drafts/head_shot_red.json. (3) Two copies played in one turn share the flag, so they mark once between them where paper could mark twice (same disclosure as high_striker_red)."
+}

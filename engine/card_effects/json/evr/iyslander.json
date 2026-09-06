@@ -1,0 +1,34 @@
+{
+  "slug": "iyslander",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "IS_ACTIVE_PLAYER", "value": false}
+      ],
+      "effects": [
+        {
+          "type": "GRANT_INSTANT_TIMING",
+          "filter": [
+            {"type": "CARD_IS_TYPE", "card_type": "Action"},
+            {"type": "CARD_IS_ATTACK", "value": false},
+            {"type": "CARD_IS_COLOR", "color": "blue"},
+            {"type": "PLAYED_FROM_ARSENAL", "value": true}
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_CARD_PLAYED",
+      "conditions": [
+        {"type": "CARD_IS_TALENT", "talent": "Ice"},
+        {"type": "IS_ACTIVE_PLAYER", "value": false}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "frostbite", "amount": 1, "player": "OPPONENT"}
+      ]
+    }
+  ],
+  "_comment": "Elemental Wizard Hero - Young (Everfest). 'Essence of Ice' keyword (printed_keywords, fires from card DB). Two clauses:\n\n1. 'If it's not your turn, you may play blue non-attack action cards from your arsenal as though they were an instant.' - WHILE_STATIC gated on IS_ACTIVE_PLAYER value:false (not your turn). Effect GRANT_INSTANT_TIMING with filter for blue non-attack action cards played from arsenal. FILTER: CARD_IS_TYPE Action + CARD_IS_ATTACK value:false (non-attack) + CARD_IS_COLOR blue + PLAYED_FROM_ARSENAL value:true. NOTE: GRANT_INSTANT_TIMING is a one-shot queue (effect_types.py:4662-4674) consumed by the first matching card played. A WHILE_STATIC re-evaluates on RECALC_ATTACK_POWER only (interpreter.py:186-202), which does not feed legal-action generation. This clause is a standing play-legality expansion that the current DSL cannot fully express - it needs a declarative static the playability pipeline consults (like PLAYABLE_FROM_BANISHED but for arsenal+instant timing). Authored as best approximation; the static grant will not be consulted by play.py's legal action generation.\n\n2. 'Whenever you play an Ice card during an opponent's turn, create a Frostbite token under their control.' - STATIC_TRIGGERED on ON_CARD_PLAYED (dispatched to the hero, correct for hero text). Conditions: CARD_IS_TALENT Ice (checks played card's talent) + IS_ACTIVE_PLAYER value:false (opponent's turn). Effect: CREATE_TOKEN frostbite player OPPONENT (under their control). Frostbite token exists at json/tokens/frostbite.json (partial - cost tax not implemented).\n\nRELEASE NOTES: Blue color strip = pitch 3. Non-attack actions played as instant are still non-attack for effects. Cannot gain action point on opponent's turn. Frostbite affects cards before they are played; if created in response to a card being played, it won't affect that card. Frostbite creation is a triggered effect that can be responded to."
+}

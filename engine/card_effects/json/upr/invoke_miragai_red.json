@@ -1,0 +1,21 @@
+{
+  "slug": "invoke_miragai_red",
+  "_comment": "Transform target ash you control into Miragai. Go again. Following the shipped invoke_nekria_red.json pattern from the same set. 'Target ash' is mandatory, not 'up to', so up_to is false: with no ash the transform simply cannot happen (CR 8.5.36d). GoAgain is a printed keyword that fires from the card DB keywords field; the shipped invoke_nekria_red also authors GO_AGAIN as an effect, which is redundant (CR 8.3.5c makes a second go again fail), but I follow the shipped pattern for consistency.",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "TRANSFORM",
+          "from": "ash",
+          "to": "miragai",
+          "amount": 1,
+          "up_to": false
+        },
+        {
+          "type": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

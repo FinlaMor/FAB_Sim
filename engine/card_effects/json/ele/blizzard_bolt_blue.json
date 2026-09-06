@@ -1,0 +1,32 @@
+{
+  "slug": "blizzard_bolt_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        { "type": "FLAG_SET", "flag": "fused_blizzard_bolt_blue" }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "trigger": {
+            "trigger_type": "ON_DEAL_DAMAGE",
+            "conditions": [
+              { "type": "ATTACK_TARGET_IS_HERO" }
+            ],
+            "effects": [
+              {
+                "type": "CREATE_TOKEN",
+                "token": "frostbite",
+                "amount": 1,
+                "player": "OPPONENT"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'Ice Fusion. If Blizzard Bolt was fused, whenever an attack deals damage to a hero this turn, create a Frostbite token under their control.'\n\nDELIBERATE DEVIATION FROM TRIAGE: it named PITCHED_FOR_THIS for the 'was fused' gate, and that condition cannot work here. PITCHED_FOR_THIS reads card.pitched_for_this, stamped only by play._pitch_for_cost on cards pitched to pay the resource cost; the engine's fusion() (ability_keywords.py:582-607) is a REVEAL from hand - it never pitches and never touches pitched_for_this - so PITCHED_FOR_THIS would be false whenever the card WAS fused and true whenever any Ice merely paid cost. The live idiom, verified against shipped siy/aether_icevein_blue.json and ele/chilling_icevein_yellow.json: fusion() writes 'fused_<card.slug>' into the controller's current_turn_effects (ability_keywords.py:604-606), and FLAG_SET tests exactly that set. Flag name is per-printing because fusion() keys it on card.slug.\n\nShape copied from shipped ele/chilling_icevein_yellow.json, which prints the same sentence ('whenever an attack deals damage to a hero this turn ...') as PLAY + FLAG_SET fused_<slug> + INJECT_TRIGGER scope TURN with nested trigger ON_DEAL_DAMAGE gated by ATTACK_TARGET_IS_HERO - nested dict is REQUIRED so the inner condition survives the loader's conditions-pop and is evaluated per damage instance. Release notes hold against this shape: ON_DEAL_DAMAGE dispatches per damage INSTANCE (so multiple instances give multiple Frostbites, note 3; 5 damage in one instance gives one, note 2), and the TURN-scoped hook re-applies to every attack that turn including this card's own, combat chain or not (notes 1 and 4).\n\nCREATE_TOKEN handler (effect_types.py:1890-1939) reads token/count|amount/player - all verified. 'under their control' (the damaged hero) is authored player OPPONENT, copying chilling_icevein_yellow's treatment of the same wording; the handler maps OPPONENT/DEFENDING/TARGET_HERO identically, so this is wrong only if a hero other than the opponent takes hero-targeted attack damage on this card's controller's turn.\n\nMISSING DEPENDENCY - blocks the payoff entirely: json/tokens/frostbite.json does NOT exist, and create_token calls require_card(token_slug) (effect_keywords.py:266-276), so every fire raises MissingCardImplementation until a definition is added. The card DB has no frostbite template either (only other cards' texts mention it), so the definition must also carry the types/subtypes and the Elemental Aura ability ('Cards and activated abilities you control cost an additional {r}.' - release note 5), none of which is authorable from this file.\n\nFusion itself is NOT authored - '<X> Fusion' fires engine-side from the card DB keywords field (printed_keywords here: Fusion). No known gaps beyond the missing token definition."
+}

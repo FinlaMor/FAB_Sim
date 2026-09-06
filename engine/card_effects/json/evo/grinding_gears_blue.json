@@ -1,0 +1,53 @@
+{
+  "slug": "grinding_gears_blue",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {"type": "PUT_COUNTER", "counter_type": "steam", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "PAY_OR_ELSE",
+          "counter_type": "steam",
+          "amount": 1,
+          "on_failure": [
+            {"type": "DESTROY_SELF"}
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {
+          "type": "CHOOSE",
+          "amount": 1,
+          "options": [
+            {
+              "name": "Your deck",
+              "effects": [
+                {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "SELF", "amount": 1, "into": "milled"},
+                {"type": "DESTROY_REF", "ref": "milled"}
+              ]
+            },
+            {
+              "name": "Opposing hero's deck",
+              "effects": [
+                {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "OPPONENT", "amount": 1, "into": "milled"},
+                {"type": "DESTROY_REF", "ref": "milled"}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Crank / This enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it. / Action - 0: Target hero destroys the top card of their deck.' Mechanologist Action - Item (batch set label BrightLights). REWRITES the earlier draft of this same file, which authored the upkeep as MAY{REMOVE_COUNTERS / else DESTROY_SELF}; reason below, verified in source this session.\n\nCRANK NOT AUTHORED: printed keyword (printed_keywords), fires engine-side from the card DB keywords field via ability_keywords.crank (ability_keywords.py:564-579, read this session: an optional removal that gains an action point). Re-authoring it would be a defect. The steam-counter paragraph is NOT part of Crank - it is this card's own text and is authored below.\n\nENTRY COUNTER: TRIGGERED ON_ENTER_PLAY + PUT_COUNTER counter_type steam amount 1. ON_ENTER_PLAY is dispatched from Zone.add on real arena entry (state.py:304-310); PUT_COUNTER reads counter_type/amount and defaults its target to the SOURCE card (effect_types.py:2015-2058), and effect_put_counter writes BOTH tallies - card.counters['steam'] and the player-level dict keyed (slug, zone, kind) (ability_keywords.py:1653-1660).\n\nUPKEEP 'DESTROY UNLESS YOU REMOVE' as PAY_OR_ELSE {counter_type steam, amount 1, on_failure DESTROY_SELF} - the handler docstring names exactly this pattern ('destroy this UNLESS you remove a steam counter from it' ... the recurring Crank/steam pattern, effect_types.py:3213-3215). Why not the earlier draft's MAY:\n(1) ZERO-COUNTER CORRECTNESS. crank() decrements ONLY the player-level tally controller.counters[(slug, zone, 'steam')] (ability_keywords.py:568-576) and never touches card.counters, so after a Crank removal the item can be at player-tally 0 with a stale card-level 1. A MAY+REMOVE_COUNTERS shape still offers removal at 0 counters and REMOVE_COUNTERS clamps at max(0, ...) (ability_keywords.py:1663-1670), so declining-or-accepting both let the item survive where the printed text destroys it - the exact defect class recorded in .draft-review/dissipation_shield_yellow.json. PAY_OR_ELSE reads the PLAYER-level tally (effect_types.py:3239), offers the pay/decline prompt only when have >= 1, and runs on_failure without a prompt otherwise - printed-correct in both directions.\n(2) THE RELEASE NOTE IS ITS PROMPT VERBATIM: 'Removing a steam counter is optional. If you choose not to remove a steam counter, it is simply destroyed' = PAY_OR_ELSE's pay/decline choice with decline running on_failure (effect_types.py:3230-3257, read this session). The asker is tid = SELF default = the controller; 'your turn' holds because START_OF_TURN dispatches to the ACTIVE player's zones only and _dsl_permanent_zones includes player.items (engine.py:1452-1466, read this session).\n(3) TALLIES STAY CONSISTENT: its pay path routes through effect_remove_counter, which decrements BOTH tallies (ability_keywords.py:1663-1670).\n\nACTIVATED ABILITY: ACTIVATE + card-level activation_cost 0 (DSL-authoritative per DSL_REFERENCE; NOT also modelled as a cost, which would double-charge). No per_turn field - release note 2 rules activations unlimited ('as many times as you want as long as you have the action points'). Item ACTIVATE abilities are offered by play._add_hero_dsl_activations, whose source scan includes player.items.\n\n'TARGET HERO' IS AN APPROXIMATION, disclosed: no generic hero-target declaration flows into these effects (the triage note for this card says the same), so the hero choice is expressed as a resolution-time CHOOSE between milling your own or the opposing hero's deck - the option the triage explicitly blesses over TARGET_HERO_CLASS_IN class-list gymnastics. Each branch is LOOK_AT zone DECK_TOP amount 1 into ref + DESTROY_REF ref: LOOK_AT stores a single card unwrapped (effect_types.py:3356-3415) and DESTROY_REF destroys it through canonical destroy() (effect_types.py:3417-3428); an empty deck stores None and DESTROY_REF no-ops safely. Cost of the approximation: the choice is made at resolution rather than when the ability is put on the stack (CR 1.8.5), which is observable only if something reacts between activation and resolution.\n\nNo printed-keyword conditional machinery applies (nothing gates Crank), and no gaps beyond the disclosed targeting approximation."
+}

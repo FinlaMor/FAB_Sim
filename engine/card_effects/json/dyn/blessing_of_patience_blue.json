@@ -1,0 +1,31 @@
+{
+  "slug": "blessing_of_patience_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {
+          "type": "CHOOSE",
+          "amount": 1,
+          "options": [
+            {
+              "name": "This hero gains 1 life",
+              "effects": [
+                {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1, "player": "SELF"}
+              ]
+            },
+            {
+              "name": "Opposing hero gains 1 life",
+              "effects": [
+                {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1, "player": "OPPONENT"}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Release notes settle the modelling: the trigger fires and resolves during the start-of-turn phase with no priority, and 'target hero' is chosen at trigger time, not when played. START_OF_TURN is dispatched to the turn player's permanent zones incl. auras (engine.py:1461-1466), so the aura sees its own controller's start phase as printed ('At the start of your turn'). Trigger-time targeting is approximated by a resolution-time CHOOSE between SELF and OPPONENT - equivalent here because the ability resolves immediately in the start phase with no intervening priority; GAIN reads player (effect_types.py:4795) and resolves it via _effect_player_id. LIMITATION: in a multiplayer game 'target hero' means ANY hero, but CHOOSE here offers only the two heroes of a two-player game; no DSL shape found for an arbitrary-player target on a triggered layer (triggered-layer target declaration is a known engine gap). Destroy-then-gain order matches the printed text; effects run sequentially and the ability resolves fully even though the source left play."
+}

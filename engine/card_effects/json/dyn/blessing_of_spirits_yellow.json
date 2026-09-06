@@ -1,0 +1,26 @@
+{
+  "slug": "blessing_of_spirits_yellow",
+  "_comment": "Aura: at the start of your turn it destroys itself then creates 2 Spectral Shield tokens. Identical to the blue printing except token count (amount 2). 'Ward 1' is NOT authored here - it is in printed_keywords and applies from the card DB keywords field; re-authoring it double-applies (see waning_vengeance_blue review). json/tokens/spectral_shield.json already exists.",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token": "spectral_shield",
+          "amount": 2
+        }
+      ]
+    }
+  ]
+}

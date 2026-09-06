@@ -1,0 +1,19 @@
+{
+  "slug": "entangling_shot_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PUT_FACEUP_IN_ARSENAL",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Tap target hero?",
+          "effects": [
+            {"type": "TAP", "target": "OPPONENT_HERO"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this is put face-up into your arsenal, you may {t} target hero.' Ranger Action - Arrow Attack (Azalea starter); no printed keywords, so the Arrow attack body comes from the card DB and nothing else is authored.\n\nTRIGGER: ON_PUT_FACEUP_IN_ARSENAL exists (trigger_types.py:67) and is dispatched from Zone.add (state.py:323-328) - the one place that knows both the destination zone and face-up-ness - with card=card, so the card itself hears it. Release note 2 ('does not trigger if it is already in the arsenal and is turned face-up by an effect') holds by construction: flipping a card in place never passes through Zone.add, so only an actual face-up ARRIVAL fires.\n\nOPTIONALITY: the MAY handler (effect_types.py:3788-3856) reads prompt/effects; declining runs nothing in the block, which is release note 1's 'you may also choose not to target a hero and the triggered effect is not added to the stack' observed as behaviour (no tap) rather than as stack mechanics - the engine has no optional-triggered-layer representation, and MAY is the corpus-standard way to express 'you may X'.\n\nTAP: {\"type\":\"TAP\",\"target\":\"OPPONENT_HERO\"} is the handler's own documented spelling for '{t} them' (effect_types.py:3641-3682); it routes through canonical effect_keywords.tap (CR 8.5.55, verified to exist at effect_keywords.py:2995), so already-tapped fails rather than silently succeeding.\n\nAPPROXIMATION, disclosed: release note 1 says the hero is DECLARED when the triggered effect is added to the stack. Triggered-layer target declaration is a known engine gap (same disclosure as .drafts/caress_of_the_reaper_red.json), so the target is fixed to the opposing hero via OPPONENT_HERO. In a two-player game - all this engine models - the declared-target pool is exactly that one hero, so the observable behaviour matches."
+}

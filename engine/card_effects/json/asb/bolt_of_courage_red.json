@@ -1,0 +1,26 @@
+{
+  "slug": "bolt_of_courage_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {"type": "CHARGE", "amount": 1, "optional": true}
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "conditions": [
+            {"type": "EVENT_THIS_TURN", "event": "charge"}
+          ],
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "effects": [
+              {"type": "DRAW", "amount": 1}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'As an additional cost to play Bolt of Courage, you may charge your hero's soul. If you've charged this turn, Bolt of Courage gains \"If this hits, draw a card.\"'\n\nCOST: optional CHARGE additional cost on the PLAY ability, spelling copied from shipped dtd/light_the_way_red.json (a 27-card family with this exact sentence). Optional never blocks the play - CHARGE's can_pay returns True unconditionally when optional (cost_types.py:282-286) - and pay asks WHICH hand card to charge via ask_optional. The boolean true is deliberate: _compile_cost passes raw values through (loader.py:96) and handlers bool() them, so a string FALSE would also read as optional; mandatory costs must omit the key entirely. Charge is in printed_keywords but the DB keyword field carries no cost wiring - the corpus implements this sentence as the CHARGE cost everywhere, so there is nothing to double-charge.\n\nDEVIATION FROM TRIAGE on the gate: it named CARD_WAS_CHARGED, which tests the was_charged attribute ON THIS CARD (condition_types.py:1175-1192). charge() marks the hand card that goes into the soul (effect_keywords.py ~2349), never Bolt itself - wrong subject. Release note 1 is explicit that ANY charge this turn counts ('does not need to be the card to have charged'). EVENT_THIS_TURN event=charge reads the bare did_this_turn:charge marker that charge() records against the charging player (effect_keywords.py:2368); record_turn_event_for_player always writes the bare marker alongside qualifiers (effect_keywords.py:597-606), and player defaults to SELF = this card's controller.\n\nGATE TIMING: the conditions sit on the INJECT_TRIGGER effect itself, where the loader pops them into an EffectDef gate (loader.py:87) enforced in the effects loop (interpreter.py:149-159) - evaluated ONCE, when Bolt resolves. That is the right moment: the additional cost is paid before the ability's effects run (interpreter.py:48-52), so a charge made for THIS card already satisfies 'you've charged this turn', and a charge from earlier in the turn satisfies it trivially.\n\nINNER TRIGGER: nested dict per DSL_REFERENCE ('the inner trigger's conditions and effects MUST be nested under a trigger dict'); it has no inner conditions - the granted ability is an unconditional 'if this hits, draw a card'. Scope defaults to COMBAT: a one-shot TriggerDef into combat.injected_triggers, consumed at the engine's hit listener - exactly 'this attack gains ...'. Bolt is itself the attack action card, so combat exists when it resolves; DRAW defaults to SELF.\n\nNo release note beyond note 1; note 2 does not exist for this printing."
+}

@@ -1,0 +1,46 @@
+{
+  "slug": "astral_strike_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "DESTROYED_THIS_TURN", "name": "lightning flow"}
+      ],
+      "effects": [
+        {
+          "type": "CHOOSE",
+          "amount": 1,
+          "options": [
+            {
+              "name": "Draw a card",
+              "effects": [{"type": "DRAW", "amount": 1}]
+            },
+            {
+              "name": "This gets +2{p}",
+              "effects": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}]
+            },
+            {
+              "name": "This gets go again",
+              "effects": [
+                {"type": "SET_FLAG", "flag": "astral_strike_go_again_mode", "scope": "CURRENT"},
+                {"type": "GO_AGAIN"}
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "FLAG_SET", "flag": "astral_strike_go_again_mode"}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "Two deliberate deviations from the triage list.\n\n(1) Triage said EVENT_THIS_TURN event=destroy. No 'destroy' turn event is recorded anywhere (_record_turn_event call sites: banish/create/damage/draw/roll/charge/transcend/play/sharpen/scrap/beat_chest/steal/pitch), so that condition would compile and never fire. DESTROYED_THIS_TURN is the real condition: canonical destroy() records slug/name/subtypes/types identifiers ('lightning flow' normalizes to the same marker as the token's slug), and the condition's own docstring cites this exact case.\n\n(2) GoAgain is in the card DB's printed keywords, so the engine would apply it unconditionally. loader.conditional_keywords() only suppresses a printed keyword for an ability gated on SOURCE_IS_ATTACK whose DIRECT effects grant it -- a mode nested inside CHOOSE does not count. Hence the WHILE_STATIC: it satisfies the suppression scan, and its FLAG_SET condition ties the grant to actually choosing the go again mode (SET_FLAG in option 3). The option also grants GO_AGAIN directly at resolution because the static only re-fires on RECALC_ATTACK_POWER, which may precede or follow trigger resolution; both grants are membership-checked and idempotent.\n\nTiming: release notes say the if-condition is checked when the triggered effect is added to the stack; ability-level conditions on a TRIGGERED ability are evaluated at trigger time, which matches.\n\nKNOWN GAP: the release note 'Destroying your opponent's Lightning Flow token will satisfy the if-condition' is not fully modelled. _record_destroyed_this_turn attributes the marker to the destroyed card's controller (coo), so destroying an OPPONENT-owned flow credits the opponent's turn markers, not yours, and SELF-default DESTROYED_THIS_TURN will not see it. Destroying your own flow (the normal case) works. No JSON-expressible fix; would need the destroyer credited at the recording site."
+}

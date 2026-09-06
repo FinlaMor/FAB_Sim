@@ -1,0 +1,32 @@
+{
+  "slug": "cadaverous_contraband_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Put a non-attack action card from your graveyard on top of your deck?",
+          "effects": [
+            {
+              "type": "MOVE_MATCHING",
+              "to_zone": "deck",
+              "position": "top",
+              "target": {
+                "controller": "SELF",
+                "zone": "GRAVEYARD",
+                "amount": 1,
+                "filter": [
+                  {"type": "CARD_IS_TYPE", "card_type": "Action"},
+                  {"type": "NOT", "inner_type": "CARD_IS_TYPE", "card_type": "Attack"}
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If Cadaverous Contraband hits' = TRIGGERED ON_HIT on the attack card itself (pattern proven by aaz/infecting_shot_blue). The triage list suggested SEARCH_GRAVEYARD, but its handler cannot express this clause: it passes no position to put_object (deck destinations land on the BOTTOM) and defaults shuffle=True for deck destinations. MOVE_MATCHING exists exactly for 'put target <card matching X> from <zone> on top of your deck' (its own handler comment says so), reads to_zone/position/target, and _object_zone_cards supports GRAVEYARD; the filter is ordinary DSL conditions evaluated per candidate, so CARD_IS_TYPE Action + NOT CARD_IS_TYPE Attack expresses 'non-attack action card'. Known wart: the MAY prompt is offered even when no matching card is in the graveyard - CARD_IN_ZONE could gate the offer but its filters are positive-only and cannot count 'action AND NOT attack', so accepting with an empty pool simply does nothing."
+}

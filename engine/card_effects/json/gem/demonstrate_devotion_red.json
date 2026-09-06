@@ -1,0 +1,27 @@
+{
+  "slug": "demonstrate_devotion_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "CHAIN_LINKS_CONTROLLED_GTE", "amount": 1, "attribute": "Draconic"}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"},
+        {"type": "CHAIN_LINKS_CONTROLLED_GTE", "amount": 1, "attribute": "Draconic"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "fealty"}
+      ]
+    }
+  ],
+  "_comment": "'If you control 2 or more Draconic chain links, this gets go again and \"When this attacks a hero, create a Fealty token.\"' Draconic Ninja Action - Attack.\n\nGo again: printed_keywords lists GoAgain, so the conditional-keyword shape is MANDATORY - a WHILE_STATIC gated on SOURCE_IS_ATTACK granting GAIN keyword GO_AGAIN (un-nested, so loader.conditional_keywords (loader.py:255-296) strips the printed unconditional keyword and the gate governs). Shape copied from the sibling draft .drafts/burning_blade_dance_red.json, whose printed first clause is identical; every claim re-verified by this session. WHILE_STATIC fires on RECALC_ATTACK_POWER which reaches the attack card; _grant_go_again (effect_types.py:423-458) puts 'Go Again' on the live combat (dedup-guarded per CR 8.3.5c) and the engine pays the action point at the Resolution Step.\n\nWhy amount 1 and not 2: release note 1 says the card counts ITSELF as a Draconic chain link, but a ChainLink is appended to state.chain_links only AFTER the attack's damage resolves (engine.py:2148-2163, verified), so during Demonstrate Devotion's own attack neither its go-again gate nor its ON_ATTACK trigger can see its own link. '2 or more including itself' therefore means >=1 PRIOR Draconic link, which CHAIN_LINKS_CONTROLLED_GTE amount 1 attribute Draconic tests (condition_types.py:1819-1847 reads amount + attribute/talent/class/subtype and matches the talent across each stored link's talents/classes/subtypes/keywords). Both abilities use the same gate at the same timing, so one number serves both. First-attack-of-chain case checks out: table says 1 link < 2 -> nothing; engine says 0 prior < 1 -> nothing.\n\nFealty rider DEVIATION FROM TRIAGE: it listed INJECT_TRIGGER, but a direct TRIGGERED ON_ATTACK ability is the simpler proven vehicle - _dsl_attacking_listener dispatches ON_ATTACK to the attacking card's own slug (engine.py:1524-1529), and this card IS the attack when played, so it hears its own declaration. INJECT_TRIGGER would need a PLAY-time injection guaranteed to land before that dispatch, with no timing guarantee. Same authoring the display_loyalty_red triage note prescribes for this exact sentence. ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977) is true exactly when combat.attack_target is None, which is the hero-attack case - attack_target is set only when a card target resolved (engine.py:534-536), before the attacking event fires. Text says 'attacks', not 'hits', so ON_ATTACK not ON_HIT.\n\nCREATE_TOKEN reads 'token' (slug), count defaults 1, player defaults SELF = the controller creates it (effect_types.py:1942-2001). The Fealty token definition already exists (json/cin/fealty.json); the loader walks the tree and keys by slug.\n\nRelease note 2 ('still considered to control a chain link even if the attack is no longer on the combat chain; last known information') falls out of representation: appended ChainLinks persist in state.chain_links with their talents recorded, so prior links stay countable for later checks. No residual gap known."
+}

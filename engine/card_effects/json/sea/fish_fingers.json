@@ -1,0 +1,16 @@
+{
+  "slug": "fish_fingers",
+  "activation_cost": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - {r}, destroy this: Your next attack this turn gets +1{p}. **Go again** / **Blade Break**' Pirate Equipment - Arms (HighSeas).\n\nACTIVATION: ability_type ACTIVATE with cost DESTROY_SELF - shape copied from the fiddle_dee draft and shipped dyn/blacktek_whisperers.json; DESTROY_SELF cost handler verified at cost_types.py:43-51 (pay calls canonical destroy on the source card, always payable). play._add_hero_dsl_activations (play.py:238+, read this session) offers ACTIVATE abilities of arena equipment as ACTIVATE_CARD actions: action phase + action point + empty stack.\n\n{r} COST: card-level activation_cost 1 per DSL_REFERENCE - DSL-authoritative, and deliberately NOT also authored as a PAY_RESOURCES cost (that would double-charge).\n\n+1{p}: MODIFY_NEXT_ATTACK (effect_types.py:4592-4618, read this session) with mod add, amount 1, NO filter, default scope TURN. The official release note says the power bonus applies to your next attack of ANY kind - next attack action card, weapon attack, or ally attack - which is exactly the unfiltered queue consumed by the first attack this turn.\n\nGO AGAIN NOT AUTHORED, deliberately: it is unconditional printed text inside the activated ability and appears in printed_keywords. The engine grants the action point when the activated card-layer resolves - engine.py:2322 checks card.has_go_again for non-attack layers (read this session). Authoring GAIN GO_AGAIN here would double-grant.\n\nBLADE BREAK NOT AUTHORED: engine-known keyword that fires from the card DB keywords field; re-authoring it would be a defect."
+}

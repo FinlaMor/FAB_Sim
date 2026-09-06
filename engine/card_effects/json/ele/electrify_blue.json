@@ -1,0 +1,33 @@
+{
+  "slug": "electrify_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "player": "SELF",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+              {"type": "ATTACK_TARGET_IS_HERO"},
+              {"type": "NOT", "inner_type": "FLAG_SET", "flag": "electrify_damage_spent"}
+            ],
+            "effects": [
+              {"type": "SET_FLAG", "flag": "electrify_damage_spent"},
+              {"type": "DEAL_GENERIC", "amount": 1}
+            ]
+          }
+        },
+        {
+          "type": "DRAW",
+          "amount": 1,
+          "conditions": [{"type": "PLAYED_FROM_ARSENAL"}]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next time an attack action card hits a hero this turn, it deals 1 damage to them. / If Electrify is played from arsenal, draw a card. / Go again.'\n\nGO AGAIN deliberately NOT authored: GoAgain is in printed_keywords and fires from the card DB keywords field; re-authoring a printed keyword is a defect.\n\nCLAUSE 1: INJECT_TRIGGER scope=TURN puts the hook on the controller's turn_attack_hooks, re-applied to EVERY attack for the rest of the turn and cleared at end of turn (engine.py:1238-1273; INJECT_TRIGGER handler effect_types.py:2103-2179). 'The NEXT time' needs single-fire, and TURN hooks are NEVER consumed after firing (the bluff_catcher_yellow triage finding), so the inner trigger self-consumes via a flag: the first qualifying hit sets electrify_damage_spent on the attacker's current_turn_effects (SET_FLAG defaults player SELF = controller of the card the trigger fired on) and every later hit this turn fails NOT FLAG_SET. The anchoring is sound in practice: an Action card can only be played during its controller's action phase, and the TURN hook expires at that same turn's end - so every attack the hook can ever see belongs to Electrify's controller, and attacker-relative SELF resolves to the same player every time. (A mixed-controller turn would be the only way the flag anchors inconsistently; the engine does not produce one.)\n\nINNER SHAPE: conditions/effects nested under the trigger dict - REQUIRED, because a top-level conditions key is popped by the loader as an effect-level gate evaluated ONCE at registration, when there may be no attack (effect_types.py:2104-2119 comment). ATTACK_TYPE_IN unions the attack card's types AND subtypes (condition_types.py ~273-294), so ['Action'] matches exactly attack ACTION cards; weapon attacks carry type Weapon and do not qualify - matching the printed 'an attack action card'. ATTACK_TARGET_IS_HERO gates 'hits a hero'; DEAL_GENERIC then resolves target OPPONENT relative to the ATTACKER (_damage_target_player), i.e. the hero that was hit - 'it deals 1 damage to THEM'. Generic damage per the release note ('the damage is not arcane damage'); the attack action card is recorded as the damage source because the trigger fires with c=combat.attack_card.\n\nCLAUSE 2: DRAW amount 1 gated by EFFECT-LEVEL conditions PLAYED_FROM_ARSENAL - the loader pops a conditions key inside an effect object into a resolution-time gate (loader.py:82-90); the condition reads played_from_zone stamped at the moment of play, falling back to prev_zone (condition_types.py:789-809). Ability-level conditions would behave identically here (both check at resolution), but the effect-level gate keeps the condition attached to the one clause it scopes.\n\nNo known gaps."
+}

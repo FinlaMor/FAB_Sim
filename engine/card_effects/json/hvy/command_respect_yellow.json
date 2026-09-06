@@ -1,0 +1,35 @@
+{
+  "slug": "command_respect_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"},
+        {"type": "ATTACK_POWER_GT_BASE"}
+      ],
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "zone": "ARSENAL",
+          "player": "OPPONENT",
+          "amount": "ALL",
+          "into": "their_arsenal"
+        },
+        {
+          "type": "SELECT_FROM_REF",
+          "ref": "their_arsenal",
+          "mode": "ANY",
+          "min": 1,
+          "max": 1,
+          "into": "to_destroy"
+        },
+        {
+          "type": "DESTROY_REF",
+          "ref": "to_destroy"
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits a hero, if this has {p} greater than its base, destroy a card in their arsenal.' Guardian Action - Attack, so TRIGGERED + ON_HIT (an Action - Attack is never an ATTACK_REACTION). Third printing of the same card: identical text and release notes to .drafts/command_respect_red.json and .drafts/command_respect_blue.json, mirrored shape exactly.\n\nRELEASE NOTE 1 ('does not trigger ... an ally') = ability-level ATTACK_TARGET_IS_HERO gate - false when combat.attack_target is set (permanent/ally), true for hero attacks (condition_types.py:1960-1977).\n\nRELEASE NOTE 2 ('{p} is checked on the resolution of the trigger, not when it hits') = ability-level conditions, which the interpreter evaluates at RESOLUTION; ATTACK_POWER_GT_BASE (condition_types.py:499-509) takes no params and reads combat.attack_power vs base_attack_power live at that moment, so pumps applied between hit and trigger resolution are seen, exactly as ruled.\n\nDEVIATION FROM TRIAGE, which named bare DESTROY_ARSENAL: that handler (effect_types.py:2994-3008) loops over the WHOLE arsenal and destroys every card in it. Release note 3 rules 'if they have two or more cards in their arsenal, you choose which card to destroy', so the all-destroy is observably wrong in exactly the case the note calls out. Shipped command_and_conquer_red used DESTROY_ARSENAL for singular text, but consistency with a handler that over-destroys is not worth adopting here when the exact shape compiles (and the red/blue siblings already use it): LOOK_AT zone ARSENAL amount ALL stores the whole arsenal as a list (handler reads zone/player/amount/into), SELECT_FROM_REF mode ANY min 1 max 1 asks the controller to pick exactly one, DESTROY_REF destroys the choice via canonical destroy. Empty arsenal degrades safely: LOOK_AT stores [], SELECT chooses nothing, DESTROY_REF no-ops.\n\nRELEASE NOTE 4 (Mirraging Metamorph 'when destroyed' triggers only from the arena) falls out of canonical destroy() resolving by zone - no authoring needed here.\n\nNo gaps; every clause expressible."
+}

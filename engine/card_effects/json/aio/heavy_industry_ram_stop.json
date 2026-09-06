@@ -1,0 +1,22 @@
+{
+  "slug": "heavy_industry_ram_stop",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Heavy Industry Ram Stop: pay {r} to give this +1{d} until end of turn?",
+          "cost": [
+            {"type": "PAY_RESOURCES", "amount": 1}
+          ],
+          "effects": [
+            {"type": "MODIFY_DEFENSE_VALUE", "mod": "add", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends, you may pay {r}. If you do, it gets +1{d} until end of turn.' Mechanologist Equipment - Arms.\n\nTEMPER NOT AUTHORED: printed keyword (printed_keywords), fires from the card DB keywords field - re-authoring it would be a defect.\n\nTRIGGER: TRIGGERED + ON_DEFEND - _dsl_defend_listener dispatches to the actual defending card object (engine.py:1640-1646, read this session), so the helm hears its own defend.\n\nOPTIONAL PAYMENT: one MAY block whose cost gates the OPTION - declining runs nothing in the block, so 'if you do' needs no plumbing. The MAY handler reads cost/costs through compile_cost (effect_types.py:3825-3836, read this session): can_pay makes the prompt unavailable below 1 resource and pay deducts on accept. PAY_RESOURCES is a real cost type reading 'amount' (cost_types.py:691-699, read this session).\n\nDEVIATION FROM THE TRIAGE LIST, disclosed: it named MODIFY_DEFENSE. An untargeted MODIFY_DEFENSE outside a recalculation writes the defender's own .defense directly (effect_types.py:2695-2713), and engine._recalculate_total_defense RESETS every declared defender to base_defense minus counters before summing, called at the damage step (engine.py:2046-2053 and :2094, read this session) - a defend-time bump would be wiped before damage ever used it. MODIFY_DEFENSE_VALUE instead records (_m, delta) on combat.defense_mods (effect_types.py:2651-2676), which the recalculation re-applies after the reset (engine.py:2070-2076). Since this equipment is a declared defender whenever its ON_DEFEND trigger fires, +1 to the defending total for the block IS 'it gets +1{d}'. This copies shipped evo/infuse_alloy_yellow.json (Galvanize - the same 'when this defends, you may <pay>; if you do, +N{d}' sentence) and the .drafts/brothers_in_arms_* family, whose printed sentence is IDENTICAL to this card's apart from the number (+2{d} there).\n\nKNOWN IMPRECISION (inherited from those precedents): untargeted MODIFY_DEFENSE_VALUE moves the defending TOTAL, so a defender added AFTER the payment (a defense reaction joining the block) also benefits from the +1. The targeted form was rejected deliberately: it writes obj.defense directly without recording defense_mods, i.e. it does not survive recalculation - .review/platinum_amulet_blue.json documents exactly that defect.\n\n'UNTIL END OF TURN': CombatState is rebuilt per attack, so defense_mods live exactly for this chain link; a defense value has no existence outside the attack it blocks, so chain-link span and end-of-turn span are observably identical here."
+}

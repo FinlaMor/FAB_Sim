@@ -1,0 +1,29 @@
+{
+  "slug": "dabble_in_darkness_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "SELF", "amount": 1, "into": "dabbled"},
+        {"type": "BANISH_REF", "ref": "dabbled", "from_zone": "deck"},
+        {
+          "type": "CONDITIONAL",
+          "when": [{"type": "REF_PITCH_IS", "ref": "dabbled", "pitch": 1}],
+          "then": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": -1}]
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [{"type": "REF_PITCH_IS", "ref": "dabbled", "pitch": 2}],
+          "then": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": -2}]
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [{"type": "REF_PITCH_IS", "ref": "dabbled", "pitch": 3}],
+          "then": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": -3}]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, banish the top card of your deck. This gets -X{p}, where X is the pitch value of the card banished this way. / **Blood Debt**' - Shadow Action - Attack.\n\nBLOODDEBT NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords (ability_keywords.blood_debt) - authoring it again would be a defect.\n\nBANISH + REF SHAPE (per triage): LOOK_AT zone DECK_TOP player SELF amount 1 into 'dabbled'. LOOK_AT peeks WITHOUT moving the card (effect_types.py:3356-3415) and stores a single card UNWRAPPED when amount is 1 and the deck is non-empty; an empty deck stores None. player SELF must be explicit - the handler defaults to OPPONENT (effect_types.py:3380), which would have looked at and then banished from the wrong deck's top via the ref. BANISH_REF (effect_types.py:3726-3752) goes through the canonical banish keyword with origin_zone 'deck' passed explicitly - LOOK_AT left the card in place, so the derived origin would also work, but explicit beats implicit here (the DSL_REFERENCE warns that a missing origin leaves the card in both zones). face_down not set: a plain 'banish the top card' is a face-up banish.\n\nX AS NESTED CONDITIONALS: no amount expression reads a ref's pitch value, so X is spelled as three CONDITIONAL branches on REF_PITCH_IS pitch 1/2/3 (condition_types.py:1979-2009 reads 'ref' and 'pitch'; a None ref fails all three). That makes both release notes fall out exactly: a card with no pitch value tests 0 against 1/2/3 -> no branch fires -> X is 0; empty deck -> ref is None -> X is 0.\n\nPOWER MODIFICATION: MODIFY_ATTACK mod add with negative amounts. The ON_ATTACK trigger resolves while this card is the current attack, so the one-shot path appends (_mod, val) to combat.power_mods AND bumps live power now (effect_types.py:4145-4157) - power_mods is re-applied by every later recalculation of this chain link (engine.py:1944-1950), so the -X persists through defend and damage steps rather than being washed out by the next recalc.\n\nRe-verified against handlers this session (LOOK_AT param spellings and default player, BANISH_REF origin handling, REF_PITCH_IS ref/pitch keys and None behaviour, CONDITIONAL when/then keys, MODIFY_ATTACK persistence); no gaps found."
+}

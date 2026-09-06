@@ -1,0 +1,33 @@
+{
+  "slug": "deadwood_rumbler_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "DRAW", "amount": 1},
+        {"type": "DISCARD_RANDOM", "amount": 1},
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "REF_POWER_GTE", "ref": "discarded", "amount": 6}
+          ],
+          "then": [
+            {
+              "type": "CHOOSE",
+              "amount": 1,
+              "options": [
+                [
+                  {"type": "BANISH", "from_zone": "GRAVEYARD", "player": "SELF", "amount": 1}
+                ],
+                [
+                  {"type": "BANISH", "from_zone": "GRAVEYARD", "player": "OPPONENT", "amount": 1}
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, banish a card from a graveyard.' Shadow Brute Action - Attack. BloodDebt is in printed_keywords, so it fires from the card DB - not authored here.\n\nNO TRIGGER WORDING: unlike Bare Fangs ('When this attacks, draw then discard...'), this text has no 'when', so it is one flat PLAY resolution, not TRIGGERED ON_ATTACK. Release note 2 ('no priority during resolution; you cannot play anything after drawing but before discarding') is exactly one flat effect sequence: DRAW -> DISCARD_RANDOM -> test -> banish.\n\nDELIBERATE DEVIATION FROM TRIAGE (1): it listed DISCARDED_CARD_POWER_GTE, but that condition reads .power off the DISPATCHING EVENT (condition_types.py:1046-1052); inside a PLAY resolution that event carries no discarded card, so the gate would be false in every state while looking implemented - the exact defect .review findings record for wrecking_ball_red / ram_raider_yellow / breakneck_battery_red / predatory_assault_blue. DISCARD_RANDOM stores the card actually discarded under ref 'discarded' (effect_types.py:5027-5029) precisely so 'THIS WAY' is expressible; REF_POWER_GTE(ref 'discarded', amount 6) reads ref+amount and any list entry satisfies it (condition_types.py:2090-2118). Same fix as the sibling bare_fangs_* drafts, whose printed clause is identical. Empty hand edge: nothing discarded -> ref never set -> get_ref None -> condition false -> no banish, while draw/discard still resolve.\n\nDELIBERATE DEVIATION FROM TRIAGE (2): plain BANISH fixes whose graveyard at compile time (player SELF or OPPONENT), but release note 4 says 'any player's graveyard'. CHOOSE (effect_types.py:5107-5136, verified: reads amount + options, runs the chosen option's effects) offers exactly the two BANISHes; there is no decline option, so banishing stays mandatory per release note 3, and the just-discarded card is a legal pick since it reached the graveyard before the prompt.\n\nKNOWN IMPRECISION: CHOOSE cannot make an option unavailable, so with exactly one non-empty graveyard the player can pick the empty side and dodge a banish the release notes call mandatory (both empty forces a pointless prompt but no-ops correctly, since BANISH breaks on an empty pool). Expressing 'choose a non-empty graveyard' would need a new generic type; not attempted.\n\nShape copied from sibling drafts deadwood_rumbler_blue/yellow in this directory; every handler claim re-verified directly against effect_types.py / condition_types.py this session."
+}

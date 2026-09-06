@@ -1,0 +1,21 @@
+{
+  "slug": "bloodrot_trap_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {"type": "REACTION_THIS_LINK", "player": "ATTACKING"}
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "bloodrot_pox",
+          "amount": 1,
+          "player": "OPPONENT"
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends and the attacking hero has played or activated a reaction this chain link, create a Bloodrot Pox token under their control.'\n\nDELIVERY: ON_DEFEND is dispatched to the defending card object itself (engine._dsl_defend_listener -> dispatch(card_obj.slug)), so the trap hears its own defend.\n\nCONDITION: REACTION_THIS_LINK player=ATTACKING, no kind filter = 'has played or activated A reaction' (any kind) by combat.attacker_id this chain link. Ability-level conditions evaluate at RESOLUTION (interpreter._run_ability), which matches the release note that the reaction check happens when the trap resolves and becomes a defending card - not at trigger time. The data source is live: play._record_reaction_on_link appends to combat.reactions_this_link for both played and activated reactions, and the list is link-scoped by construction (new CombatState per attack).\n\nEFFECT: CREATE_TOKEN reads token/amount/player (handler verified); player=OPPONENT resolves to 3 - controller, i.e. the attacking hero - 'under their control'. Token definition already exists at json/tokens/bloodrot_pox.json (END_OF_TURN destroy-or-pay static), so no destination param is needed; zone routing derives from the template subtypes.\n\nINEXPRESSIBLE CLAUSE: the release note 'If there is no attacking hero (e.g. this is defending against an ally attack), this does not trigger.' No condition asks whether the ATTACKER is a hero - ATTACK_TARGET_IS_HERO asks about the attack's TARGET. Ally attacks exist in this engine and their combat.attacker_id is the controlling PLAYER, so on an ally attack this gate would read the ally-controller's reactions and can fire where the printed card would not. Would need an ATTACKER_IS_HERO-style condition to close."
+}

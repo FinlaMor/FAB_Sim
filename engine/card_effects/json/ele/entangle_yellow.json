@@ -1,0 +1,44 @@
+{
+  "slug": "entangle_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "fused_entangle_yellow"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "COMBAT",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {
+                "type": "ATTACK_TARGET_IS_HERO"
+              }
+            ],
+            "effects": [
+              {
+                "type": "MODIFY_ATTACKS_THIS_TURN",
+                "mod": "subtract",
+                "amount": 2,
+                "scope": "NEXT_TURN",
+                "player": "OPPONENT",
+                "filter": [
+                  {
+                    "type": "ATTACK_ORDINAL_EQ",
+                    "amount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Earth Fusion** / If Entangle was **fused**, it gains \"If this hits a hero, their first attack during their next turn has -2{p}.\"' Elemental Guardian Action - Attack (TalesOfAria batch label - pick the json/<set>/ folder from setIdentifiers at adoption).\n\nPRINTED KEYWORD NOT AUTHORED: Fusion fires engine-side from the card DB keywords field as an optional additional cost at play time (triggers.py maps '<X> Fusion' -> ability_keywords.fusion, ability_keywords.py:582-607 -- a REVEAL from hand). Re-authoring it would be a defect.\n\nFUSED GATE: fusion() writes the marker 'fused_<card.slug>' into the controller's current_turn_effects (ability_keywords.py:604-606) precisely so 'if <card> was fused' clauses can ask FLAG_SET (condition_types.py:1032-1037 tests exactly that list for the source controller). Flag name is per-printing because fusion() keys it on card.slug -- hence fused_entangle_yellow. Timing holds: fusion resolves as a play cost before the attack action's PLAY abilities dispatch, and ability-level conditions are checked at resolution, so by then the flag is set or permanently absent. Same verified idiom as shipped ele/chilling_icevein_yellow.json.\n\nGAINED TRIGGER: INJECT_TRIGGER scope COMBAT with the inner trigger NESTED under 'trigger' (required -- a top-level conditions key would be popped by the loader as an effect-level gate evaluated once at registration, when there may be no attack). state.combat exists when an attack action's PLAY abilities resolve, so the one-shot lands in combat.injected_triggers and fires on this attack's hit. Inner ATTACK_TARGET_IS_HERO restricts to 'hits A HERO' (false against allies/permanents; combat.attack_target is None for hero attacks).\n\nTHE -2{p}: MODIFY_ATTACKS_THIS_TURN handler (effect_types.py:2201-2227, read this session) reads amount/mod/scope/player/filter -- all verified read. mod 'subtract' signs the amount negative; player OPPONENT resolves relative to the source controller (the attacker), so the hook lands on the DEFENDER; scope NEXT_TURN parks it in their next_turn_attack_hooks, promoted into turn_attack_hooks at the OWNER'S next turn start -- exactly 'during their next turn'. Release note ('affects all attacks including attack actions and weapon attacks') holds: the hook is re-applied per attack regardless of kind, and ATTACK_ORDINAL_EQ only narrows WHICH one.\n\n'THEIR FIRST attack': filter ATTACK_ORDINAL_EQ amount 1 (condition_types.py:672-683 -- the param is 'amount'). It compares the attacking player's attacks_this_turn, which is 1 DURING the first attack, so EQ 1 matches only the first. This copies .drafts/entangle_blue.json and .drafts/entangle_red.json verbatim (identical printed text); only the slug and the per-printing fusion flag differ."
+}

@@ -1,0 +1,20 @@
+{
+  "slug": "infect_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "bloodrot_pox",
+          "player": "OPPONENT"
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Stealth** / When this hits a hero, create a Bloodrot Pox token under their control.' Assassin Action - Attack (ArakniBlitzDeck - derive the json/<set>/ folder from setIdentifiers at adoption).\n\nSTEALTH NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field; re-authoring a printed keyword is a defect. Nothing gates it, so no SOURCE_IS_ATTACK conditional-keyword machinery applies.\n\nTRIGGER: TRIGGERED + ON_HIT with ability-level conditions [ATTACK_TARGET_IS_HERO] (condition_types.py:1960-1977, read this session - takes no required params; combat.attack_target is set only for permanent/ally attacks, so a hero attack passes). Ability-level conditions are checked at resolution, i.e. per hit here, which is the printed 'hits A HERO' restriction - an attack fully blocked never hits and never fires. ON_HIT dispatches to combat.attack_card, which for this attack action card IS Infect.\n\nTOKEN: CREATE_TOKEN reads token/count|amount/player|controller/destination (effect_types.py:1942-2013, read this session). 'Under THEIR control' = the hit hero = the defender: player OPPONENT resolves relative to the source controller (the attacker), and the handler maps OPPONENT/DEFENDING/DEFENDER/TARGET_HERO identically (:1971-1972), so OPPONENT is exact in 1v1. count defaults to 1 ('a Bloodrot Pox token'). json/tokens/bloodrot_pox.json EXISTS (verified this session), so create_token's require_card cannot raise mid-game; zone routing derives from the token template's subtypes.\n\nNo other functional text; no gaps."
+}

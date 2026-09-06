@@ -1,0 +1,41 @@
+{
+  "slug": "cognition_nodes_blue",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 1,
+      "conditions": [
+        {"type": "COUNTER_EQ", "counter_type": "steam", "min": 0}
+      ],
+      "effects": [
+        {"type": "PUT_COUNTER", "counter_type": "steam", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "ATTACK_REACTION",
+      "per_turn": 1,
+      "cost": [
+        {"type": "REMOVE_COUNTERS", "counter_type": "steam", "amount": 1}
+      ],
+      "target": {
+        "filter": [
+          {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+          {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+        ]
+      },
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "COMBAT",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "effects": [
+              {"type": "PUT_SELF_BOTTOM_DECK"}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "Mechanologist Item (ArcaneRising). Two abilities: (1) Action - {r}: If no steam counters, put a steam counter on it. Go again. (2) Once per Turn Attack Reaction - Remove a steam counter: Target attack action card gains 'When this hits, put it on the bottom of its owner's deck.'\n\nGO AGAIN NOT AUTHORED: GoAgain is in printed_keywords and fires from the card DB keywords field; re-authoring it would be a defect.\n\nABILITY 1: ACTIVATE with activation_cost 1 (the {r} cost). Condition COUNTER_EQ steam 0 gates 'If there are no steam counters'. Effect PUT_COUNTER steam 1. The condition is at ability level (checked at resolution), matching 'If...' conditional effect wording.\n\nABILITY 2: ATTACK_REACTION with per_turn 1 for 'Once per Turn'. Cost REMOVE_COUNTERS steam 1. Target filter ATTACK_TYPE_IN Action + ATTACK_SUBTYPE_IN Attack together name exactly an attack action card (condition_types.py:273/296). Effect INJECT_TRIGGER scope COMBAT (current attack only) with nested ON_HIT trigger granting PUT_SELF_BOTTOM_DECK. The nested trigger dict is REQUIRED - a top-level conditions key would be popped by the loader as an effect-level gate evaluated once at registration (effect_types.py:2103-2119). PUT_SELF_BOTTOM_DECK moves the attacking card to its owner's deck bottom (effect_types.py:1633-1654)."
+}

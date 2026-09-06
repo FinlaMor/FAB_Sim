@@ -1,0 +1,22 @@
+{
+  "slug": "lead_the_charge_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_CARD_COST",
+          "amount": 0,
+          "filter": [
+            {"type": "CARD_COST_GTE", "amount": 1},
+            {"type": "CARD_IS_TYPE", "types": ["Action"]}
+          ],
+          "on_consume": [
+            {"type": "GAIN", "asset": "ACTION_POINTS", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Go again is a printed keyword from card DB, not authored here. PLAY ability creates a one-shot queue entry (MODIFY_NEXT_CARD_COST with amount 0) for the next action card with cost >= 1 played this turn; on_consume grants 1 action point. The queue lives on the player and expires at end of turn."
+}

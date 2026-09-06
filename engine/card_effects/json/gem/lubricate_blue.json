@@ -1,0 +1,39 @@
+{
+ "slug": "lubricate_blue",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "effects": [
+    {
+     "type": "MAY",
+     "prompt": "Untap up to 3 cogs you control?",
+     "conditions": [
+      {
+       "type": "CARD_IN_ZONE",
+       "zone": "permanents",
+       "card_name": "cog",
+       "count_gte": 1
+      }
+     ],
+     "effects": [
+      {
+       "type": "TAP_TARGET",
+       "target": {
+        "zone": "ARENA",
+        "amount": 3,
+        "record_as": "lubricate_cogs",
+        "name": "Cog"
+       }
+      },
+      {
+       "type": "TAP_REF",
+       "ref": "lubricate_cogs",
+       "untap": true
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "_comment": "Instant CARD -> ability_type PLAY (INSTANT would be an activated ability and never fire for a played card). Untap composed as TAP_TARGET (dict object target, record_as) + TAP_REF untap:true - the only untap path (no dedicated UNTAP effect); net effect correct (tapped cogs: tap cancels then untap clears; untapped cogs: tap then untap round-trips), wart: spurious TapEvent for untapped cogs (same shape as .drafts/draw_back_the_hammer_red.json). 'Cogs': no Cog subtype exists in the DB (verified scan), so name-substring 'Cog' over ARENA (permanents) matches Copper Cog, Golden Cog, Cognition Nodes - the cogwerx_workshop_blue precedent. GAP: 'up to 3' is approximated - the object-target pick loop is mandatory up to amount (effect_types.py:807-817), so accepting forces exactly min(3, pool) picks; choosing 1-2 of 3+ is not expressible (same gap documented in cogwerx_workshop_blue). The MAY wrapper lets the player decline entirely (0 cogs), honoring release note 2; the CARD_IN_ZONE gate means the prompt is not offered with no cogs."
+}

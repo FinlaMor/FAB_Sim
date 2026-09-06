@@ -1,0 +1,41 @@
+{
+ "slug": "jack_o_lantern_yellow",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "effects": [
+    {
+     "type": "LOOK_AT",
+     "zone": "DECK_TOP",
+     "player": "SELF",
+     "amount": 1,
+     "into": "looked"
+    },
+    {
+     "type": "BANISH_REF",
+     "ref": "looked",
+     "from_zone": "deck"
+    },
+    {
+     "type": "CONDITIONAL_EFFECT",
+     "when": [
+      {
+       "type": "REF_PITCH_IS",
+       "ref": "looked",
+       "pitch": 2
+      }
+     ],
+     "then": [
+      {
+       "type": "CREATE_TOKEN",
+       "token": "runechant",
+       "amount": 1
+      }
+     ],
+     "else": []
+    }
+   ]
+  }
+ ],
+ "_comment": "PLAY ability on an Action card. LOOK_AT top 1 of own deck (player SELF) into 'looked'. BANISH_REF banishes that card from deck (from_zone 'deck' required per effect_types.py:3780 - otherwise banish leaves card in both zones). CONDITIONAL_EFFECT checks if the banished card was yellow (pitch 2) via REF_PITCH_IS on the same ref (card object persists after banish). If yellow, CREATE_TOKEN runechant. GoAgain is a printed keyword (in printed_keywords) and comes from the card DB, not authored here."
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "annexation_of_grandeur_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "conditions": [
+        {"type": "TARGET_HERO_CLASS_IN", "classes": ["Guardian"]}
+      ],
+      "effects": [
+        {"type": "STEAL_AURA_TOKEN"}
+      ]
+    }
+  ],
+  "_comment": "Crush is a printed keyword (card DB) - not authored. The engine dispatches ON_CRUSH only when crush_check passes (hit event damage >= 4, engine.py ~1424-1428), so the printed 'deals 4 or more damage' half needs no authoring; ability_type STATIC_TRIGGERED + ON_CRUSH copied from shipped wtr/disable_yellow.json.\n\n'...to a Guardian hero' is TARGET_HERO_CLASS_IN, which reads the DEFENDING hero's classes/talents (condition_types.py ~1489) - not the attack card's class. Combat still exists at crush time (inside the hit-event dispatch), so the condition resolves.\n\n'Gain control of an aura they control' is STEAL_AURA_TOKEN: the handler ignores its params and calls effect_steal_token(state, controller, opponent), which moves one card from the opposing player's AURAS ZONE to this card's controller, asking which when there are several - so multiple auras are handled by the runtime choice.\n\nGAP vs the official release notes: they say the gained aura may be an aura permanent, an aura token, a defending card with the aura sub-type, or an aura card on the stack; effect_steal_token reads only victim.auras.cards, so auras in those other locations are not reachable. Cosmetic wart: its choice prompt always reads 'Choose Gold token to steal' regardless of what is stolen."
+}

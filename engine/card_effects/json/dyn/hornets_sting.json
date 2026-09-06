@@ -1,0 +1,25 @@
+{
+  "slug": "hornets_sting",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "REVEAL_TOP_DECK", "amount": 1, "into": "revealed"},
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "REF_IS_TYPE", "ref": "revealed", "types": ["Arrow"]}
+          ],
+          "then": [
+            {"type": "DEAL_GENERIC", "amount": 1, "target": "ATTACKER"}
+          ],
+          "else": [
+            {"type": "PUT_REF_BOTTOM", "ref": "revealed"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Whenever Hornet's Sting defends, reveal the top card of your deck. If it's an arrow, deal 1 damage to the attacking hero or ally. Otherwise, put it on the bottom of your deck.' Ranger Equipment - Arms (Dynasty) + printed **Blade Break**.\n\nBLADE BREAK NOT AUTHORED: it appears in printed_keywords, so it fires from the card DB keywords field engine-side; re-authoring it would be a defect.\n\nTRIGGER: TRIGGERED ON_DEFEND - shape copied from SHIPPED ast/zap_clappers.json, which pairs the same defend trigger with a reveal and damage to the attacker ('the ATTACKING hero' from a WHEN-THIS-DEFENDS trigger is the exact case _damage_target_player documents ATTACKER for).\n\nREVEAL: REVEAL_TOP_DECK reads amount and into (effect_types.py:2229-2256); with into:'revealed' it stores the revealed card(s) as a list under that ref without moving them.\n\nBRANCH: CONDITIONAL with when/then/else (effect_types.py:3697-3724) - deliberately NOT 'conditions', which the loader pops as an effect-level gate and would skip the whole branch including the else. The when-test REF_IS_TYPE (condition_types.py:2011-2043) takes ref+types and unions TYPES AND SUBTYPES, so ['Arrow'] matches Arrow-the-subtype; it also handles a one-element list correctly (takes the single entry), which matters because REVEAL_TOP_DECK always stores a list. If arrow: DEAL_GENERIC amount 1 target ATTACKER - _damage_target_player (effect_types.py:907-931) resolves ATTACKER to combat.attacker_id, i.e. the opposing hero, exactly the defender-sourced case zap_clappers ships. Otherwise: PUT_REF_BOTTOM ref 'revealed' (effect_types.py:3614-3639), whose default player OWNER routes to the card's owner's deck bottom - here the controller's own deck, which is whose deck was revealed. If the revealed card IS an arrow it stays where it is (top of deck): the printed text only moves it in the otherwise case.\n\nGAP - CLAUSE 'deal 1 damage to the attacking hero OR ALLY': DEAL_GENERIC damages a PLAYER; its target vocabulary resolves ATTACKER to combat.attacker_id (a player id), so when the attack came from an ALLY the printed text wants the damage on the ally OBJECT, and no DEAL_* target string names an attacking ally. Drafted as damage to the attacking player (hero), which is right whenever a hero attacked and over-applies only vs ally attacks. A fix needs a DEAL target that resolves to the current attack's source object.\n\nRelease note ('if the damage kills an attacking Ally, the combat chain closes before the reaction step') is engine state-based-action behaviour around ally death - nothing to author in JSON."
+}

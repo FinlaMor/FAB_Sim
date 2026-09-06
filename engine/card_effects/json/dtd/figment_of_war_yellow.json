@@ -1,0 +1,22 @@
+{
+  "slug": "figment_of_war_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "courage",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Legendary** / When this enters the arena, create a Courage token.' Light Illusionist Instant - Figment (DuskTillDawn).\n\nLEGENDARY NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field - re-authoring it would be a defect.\n\nETB TRIGGER: TRIGGERED + ON_ENTER_PLAY, mapped at trigger_types.py:30 and dispatched from Zone.add on real arena entry from a non-arena zone (state.py:293-310, read this session) - covers BOTH paths: resolving on the stack when played AND being put into the arena by another card's effect. Same shape as the sibling drafts figment_of_erudition_yellow / figment_of_triumph_yellow.\n\nTOKEN: CREATE_TOKEN handler reads token/count|amount/player/destination (effect_types.py:1942-2013, read this session). 'courage' is the slug of json/tokens/courage.json, which EXISTS, so create_token's require_card passes; count defaults to 1 anyway, authored explicitly; player defaults SELF = the controller ('create a Courage token' under your control); destination omitted so zone routing derives from the token template's subtypes.\n\nDISCLOSED RESIDUAL RISK (not fixable in JSON, inherited from the sibling drafts): arena-entry ROUTING tests \"Figment\" in card.TYPES (engine.py:2338-2340, re-read this session) before routing the resolving layer into player.permanents per CR 8.2.16a; state.py's permanent-subtype table accepts Figment by SUBTYPE once routed. Whether the DB record carries 'Figment' in types vs subtypes could not be confirmed - card_data/slug_index.json was permission-blocked this session too. If it is subtype-only, the card ceases to exist on resolution and this trigger never fires; that is a data question, not a DSL gap.",
+  "_verified_this_session": [
+    "trigger_types.py:30 ON_ENTER_PLAY mapping; state.py:304-310 Zone.add dispatch",
+    "effect_types.py:1942-2013 CREATE_TOKEN reads token/amount/player/destination",
+    "glob: engine/card_effects/json/tokens/courage.json exists"
+  ]
+}

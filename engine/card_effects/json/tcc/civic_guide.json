@@ -1,0 +1,13 @@
+{
+  "slug": "civic_guide",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "might", "amount": 1, "player": "OPPONENT"}
+      ]
+    }
+  ],
+  "_comment": "Temper is a printed keyword -> card DB keywords field, deliberately NOT authored here. 'Whenever this defends' = TRIGGERED ON_DEFEND; verified engine.py _dsl_defend_listener dispatches ON_DEFEND to the defending card object itself on every defend event, so it fires each time it defends - no once-per-turn gating, matching the release note ('not just the first time it defends in a game'). 'Under ANOTHER hero's control': CREATE_TOKEN's player param is binary SELF/OPPONENT (handler maps OPPONENT to the other player id); drafted OPPONENT, which is exact in a 1v1 game and satisfies 'you may not choose yourself'. The release note's resolution-time choice among any other hero in UPF is not expressible with the binary player param - in this engine there is exactly one other hero, so behaviour is correct here; flagged for a future multiplayer pass. Token definition exists at json/tokens/might.json."
+}

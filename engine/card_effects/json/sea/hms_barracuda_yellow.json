@@ -1,0 +1,27 @@
+{
+  "slug": "hms_barracuda_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "DESTROY_PERMANENT", "player": "OPPONENT", "subtype": "Ally", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "CARD_IN_ZONE", "zones": ["pitch"], "color": "blue", "count_gte": 2}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1},
+        {"type": "GAIN", "keyword": "OVERPOWER"}
+      ]
+    }
+  ],
+  "_comment": "'When this hits a hero, destroy an ally they control.' / 'High Tide - If there are 2 or more blue cards in your pitch zone, this gets +1{p} and overpower.' Pirate Action - Attack (HighSeas).\n\nHIT TRIGGER: TRIGGERED + ON_HIT gated by ATTACK_TARGET_IS_HERO - ON_HIT is dispatched to combat.attack_card (this card while it attacks) and the gate (condition_types.py:1960, read this session; takes no required params) is false when the attack was declared at a permanent or ally, covering the printed 'a HERO'.\n\nDESTROY: DESTROY_PERMANENT handler READS player/subtype/amount (effect_types.py:2470-2488, read this session); player OPPONENT resolves to 3-cid = the hero that was hit ('an ally THEY control'). Allies live in player.allies, a SubZoneView over player.permanents (state.py:870), so the handler's scan of permanents.cards reaches them - including PERCHED allies (official release note 2): 'perched' is a pass-through keyword (triggers/triggers.py:305), perching does not move an ally out of the permanents pool. When several allies qualify the handler asks which to destroy (release note 1, 'you choose ... when the triggered effect resolves'); a single candidate auto-resolves.\n\nHIGH TIDE IS A STATIC, NOT A TRIGGER - settled by official_release_notes 3 ('checks your pitch zone constantly, not just when it attacks. If the condition is met after the attack is made, it will get the effect'): the Aggressive Pounce ruling shape, so WHILE_STATIC re-evaluated on every RECALC_ATTACK_POWER dispatch, NOT the TRIGGERED ON_ATTACK form. Shape copied from SHIPPED pen/savage_claw.json (pitch-conditioned attack static). MODIFY_ATTACK applies transiently in the stage-8 static window so repeated recalculations never stack the +1{p}; SOURCE_IS_ATTACK (condition_types.py:381) confines both halves to THIS card's own attack.\n\nCONDITIONAL-KEYWORD MACHINERY IS MANDATORY: Overpower appears in printed_keywords, so the card DB applies it unconditionally; loader.conditional_keywords() (loader.py:255-296, read this session) strips the printed copy ONLY because this ability's conditions include SOURCE_IS_ATTACK and it grants the keyword via an un-nested GAIN - 'overpower' is in _GRANTABLE_KEYWORDS (loader.py:243-246). Without this shape the card would limit defenders to one action card even with fewer than two blue cards pitched. The grant lands correctly: GAIN keyword routes through canonical_keyword (effect_types.py:336-346), producing the printed spelling 'Overpower' in combat.keywords, which the defend step reads exactly (engine.py:616-628).\n\nTHE GATE: CARD_IN_ZONE reads zones (list)/color/count_gte (condition_types.py:844-996, read this session); player defaults SELF = the controller's own pitch zone ('YOUR pitch zone'); blue matched via base_color/pitch fallback. count_gte 2 = '2 or more'.\n\nNOT AUTHORED: the HighTide label itself has no branch in build_keyword_triggers (grepped triggers/triggers.py this session) - it is inert from the card DB keywords field, and the authored condition above IS the whole mechanic. No spurious trigger to disclose.\n\nADOPTION NOTE: batch labels set HighSeas; derive the folder from the card's own sets/setIdentifiers in card_data/slug_index.json, never from its class."
+}

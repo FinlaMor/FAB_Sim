@@ -1,0 +1,21 @@
+{
+  "slug": "heavy_swing_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Sword"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'At the start of your turn, destroy this and your next sword attack this turn gets +3{p}.' Warrior Action - Aura (MasteryPackWarrior).\n\nSHAPE copied from .drafts/crash_down_yellow.json - same family, same printed sentence shape ('At the start of your turn, destroy this and your next <X> attack this turn gets +N{p}'), differing only in the filter and amount.\n\nTRIGGER VEHICLE: START_OF_TURN is dispatched by engine._dsl_start_of_turn_listener (engine.py:1461-1466) to the ACTIVE player's zones only, and _dsl_permanent_zones (engine.py:1452-1459) includes player.auras - a played Aura sits there, so on its controller's turn the ability fires with no IS_ACTIVE_PLAYER gate needed. Release note ('neither player has priority during the start of turn when this resolves') describes engine timing, not card behaviour - nothing to author.\n\nEFFECT ORDER follows the printed sentence: DESTROY_SELF first (effect_types.py:2470 shares the DESTROY_PERMANENT branch; the bare form destroys the source via canonical destroy(), which resolves the aura zone itself), then MODIFY_NEXT_ATTACK queues on the controller's dsl_queued_attack_mods (handler effect_types.py:4592-4618 READS mod/amount/filter/scope - verified). Destroying the aura first cannot unqueue the pump: the entry lives on the player, not the card. One-shot consumption by the first qualifying attack IS 'the next'; unused entries expire end of turn, which is 'this turn' (scope left at default TURN).\n\nFILTER names a SWORD attack. Per DSL_REFERENCE's filter table, sword is a SUBTYPE (swords are weapons, which attack as themselves), so ATTACK_SUBTYPE_IN alone is the whole filter - unlike crash_down's three-clause 'Guardian attack action card'. Handler verified: condition_types.py:296-316 reads 'subtypes' and tests them against the attack card's subtypes AND types merged, plus a 'weapon' flag when combat.from_weapon is set, so a Sword weapon attack matches on its printed subtype.\n\nNo printed keywords (printed_keywords empty); no play cost or conditions in the text; nothing else to author."
+}

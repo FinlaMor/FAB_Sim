@@ -1,0 +1,74 @@
+{
+  "slug": "explosive_growth_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1,
+          "target": "TARGET_HERO"
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "FLAG_SET",
+              "flag": "fused_explosive_growth_blue"
+            },
+            {
+              "type": "EVENT_THIS_TURN",
+              "event": "damage",
+              "qualifier": "arcane"
+            }
+          ],
+          "then": [
+            {
+              "type": "INJECT_TRIGGER",
+              "scope": "CHAIN",
+              "trigger": {
+                "trigger_type": "ON_HIT",
+                "effects": [
+                  {
+                    "type": "MODIFY_ATTACK",
+                    "mod": "add",
+                    "amount": 1
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEAL_DAMAGE",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "fused_explosive_growth_blue"
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "CHAIN",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "effects": [
+              {
+                "type": "MODIFY_ATTACK",
+                "mod": "add",
+                "amount": 1
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "Implementation copied verbatim from explosive_growth_red, whose printed functional text is identical to this card's once each card's own name is substituted out. Everything that differs between them -- cost, pitch, power, colour -- comes from the card DB, not from this file, so the DSL is the same card twice.\n\nTHE COPY IS PINNED, not trusted: tests/test_copied_card_implementations.py asserts that these abilities still match explosive_growth_red's and that the two printed texts still agree, so a later edit to one cannot silently leave the other behind. That is the insult_to_injury failure -- three printings of one sentence with three different implementations, the blue one missing a gate the others had.",
+  "_copied_from": "explosive_growth_red"
+}

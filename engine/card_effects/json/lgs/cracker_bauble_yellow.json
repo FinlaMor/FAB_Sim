@@ -1,0 +1,15 @@
+{
+  "slug": "cracker_bauble_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PITCH",
+      "effects": [
+        {"type": "ROLL", "faces": 2},
+        {"type": "CREATE_TOKEN", "token": "gold", "amount": 1, "player": "SELF"},
+        {"type": "CREATE_TOKEN", "token": "gold", "amount": 1, "player": "OPPONENT"}
+      ]
+    }
+  ],
+  "_comment": "'When this is pitched, you and target opponent randomly choose opposite ends of this and pull them until this breaks in half. Then each hero creates the token on the back of their half, and this ceases to exist.' Generic Resource.\n\nTRIGGER: ON_PITCH is dispatched to the pitched card itself, keyed by its slug (engine.py:1609).\n\nTHE RANDOM PULL is the ROLL (handler effect_types.py:4965 reads faces/sides; result stored on state._roll_result). It is kept because the printed break IS random, but NOTE THE GAP: the triage pass's CONDITIONAL_EFFECT primitive cannot branch on it - no condition type reads the roll result. ROLL_RESULT/ROLL_NUMBER exist only as effect AMOUNT tokens inside _resolve_amount (effect_types.py:31-35); condition_types.py has no roll-reading condition (grep-verified). So 'which hero gets which half's token' is NOT expressible, and the draft models the substance the triage note itself identified: each hero creates one token.\n\nTOKEN SLUG IS A PLACEHOLDER, flagged loudly: fabtcg.com lists LGS360 as 'Armory Event, 20 different token card pairings' - the perforated back varies per physical copy, and the card DB carries oppositeSideCardIdentifiers: [], so no authoritative pair exists to author. 'gold' was chosen because json/tokens/gold.json EXISTS (create_token calls require_card; a missing def raises MissingCardImplementation mid-game) and the bauble family pairs Cracked Bauble with Gold elsewhere in the DB ('they may create a Cracked Bauble in their hand. If they do, you create a Gold token'). Whoever adopts this must swap the slug per the pairing the deck represents; note cracked_bauble_yellow has a card-DB template but NO json definition yet.\n\nCREATE_TOKEN handler reads token/count-or-amount/player (effect_types.py:1947-1957); player OPPONENT maps to the other player, so the two effects give each hero exactly one token. 'You and target opponent' names the two pullers, but the outcome is symmetric (both heroes get a half), so no target declaration is needed.\n\n'Ceases to exist' needs nothing: a pitched Resource has already left the arena (triage note concurs)."
+}

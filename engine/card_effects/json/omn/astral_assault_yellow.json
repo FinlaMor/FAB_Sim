@@ -1,0 +1,31 @@
+{
+  "slug": "astral_assault_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "MAY",
+          "conditions": [
+            {"type": "CONTROLS_TOKEN_TYPE", "token": "lightning_flow"}
+          ],
+          "prompt": "Destroy a Lightning Flow you control? (If you do, Astral Assault gets +2{p}.)",
+          "effects": [
+            {
+              "type": "DESTROY_MATCHING",
+              "target": {
+                "controller": "SELF",
+                "zone": "ARENA",
+                "name": "Lightning Flow",
+                "amount": 1
+              }
+            },
+            {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, you may destroy a Lightning Flow you control. If you do, this gets +2{p}.' Identical text to the red printing; shape copied from sibling draft .drafts/astral_assault_red.json after independently verifying each of its claims against the handlers. Release note: the trigger fires when this resolves onto the combat chain - ON_ATTACK on an Action - Attack card, the shipped pound_town_blue / rising_knee_thrust shape (an Action - Attack is NOT an ATTACK_REACTION). The whole clause is MAY's all-or-nothing block: destroy + pump sit together in effects, so declining runs neither and 'if you do' needs no plumbing (release note: optional effect, chosen when the triggered effect resolves). The MAY's conditions gate whether the prompt is offered at all; with no else block that is exactly 'no legal target, nothing happens'. Two data facts drove the type choices, both re-verified here: Lightning Flow exists in the corpus ONLY as a token (json/tokens/lightning_flow.json) whose card-DB subtypes are ['Aura'] - there is NO 'Lightning Flow' subtype - so CONTROLS_SUBTYPE/DESTROY_PERMANENT-by-subtype would never match; hence CONTROLS_TOKEN_TYPE (matches by slug or display name, condition_types.py ~1697, scans all permanents incl. aura members) for the gate. For the destroy I chose DESTROY_MATCHING with an explicit object target (zone ARENA == player.permanents.cards, name flat-matches 'Lightning Flow') over DESTROY_TOKEN because DESTROY_TOKEN destroys the FIRST matching token with no player choice, while 'a Lightning Flow' with several in play implies the controller picks; _compile_object_target asks via _ask_player. Known minor infidelity: with exactly one flow the destroy path still prompts a single-option ask - cosmetic only. MODIFY_ATTACK add 2 on a one-shot ON_ATTACK trigger appends to combat.power_mods and is re-applied by every later attack-power recalculation (effect_types.py ~4081 cites this exact pattern), so the bonus survives the defend/damage steps. No known gaps."
+}

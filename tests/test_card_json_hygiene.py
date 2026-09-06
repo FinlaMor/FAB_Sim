@@ -39,6 +39,9 @@ NO_EFFECTS_REQUIRED = {"COST_MODIFIER", "REPLACEMENT", "DEFEND_RESTRICTION",
 # them. Anything left over after stripping them is real text that must be
 # implemented.
 _BOLD = re.compile(r"\*\*.*?\*\*")
+#: Italicised parenthetical reminder text -- "*(A player may add ...)*" -- and
+#: bare parentheticals. Both restate rules rather than creating them.
+_REMINDER = re.compile(r"\*?\([^)]*\)\*?")
 
 # Cards whose printed text CANNOT be expressed with the current DSL, listed
 # explicitly so the gap is tracked rather than papered over with an ability
@@ -50,6 +53,53 @@ _BOLD = re.compile(r"\*\*.*?\*\*")
 # ability type — enforced in actions.get_defendable_cards, the path
 # engine._defend_step actually uses.
 KNOWN_UNIMPLEMENTED: set[str] = {
+    # "Whenever this fragments, it gets go again. Fragment" -- FRAGMENT is not
+    # implemented anywhere: no trigger table entry, no keyword handler, and not
+    # one mention in the comprehensive rules, which predate the keyword. 27
+    # cards print it. The shipped ability was a fabricated ON_BECOME trigger
+    # gated on HAS_KEYWORD "Fragment" that nothing dispatches. Each file still
+    # declares conditional_keywords GO_AGAIN, so the printed keyword is
+    # withdrawn and the card never has go again -- exactly right while
+    # fragmenting is impossible. Definition of done: a fragment trigger exists
+    # and these three gain a TRIGGERED ability on it.
+    "ebbing_arcstride_red",
+    "ebbing_arcstride_blue",
+    "ebbing_arcstride_yellow",
+    # "When you play a non-attack action card, destroy this and the card gets
+    # go again." TWO things are missing and either alone would make an
+    # approximation wrong: ON_CARD_PLAYED is dispatched only to the player's
+    # HERO (engine._dsl_card_played_listener), so an aura never hears it; and
+    # GRANT_KEYWORD_TO_PLAYED is TURN-scoped, so using it would hand go again
+    # to every non-attack action played for the rest of the turn instead of to
+    # the one card that destroyed this. Definition of done: permanents hear
+    # ON_CARD_PLAYED and a one-shot form of the grant exists.
+    "eloquence",
+    # "Whenever an arrow is put face up into your arsenal from your deck, you
+    # may pay {r}. If you do, put an aim counter on it." Nothing dispatches a
+    # trigger for a card entering the ARSENAL from the DECK, so there is no
+    # event to hang the rest on. Definition of done: that trigger exists.
+    "crows_nest",
+    # "If you have a base legs equipped, transform it into this, then equip
+    # this." A transform between two EQUIPMENT pieces at play time; the
+    # transform primitive covers weapons/allies that swap in the arena, not an
+    # equipment slot replacing its occupant during a play. Definition of done:
+    # an equipment-slot transform exists.
+    "evo_sentry_base_legs_red",
+    # "If this is defended by an action card, this has -2{p}." The release note
+    # is explicit that two action defenders still give -2{p} in total, so it is
+    # one conditional continuous property, not a per-defender penalty --
+    # DEFENDING_CARD_IS gates per defending card and would stack. Definition of
+    # done: a once-only "defended by a card matching X" gate.
+    "freewheeling_renegades_red",
+    "freewheeling_renegades_yellow",
+    # NOT actually unimplemented -- listed because this check cannot tell a
+    # sentence that RESTATES a printed keyword from one that adds a clause.
+    # "Incarnate. This card's attacks get go again. Blood Debt": all three
+    # keywords come from the card DB, and authoring them again would be the
+    # defect. Stripping the bold leaves "This card's attacks get ." Definition
+    # of done: the residue check recognises a keyword-restating sentence, and
+    # this entry goes.
+    "corrupted_corpse",
     # Three TOKENS that existed nowhere until sixteen live cards were found
     # referencing them: create_token calls require_card, which RAISES, so the
     # game aborted mid-resolution rather than misbehaving. The files now exist
@@ -226,11 +276,22 @@ def test_card_with_functional_text_implements_something(path: Path):
     # play_cost and both checked and paid by engine/play.py, so a card whose only
     # implementable clause is that cost (Scrap, CR 8.3.32) HAS implemented
     # something. Counting abilities alone reported such a card as untouched.
-    if raw.get("abilities") or raw.get("setup") or raw.get("cost"):
+    # `cost_modifiers` is the same argument as `cost`: "if you control a Hyper
+    # Driver, this costs {r} less to play" is a COST, read by play.py when it
+    # decides legality and price. Modelling it as an ON_PLAY effect would apply
+    # it after the price was already paid, so a card whose only clause is a
+    # cost reduction correctly has no abilities at all.
+    if (raw.get("abilities") or raw.get("setup") or raw.get("cost")
+            or raw.get("cost_modifiers")):
         return
     if slug in KNOWN_UNIMPLEMENTED:
         pytest.xfail(f"{slug}: no DSL primitive for this text yet (see KNOWN_UNIMPLEMENTED)")
-    prose = _BOLD.sub("", entry.get("functionalText") or "").strip(" \n\t-—,.")
+    # Reminder text is not rules text. Cracked Bauble's ENTIRE printed text is
+    # "*(A player may add any number of Cracked Baubles to their card-pool in
+    # sealed deck or booster draft formats.)*" -- a deckbuilding note with no
+    # behaviour at all, which this check reported as an unimplemented clause.
+    prose = _REMINDER.sub("", entry.get("functionalText") or "")
+    prose = _BOLD.sub("", prose).strip(" \n\t-—,.*")
     assert not prose, (
         f"{slug} has no abilities and no setup, but its text is not purely "
         f"keywords — unimplemented remainder: {prose!r}"
@@ -288,6 +349,15 @@ def test_every_ability_has_effects(path: Path):
         # 10,000 Year Reunion is exactly that -- "you may remove three +1{p}
         # counters rather than pay its {r} cost", plus a printed Ward.
         if ability.get("alternative_cost"):
+            continue
+        # Same for an ADDITIONAL cost. loader.compile_card compiles
+        # `additional_cost` into AbilityDef.additional_costs, play.py checks and
+        # pays it, and interpreter.py pays it on resolution -- so "as an
+        # additional cost to play this, banish 3 random cards from your
+        # graveyard" IS the whole implementation of a card whose text says only
+        # that (Cross the Line). Costs must block play legality, never be
+        # modelled as effects, so there is nothing for `effects` to hold.
+        if ability.get("additional_cost"):
             continue
         assert ability.get("effects") or ability.get("modes") or ability.get("options"), (
             f"{slug} ability[{i}] ({atype or 'no ability_type'}) has no effects, "

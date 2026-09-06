@@ -1,0 +1,27 @@
+{
+  "slug": "high_striker_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "player": "SELF",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "ATTACK_CONTROLLED_BY_YOU"},
+              {"type": "NOT", "inner_type": "FLAG_SET", "flag": "high_striker_yellow_spent"}
+            ],
+            "effects": [
+              {"type": "CREATE_TOKEN", "token": "copper", "amount": 4},
+              {"type": "SET_FLAG", "flag": "high_striker_yellow_spent"}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next time an attack you control hits this turn, create 4 Copper tokens.' + printed **Go again** (Generic Action, Everfest). Yellow printing of .drafts/high_striker_red.json (same folder, same shape) - copied per the copy-an-existing-spelling rule; only slug, amount (4 vs 6) and flag name differ.\n\nGO AGAIN NOT AUTHORED: it appears in printed_keywords and fires from the card DB keywords field - re-authoring a printed keyword is a defect.\n\nDEVIATION FROM THE TRIAGE LIST, deliberate and verified before deviating: it named DELAYED_TRIGGERED + ON_HIT on the card itself, but that can never fire. interpreter.dispatch_event handles DELAYED_TRIGGERED exactly like TRIGGERED (interpreter.py:171-180) - there is no arming machinery and no expire-once behaviour - and after resolution this action card sits in the graveyard, while the engine dispatches ON_HIT only to combat.attack_card, the attacker's hero, and the attacker's equipment/permanents, so a graveyard card hears nothing. The working vehicle for this exact sentence family is INJECT_TRIGGER scope=TURN (handler read this session, effect_types.py:2103+): the shape .drafts/high_striker_red.json ships for the identical clause and .drafts/burn_up__shock_red.json documents for 'The next time an attack you control hits a hero this turn'.\n\nNESTED TRIGGER DICT REQUIRED: the inner conditions/effects must live under the trigger dict (effect_types.py:2110-2119), or a top-level conditions key is popped by the loader into an effect-level gate evaluated once at registration, when there may be no attack.\n\n'THE NEXT time' needs a fire-once gate: the NOT FLAG_SET / SET_FLAG pair. A TURN hook re-arms EVERY attack until end of turn, so without the flag each qualifying hit would create 4 more Coppers. Injected triggers fire with card=combat.attack_card, so FLAG_SET and SET_FLAG resolve against the attacker's current_turn_effects - my own, because the hook only ever arms while I am the active player (_apply_turn_attack_effects reads state.active()'s turn_attack_hooks at attack declaration; end phase clears them = 'this turn').\n\n'AN ATTACK YOU CONTROL ... THIS TURN' holds by hook ownership rather than by the named condition: ATTACK_CONTROLLED_BY_YOU is kept to match the sibling shape, but under injection c IS combat.attack_card, so it compares the attack's controller with itself and is trivially true today - the real filter is hook ownership. Release note 1 (all attacks count: action cards, ally attacks, weapon attacks) holds - any attack declared while I am active arms the hook. Release note 2 (a miss does not use the effect up; a later hit triggers it) holds by construction: hooks are applied but NOT consumed, and the flag is set only inside the effects that run on an actual hit.\n\nTOKEN: CREATE_TOKEN reads token/count|amount/player (effect_types.py:1942-2013); amount 4, player omitted (SELF default resolves via the attack card's controller = me). json/tokens/copper.json does NOT yet exist in the shipped tree; .drafts/copper.json defines slug 'copper' - adoption must land both files together or the first hit raises MissingCardImplementation mid-game.\n\nKNOWN APPROXIMATION (inherited from the red sibling): the spent flag is shared across copies, so a second High Striker played the same turn never pays out after the first qualifying hit anywhere - the printed text arguably gives each copy its own 'next time'."
+}

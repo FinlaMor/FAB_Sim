@@ -1,0 +1,26 @@
+{
+  "slug": "gleam_of_the_blade_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_IS_WEAPON"}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DISCARD_SELF"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "flurry", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Target weapon attack gets +3{p}.' / 'Instant - Discard this: Create a Flurry token.' Warrior Attack Reaction (Armory Deck Origins: Hala).\n\nREACTION HALF: ATTACK_REACTION with target.filter [ATTACK_IS_WEAPON] + MODIFY_ATTACK add 3 - the proven 'Target <X> attack' reaction shape (shipped hp/ironsong_response_blue.json; sibling drafts .drafts/deadly_display_red.json share it, that card being Gleam plus a sharpened clause). ATTACK_IS_WEAPON reads combat.from_weapon and takes no params (condition_types.py), so it cannot miss on a subtype spelling. Target declared at play time per CR 5.1.4 via target.filter, not ability-level conditions.\n\nINSTANT HALF: INSTANT ability whose only cost is DISCARD_SELF - the exact signature play._add_hand_instant_activations (play.py:341-368) offers as DISCARD_ACTIVATE from hand, instant speed, no action point. Release note 2 ('can only be activated while it is in your hand') is enforced by DISCARD_SELF.can_pay (cost_types.py:53-67), which requires the card to still be in hand. Cost is an ability-level cost array (a cost must be able to block the activation), not an effect.\n\nFLURRY TOKEN: json/aha/flurry.json EXISTS, so CREATE_TOKEN's require_card('flurry') resolves - unlike the deadly_display/big_blinder drafts, this card has no missing-token blocker. CREATE_TOKEN handler reads 'token' and 'amount'/'count' (effect_types.py:1942-1952); player defaults SELF, which is correct ('Create a Flurry token' under your control).\n\nNo per-ability activation conflict: the card has exactly ONE activated ability (the Instant); the Attack Reaction is played, not activated, so the known 2+-activated-abilities NotImplementedError does not apply."
+}

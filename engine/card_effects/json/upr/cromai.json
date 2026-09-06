@@ -1,0 +1,22 @@
+{
+  "slug": "cromai",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "once_per_turn": "cromai",
+      "effects": [
+        {"type": "GAIN", "asset": "ACTION_POINTS", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "once_per_turn": "cromai",
+      "effects": [
+        {"type": "GAIN", "asset": "ACTION_POINTS", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Once per turn, when Cromai attacks or leaves the arena, gain 1 action point.' Draconic Illusionist - Dragon Ally.\n\nTWO triggers, ONE shared once-per-turn gate: the printed 'Once per turn' scopes the whole sentence, so attacking and then leaving in the same turn is still one action point, not two. The interpreter keys the gate on the ability's own 'once_per_turn' string when given (interpreter.py:74-78), so BOTH abilities carry the SAME value 'cromai' to share a single use per turn - deliberately NOT distinct values, which would give each event its own use. The marker is appended past every other gate (interpreter.py:66-85), so a trigger that fires but finds the use already spent simply does not resolve; there are no conditions here to burn the use spuriously.\n\nON_ATTACK is dispatched to combat.attack_card itself (_dsl_attacking_listener, engine.py:1524-1529), so it fires only when Cromai is the attacking card. ON_LEAVE_PLAY is dispatched to the leaving card itself off destroy()'s 'leaves_arena' event (_dsl_leaves_arena_listener, engine.py:1560-1576) - destruction by anyone reaches it. KNOWN ENGINE GAP, flagged not worked around: that listener emits on destroy() only; banishing or returning to hand emits nothing, so those leave routes do not fire the second trigger (the listener's own comment states this). Destruction is the ordinary way an ally leaves the arena, so the common case is covered.\n\nGAIN asset ACTION_POINTS routes through the canonical effect_keywords.gain (effect_types.py:4897-4900); amount 1 literal.\n\nNo printed keywords; no play cost or conditions in the text; nothing else to author."
+}

@@ -1,0 +1,27 @@
+{
+ "slug": "lay_down_the_law_red",
+ "abilities": [
+  {
+   "ability_type": "WHILE_STATIC",
+   "trigger": "RECALC_DEFENSE",
+   "conditions": [
+    {
+     "type": "SELF_ATTACK_POWER_GTE",
+     "amount": 13
+    },
+    {
+     "type": "DEFENDING_CARD_IS",
+     "equipment": false
+    }
+   ],
+   "effects": [
+    {
+     "type": "MODIFY_DEFENSE",
+     "mod": "subtract",
+     "amount": 1
+    }
+   ]
+  }
+ ],
+ "_comment": "Tower is a printed keyword from the card DB (printed_keywords), not authored here. The static applies -1{d} to each non-equipment defending card while this attack has 13+ power. WHILE_STATIC on RECALC_DEFENSE is dispatched once per defender; DEFENDING_CARD_IS with equipment:false scopes the effect to non-equipment defenders only. SELF_ATTACK_POWER_GTE checks the live attack power at each recalculation, so power increases after defense declaration retroactively apply the penalty (per release notes)."
+}

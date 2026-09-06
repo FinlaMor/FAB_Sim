@@ -1,0 +1,30 @@
+{
+  "slug": "enact_vengeance_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "OR",
+          "any": [
+            {"type": "LAST_CHAIN_ATTACK", "name": "Edge of Autumn"},
+            {"type": "COMBO_CONTAINS", "substring": "vengeance"}
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "COMBAT",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [{"type": "ATTACK_TARGET_IS_HERO"}],
+            "effects": [{"type": "DESTROY_ARSENAL", "player": "OPPONENT"}]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'Combo - If Edge of Autumn or a card with Vengeance in its name was the last attack this combat chain, this gets \"When this hits a hero, destroy all cards in their arsenal.\"' Ninja Action - Attack (ArmoryDeckIra).\n\nCOMBO KEYWORD NOT AUTHORED AS A KEYWORD: printed_keywords carries Combo, but on this card Combo is not an unconditional engine keyword - it is the gating clause itself, implemented as ability-level conditions. No SOURCE_IS_ATTACK conditional-keyword machinery applies (that shape is only for a PRINTED keyword like go again gated on a condition); there is no unconditional DB behaviour to strip.\n\nTRIGGER VEHICLE: TRIGGERED + ON_ATTACK with the gate in ability-level conditions - an Action - Attack card is NOT an ATTACK_REACTION (DSL_REFERENCE warning; that ability type never fires on one). ON_ATTACK is dispatched by _dsl_attacking_listener to combat.attack_card once this card IS the attack (engine.py:1524-1529), and ability conditions evaluate at that resolution - precedent .drafts/chase_the_tail_red.json, same sentence family.\n\nTHE GATE IS LAST_CHAIN_ATTACK, never COMBO: COMBO is a different, older condition reading a 'names' LIST via combo_check; authored with 'name' it would gate on an empty list and never fire (condition_types.py:727-746 comment; DSL_REFERENCE names this trap). chain_links append AFTER damage resolves, so during this attack links[-1] IS the previous link.\n\n'EDGE OF AUTUMN': LAST_CHAIN_ATTACK reads 'name', compares _norm(name) against _norm(slug), _norm(colour-stripped base) and _norm(resolved card name) (condition_types.py:1638-1675); _norm strips all non-alphanumerics (:7-15), so 'Edge of Autumn' matches every edge_of_autumn printing.\n\n'A CARD WITH VENGEANCE IN ITS NAME': COMBO_CONTAINS reads 'substring' (also card/card_name) and substring-matches the colour-stripped base slug (condition_types.py:727-746) - a loose containment test, which is exactly what 'in its name' asks for and why LAST_CHAIN_ATTACK's exact-name match cannot cover this half. OR reads 'any' (condition_types.py:1901-1905).\n\nGRANTED TRIGGER: INJECT_TRIGGER with the NESTED trigger dict - REQUIRED because inner conditions are present; a top-level conditions key would be popped by the loader as an effect-level gate evaluated once at registration, when there may be no attack (effect_types.py:2103-2119 comment). scope COMBAT (default, spelled explicitly) registers a one-shot TriggerDef into state.combat.injected_triggers (:2191-2198): fires once, on THIS attack's hit - 'this gets \"When this hits...\"'. Inner ATTACK_TARGET_IS_HERO gates 'hits a hero' (condition_types.py:1960); a hit into an ally or aura does not destroy anything.\n\nPAYOFF: DESTROY_ARSENAL reads player/target and defaults OPPONENT (effect_types.py:2994-3008); during our own attack's hit the controller is the attacker, so OPPONENT is the defending hero - 'their arsenal' - and the handler destroys ALL cards in it via canonical destroy().\n\nNo known gaps beyond what is disclosed."
+}

@@ -1,0 +1,16 @@
+{
+  "slug": "glory_seeker",
+  "activation_cost": 3,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "DRAW", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - {r}{r}{r}, destroy this: Draw a card.' Generic Equipment - Head.\n\nSHAPE copied from .drafts/calming_cloak.json / .drafts/amethyst_amulet_blue.json (same 'Instant - <cost>, destroy this: <payoff>' family; amethyst's sibling is shipped as sea/platinum_amulet_blue). The {r}{r}{r} is the card-level activation_cost (DSL-authoritative, read by play.py's shared affordability gate for DSL activated abilities) - deliberately NOT also authored as a PAY_RESOURCES ability cost, which would double-charge per IMPLEMENTATION_GUIDE. 'destroy this' is the ability-level cost [{DESTROY_SELF}] - a real cost type (cost_types.py:43), so it can block the activation and routes through canonical destroy(), which resolves the equipment slot. INSTANT maps to ON_ACTIVATE (trigger_types.py:115) and instant activations on equipment are offered by play._add_dsl_activations at any priority window, paying costs before dispatch.\n\nDRAW reads amount/player (effect_types.py:1222-1224); player defaults SELF = controller, which is what the bare 'Draw a card' means. No printed keywords on this card.\n\nSET FOLDER AT ADOPTION: HeavyHitters -> json/hvy/ (where the sibling aurum_aegis lives)."
+}

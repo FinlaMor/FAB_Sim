@@ -1,0 +1,58 @@
+{
+ "slug": "malefic_incantation_yellow",
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_ENTER_PLAY",
+   "effects": [
+    {
+     "type": "PUT_COUNTER",
+     "counter_type": "verse",
+     "amount": 2
+    }
+   ]
+  },
+  {
+   "ability_type": "WHILE_STATIC",
+   "conditions": [
+    {
+     "type": "NOT",
+     "inner_type": "COUNTER_GTE",
+     "counter_type": "verse",
+     "min": 1
+    }
+   ],
+   "effects": [
+    {
+     "type": "DESTROY_PERMANENT",
+     "target": "self"
+    }
+   ]
+  },
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+   "once_per_turn": "malefic_incantation_verse",
+   "conditions": [
+    {
+     "type": "COUNTER_GTE",
+     "counter_type": "verse",
+     "min": 1
+    }
+   ],
+   "effects": [
+    {
+     "type": "REMOVE_COUNTERS",
+     "counter_type": "verse",
+     "amount": 1
+    },
+    {
+     "type": "CREATE_TOKEN",
+     "token": "runechant",
+     "amount": 1
+    }
+   ]
+  }
+ ],
+ "_comment": "Go again is a printed keyword (printed_keywords) and fires from the card DB keywords field - NOT authored here. ON_ENTER_PLAY puts 2 verse counters on entry (not a continuous STATIC, which would re-add them). WHILE_STATIC with NOT COUNTER_GTE verse 1 implements 'when it has none, destroy it' as a continuous check - re-evaluated whenever counters change. ON_PLAY_ACTIVATE_ATTACK triggers when the controller plays an attack action card (the release note clarifies that discarding an attack action card as a cost for its own instant ability is NOT playing it, so it won't trigger). The once_per_turn key 'malefic_incantation_verse' enforces 'once per turn'. The COUNTER_GTE condition gates the trigger so it only fires while verse counters remain. REMOVE_COUNTERS removes 1 verse counter, then CREATE_TOKEN makes a Runechant token."
+}

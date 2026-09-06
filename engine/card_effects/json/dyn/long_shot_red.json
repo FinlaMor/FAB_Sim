@@ -1,0 +1,25 @@
+{
+ "slug": "long_shot_red",
+ "abilities": [
+{
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "HAS_COUNTER",
+          "counter_type": "aim"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    }
+ ],
+ "_comment": "If Long Shot has an aim counter, it has +2{p}. WHILE_STATIC re-evaluates on every RECALC_ATTACK_POWER so the bonus appears/disappears as aim counters are added/removed. SOURCE_IS_ATTACK confines it to this card's own attack. COUNTER_GTE with counter_type 'aim' and amount 1 checks for at least one aim counter (release note: multiple aim counters do not give multiple instances). MODIFY_ATTACK under a recalc event applies transiently in the stage-8 window without accumulating. Printed_keywords is empty so no conditional-keyword machinery needed."
+}

@@ -1,0 +1,20 @@
+{
+  "slug": "deep_blue_sea_blue",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "EVENT_THIS_TURN", "event": "pitch", "qualifier": "blue"}
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": {"type": "COUNT_TURN_EVENT", "event": "pitch", "qualifier": "blue"}
+        }
+      ]
+    }
+  ],
+  "_comment": "'This gets +1{p} for each blue card you've pitched this turn.' Mystic Action - Attack.\n\nABILITY TYPE SET BY RELEASE NOTES: note 1 says the bonus keeps accruing for blue cards pitched AFTER the card resolves onto the combat chain - an always-checking condition (the Aggressive Pounce lesson), so this is a WHILE_STATIC re-evaluated on every RECALC_ATTACK_POWER dispatch, NOT a TRIGGERED ON_ATTACK pump that would freeze the count at declaration. Recalculations happen at attack declaration, after reactions, and at the top of damage resolution, so a blue pitch any time before the damage step is counted there; no recalc happens after the damage step, which is release note 3's no-retroactivity falling out of engine timing. Shape is shipped pen/savage_claw.json (the documented pitch-conditioned static), with SOURCE_IS_ATTACK scoping the buff to this card's own attack.\n\nAMOUNT IS A COUNT, NOT A GATE: amount expression {\"type\": \"COUNT_TURN_EVENT\", \"event\": \"pitch\", \"qualifier\": \"blue\"} resolves through _resolve_amount inside MODIFY_ATTACK (effect_types.py:4129 -> :101-115), counting did_this_turn:pitch:blue markers in the controller's current_turn_effects. This is exactly the fix .review/wide_blue_yonder_blue.json demanded for the IDENTICAL printed text on that card ('flat amount:1 gated on boolean EVENT_THIS_TURN ... undercounts every state with 2+ blue pitches'). The EVENT_THIS_TURN condition alongside it is belt-and-braces so a zero-count state registers no +0 mod at all.\n\nPRODUCER VERIFIED: pitch() records the turn event with the card COLOUR as qualifier - effect_keywords.py:2714-2723 (_PITCH_COLOUR maps 1/2/3 to red/yellow/blue) - so the 'blue' qualifier matches. Release note 2 falls out by construction: the marker persists in current_turn_effects regardless of what later happens to the pitched card (e.g. Potion of Deja Vu removing it from the pitch zone)."
+}

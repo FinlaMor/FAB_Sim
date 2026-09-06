@@ -1,0 +1,26 @@
+{
+  "slug": "bull_bar_yellow",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "_comment": "'If you control a Hyper Driver, this gets overpower' - the corpus shape for a self-granted conditional keyword (war_machine_red, over_the_top_red, speed_demon_red). SOURCE_IS_ATTACK is required by loader.conditional_keywords(): the card DB ships Overpower as a printed keyword, and the loader strips that unconditional copy only when a SOURCE_IS_ATTACK-gated ability GAINs the keyword - without it Bull Bar would have overpower always. The real gate is CARD_IN_ZONE over 'permanents': items, auras, allies and tokens are all SubZoneViews over player.permanents (state.py), so that single zone holds every Hyper Driver printing and every created Hyper Driver token; card_name matches them all by name.",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "permanents",
+          "card_name": "Hyper Driver"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "OVERPOWER"
+        }
+      ]
+    }
+  ],
+  "_comment": "Boost is a DB keyword and fires engine-side - deliberately NOT authored here. The release note ('already defended by two or more action cards, then gain control of a Hyper Driver -> gains overpower, defenders not retroactively removed') is continuous checking: WHILE_STATIC re-evaluates on each attack-power recalculation and grants into combat.keywords whenever the gate next holds, and nothing in that path un-declares defenders already on the chain."
+}

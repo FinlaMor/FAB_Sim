@@ -1,0 +1,11 @@
+{
+  "slug": "boneyard_marauder_blue",
+  "cost": {
+    "play_activate": "PLAY",
+    "optional": "FALSE",
+    "type": "BANISH_RANDOM_FROM_GRAVEYARD",
+    "amount": 3
+  },
+  "abilities": [],
+  "_comment": "'As an additional cost to play Boneyard Marauder, banish 3 random cards from your graveyard. Blood Debt.' Blue printing (LeviaBlitzDeck); identical text to the yellow Monarch printing (.drafts/boneyard_marauder_yellow.json).\n\nThe cost is the card's ENTIRE printed behaviour, so it is authored at CARD level, not as a PLAY ability's additional_cost: the card has no play effect, and test_card_json_hygiene.test_every_ability_has_effects fails any ability whose effects list is empty - a cost-only PLAY ability would be a hygiene defect by construction. The hygiene test explicitly counts a card-level cost as implementation (its Scrap precedent), and the engine path is verified end to end: the loader compiles the top-level cost dict into CardDef.play_cost (loader.py:148-151), play.py CHECKS it before offering the play and blocks when unpayable (play.py:567-569) and PAYS it on application (play.py:1146-1147).\n\nBANISH_RANDOM_FROM_GRAVEYARD reads 'amount' (default 1); can_pay requires >= N cards in the controller's graveyard, pay samples N random cards and banishes each through canonical banish(origin_zone=\"graveyard\") - passing the origin zone matters, or cards would sit in both zones. It also records what it banished under the shared banished_cards ref, which this card does not need but costs nothing. Mandatory per text ('banish 3 random cards', not 'you may'). Shipped precedent for the type: writhing_beast_hulk_red (lev/) uses the same cost as an ability-level additional_cost - it has a real effect after the cost, which this card lacks.\n\nBlood Debt is deliberately NOT authored: it is a printed keyword implemented from the DB keywords field (build_keyword_triggers maps \"blood debt\" to a start_of_end_phase lose-1-life trigger while the card is face-up in the banished zone, triggers.py:279-284). Re-authoring it in JSON would be a defect. On adoption file under a set from setIdentifiers (batch says LeviaBlitzDeck; sibling printings exist in other sets)."
+}

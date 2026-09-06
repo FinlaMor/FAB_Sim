@@ -1,0 +1,44 @@
+{
+  "slug": "back_for_seconds_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_SUBTYPE_IN",
+            "subtypes": [
+              "Sword"
+            ]
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "ATTACK_ORDINAL_EQ",
+              "amount": 2
+            }
+          ],
+          "then": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 3
+            }
+          ],
+          "else": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target sword attack gets +2{p}. If it's your second attack this turn, instead it gets +3{p}.' One bonus chosen by condition: a single CONDITIONAL with then(+3)/else(+2), NOT two gated MODIFY_ATTACKs (those would stack to +5). Release note settles the branch: third-or-greater attack still gets +2, so the +3 test is ATTACK_ORDINAL_EQ amount=2 (exactly the second), never GTE. Handler checks (condition_types.py:644) s.players[combat.attacker_id].attacks_this_turn == amount, docstring-guaranteed to be 2 DURING the second attack; the targeted sword attack is the current attack in the reaction step, so attacker_id is right. Target filter copied verbatim from adopted dvr/run_through_yellow ('Sword' is a weapon SUBTYPE - ATTACK_CLASS_IN would be the wrong vocabulary and never fire). Legality path verified: play._legality_check evaluates AR target_filter against state.combat, and ATTACK_SUBTYPE_IN ignores its card argument and reads combat.attack_card subtypes+types, so the card is unplayable unless the current attack is a Sword."
+}

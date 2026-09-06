@@ -1,0 +1,13 @@
+{
+  "slug": "double_cross_strap",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "conditions": [{"type": "CHAIN_HIT_COUNT_GTE", "amount": 2}],
+      "cost": [{"type": "DESTROY_SELF"}],
+      "effects": [{"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 1}]
+    }
+  ],
+  "_comment": "'**Instant** - Destroy this: Gain {r}. Activate this only if you've hit 2 or more times this combat chain.' + printed **Arcane Barrier 1**.\n\nArcaneBarrier is in printed_keywords and fires from the card DB keywords field (ability_keywords.arcane_barrier) - deliberately NOT authored here; authoring it again would be a defect.\n\n'Instant - Destroy this: Gain {r}' = INSTANT activated ability (instant timing, offered by play._add_hero_dsl_activations, which scans player.chest among its sources, play.py:262). The destroy is the ACTIVATION COST, so it lives in the ability-level 'cost' array: DESTROY_SELF cost type exists (cost_types.py:43-51, can_pay True, pays via canonical destroy() which resolves the chest zone). GAIN reads asset+amount (effect_types.py:4869-4889); asset RESOURCE_POINTS -> effect_gain_resources. activation_cost 0 is set explicitly so the loader's printed-text heuristic cannot invent a resource cost for a free ability.\n\n'Activate this only if you've hit 2 or more times this combat chain' = ability-level conditions [{CHAIN_HIT_COUNT_GTE, amount 2}] (condition_types.py:1039-1044: len(chain_links) >= amount - 1, i.e. >= 1 prior link). Ability conditions gate BOTH the offer (play.py:306-309) and resolution (interpreter.py:54-58), and the handler reads only state.chain_links, so it is safe with the event=None the offer path passes.\n\nKNOWN IMPRECISION vs the release note: the handler counts prior chain LINKS, and engine.py:2148-2163 appends a link for EVERY resolved attack carrying a hit flag - so (a) a BLOCKED attack still counts toward the threshold, and (b) two hits on ONE chain link (the release note's exact case: a Flick Knives dagger hit plus a damage-step hit) count once, so that edge cannot activate the ability in-engine. This is the closest existing primitive and the same approximation shipped cards (mask_of_momentum, flying_kick_yellow) already use; expressing raw hit counts would need a new condition type."
+}

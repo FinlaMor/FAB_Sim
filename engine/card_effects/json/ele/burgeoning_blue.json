@@ -1,0 +1,22 @@
+{
+  "slug": "burgeoning_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "_comment": "'If this was played from arsenal, it gains +1{p}' - the documented pump shape for an Action - Attack card: TRIGGERED ON_ATTACK + MODIFY_ATTACK (DSL_REFERENCE Combo section; shipped precedents flex_blue, chain_of_brutality_red). PLAYED_FROM_ARSENAL reads played_from_zone, stamped by play.py at the moment of play, so it is already set when ON_ATTACK dispatches; played from hand the gate fails and the attack keeps its printed power, which is the release note's 'you may still play it from your hand; it would not gain the +1{p}'.",
+      "conditions": [
+        {
+          "type": "PLAYED_FROM_ARSENAL"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

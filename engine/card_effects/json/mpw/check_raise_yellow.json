@@ -1,0 +1,19 @@
+{
+  "slug": "check_raise_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {"type": "ATTACK_HAS_KEYWORD", "keyword": "wager"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Yellow printing of check_raise_blue: identical text, +3{p} instead of +2{p}. See that draft for the full verified reasoning - MODIFY_NEXT_ATTACK (reads mod/amount/filter/scope) queues a one-shot on the controller's dsl_queued_attack_mods; consumed only from state.active() during that player's own attacks; non-matching attacks leave the entry queued so it lands on the next WAGERING attack; unused entries expire end of turn ('this turn'); combat.keywords carries the attack's printed keywords before the queue is consulted, and 'Wager' is a real printed keyword on attack cards in slug_index (e.g. bet_big_red). Go again is a printed DB keyword - deliberately not authored. Same known approximation as the blue printing: an attack wagering only via another card's WAGER effect carries no keyword and cannot match (no condition reads combat.wagers).\n\nAdoption note: batch lists set MasteryPackWarrior - file under that set's folder at adoption time."
+}

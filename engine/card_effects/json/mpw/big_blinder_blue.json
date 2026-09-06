@@ -1,0 +1,18 @@
+{
+  "slug": "big_blinder_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Sword"]}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2},
+        {"type": "WAGER", "prize": "flurry"}
+      ]
+    }
+  ],
+  "_comment": "'Target sword attack gets +2{p} and wagers with the defending hero. The winner creates a Flurry token.'\n\nSHAPE: ATTACK_REACTION + target.filter ATTACK_SUBTYPE_IN + MODIFY_ATTACK, copied from shipped hp/ironsong_response_blue. 'Sword' is a real subtype on sword weapons in card_data/slug_index.json, and ATTACK_SUBTYPE_IN matches the attack card's subtypes+types (a sword weapon attacks as itself), so the play-time target filter is satisfable exactly when the current attack is a sword.\n\nWAGER: the handler (effect_types.py 'WAGER') reads ONLY params 'prize' or 'token' and calls add_wager(controller_id, prize, source=card), registering on combat.wagers; engine._resolve_wagers (engine.py:2155) then creates the prize token for the winner at chain-link resolution (attack hit -> attacker wins, else defender). So 'The winner creates a Flurry token' needs NO ON_WAGER_RESOLVED ability - that trigger exists for non-token payoffs ('the winner loses 1{h}'). 'flurry' exists in card_data/slug_index.json.\n\nCAUTION copied-around: hvy/bet_big_red authored WAGER with a 'tokens' LIST - a parameter the handler never reads - so that shipped card's wager currently pays out no token at all. Do not copy that spelling; use 'prize' with a single slug.\n\nNO ATTACK_TARGET_IS_HERO gate: the release note says the wager applies whenever there is a defending hero, INCLUDING attacks targeting allies (wage_vigor_yellow/bet_big_red gate on the hero target for their own texts; this note explicitly widens past that). The wager is mandatory per the release note, and WAGER has no optional flag - add_wager registers unconditionally."
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "brain_freeze_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "LOOK_AT", "zone": "HAND", "player": "OPPONENT", "amount": "ALL", "into": "their_hand"},
+        {"type": "CONDITIONAL_EFFECT",
+         "when": [
+           {"type": "FLAG_SET", "flag": "fused_brain_freeze_red"}
+         ],
+         "then": [
+           {"type": "MOVE_MATCHING",
+            "target": {
+              "ref": "their_hand",
+              "controller": "OPPONENT",
+              "amount": 1,
+              "filter": [
+                {"type": "CARD_IS_TYPE", "card_type": "Action"},
+                {"type": "CARD_COST_LTE", "amount": 2}
+              ]
+            },
+            "to_zone": "deck",
+            "position": "top"}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "'**Ice Fusion** / Target opponent reveals their hand. If Brain Freeze was **fused**, put an action card with cost 2 or less from their hand on top of their deck.' Red printing: threshold cost <= 2 (blue puts cost 0, yellow cost 1).\n\nFUSION ITSELF IS NOT AUTHORED: '<X> Fusion' fires engine-side from the card DB keywords field as an optional additional cost at PLAY time (ability_keywords.fusion, ability_keywords.py:582-607 - a REVEAL from hand). 'Was fused' gates on the marker fusion() writes: 'fused_<card.slug>' appended to the controller's current_turn_effects (ability_keywords.py:604-606), tested by FLAG_SET (condition_types.py:1032-1037 reads flag against the source controller's current_turn_effects). Flag name is per-printing because fusion() keys it on card.slug. Timing holds: fusion resolves as a cost before the PLAY ability resolves, so by resolution the flag is set or permanently absent. This is the verified live idiom (shipped siy/aether_icevein_blue.json, ele/chilling_icevein_yellow.json; blizzard_bolt/biting_gale drafts) and matches this card's own .triage note - note PITCHED_FOR_THIS would be WRONG here for the same reason those drafts document: fusion reveals, it never pitches.\n\nREVEAL: LOOK_AT zone HAND player OPPONENT amount ALL into their_hand (handler effect_types.py:3356-3415 reads zone/player/amount/into; HAND is a supported zone; ALL stores the whole hand as a list). KNOWN FIDELITY GAP: printed text says 'reveals', and LOOK_AT stores refs without setting the cards public - the information reaches the effect but the cards are not marked is_public. Accepted per the triage note ('Reveal hand = LOOK_AT(HAND, OPPONENT, ALL, into ref)'); no DSL effect both reveals a whole hand and stores it.\n\nSELECTION DEVIATES FROM THE TRIAGE LIST, deliberately: it named SELECT_FROM_REF, but that handler (effect_types.py:3540-3591) takes NO filter - its pool is the raw ref contents, so it would let me put ANY card from their hand on top, not just an Action with cost <= 2. Instead MOVE_MATCHING (effect_types.py:3593-3612) whose object-target spec filters the ref pool per candidate: filter conditions are compiled and evaluated with the CANDIDATE as the card argument (effect_types.py:731-733, 776-778), so CARD_IS_TYPE card_type Action (types union subtypes, condition_types.py:1309-1325 - matches release note 2, 'Action cards include any card with the type Action') and CARD_COST_LTE amount 2 (reads amount, condition_types.py:1219-1252) restrict the pool correctly. The controller then picks one via _ask_player with no STOP option - mandatory, matching release note 1 ('not optional. You must select a card if possible'); an empty filtered pool returns [] and the move is a silent no-op, which is the 'if possible' half. put_object routes through Zone.remove/add to the OWNER's deck top (destination_player_id=obj.owner in MOVE_MATCHING), i.e. THEIR deck, not mine. Release note 3 (no response between reveal and selection) holds structurally: both effects run inside one ability resolution and the engine offers no priority mid-resolution.\n\nThe fused gate wraps ONLY the put-back via CONDITIONAL_EFFECT when/then (effect_types.py:3697-3724 reads when/then/else; 'when' not 'conditions' - the loader pops the latter as an effect-level gate): the reveal happens whether or not the card was fused, exactly as printed.",
+  "_source_batch": "_batch1.json"
+}

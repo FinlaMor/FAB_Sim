@@ -1,0 +1,31 @@
+{
+  "slug": "captains_call_red",
+  "abilities": [
+    {
+      "ability_type": "MODAL",
+      "choose": 1,
+      "modes": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {"type": "ATTACK_COST_LTE", "cost": 2},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ]
+        },
+        {
+          "type": "GRANT_NEXT_ATTACK_KEYWORD",
+          "keyword": "GO_AGAIN",
+          "filter": [
+            {"type": "ATTACK_COST_LTE", "cost": 2},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Choose 1: next attack action card with cost 2 or less you play this turn gains +2{p} / ... gains go again. Go again.'\n\nPRINTED GO AGAIN IS NOT AUTHORED: printed_keywords carries GoAgain - the card's own unconditional 'Go again' line fires from the card DB keywords field, and re-authoring it as an effect would be a defect (it is also why there are only TWO modes here, not three).\n\nMODE TIMING: release note 1 ('you choose the mode at the time you play Captain's Call') is exactly MODAL choose 1 - modes are selected when the card is put on the stack (CR 1.7.5a). Spelling copied from shipped wtr/enlightened_strike_red.json.\n\nFILTER SPELLING VERIFIED AGAINST HANDLERS: ATTACK_COST_LTE reads 'cost' (or 'amount') at condition_types.py:261-263; ATTACK_TYPE_IN reads 'types' (273+); ATTACK_SUBTYPE_IN reads 'subtypes' (296+). An attack action card is types=['Action'], subtypes=['Attack'], so all three together name precisely 'attack action card' - this is verbatim the DSL_REFERENCE MODIFY_NEXT_ATTACK example. MODIFY_NEXT_ATTACK reads mod/amount/filter/scope (effect_types.py:4592-4618) and GRANT_NEXT_ATTACK_KEYWORD reads keyword/filter/scope (4816-4840); both queue one-shot entries on dsl_queued_attack_mods.\n\nRELEASE NOTE 2 IS THE QUEUE'S OWN BEHAVIOUR: a played attack that fails the filter leaves the entry queued, and the first later matching attack consumes it - 'the bonus will still apply to the one applicable'. Scope defaults to TURN and unused entries expire end of turn, matching 'this turn'.\n\nNo _comment-worthy gaps; every clause is expressible."
+}

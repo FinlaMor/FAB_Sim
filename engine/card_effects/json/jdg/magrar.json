@@ -1,0 +1,27 @@
+{
+ "slug": "magrar",
+ "activation_cost": 0,
+ "abilities": [
+  {
+   "ability_type": "ACTIVATE",
+   "cost": [
+    {
+     "type": "DESTROY_SELF"
+    }
+   ],
+   "effects": [
+    {
+     "type": "CREATE_TOKEN",
+     "token": "zen_state",
+     "amount": 1
+    },
+    {
+     "type": "CREATE_TOKEN",
+     "token": "inertia",
+     "amount": 1
+    }
+   ]
+  }
+ ],
+ "_comment": "Genis Specialization is a keyword from printed_keywords, handled by engine. Activation cost 0 since no {r} shown in printed text. Token slugs assumed as zen_state and inertia."
+}

@@ -1,0 +1,24 @@
+{
+  "slug": "hiss_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_CLASS_IN", "classes": ["Assassin", "Mystic"]},
+          {"type": "ATTACK_TYPE_IN", "types": ["Action"]}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1},
+        {
+          "type": "CONDITIONAL",
+          "when": [{"type": "EVENT_THIS_TURN", "event": "pitch", "qualifier": "blue"}],
+          "then": [{"type": "CREATE_TOKEN", "token": "slither", "destination": "hand"}]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target Assassin or Mystic attack action card gets +1{p}. / If you've pitched a blue card this turn, create a Slither in your hand.' Mystic Assassin Attack Reaction (NuuBlitzDeck).\n\nTARGETING: target.filter gates the play OFFER at announce (play.py:416-431 evaluates ATTACK_REACTION target filters against the live state; both conditions read state.combat.attack_card). ATTACK_CLASS_IN reads classes AND talents via _card_traits (condition_types.py:204-216), so Assassin (class) and Mystic (talent) go in ONE 'classes' list - splitting them across 'classes'/'talent' keys would drop the second, since only the first-present key is read. ATTACK_TYPE_IN unions types+subtypes (condition_types.py:273-294): an attack action card is types=['Action'], subtypes=['Attack'], so ['Action'] names exactly attack action cards and a weapon attack (type Weapon) fails. Unplayable when the current attack matches neither - CR 5.1.4 announce legality.\n\n+1{p}: MODIFY_ATTACK add 1 lands in combat.power_mods (effect_types.py:4123-4158) so later recalculations keep it; combat exists throughout the reaction step.\n\nPITCH GATE - PLACEMENT IS THE RELEASE NOTE: 'you will create a Slither ... if you've pitched a blue card BY THE TIME HISS RESOLVES'. Ability-level conditions are checked at resolution, but they would gate the +1{p} too; CONDITIONAL (effect_types.py:3697-3724, aliases IF/CONDITIONAL_EFFECT; reads 'when'/'then' - authoring 'conditions' there would be silently unread and run then unconditionally) scopes the gate to the token clause only, evaluated when Hiss resolves. Marker verified end to end: pitch() records _record_turn_event(state, player_id, 'pitch', colour-from-color-or-pitch-value, ...) at pitch time (effect_keywords.py:2714-2723, read this session), BEFORE the played layer resolves - so pitching a blue card to pay for Hiss itself counts, which is exactly the case the release note exists for ('even if those pitched cards are no longer in the pitch zone'). EVENT_THIS_TURN builds the identical marker string against the controller's current_turn_effects (condition_types.py:1070-1112); qualifier 'blue' matches the recorded colour name. Spelling precedent: .drafts/deep_blue_sea_blue.json uses the identical condition.\n\nTOKEN: CREATE_TOKEN reads token/count|amount/player/destination (effect_types.py:1942-2013); count defaults 1, player defaults SELF. destination 'hand' resolves via getattr(controller, 'hand') in effect_keywords.create_token (:372-376, read this session) - an explicit destination overrides subtype routing, which matters because Slither's template types are ['AttackReaction'], not routable to a zone by subtype. require_card('slither') runs at creation (:276), so a token definition MUST exist: drafted alongside as .drafts/slither.json (belongs at json/tokens/slither.json at adoption; same pattern as .drafts/flurry.json).\n\nWINDOW: _attack_reaction_legal_check (play.py:933-948, read this session) offers attack reactions only to the ATTACKER during the reaction step - Nuu reacting to her own Assassin/Mystic attack, which is this card's printed use.\n\nNo printed keywords (printed_keywords empty). No known gaps beyond the token-definition adoption note.",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

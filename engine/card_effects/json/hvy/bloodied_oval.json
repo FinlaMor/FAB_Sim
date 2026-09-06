@@ -1,0 +1,15 @@
+{
+  "slug": "bloodied_oval",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "DEFENSE_EQUALS",
+          "amount": {"type": "COUNT_OPPOSING_HEROES", "life": "GREATER"}
+        }
+      ]
+    }
+  ],
+  "_comment": "'Bloodied Oval's {d} is equal to the number of opposing heroes with greater {h} than you.' + '**Blade Break**'\n\nShape copied verbatim from shipped hvy/grandstand_legplates.json, whose printed text is the same sentence and whose handler was written for it: play._apply_dynamic_defense (play.py:677-707) reads STATIC abilities holding DEFENSE_EQUALS at the moment a defending card's {d} is consumed (defend step, play.py:1368), resolves 'amount' through _resolve_amount, and writes card.defense. Because it re-evaluates from live life totals on every consumption, the release-note behaviour ('if an opposing hero goes from greater to less health than you, {d} is automatically reduced') holds by construction - there is no snapshot to go stale.\n\nAmount expression COUNT_OPPOSING_HEROES reads 'life' with GREATER/GT/MORE (effect_types.py:179-195): counts opposing players whose life > this card's controller's life. 0 in the usual even-health state, 1 when behind.\n\nBladeBreak appears in printed_keywords, so it comes from the card DB keywords field - authoring it again would be a defect per the batch instructions. Nothing else to implement."
+}

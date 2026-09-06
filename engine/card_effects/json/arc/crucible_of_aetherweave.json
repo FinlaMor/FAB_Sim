@@ -1,0 +1,27 @@
+{
+  "slug": "crucible_of_aetherweave",
+  "activation_cost": 1,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_CARD",
+          "amount": 0,
+          "filter": [
+            {"type": "CARD_HAS_EFFECT", "effect": "DEAL_ARCANE"}
+          ],
+          "on_consume": [
+            {
+              "type": "BOOST_NEXT_DAMAGE",
+              "amount": 1,
+              "damage_type": "arcane"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Once per Turn Instant - {r}: the {r} is card-level activation_cost 1 (never also a PAY_RESOURCES cost - double-charges); per_turn 1 wires the Once-per-Turn limit (card.py applies CardDef.per_turn -> has_per_turn_limit/activations). DEVIATION FROM THE BATCH TRIAGE, verified against handlers: BOOST_NEXT_DAMAGE cannot be authored as a direct effect of this card - its handler pins the replacement to the SOURCE card (src is not _t), so on Crucible it would watch the STAFF's damage, not the next played card's. Instead MODIFY_NEXT_CARD queues a one-shot entry (amount 0 = no cost change; the queue carries only filter + follow-up) whose filter CARD_HAS_EFFECT DEAL_ARCANE is evaluated against each card as it is played (play._cost_mod_matches), and whose on_consume effects run with the PLAYED card as source (play.py:1744-1746) - so the BOOST_NEXT_DAMAGE registered there pins to exactly 'the next card you play with an effect that deals arcane damage'. CARD_HAS_EFFECT reads the played card's JSON abilities incl. nested params (condition_types.py:1257). The queued entry expires at end of turn (engine clears dsl_queued_card_mods), matching 'this turn'. Known approximations: (a) BOOST_NEXT_DAMAGE is single-use - if the consumed card deals arcane damage in several instances, only the first gets +1; a per-instance reading would need a multi-use variant. (b) the registered replacement itself has no turn expiry; harmless in practice since the boosted card's damage lands the turn it is played."
+}

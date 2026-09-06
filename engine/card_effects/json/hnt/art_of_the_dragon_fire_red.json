@@ -1,0 +1,16 @@
+{
+  "slug": "art_of_the_dragon_fire_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "CARD_IS_TALENT", "talent": "Draconic"}
+      ],
+      "effects": [
+        {"type": "DEAL_GENERIC", "amount": 2, "target": "OPPONENT"}
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, if it is Draconic, deal 2 damage to any target.' Release-note timing honored: the trigger fires when the card becomes an attacking card (ON_ATTACK), and Draconic-ness is checked when the trigger RESOLVES — ability-level conditions run at resolution (interpreter.execute_ability), and CARD_IS_TALENT reads the card's live traits (classes/talents via _card_traits), so a Draconic talent granted after play still passes. GAP (flagged, not solved): 'any target' includes allies, and no generic-typed route reaches them. DEAL_ARCANE target:\"ANY\" is the only object-pool picker (_deal_arcane_to_objects offers both heroes plus allies) but it deals ARCANE damage — wrong type, wrongly interactable with Arcane Barrier/spellvoid. DEAL_GENERIC resolves its target ONLY through _damage_target_player, whose fallback for unrecognized strings is the CONTROLLER — authoring target:\"ANY\" here would deal 2 to MY OWN hero, so it must never be written. Drafted as target OPPONENT (the opposing hero): correct damage type and direction, under-inclusive because it can never name an ally. Second, smaller gap: the note has the target declared when the trigger is added to the stack; triggered-layer target declaration is an open engine item (docs/cr_audit_2026-07.md), so selection happens implicitly at resolution instead."
+}

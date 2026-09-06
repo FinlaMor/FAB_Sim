@@ -145,7 +145,17 @@ def test_no_typed_prevention_omits_its_damage_type():
         low = text.lower()
         if "prevent" not in low:
             continue
-        if not ("{p}" in text or "arcane damage" in low):
+        # SCOPE THE SCAN TO THE PREVENTION SENTENCE. Cosmic Suture reads
+        # "Prevent the next 4 damage that would be dealt to you this turn." and,
+        # in a SEPARATE clause, "deal 1 arcane damage to target hero" -- its
+        # prevention is deliberately untyped and correct. Reading the whole card
+        # made the damage type of one sentence an accusation about another, and
+        # reported three correct cards. A sweep that manufactures findings is
+        # worse than no sweep: the findings all have to be read.
+        sentences = [s for s in re.split(r"(?<=[.!])\s+|\n+", text)
+                     if "prevent" in s.lower()]
+        clause = " ".join(sentences)
+        if not ("{p}" in clause or "arcane damage" in clause.lower()):
             continue
 
         found = []

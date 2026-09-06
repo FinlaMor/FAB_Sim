@@ -1,0 +1,25 @@
+{
+  "slug": "evo_shortcircuit_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "TRANSFORM",
+          "to": "evo_shortcircuit_blue",
+          "sources": [
+            {"zone": "arms", "from": "Base", "amount": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_EQUIP",
+      "effects": [
+        {"type": "DEAL_PHYSICAL", "amount": 1, "target": "OPPONENT"}
+      ]
+    }
+  ],
+  "_comment": "'If you have a base arms equipped, transform it into this, then equip this. / When this is equipped, deal 1 damage to any target. / Arcane Barrier 1' Mechanologist Instant Equipment - Evo Arms (PartTheMistveil).\n\nARCANE BARRIER 1 deliberately NOT authored: it is in printed_keywords and fires from the card DB keywords field; re-authoring a printed keyword is a defect (same treatment as the evo_heartdrive_blue sibling draft). Release note 2 (must already be equipped when the arcane damage is dealt) is timing semantics of the barrier itself - engine-side, nothing to author.\n\nTRANSFORM CLAUSE: PLAY + TRANSFORM with sources over the arms slot, per the arcbane_grasp_blue / evo_buzz_hive_yellow / evo_heartdrive_blue sibling drafts. The triage primitive CONTROLS_SUBTYPE was deliberately NOT used - its handler scans player.permanents.cards only (condition_types.py:1849) and can never see equipped equipment in player.arms. TRANSFORM's own source matching enforces the 'if you have a base arms equipped' precondition itself, failing all-or-nothing per CR 8.5.36d (effect_types.py:3917-3936). 'from': 'Base' matches by normalized SUBTYPE MEMBERSHIP (_match, effect_types.py:3911-3915): card DB verified this session - base arms carry ['Arms','Base'] (cogwerx_base_arms) while this card carries ['Arms','Evo'], so an already-equipped Evo can never match. That IS official release note 1 ('does not have the base subtype; cannot transform into another Evo looking for a base arms') enforced by the matcher rather than authored.\n\nGAP (shared with the sibling drafts above): 'then equip this' is not fully expressible - _do_transform creates the Evo via create_token WITHOUT a destination, so the new card lands in controller.tokens rather than replacing the base in the arms slot. create_token supports destination='arms' (effect_keywords.py:372-376) but TRANSFORM's internal call cannot pass it; one-line engine fix in _do_transform, no JSON change needed. The material relationship (base arms end up UNDER this, CR 8.5.36c) is preserved either way.\n\nON_EQUIP half: ON_EQUIP is dispatched ONLY from the start-of-game listener (engine.py:1611-1618); equipping mid-game fires nothing. An Evo cannot normally start equipped, so 'When this is equipped, deal 1 damage' is expected dead in real games today - authored faithfully so it works the moment mid-game equip dispatch exists, or if a deck ever lists it as starting equipment. Same limitation flagged on evo_zip_line_yellow (.review), arcbane_grasp_blue and evo_buzz_hive_yellow.\n\nDEAL 1 DAMAGE TO ANY TARGET: DEAL_PHYSICAL amount 1 (DEAL_DAMAGE and DEAL_PHYSICAL are aliases of one handler, effect_types.py:1177-1186, which reads only amount and target). KNOWN NARROWING, disclosed: that handler resolves 'target' to a PLAYER id only - there is no object-pool targeting for physical damage (DEAL_ARCANE's target:'ANY' pool at effect_types.py:1214-1216 has no physical sibling) - so 'any target' is narrowed to the opposing hero. Under-deals only against decks where a non-hero target would have been chosen.\n\nSet note: filed per DB sets ['PartTheMistveil'] at adoption."
+}

@@ -1,0 +1,32 @@
+{
+  "slug": "blizzard_bolt_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        { "type": "FLAG_SET", "flag": "fused_blizzard_bolt_yellow" }
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "trigger": {
+            "trigger_type": "ON_DEAL_DAMAGE",
+            "conditions": [
+              { "type": "ATTACK_TARGET_IS_HERO" }
+            ],
+            "effects": [
+              {
+                "type": "CREATE_TOKEN",
+                "token": "frostbite",
+                "amount": 1,
+                "player": "OPPONENT"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "Yellow printing of blizzard_bolt_blue - identical printed text, so copied verbatim per the copy-an-existing-spelling rule; only the slug and the fusion flag differ, because ability_keywords.fusion keys the marker on card.slug ('fused_<card.slug>', ability_keywords.py:604) and FLAG_SET tests the source controller's current_turn_effects. Full reasoning for deviating from the triage list's PITCHED_FOR_THIS (fusion is a reveal that never stamps pitched_for_this; FLAG_SET fused_<slug> is the verified live idiom per shipped siy/aether_icevein_blue.json and ele/chilling_icevein_yellow.json), the release-notes timing analysis, and the MISSING DEPENDENCY on a json/tokens/frostbite.json definition (create_token's require_card raises until it exists) are in blizzard_bolt_blue.json's _comment."
+}

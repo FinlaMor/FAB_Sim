@@ -1,0 +1,29 @@
+{
+  "slug": "crash_and_bash_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "zone": "HAND",
+          "player": "SELF",
+          "filter": {"keyword": "crush"},
+          "into": "crush_cards"
+        },
+        {
+          "type": "MAY",
+          "prompt": "Reveal a card with crush from your hand?",
+          "conditions": [
+            {"type": "REF_EXISTS", "ref": "crush_cards"}
+          ],
+          "effects": [
+            {"type": "CREATE_TOKEN", "token": "seismic_surge"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends, you may reveal a card with **crush** from your hand. If you do, create a Seismic Surge token.'\n\nShape follows shipped sup/tough_smashup_blue.json (block card, 'When this defends' = TRIGGERED + ON_DEFEND + MAY); ON_DEFEND is dispatched to the defending card itself (engine.py:1646). Release notes confirm it triggers on BECOMING a defending card and that reveal+token resolve as one optional effect.\n\nThe reveal is modelled as LOOK_AT over your own HAND filtered to keyword 'crush' - the handler reads zone/player/filter/into (effect_types.py:3356) and its keyword filter matches card.keywords case-insensitively. The reveal itself has no mechanical footprint beyond gating the token, so peek-without-move is behaviourally equivalent; no reveal event is emitted.\n\nTriage listed SELECT_FROM_REF but it is deliberately not used: WHICH crush card is revealed does not matter (nothing acts on the chosen card), and LOOK_AT's filter already stores every match as a list under one ref. REF_EXISTS handles lists (len > 0), so the MAY prompt is offered exactly when a crush card exists; declining runs nothing ('If you do' falls out of MAY for free per its handler doc).\n\nCREATE_TOKEN reads token/count/player (effect_types.py:1942); json/tokens/seismic_surge.json already exists with slug 'seismic_surge', so no missing token definition."
+}

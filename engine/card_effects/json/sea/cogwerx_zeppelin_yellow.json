@@ -1,0 +1,56 @@
+{
+  "slug": "cogwerx_zeppelin_yellow",
+  "per_turn": 2,
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Tap a cog you control?",
+          "cost": [
+            {
+              "type": "TAP_PERMANENT",
+              "subtype": "Cog"
+            }
+          ],
+          "effects": [
+            {
+              "type": "CREATE_TOKEN",
+              "token": "golden_cog",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        }
+      ],
+      "cost": [
+        {
+          "type": "TAP_PERMANENT",
+          "subtype": "Cog"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits a hero, you may {t} a cog you control. If you do, create a Golden Cog token. / Twice per Turn Instant - {t} a cog you control: This gets +1{p}.'\n\nYellow printing of .drafts/cogwerx_zeppelin_blue.json (identical text); the red sibling was triaged to the same shape.\n\nHIT CLAUSE: TRIGGERED + ON_HIT + ATTACK_TARGET_IS_HERO - the gate is mandatory because the generic hit event also fires when the attack damaged an ally/aura instead of a hero. 'You may {t} ... If you do, create' is MAY with an inner cost (MAY reads prompt/cost/effects, effect_types.py:3830-3849): TAP_PERMANENT {subtype Cog} scans player.permanents for UNTAPPED cogs (cost_types.py:328-363), the prompt is not even offered when none exists, and declining runs nothing - 'if you do' falls out for free. Release note 2 ('you choose whether or not to tap at the time the triggered effect resolves') is MAY's resolution-time choice exactly.\n\nCREATE_TOKEN reads token/amount (effect_types.py:1947-1952); 'golden_cog' resolves against json/tokens/golden_cog.json, which ALREADY EXISTS (the batch's 'token JSON still needs authoring' note is stale - goldwing_turbine, puffin_hightail and tough_old_wrench_yellow already create it).\n\nACTIVATED CLAUSE: INSTANT + TAP_PERMANENT cost + MODIFY_ATTACK add 1 against the live combat's power. The SOURCE_IS_ATTACK gate IS release note 3 ('two times only while it is on the combat chain as an attacking card ... cannot be activated while it is a defending card'): it gates both the offer (play.py:307 checks ability conditions before listing the activation) and resolution, so an off-chain activation cannot tap a cog for nothing and a defending activation cannot pump the OPPONENT's attack.\n\n'TWICE PER TURN' IS CARD-LEVEL ONLY: _compile_ability never reads an ability-level per_turn key (loader.py:119-141 - it would land unread in ab_params), so it is authored top-level, where card.py stamps has_per_turn_limit/activations=2, enforced at offer time (play.py:304). No activation_cost is authored: the ability's only cost is the tap.\n\nCAVEAT FOR REVIEW (engine-side, not a JSON question): whether play.py's DSL-activation sweep offers activations for a card sitting on the combat chain as the ATTACKER was not verified end-to-end. If it does not, this ability is drafted correctly but never offered - that would want a behavioral test and possibly an engine nudge, not a JSON change."
+}

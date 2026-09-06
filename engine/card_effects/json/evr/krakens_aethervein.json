@@ -1,0 +1,34 @@
+{
+ "slug": "krakens_aethervein",
+ "activation_cost": 3,
+ "per_turn": 1,
+ "abilities": [
+  {
+   "ability_type": "INSTANT",
+   "target": {
+    "controller": "OPPONENT",
+    "zone": "HERO",
+    "filter": [
+     {
+      "type": "CARD_TYPE_IN",
+      "types": [
+       "Hero"
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "type": "DEAL_ARCANE",
+     "amount": 1,
+     "target": "OPPONENT"
+    },
+    {
+     "type": "DRAW",
+     "amount": 1
+    }
+   ]
+  }
+ ],
+ "_comment": "Weapon with activated ability. activation_cost 3 at card level for {r}{r}{r}. per_turn 1 for 'Once per Turn'. INSTANT ability type for instant-speed activation. Target opposing hero via target spec (controller OPPONENT, zone HERO). DEAL_ARCANE with target OPPONENT deals to opposing hero. DRAW 1 for 'draw a card for each arcane damage dealt this way' - fixed 1 damage means draw 1. Release notes confirm this cannot attack and is not an action card."
+}

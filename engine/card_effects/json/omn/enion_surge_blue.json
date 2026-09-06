@@ -1,0 +1,27 @@
+{
+  "slug": "enion_surge_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1,
+          "target": "ANY"
+        },
+        {
+          "type": "MAY",
+          "prompt": "Tap your hero to create a Lightning Flow token?",
+          "conditions": [
+            {"type": "EVENT_THIS_TURN", "event": "damage", "qualifier": "arcane"}
+          ],
+          "effects": [
+            {"type": "TAP", "target": "YOUR_HERO"},
+            {"type": "CREATE_TOKEN", "token": "lightning_flow"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Deal 1 arcane damage to any target. / If this deals damage, you may {t} your hero. If you do, create a Lightning Flow token.' Lightning Wizard Action (OmensOfTheThirdAge). Release note 1 gives 3/2/1 arcane for red/yellow/blue - blue is 1, matching the batch printed_text. Release note 2 ('no priority between any of the effects generated') rules out a triggered layer for the rider: ONE flat PLAY resolution, effects in printed order.\n\nCLAUSE 1: DEAL_ARCANE amount 1 target 'ANY' - the handler (effect_types.py:1188-1219) routes ANY/ANY_TARGET to _deal_arcane_to_objects (effect_types.py:988-1040), which builds a pool of BOTH heroes plus all allies and asks the controller to choose one ('none' offered; max_targets defaults to 1): exactly 'any target'. Damage goes through the canonical deal_damage primitive, so replacements/prevention and the ally death check all see it. Same shape as .drafts/destructive_aethertide_blue.json for the identical printed clause. APPROXIMATION, disclosed: release note 1 says the target is declared when playing; the DSL's play-time target declaration cannot express an unqualified 'any target' pool, so the choice happens at resolution instead - with nothing able to respond inside one resolution, the observable difference is narrow.\n\n'IF THIS DEALS DAMAGE' GATE - DEVIATION FROM THE TRIAGE LIST, which said TRIGGERED/ON_DEAL_DAMAGE: that trigger cannot hear effect damage (_dsl_deal_damage_listener returns unless state.combat.attack_card exists, engine.py:1742-1754 - combat damage only), and a triggered layer would contradict release note 2. Instead the MAY carries an effect-level conditions gate: EVENT_THIS_TURN event 'damage' qualifier 'arcane' - the exact documented example (condition_types.py:1070-1075) - checked at resolution AFTER the DEAL_ARCANE effect ran in the same sequential list (interpreter.py:148-159). deal_damage records the marker against the DEALING player only once damage is final past prevention/cancellation (effect_keywords.py:503-509), so a fully prevented hit offers no prompt. KNOWN EDGE: the marker is turn-scoped, not play-scoped - if the controller dealt arcane damage earlier this turn and THIS hit is prevented, the prompt would still be offered (over-grant); no condition reads state._last_damage_dealt directly (amount expression only, effect_types.py:76-77).\n\nTAP - SECOND TRIAGE DEVIATION, which said TAP_SELF: as an EFFECT, TAP_SELF taps the SOURCE CARD (effect_types.py:3660-3681: 'SELF' -> obj = card), not the hero. '{t} YOUR HERO' is TAP target 'YOUR_HERO', which resolves state.players[cid].hero through canonical tap() (CR 8.5.55). Edge: if the hero is already tapped, tap() fails quietly (canceled event, no exception) but CREATE_TOKEN still runs - a narrow over-grant vs 'If you do'; no condition observes a TapEvent to gate on.\n\nTOKEN: CREATE_TOKEN reads token/count|amount/player/destination (effect_types.py:1942-2013); count defaults 1, player defaults SELF. json/tokens/lightning_flow.json already exists."
+}

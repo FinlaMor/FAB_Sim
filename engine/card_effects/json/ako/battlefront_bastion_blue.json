@@ -1,0 +1,26 @@
+{
+  "slug": "battlefront_bastion_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {
+          "type": "DEFENDING_CARD_COUNT",
+          "amount": 1,
+          "comparison": "eq"
+        },
+        {
+          "type": "IS_DEFENDING_CARD"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PREVENT_DAMAGE",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends alone, prevent the next 1 damage that would be dealt to you this turn.'\n\nTrigger: ON_DEFEND is dispatched to the defending card ITSELF (engine.py:1629-1635), and per CR 7.0.5e / Rules Reprise #20 the defend event occurs AFTER the cards are on the chain link - which the engine mirrors: play.py:1353-1376 appends the whole declared batch to combat.defending_cards FIRST, then emits one 'defend' event per card. So at trigger time DEFENDING_CARD_COUNT eq 1 reads exactly 'Bastion is the only defending card', IS_DEFENDING_CARD confirms the dispatch is about this card (belt-and-braces; the listener already targets it), and the release-note cases come out right: declared as the only defender -> triggers; declared alongside another card -> count 2, no trigger (note 3's multiplayer case approximated correctly, since all declarations land before any event fires).\n\nEffect: PREVENT_DAMAGE amount 1 registers a PREVENTION replacement on Bastion's controller that absorbs up to 1 of the next damage event targeting them and is consumed on use (effect_types.py:5152-5215) - matching 'prevent the next 1 damage ... to you', including note 2's ruling that defenders added later do not revoke it (the shield is registered at resolution and does not care).\n\nTWO DEVIATIONS, both engine plumbing rather than DSL shape, per CR 7.0.5e ('it is considered to defend alone if it is the only card being added as part of that action/resolution/effect, EVEN IF there are already cards defending on that chain link'):\n(1) Bastion added BY ITSELF BY AN EFFECT (e.g. Pulsewave Harpoon) onto a link that already has defenders should trigger, but will not: DEFENDING_CARD_COUNT counts ALL current defenders, so the pre-existing ones defeat the eq-1 check. Worse, add_defend() emits an event type with NO registered DSL listener (only declaration-time 'defend' is wired, engine.py:1775), so an effect-added defender never triggers ON_DEFEND at all. Fixing either half needs engine-side batch information on the defend event or a listener for add_defend - not authorable here.\n(2) 'This turn' expiry: PREVENT_DAMAGE replacements are pruned only on consumption (effects.py:274/294); clear_turn_effects filters continuous effects only (effects.py:196-203). An unused shield persists into later turns instead of lapsing at end of turn. Engine-wide trait of the type (Steadfast shares it); no JSON-expressible fix.\n\nNo printed keywords; nothing else in the text."
+}

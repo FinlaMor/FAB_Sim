@@ -1,0 +1,91 @@
+{
+ "slug": "bravo_star_of_the_show",
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "START_OF_TURN",
+   "conditions": [
+    {
+     "type": "AND",
+     "all": [
+      {
+       "type": "CARD_IN_ZONE",
+       "zone": "hand",
+       "talent": "Earth",
+       "count_gte": 1
+      },
+      {
+       "type": "CARD_IN_ZONE",
+       "zone": "hand",
+       "talent": "Ice",
+       "count_gte": 1
+      },
+      {
+       "type": "CARD_IN_ZONE",
+       "zone": "hand",
+       "talent": "Lightning",
+       "count_gte": 1
+      }
+     ]
+    }
+   ],
+   "effects": [
+    {
+     "type": "MAY",
+     "prompt": "Reveal an Earth, an Ice, and a Lightning card from your hand?",
+     "effects": [
+      {
+       "type": "MODIFY_NEXT_ATTACK",
+       "mod": "add",
+       "amount": 2,
+       "filter": [
+        {
+         "type": "ATTACK_TYPE_IN",
+         "types": [
+          "Action"
+         ]
+        },
+        {
+         "type": "ATTACK_COST_GTE",
+         "amount": 3
+        }
+       ]
+      },
+      {
+       "type": "GRANT_NEXT_ATTACK_KEYWORD",
+       "keyword": "Dominate",
+       "filter": [
+        {
+         "type": "ATTACK_TYPE_IN",
+         "types": [
+          "Action"
+         ]
+        },
+        {
+         "type": "ATTACK_COST_GTE",
+         "amount": 3
+        }
+       ]
+      },
+      {
+       "type": "GRANT_NEXT_ATTACK_KEYWORD",
+       "keyword": "GO_AGAIN",
+       "filter": [
+        {
+         "type": "ATTACK_TYPE_IN",
+         "types": [
+          "Action"
+         ]
+        },
+        {
+         "type": "ATTACK_COST_GTE",
+         "amount": 3
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

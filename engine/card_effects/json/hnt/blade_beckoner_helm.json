@@ -1,0 +1,17 @@
+{
+  "slug": "blade_beckoner_helm",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "conditions": [
+        { "type": "IS_DEFENDING_CARD" },
+        { "type": "ATTACK_IS_WEAPON" }
+      ],
+      "effects": [
+        { "type": "MODIFY_DEFENSE", "mod": "add", "amount": 1 }
+      ]
+    }
+  ],
+  "_comment": "'This gets +1{d} while defending a weapon attack. / Guardwell'\n\nIdentical text to blade_beckoner_boots (Legs printing); same shape, copied from shipped pen/basalt_boots.json.\n\nGuardwell is a printed keyword (printed_keywords) and fires from the card DB keywords field (ability_keywords.guardwell) - deliberately NOT authored here; authoring it again would be a defect.\n\nThe +1{d} clause: WHILE_STATIC naming trigger RECALC_DEFENSE + MODIFY_DEFENSE. engine._recalculate_total_defense (engine.py:1983-2054) resets each declared defender to its base {d}, then dispatches RECALC_DEFENSE once per defender to [that defender] + the attack card + both heroes + all permanents/head/chest/arms/legs/weapon zones of BOTH players (engine.py:2016-2031) - head is in that list, so this equipment receives the dispatch when it defends. Naming the trigger matters: without it the static defaults to RECALC_ATTACK_POWER, where combat.defense_recalc_card is None and MODIFY_DEFENSE falls back to its source card (interpreter.py:186-201).\n\nIS_DEFENDING_CARD scopes the effect to the defender currently being evaluated (combat.defense_recalc_card is this card, condition_types.py:536-599); without it the once-per-defender dispatch would let this static add +1{d} to every other defending card in turn. MODIFY_DEFENSE writes the defender card's own {d} (effect_types.py:2614-2650), which survives into total_defense; because each pass resets to base first, the static cannot stack across recalculations.\n\nATTACK_IS_WEAPON reads combat.from_weapon (condition_types.py:198-199), stamped from attack_card.is_weapon when the CombatState is created (engine.py:527) and consulted at defense-recalc time. That is exactly the release note's reading: the check is on the CURRENT attack being a weapon attack, not on the weapon still sitting on this chain link - so the +1{d} holds even if the weapon has since been used on another link or flicked."
+}

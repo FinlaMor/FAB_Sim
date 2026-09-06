@@ -1,0 +1,32 @@
+{
+  "slug": "draw_a_crowd_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {"type": "DRAW", "amount": 1},
+        {"type": "DRAW", "amount": 1, "player": "OPPONENT"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_ACTION_PHASE",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {"type": "ATTACK_CLASS_IN", "classes": ["Guardian"]},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Go again** / When this enters the arena, each hero draws a card. / At the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +3{p}.' Guardian Action - Aura.\n\nGO AGAIN NOT AUTHORED: GoAgain is an UNCONDITIONAL line of the printed text and appears in printed_keywords - it fires from the card DB keywords field; re-authoring it would be a defect. No conditional-keyword (SOURCE_IS_ATTACK) machinery applies because nothing gates it.\n\nETB DRAW: TRIGGERED ON_ENTER_PLAY, dispatched from Zone.add on real arena entry from a non-arena zone (state.py:304-310) - covers BOTH release-note-1 paths: resolving on the stack when played AND being put into the arena by another card's effect. 'Each hero draws a card' is the documented two-effect shape - DRAW SELF + DRAW OPPONENT (DSL_REFERENCE Draw/Discard) - ordered SELF first, matching release note 1 ('in clockwise order beginning with the controller'). Release note 3 (no priority between the draws) is plain sequential resolution of one effects list. DRAW handler reads amount/player (effect_types.py:1222-1249).\n\nUPKEEP TRIGGER: START_OF_ACTION_PHASE, not START_OF_TURN - 'at the beginning of your ACTION PHASE' is CR 4.3.1 wording and trigger_types.py:56-58 maps exactly that phrase; the corpus review files flag START_OF_TURN for this wording as wrong-timing (one sub-phase early). Dispatched to the ACTIVE player's permanent zones INCLUDING player.auras (engine.py:1514-1522, _dsl_permanent_zones at :1452), so the aura fires on its controller's action phase only - 'your action phase'; no IS_ACTIVE_PLAYER gate, same as crash_down_yellow (same clause family, +5{p}).\n\nORDER: DESTROY_SELF first, then the pump, following the printed sentence; release note 3 ('no priority between destroying Draw a Crowd and generating the continuous effect') is plain in-order resolution with nothing between them. Destroying first cannot unqueue the pump: the mod lives on the CONTROLLER's dsl_queued_attack_mods, not on the card.\n\nPUMP: MODIFY_NEXT_ATTACK reads mod/amount/filter/scope (effect_types.py:4592-4618) and queues a one-shot entry consumed by the first matching attack; unused entries expire end of turn = 'this turn'; scope left at default TURN. Filter names 'Guardian attack action card', each key read out of its handler this session: ATTACK_CLASS_IN reads 'classes' and matches them against the attack card's classes AND talents via _card_traits (condition_types.py:204-216); ATTACK_TYPE_IN reads 'types' and tests types AND subtypes merged (273-294); ATTACK_SUBTYPE_IN reads 'subtypes' (296+). An attack action card is types=['Action'], subtypes=['Attack']; a weapon attack carries type Weapon and fails the Action test, so the buff cannot land on a weapon attack - exactly the printed restriction.\n\nAdoption note: batch lists set MasteryPackGuardian - file under that set's folder at adoption time.",
+  "_source_batch": "_batch3.json"
+}

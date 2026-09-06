@@ -1,0 +1,14 @@
+{
+  "slug": "slither",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [{"type": "ATTACK_TYPE_IN", "types": ["Action"]}]
+      },
+      "effects": [{"type": "GAIN", "keyword": "GO_AGAIN"}]
+    }
+  ],
+  "_comment": "TOKEN STUB - adoption prerequisite for .drafts/hiss_blue.json. create_token calls require_card('slither') at resolution (effect_keywords.py:276, read this session), so without a definition the first Hiss resolving after a blue pitch raises MissingCardImplementation mid-game. Filed in .drafts/ only because this drafting pass may not write outside it; AT ADOPTION this file belongs at json/tokens/slither.json.\n\nCard DB template verified this session (card_data/slug_index.json by_slug['slither']): 'Mystic Assassin Attack Reaction', types ['AttackReaction'], classes ['Assassin'], talents ['Mystic'], keywords ['Ephemeral'], printed text '**Ephemeral** / Target attack action card gets **go again**.'\n\nEPHEMERAL NOT AUTHORED: it is on the card-DB template keywords, which create_token inherits onto the token (effect_keywords.py:323-326), and the keyword is engine-implemented (CR 8.3.21 ceases-to-exist instead of graveyard, effect_keywords.py:744-749) - re-authoring it would be a defect. Tokens also cease to exist entering graveyards anyway (CR 3.0.12a).\n\nABILITY: ATTACK_REACTION - _attack_reaction_legal_check (play.py:933-948) offers it to the attacker during the reaction step, the only window a played token card gets. Target filter ATTACK_TYPE_IN ['Action'] names exactly attack action cards (types=['Action'], subtypes=['Attack']; weapon attacks carry type Weapon and fail - condition_types.py:273-294 unions both). Delivery is GAIN keyword GO_AGAIN, NOT GRANT_NEXT_ATTACK_KEYWORD: the grant targets the attack CURRENTLY on the chain, and the queue form would wait for a future attack (.review/boltn_boots.json records exactly this defect; flight_path precedent). GAIN routes through _grant_go_again (effect_types.py:4927-4941 -> :423-458): combat exists throughout the reaction step, so per CR 8.3.5b 'Go Again' lands on this combat (dedup-guarded per 8.3.5c) and pays out at the Resolution Step to whoever is attacking - correct whether Nuu slithers her own attack or, per the unrestricted printed wording, targets any attack action card.\n\ncost 0 / no power or defense on the template; nothing else to author.",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

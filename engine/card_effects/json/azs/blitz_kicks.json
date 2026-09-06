@@ -1,0 +1,29 @@
+{
+  "slug": "blitz_kicks",
+  "activation_cost": 1,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "play",
+          "qualifier": "instant"
+        }
+      ],
+      "cost": [
+        {
+          "type": "DESTROY_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "embodiment_of_lightning",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'Instant - {r}, destroy this: Create an Embodiment of Lightning token. Activate this only if you've played an instant card this turn.' FIX vs the previous draft revision found in .drafts/: the {r} moves from ability-level to CARD-LEVEL activation_cost. AbilityDef (dsl/schema.py) has NO activation_cost field - the loader silently keeps unknown ability keys in AbilityDef.params (loader.py:124) - while play._get_base_resource_cost charges runtime card.activation_cost, which card.py sets from CardDef.activation_cost on every lookup. An ability-level key looked implemented and charged nothing. INSTANT is offered for EQUIPPED legs by play._add_hero_dsl_activations (it walks head/chest/arms/legs/weapons/items/auras/allies/permanents, play.py:262-265), and ability conditions are checked BEFORE the offer (play.py:307), so 'Activate this only if...' blocks the activation rather than fizzling it. EVENT_THIS_TURN(event=play, qualifier=instant): _apply_play_card records slug/name/types/subtypes/classes/talents/colour per hand play (play.py:1085-1101); both sides fold case/punctuation (_norm in condition_types.py vs the lowercase fold in effect_keywords), so card type 'Instant' matches qualifier 'instant'. Markers land when the card is played (hits the stack), which satisfies the release-note timing 'activate after playing an instant card, but before the instant card resolves'. DESTROY_SELF exists as a cost type (cost_types.py:43) and is paid in _apply_activate (play.py:1291-1296) before ON_ACTIVATE. Second release note holds structurally: _apply_discard_activate (play.py:1317) records no 'play' turn event, so discarding a card to activate its own instant ability does not enable this. Arcane Barrier 1 is in printed_keywords -> card DB keywords field, deliberately NOT authored here. json/tokens/embodiment_of_lightning.json exists; no destination param needed (zone routing derives from template subtypes, same as shipped aurora.json / bri/briar.json). No known gaps."
+}

@@ -1,0 +1,22 @@
+{
+  "slug": "biting_gale_red",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        { "type": "PITCHED_FOR_THIS", "talent": "Ice" }
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_ELSE",
+          "player": "OPPONENT",
+          "resources": 2,
+          "on_failure": [
+            { "type": "DISCARD", "player": "OPPONENT", "amount": 1 }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Ice Fusion. If Biting Gale was fused, the attacking hero discards a card unless they pay {r}{r}.'\n\nFusion itself is NOT authored - it fires from the card DB keywords field (the fusion pitch option is engine-side), matching the triage note for this card's siblings.\n\n'Was fused' gates as PITCHED_FOR_THIS {talent: Ice}: the handler (condition_types.py:318-348) reads card.pitched_for_this, stamped by play._pitch_for_cost during cost payment (play.py:1606-1614) - visible by resolution time, where ability-level conditions are checked. This matches the release note that the attacker's decision happens when Biting Gale RESOLVES. Accepted approximation per the blizzard_bolt/biting_gale triage notes: strictly 'fused' means the extra fusion pitch was taken rather than any Ice pitched for cost; the DSL cannot tell those apart.\n\nPAY_OR_ELSE (effect_types.py:3143-3193) reads player/resources/on_failure - all verified in the handler. player OPPONENT resolves relative to this defending card's controller = the attacking hero. It offers pay/decline only when they hold >= 2 resources, otherwise straight to on_failure; on_failure player params are relative to the SAME source card, so DISCARD OPPONENT hits the hero that was asked to pay. An empty-hand discard is a no-op, which matches release note 3 (they may still elect the discard). DEFENSE_REACTION shape copied from shipped wtr/sink_below_red.json.\n\nNo known gaps."
+}

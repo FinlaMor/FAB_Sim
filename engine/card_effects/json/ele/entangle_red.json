@@ -1,0 +1,36 @@
+{
+  "slug": "entangle_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {"type": "FLAG_SET", "flag": "fused_entangle_red"}
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "COMBAT",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "ATTACK_TARGET_IS_HERO"}
+            ],
+            "effects": [
+              {
+                "type": "MODIFY_ATTACKS_THIS_TURN",
+                "amount": 2,
+                "mod": "subtract",
+                "scope": "NEXT_TURN",
+                "player": "OPPONENT",
+                "filter": [
+                  {"type": "ATTACK_ORDINAL_EQ", "amount": 1}
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Earth Fusion** / If Entangle was **fused**, it gains \"If this hits a hero, their first attack during their next turn has -2{p}.\"' Elemental Guardian Action - Attack.\n\nFUSION ITSELF NOT AUTHORED: Earth Fusion fires engine-side from the card DB keywords field as an optional additional cost at PLAY time (ability_keywords.fusion), which writes the marker 'fused_<card.slug>' into the controller's current_turn_effects (ability_keywords.py:604); FLAG_SET (condition_types.py:1032) tests exactly that set. Flag name is per-printing because fusion() keys it on card.slug - hence fused_entangle_red. This is the verified live idiom (shipped siy/aether_icevein_blue.json and ele/chilling_icevein_yellow.json; sibling drafts emerging_avalanche_*, blizzard_bolt_*, brain_freeze_*). Timing holds: fusion resolves as a play cost BEFORE the PLAY ability resolves, and ability-level conditions are checked at resolution (interpreter.py:54-58), so by then the flag is set or permanently absent; entering play unfused leaves it unset and the whole effect skips - Entangle is then a vanilla attack, matching the printed text.\n\nGAINS-CLAUSE VEHICLE: INJECT_TRIGGER with explicit COMBAT scope (default anyway - fires once, on the current attack). The inner trigger dict is REQUIRED nesting: a top-level conditions key would be popped by the loader as an effect-level gate evaluated once at registration, when there may be no attack. Inner ATTACK_TARGET_IS_HERO gates 'hits a hero'.\n\nTHE -2{p}: MODIFY_ATTACKS_THIS_TURN handler (effect_types.py:2201-2227, read this session) reads amount/mod/scope/player/filter. mod 'subtract' signs the amount negative; scope NEXT_TURN parks the hook on the opponent's next_turn_attack_hooks (state.py:900-905), promoted into turn_attack_hooks at the OWNER'S next turn start (engine.py:343) - exactly 'during their next turn'.\n\n'THEIR FIRST attack': filter ATTACK_ORDINAL_EQ amount 1 (condition_types.py:672-683, read - the param is 'amount'). It compares the ATTACKER's attacks_this_turn == 1; that counter resets to 0 in the same turn-start promotion that activates the hook (engine.py:345) and increments once per attack entering the chain (engine.py:539), so it is true during their first attack of that turn only. The filter key (not conditions) is deliberate: conditions would be popped as a registration-time gate, while filter is pass-through data re-compiled against EACH incoming attack by engine._apply_turn_attack_effects.\n\nRELEASE NOTE ('This affects all attacks including attack actions and weapon attacks') holds by construction: the filter carries NO type/subtype restriction, and attacks_this_turn counts every attack the player makes - action or weapon.\n\nTriage list followed essentially verbatim - it was accurate for this card; each named primitive was read in its handler before use. On adoption, pick the json/<set>/ folder from the card's setIdentifiers (batch label says TalesOfAria), not from the batch."
+}

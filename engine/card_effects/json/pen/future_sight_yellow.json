@@ -1,0 +1,12 @@
+{
+  "slug": "future_sight_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "sigil_of_fate", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'Create 2 Sigil of Fate tokens.' Wizard Instant card whose effect happens when played -> ability_type PLAY (DSL_REFERENCE: an Instant CARD played for its effect is PLAY, not INSTANT — INSTANT is an activated ability with instant timing).\n\nCREATE_TOKEN reads 'token' (slug) and 'count'/'amount' (effect_types.py:1942-1952, read this session); player defaults SELF; destination omitted so the engine routes the token by its template subtypes — Sigil of Fate is a Token - Aura (triage_queue.json:55854), and aura routing is template-derived.\n\nGAP, NOT EXPRESSIBLE FROM THIS FILE: json/tokens/sigil_of_fate.json does not exist anywhere in the corpus (verified by search this session). create_token() calls require_card() on the token slug at RESOLUTION time (effect_keywords.py:276; same finding recorded against .review/painful_premonition_blue.json), so until the token JSON is authored this card loads cleanly but raises MissingCardImplementation mid-game when it resolves. The token definition needs: Aura zone routing, 'When this leaves the arena, opt 1' (Opt is a numbered keyword the DB drops — token_meta.TOKEN_KEYWORDS carries it), and 'At the beginning of your action phase, destroy this' (START_OF_ACTION_PHASE trigger + DESTROY_SELF). Authoring that file is separate work outside .drafts/; flagged here rather than guessed around."
+}

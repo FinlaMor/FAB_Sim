@@ -1,0 +1,27 @@
+{
+  "slug": "frontline_helm",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "BEGINNING_OF_END_PHASE",
+      "conditions": [
+        {"type": "IS_ACTIVE_PLAYER", "value": true}
+      ],
+      "effects": [
+        {"type": "PUT_COUNTER", "counter_type": "minus_defense", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "conditions": [
+        {"type": "IS_DEFENDING_CARD"},
+        {"type": "COUNTER_GTE", "counter_type": "minus_defense", "min": 3}
+      ],
+      "effects": [
+        {"type": "MODIFY_DEFENSE", "mod": "set", "amount": 0}
+      ]
+    }
+  ],
+  "_comment": "'At the beginning of your end phase, put a -1{d} counter on this.' / 'Blade Break'\n\nSHAPE: adapted from .drafts/frontline_gauntlets.json, the identical printed text with identical release notes (this is the Head printing; gauntlets is Arms). BladeBreak is a printed keyword (printed_keywords, confirmed in slug_index alongside defense 2 / Equipment / Head) and fires from the card DB keywords field (ability_keywords.blade_break) - deliberately NOT authored; re-authoring a printed keyword is a defect.\n\nUPKEEP TRIGGER: BEGINNING_OF_END_PHASE is dispatched to BOTH players' permanent/equipment zones at EITHER hero's end phase (engine.py:1495-1503), so release note 1 ('only ... your end phase, not your opponent's') is carried by IS_ACTIVE_PLAYER value:true (condition_types.py:811-821 reads 'value'; controller == active_player) - its absence is the documented channel_iceloch_glaze_blue review finding (fires twice per round). PUT_COUNTER (effect_types.py:2015-2058) reads counter_type/amount/target and defaults to the SOURCE card when no target is given (line 2031) = 'on this'. counter_type 'minus_defense' is in DEFENSE_COUNTER_KINDS (ability_keywords.py:211), so it routes through _apply_defense_counter and actually reduces {d} on recalc instead of being inert bookkeeping. Counters accumulate across turns as printed.\n\nRELEASE NOTE 2 ('if this has 3 or more -1{d} counters, its defense value is 0, and does not become negative'): printed {d} is 2 (card DB), so plain per-counter reduction reaches 0 at two counters and would go NEGATIVE from the third onward - _apply_defense_counter's immediate update and the recalc reset both compute base - counters with no floor. The second ability clamps exactly that case: WHILE_STATIC naming trigger RECALC_DEFENSE runs only on the defence recalculation (interpreter.py:186-202); IS_DEFENDING_CARD scopes it to the defender currently being evaluated (combat.defense_recalc_card is this card, condition_types.py:564-604) - without it the dispatch reaches this equipment once per EVERY defender and would zero other cards; COUNTER_GTE reads the card's own minus_defense tally via params counter_type/min (condition_types.py:998-1030). MODIFY_DEFENSE mod:'set' amount 0 targets combat.defense_recalc_card during recalc and floors at 0 (effect_types.py:2708-2713). With fewer than 3 counters the static is inert and reduction is exact (2-n >= 0 for n <= 2)."
+}

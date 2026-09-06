@@ -1,0 +1,37 @@
+{
+  "slug": "bare_fangs_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "DRAW",
+          "amount": 1
+        },
+        {
+          "type": "DISCARD_RANDOM",
+          "amount": 1
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "REF_POWER_GTE",
+              "ref": "discarded",
+              "amount": 6
+            }
+          ],
+          "then": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, Bare Fangs gains +2{p}.' Shape copied verbatim from sibling draft .drafts/bare_fangs_blue.json (same card, same +2{p} in this red printing per the batch's printed_text); each of its claims was independently re-verified against the handlers. TRIGGERED ON_ATTACK + MODIFY_ATTACK is the documented shape for an Action - Attack self-pump (an attack action card is NOT an ATTACK_REACTION); MODIFY_ATTACK under ON_ATTACK records into combat.power_mods and survives later recalculations (effect_types.py ~4081).\n\nDELIBERATE DEVIATION FROM TRIAGE: it listed DISCARDED_CARD_POWER_GTE, but the .review findings on smashing_performance_yellow / ram_raider_yellow / breakneck_battery_red established that condition reads .power off the DISPATCHING EVENT - here the ON_ATTACK event, which carries no discarded card - so as an effect-level gate it is false in every state (a dead gate that ships looking implemented). DISCARD_RANDOM stores the card actually discarded under ref 'discarded' (effect_types.py:4925-4927) precisely so an in-ability check can express 'THIS WAY'; REF_POWER_GTE(ref 'discarded', amount 6) is list-friendly and satisfied by any entry (condition_types.py:2017-2045).\n\nEmpty hand: effect_discard returns nothing, the ref is never set, get_ref None -> condition false -> no pump, while draw/discard still resolve. Draw-then-discard order matches printed text and runs atomically inside one ability resolution, which is what the release note ('you cannot play cards or activate abilities after drawing the card but before discarding') describes. The second release note (no defense property) is a card-DB fact, not behaviour - nothing authored."
+}

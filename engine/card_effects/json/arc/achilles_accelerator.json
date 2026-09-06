@@ -1,0 +1,18 @@
+{
+  "slug": "achilles_accelerator",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {"type": "FLAG_SET", "flag": "boosted_this_turn"}
+      ],
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "GAIN", "asset": "ACTION_POINTS", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Activate this ability only if you have boosted this turn' is FLAG_SET over the exact marker boost() appends to the controller's current_turn_effects ('boosted_this_turn', ability_keywords.py boost()). The triage pass suggested DID_THIS_TURN('boosted'), but EVENT_THIS_TURN's documented event set (damage/pitch/banish/draw/create/play/roll/charge/transcend) has no 'boost' event; the FLAG_SET spelling is verified against the boost() source, which appends exactly this string once per boost. Ability-level conditions gate both the offer (play._add_hero_dsl_activations checks them before listing the action) and resolution, which matches 'activate only if'. DESTROY_SELF is a cost-namespace type (cost_types.py) whose pay routes through canonical destroy(), which resolves the legs slot zone. Arcane Barrier 1 is deliberately NOT authored: it fires from the card DB keywords field via register_prevention_effects, with the amount parsed from the printed text by effects._keyword_amount."
+}

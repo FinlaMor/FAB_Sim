@@ -1,0 +1,32 @@
+{
+  "slug": "cadaverous_contraband_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Put a non-attack action card from your graveyard on top of your deck?",
+          "effects": [
+            {
+              "type": "MOVE_MATCHING",
+              "to_zone": "deck",
+              "position": "top",
+              "target": {
+                "controller": "SELF",
+                "zone": "GRAVEYARD",
+                "amount": 1,
+                "filter": [
+                  { "type": "CARD_IS_TYPE", "card_type": "Action" },
+                  { "type": "NOT", "inner_type": "CARD_IS_TYPE", "card_type": "Attack" }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If Cadaverous Contraband hits, you may put a non-attack action card from your graveyard on top of your deck.' Identical text to the red/yellow printings; same shape as .drafts/cadaverous_contraband_red.json.\n\nTRIGGERED ON_HIT: the hit trigger is dispatched to the attack card itself, so the attacking copy receives it. The 'you may' is a MAY block (handler effect_types.py:3788 reads prompt/effects; declining runs nothing).\n\nDEVIATION FROM THE BATCH TRIAGE (SEARCH_GRAVEYARD + PUT_REF_TOP), verified against handlers before deviating: (1) SEARCH_GRAVEYARD's destination map rewrites deck_top to zone 'deck' and passes NO position to put_object, whose zone default is BOTTOM (effect_types.py:1884-1888; put_object docstring: None/bottom -> append) - the card would land on the bottom, not the top. (2) Its filter_types go through _matches_type_or_subtype, which unions types with subtypes and has no negation - an attack action is types=[Action], subtypes=[Attack], so filter ['Action'] would offer attack actions too. (3) The ref-chain alternative needs LOOK_AT over a graveyard, and LOOK_AT only covers DECK_TOP/ARSENAL/HAND (effect_types.py:3390). MOVE_MATCHING avoids all three: GRAVEYARD is a legal _OBJECT_TARGET_ZONES entry (effect_types.py:418-420), position 'top' is forwarded to put_object ('top' -> index 0, effect_keywords.py:1666-1667), and the filter list is ordinary DSL conditions evaluated with each graveyard candidate as the card argument (_compile_object_target, effect_types.py:776-778). CARD_IS_TYPE reads card_type (condition_types.py:1315); NOT's flattened inner_type form compiles the sibling params (condition_types.py:2228-2236). amount 1 makes the controller choose among eligible cards via _ask_player (effect_types.py:792-799) - the printed 'put a ... card' choice.\n\nWith no eligible card in the graveyard the pool is empty and the move no-ops; the MAY prompt may still be offered once. Suppressing the trigger entirely when no legal target exists is not expressible for triggered layers - flagged rather than approximated."
+}

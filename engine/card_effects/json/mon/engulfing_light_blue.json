@@ -1,0 +1,27 @@
+{
+  "slug": "engulfing_light_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {"type": "CHARGE", "amount": 1, "optional": true}
+      ],
+      "conditions": [
+        {"type": "EVENT_THIS_TURN", "event": "charge"}
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "COMBAT",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "effects": [
+              {"type": "PUT_SELF_IN_ZONE", "zone": "soul"}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'As an additional cost to play Engulfing Light, you may **charge** your hero's soul. If you've charged this turn, Engulfing Light gains \"If this hits, put it into your hero's soul.\"' Light Warrior Action - Attack.\n\nSHAPE COPIED FROM .drafts/engulfing_light_red.json (identical printed text across colours; the yellow sibling differs only in placing the gate on the effect instead of the ability - equivalent timing, since both evaluate when the PLAY ability resolves). Every claim below was re-verified against source this session.\n\nPRINTED KEYWORD NOT AUTHORED: Charge appears in printed_keywords and fires from the card DB keywords field; triggers.py maps it to 'pass - card-specific', so the DB keyword carries no cost wiring and the additional_cost below is the whole implementation - no double-charge.\n\nCOST: optional CHARGE additional_cost on the PLAY ability (cost_types.py:266-318). The boolean true is deliberate: the handler bool()s the raw value, so any non-empty string - including \"FALSE\" - would read as optional; mandatory costs omit the key entirely. With optional set, can_pay returns True unconditionally so the cost NEVER blocks the play (that is the printed 'you may'), and pay asks WHICH hand card to charge via ask_optional, then routes through canonical effect_keywords.charge (CR 8.5.29).\n\nGATE DEVIATES FROM THE BATCH TRIAGE LIST, which named CARD_WAS_CHARGED - wrong subject. CARD_WAS_CHARGED tests the was_charged attribute ON THIS CARD (condition_types.py:1175-1192), but charge() marks the HAND card that goes into the soul (effect_keywords.py:2367), never the attack action itself, so it would be false even when this card's own cost was paid. Release note 1 is explicit that ANY charge this turn counts ('does not need to be the card to have charged ... due to another card'): a PLAYER-level question, which is EVENT_THIS_TURN event=charge reading the bare did_this_turn:charge marker charge() records against the charging player (effect_keywords.py:2368-2372, CR 8.5.29a/b); player defaults to SELF = this card's controller.\n\nTIMING: interpreter._run_ability pays additional costs BEFORE checking ability-level conditions (interpreter.py:48-58), so a charge made for this card's own cost is already recorded when the gate evaluates - the gate cannot miss its own cost, and cannot miss an earlier charge by another card either.\n\nINJECT_TRIGGER scope COMBAT with a NESTED trigger dict (required shape when carrying effects): state.combat exists when an attack action's PLAY abilities resolve, so the one-shot lands in combat.injected_triggers and fires on this attack's hit. No inner condition: the gained trigger is unconditional, and per release note 5 it is NOT optional once charged - hence bare PUT_SELF_IN_ZONE zone 'soul', the shipped spelling for moving an attacking card to the soul (herald_of_ravages_*, rising_solartide_*); inside the injected trigger the dispatched card IS Engulfing Light.\n\nNOT EXPRESSIBLE / ENGINE-SIDE (release notes 2-4): 'the chain link does not close and remains on the combat chain', 'the attack can not gain go again once in the soul', and the Last-Known-Information action point are chain-link-resolution mechanics of the engine, not card behaviour; no DSL effect touches them and none is needed for this text."
+}

@@ -1,0 +1,23 @@
+{
+ "slug": "mark_of_the_funnel_web_yellow",
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_HIT",
+   "conditions": [
+    {
+     "type": "OPPONENT_IS_MARKED"
+    }
+   ],
+   "effects": [
+    {
+     "type": "BANISH",
+     "player": "OPPONENT",
+     "from_zone": "ARSENAL",
+     "amount": 1
+    }
+   ]
+  }
+ ],
+ "_comment": "Stealth keyword from printed_keywords handled by engine. ON_HIT trigger with OPPONENT_IS_MARKED condition. BANISH from opponent's arsenal prompts controller to choose which card (per release notes). Banished face-up by default."
+}

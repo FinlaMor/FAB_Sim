@@ -1,0 +1,32 @@
+{
+  "slug": "desires_of_flesh_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "zone": "DECK_TOP",
+          "player": "OPPONENT",
+          "amount": 1,
+          "into": "top"
+        },
+        {"type": "BANISH_REF", "ref": "top", "from_zone": "deck"},
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "REF_IS_TYPE", "ref": "top", "types": ["Attack"]}
+          ],
+          "then": [
+            {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Stealth** / When this hits a hero, banish the top card of their deck. / Whenever this banishes an attack action card, gain 1{h}.' Assassin Action - Attack.\n\nSTEALTH NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field - authoring it again would be a defect.\n\nHIT TRIGGER: TRIGGERED + ON_HIT + ATTACK_TARGET_IS_HERO is the shipped shape for an Action - Attack's own 'When this hits' clause; ON_HIT maps to the engine event (trigger_types.py:6). ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977) is false when the attack was declared at an ally or permanent - exactly release note 2 ('does not trigger if you hit anything other than a hero').\n\nBANISH THE TOP CARD: LOOK_AT (zone DECK_TOP, player OPPONENT, amount 1) peeks WITHOUT moving and stores the single card unwrapped under ref 'top' (effect_types.py:3356-3415); BANISH_REF then banishes it through the canonical banish keyword. from_zone 'deck' is REQUIRED: without an origin zone banish() leaves the card in place while also adding it to the banished zone - present in both zones at once (effect_types.py:3726-3752). face_down defaults to False, so the card is banished face-up into the owner's banished zone per release note 1. Empty deck: LOOK_AT stores None, BANISH_REF no-ops on a falsy ref, and the CONDITIONAL's when fails - no gain, no crash.\n\n'WHENEVER THIS BANISHES' MODELED INLINE: there is no ON_BANISH trigger dispatched to the banishing card, so the gain rides as a CONDITIONAL in the same ability execution, immediately after BANISH_REF, testing the just-banished ref with REF_IS_TYPE types ['Attack'] (the matcher unions the card's types AND subtypes, condition_types.py:2011-2043; subtype Attack is carried by attack action cards only, so one node suffices - adding 'Action' to the list would wrongly match non-attack actions under the ANY-match). This placement makes release note 3 hold BY CONSTRUCTION: a banish from resolving a DIFFERENT card's effect never runs this ability's effect list, so it can never pay the 1{h}. GAIN asset LIFE_POINTS routes to effect_gain_life (effect_types.py:4890-4896).\n\nBOUNDED OVER-MATCH, flagged not fixed: if a replacement effect ever prevented the banish itself, the inline test would still read the ref and could pay the 1{h} - the printed text does not separately address that corner, and inventing machinery for it is out of scope for a draft.\n\nSame shape as the sibling printings desires_of_flesh_yellow/blue already in .drafts/."
+}

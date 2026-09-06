@@ -1,0 +1,18 @@
+{
+  "slug": "invoke_yendurai_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "TRANSFORM",
+          "from": "ash",
+          "to": "yendurai",
+          "amount": 1,
+          "up_to": false
+        }
+      ]
+    }
+  ],
+  "_comment": "Draconic Illusionist Action - Invocation (Uprising). 'Transform target ash you control into Yendurai. Go again'.\n\nGO_AGAIN NOT AUTHORED: GoAgain is in printed_keywords and fires from the card DB keywords field; re-authoring it would be a defect.\n\nTARGET NOTE: Same as invoke_kyloria_red — 'target ash you control' is a declared target but TRANSFORM's internal scan of player.permanents handles selection, matching the shipped invoke_nekria_red shape.\n\nTRANSFORM HANDLER: from='ash' matches any card with Ash subtypes. up_to=false: CR 8.5.36d makes it mandatory — no Ash in play means the play cannot happen. 'into Yendurai' → to='yendurai' triggers _do_transform which calls create_token('yendurai') then _ek_transform to put sources under the new permanent.\n\nGAP: yendurai token has no JSON definition in json/tokens/ yet. create_token will raise MissingCardImplementation at resolution until the token file is promoted."
+}

@@ -1,0 +1,36 @@
+{
+ "slug": "light_of_sol_yellow",
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_PITCH",
+   "effects": [
+    {
+     "type": "REVEAL_TOP_DECK",
+     "amount": 1,
+     "into": "revealed"
+    },
+    {
+     "type": "MAY",
+     "prompt": "Put the revealed card into your hero's soul?",
+     "conditions": [
+      {
+       "type": "REF_PITCH_IS",
+       "ref": "revealed",
+       "pitch": 2
+      }
+     ],
+     "effects": [
+      {
+       "type": "MOVE_REF",
+       "ref": "revealed",
+       "to_zone": "soul",
+       "player": "OWNER"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "_comment": "Legendary keyword fires from the card DB keywords field, no authoring needed. ON_PITCH dispatches to the pitched card itself. REVEAL_TOP_DECK reveals the top card and stores it under ref 'revealed'. MAY offers the optional action only when REF_PITCH_IS confirms the revealed card is yellow (pitch 2). MOVE_REF moves the referenced card to the soul zone. The release note confirms the trigger resolves after the pitch cost is paid, and putting into soul is not charging (does not trigger solflare)."
+}

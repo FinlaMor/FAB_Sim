@@ -1,0 +1,20 @@
+{
+  "slug": "fleet_foot_sandals",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "target": {
+        "filter": [
+          {"type": "ATTACK_BASE_POWER_LTE", "amount": 1}
+        ]
+      },
+      "effects": [
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'Attack Reaction - Destroy Fleet Foot Sandals: Target attack with 1 or less base {p} gains go again.' Generic Equipment - Legs.\n\nSHAPE copied from .drafts/flight_path.json - identical sentence family ('Attack Reaction - Destroy this: Target <filtered> attack gets go again', also legs equipment); every node re-verified against source this session rather than copied blind.\n\nVEHICLE: ATTACK_REACTION activated ability on equipment. play._add_hero_dsl_activations (play.py:239-339) lists player.legs among its sources (:262) and offers ATTACK_REACTION only to the ATTACKER in the combat reaction step (:286-289; ATTACK_REACTION is in ACTIVATABLE_ABILITY_TYPES, play.py:18) - exactly this card's window, reacting to your own attack. 'Destroy Fleet Foot Sandals' is the ability-level cost [{DESTROY_SELF}] (cost_types.py:43-51; can_pay True, pay routes canonical destroy()), paid before effects run per the text-before-colon cost convention.\n\nTARGETING: with no CONTROLS_ATTACK_ACTION in the filter the ability's target defaults to state.combat.attack_card (play.py:329-330) and target.filter gates the offer at play time (:314-317). ATTACK_BASE_POWER_LTE reads 'amount' and tests the base recorded when the attack was declared (combat.base_attack_power, falling back to attack_card.base_power; condition_types.py:511-542) - exactly 'base {p}', so a boosted attack whose BASE is 1 or less still qualifies and a pumped-past-1 base does not.\n\nDELIVERY DEVIATES FROM THE TRIAGE LIST, deliberately: GRANT_NEXT_ATTACK_KEYWORD would be WRONG here. Its handler (effect_types.py:4816-4840) queues a grant_keyword mod on dsl_queued_attack_mods, consumed by _apply_turn_attack_effects only when the NEXT attack is declared - strictly next, never the attack currently being reacted to (.review/boltn_boots.json records exactly this defect for the same wording). The correct delivery for 'target [current] attack gains go again' is GAIN keyword GO_AGAIN -> canonical_keyword -> _grant_go_again (effect_types.py:4927-4937 -> :423-458): state.combat exists throughout the reaction step, so the CR 8.3.5b branch puts 'Go Again' on THIS combat (dedup-guarded per 8.3.5c), paid out at the resolution step to the attacker.\n\nPRINTED KEYWORD NOT AUTHORED: GoAgain in printed_keywords is the DB flattening the granted keyword out of the ability sentence - the loader.conditional_keywords() documented case of 'the printed keyword belongs to some other card'. The conditional-keyword wrapper does not apply because the go again belongs to the TARGET attack, not to this card; a GoAgain keyword sitting on legs equipment that can never attack is inert. Same reading as .drafts/flight_path.json and shipped tokens/quicken.json.\n\nNo gaps; every clause expressible."
+}

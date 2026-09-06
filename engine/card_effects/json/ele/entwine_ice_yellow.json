@@ -1,0 +1,16 @@
+{
+  "slug": "entwine_ice_yellow",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "FLAG_SET", "flag": "fused_entwine_ice_yellow"}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "DOMINATE"}
+      ]
+    }
+  ],
+  "_comment": "'**Ice Fusion** / If Entwine Ice was **fused**, it gains **dominate**.' Elemental Action - Attack (TalesOfAria).\n\nICE FUSION NOT AUTHORED: '<X> Fusion' fires engine-side from the card DB keywords field as an optional additional cost at PLAY time (triggers.py maps '<X> fusion' -> ability_keywords.fusion, ability_keywords.py:582-607 - a REVEAL of an <X> card from hand). Re-authoring it would be a defect. Release note 1 (playable on any Elemental hero regardless of essence) needs no authoring either: the fusion offer is generic, and with no Ice card in hand the optional cost simply cannot be paid - the card plays unfused.\n\n'WAS FUSED' GATE: fusion() writes the marker 'fused_<card.slug>' into the controller's current_turn_effects (ability_keywords.py:604-606), tested here by FLAG_SET (condition_types.py:1032-1037 reads the source controller's set). Flag name is per-printing because fusion() keys it on card.slug - hence fused_entwine_ice_yellow. Timing holds: fusion resolves as a play cost BEFORE the attack layer resolves, while ability-level conditions evaluate at each RECALC_ATTACK_POWER dispatch, so by then the flag is set or permanently absent.\n\nABILITY SHAPE DEVIATES FROM THE TRIAGE LIST, deliberately (it named TRIGGERED ON_ATTACK): this copies the SHIPPED siblings ele/entwine_lightning_blue.json ('If Entwine Lightning was fused, it gains go again') and ele/entwine_earth_yellow.json exactly - WHILE_STATIC + SOURCE_IS_ATTACK + FLAG_SET fused_<slug> + GAIN keyword. Two reasons ON_ATTACK was rejected: (1) THE PRINTED KEYWORD. printed_keywords carries 'Dominate', and the engine applies every printed keyword unconditionally; loader.conditional_keywords() (loader.py:255-296) is what strips a printed keyword that an ability grants conditionally, and it ONLY recognises abilities whose conditions include SOURCE_IS_ATTACK granting via GAIN{keyword}. A TRIGGERED ON_ATTACK shape would not qualify, so the card would have dominate ALWAYS and the conditional clause would be dead weight - the card strictly stronger than printed. This shape qualifies: conditions [SOURCE_IS_ATTACK, FLAG_SET] + GAIN{keyword: DOMINATE} -> conditional_keywords returns {'dominate'} -> the printed entry is stripped and the grant below is the sole source. (2) TIMING. WHILE_STATIC fires on RECALC_ATTACK_POWER (interpreter.py:186-202), dispatched at attack declaration - before defenders are declared - so 'Dominate' is already on combat.keywords when the defend step enforces it.\n\nTHE GRANT: GAIN{keyword} handler (effect_types.py:4927-4941) canonicalises DOMINATE -> 'Dominate' (effect_types.py:336-346, matching printed spelling) and calls state.combat.grant_keyword, which the defend-side checks read directly ('Dominate' in combat.keywords at engine.py:625, play.py:972, actions.py:1196). Idempotent: both the handler and grant_keyword skip if already present, so repeated recalcs do not stack.\n\nNo effects for the unfused case, matching print: unfused Entwine Ice is a vanilla Elemental attack."
+}

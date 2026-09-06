@@ -1,0 +1,13 @@
+{
+  "slug": "clarity_potion_blue",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [{"type": "DESTROY_SELF"}],
+      "effects": [
+        {"type": "OPT", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'Instant - Destroy Clarity Potion: Opt 2' = an activated ability with instant timing: INSTANT maps to ON_ACTIVATE (trigger_types.ABILITY_TYPE_TO_EVENT) and play._add_hero_dsl_activations offers item INSTANT abilities at any priority window with DSL costs checked (verified play.py ~239-265 includes player.items as sources). Destroying the potion is the ACTIVATION COST, not an effect, so it lives in the ability-level cost array as DESTROY_SELF - shape copied from dyn/blacktek_whisperers.json, whose cost_types.py entry is commented for exactly this wording. OPT reads 'amount' (effect_types.py ~1288, calls effect_opt); Opt 2 = amount 2. The release note about no defense value is a card-DB property (no printed {d}), not ability behaviour - nothing to author here."
+}

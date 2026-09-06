@@ -1,0 +1,44 @@
+{
+  "slug": "dice_up_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_IS_WEAPON"}
+        ]
+      },
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "COMBAT",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "ATTACK_TARGET_IS_HERO"}
+            ],
+            "effects": [
+              {
+                "type": "CONDITIONAL",
+                "when": [
+                  {"type": "HAS_COUNTER", "counter_type": "power"}
+                ],
+                "then": [
+                  {
+                    "type": "MAY",
+                    "prompt": "Remove a +1{p} counter from this weapon?",
+                    "effects": [
+                      {"type": "REMOVE_COUNTERS", "counter_type": "power", "amount": 1},
+                      {"type": "DESTROY_PERMANENT", "subtype": "Aura", "player": "OPPONENT", "amount": 1}
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target weapon attack gets \"When this hits a hero, you may remove a +1{p} counter from this weapon. If you do, destroy an aura they control.\"' Warrior Attack Reaction.\n\nTARGET: ATTACK_REACTION is the proven shape for a hand-played attack reaction whose target.filter is checked at play legality (play.py _legality_check lines 420-431 evaluate cd.abilities target_filter against state.combat); ironsong_response_blue (hp, shipped) targets a weapon attack the same way. ATTACK_IS_WEAPON (condition_types.py:198) reads combat.from_weapon - exactly 'weapon attack'.\n\nINJECTION: INJECT_TRIGGER scope COMBAT (default) with the NESTED trigger dict - required, because a top-level conditions key would be popped by the loader as an effect-level gate evaluated once at registration, when there may be no attack. ON_HIT dispatches to combat.attack_card, which for a weapon attack IS the weapon itself (dawnblade precedent), so 'this weapon' is the card every inner effect resolves against, whoever played Dice Up.\n\nCOUNTER KIND IS 'power' (lowercase): that is the kind _recalculate_attack_power feeds from (card.counters['power']); kinds are case-sensitive dict keys and '+1{p}' would match nothing.\n\nGATE VIA CONDITIONAL, NOT MAY-LEVEL CONDITIONS: INJECT_TRIGGER compiles inner effects at fire time from the RAW dicts (effect_types.py:2148-2149), bypassing the loader's conditions-pop (loader.py:87), so a 'conditions' key on the inner MAY would be silently unread there. CONDITIONAL reads 'when' at runtime (:3708), so HAS_COUNTER gates whether the prompt is offered at all - 'you may remove...' implies a counter exists, and without the gate accepting the prompt with zero counters would still destroy an aura (remove_counter removes min(current, amount)).\n\nREMOVE_COUNTERS AS EFFECT, NOT COST: the same-named COST reads player.counters keyed (slug, zone, counter) (cost_types.py:548-573), not card.counters where weapon counters live - it could never pay for this. The EFFECT defaults its target to [card] (:5042) and routes through the canonical remove_counter, so actual removal emits RemoveCounterEvent.\n\nAURA DESTROY: DESTROY_PERMANENT subtype Aura player OPPONENT amount 1 is the shipped spelling (bet/smack_of_reality_red.json). OPPONENT resolves relative to the attack's controller, i.e. the hero hit ('they', guaranteed by ATTACK_TARGET_IS_HERO); with several auras the handler asks which to destroy, matching the release note 'You choose which aura they control to destroy'.\n\nRELEASE NOTES need nothing extra authored: removing a counter mutates card.counters, so static continuous effects conditioned on the count re-evaluate at the next recalculation naturally, and layer-continuous timing is engine-side."
+}

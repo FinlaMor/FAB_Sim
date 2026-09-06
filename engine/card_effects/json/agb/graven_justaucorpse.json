@@ -1,0 +1,33 @@
+{
+  "slug": "graven_justaucorpse",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "LOOK_AT", "zone": "HAND", "player": "SELF", "amount": "ALL", "into": "hand_cards"},
+        {"type": "SELECT_FROM_REF", "ref": "hand_cards", "mode": "ANY", "min": 1, "max": 1, "into": "discarded"},
+        {"type": "MOVE_REF", "ref": "discarded", "to_zone": "graveyard"},
+        {
+          "type": "CONDITIONAL",
+          "when": [{"type": "REF_PITCH_IS", "ref": "discarded", "pitch": 1}],
+          "then": [{"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 1}]
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [{"type": "REF_PITCH_IS", "ref": "discarded", "pitch": 2}],
+          "then": [{"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 2}]
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [{"type": "REF_PITCH_IS", "ref": "discarded", "pitch": 3}],
+          "then": [{"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 3}]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - Destroy this: Discard a card. Gain {r} equal to its pitch value.' + printed **Battleworn**. Necromancer Equipment - Chest.\n\nSHAPE COPIED FROM SHIPPED dyn/ornate_tessen.json - the same 'Instant - <destroy cost>: ...' equipment activation (INSTANT ability, cost array, effects after). INSTANT abilities of chest equipment are offered by play._add_hero_dsl_activations (play.py:258-265 scans head/chest/arms/legs) at any priority window with no action point (play.py:284 gates only ACTIVATE).\n\nACTIVATION_COST 0 declared explicitly per DSL_REFERENCE ('use 0 for free abilities') - the whole cost is destroying this, which is the ability-level DESTROY_SELF cost (cost_types.py:43-51: always payable, pays via canonical destroy(), which resolves the chest slot itself). It is a COST, not an effect, so it can block the activation.\n\nDISCARD WITH A CHOICE, per triage: LOOK_AT zone HAND player SELF amount ALL into 'hand_cards' peeks WITHOUT moving (effect_types.py:3356-3415); player SELF must be explicit because the handler defaults to OPPONENT (:3380). SELECT_FROM_REF mode ANY min 1 max 1 into 'discarded' makes the controller choose exactly one (STOP is only offered once the minimum is met, effect_types.py:3578-3587). MOVE_REF ref 'discarded' to_zone graveyard moves it via canonical put_object (player defaults to OWNER, :3441), which is the discard. An empty hand degrades gracefully: the refs stay empty, nothing moves, no gain - the destroy cost was still paid, and the text gives the activation no minimum-hand condition.\n\nPITCH-VALUE GAIN AS BRANCHES: no amount expression reads a ref's pitch value (effect_types._resolve_amount has COUNT_REF but it COUNTS matching cards, it does not return pitch), so 'gain {r} equal to its pitch value' is spelled as three CONDITIONAL branches on REF_PITCH_IS pitch 1/2/3 - the exact pattern of .drafts/dabble_in_darkness_red.json. REF_PITCH_IS unwraps a single-element ref list (condition_types.py:1995-2008), so the one chosen card tests directly; a card with no pitch value tests 0 against 1/2/3 and no branch fires.\n\nBATTLEWORN NOT AUTHORED: printed keyword on the card DB keywords field, implemented engine-side - re-authoring it would be a defect.\n\nSET FOLDER AT ADOPTION: derive from the card's sets/setIdentifiers in card_data/slug_index.json (batch says ArmoryDeckGravyBones), never from its class."
+}

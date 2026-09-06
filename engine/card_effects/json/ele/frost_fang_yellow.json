@@ -1,0 +1,23 @@
+{
+  "slug": "frost_fang_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_ELSE",
+          "player": "OPPONENT",
+          "resources": 2,
+          "on_failure": [
+            {"type": "DISCARD", "player": "OPPONENT", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If Frost Fang hits a hero, they discard a card unless they pay {r}{r}.' Ice Action - Attack.\n\nTRIGGER + GATE: ON_HIT is the corpus trigger for 'hits' (fires when the attack deals damage, unlike ON_ATTACK which fires even when fully blocked) and is dispatched to the attack card, which Frost Fang IS on its own chain link - no source-scoping needed. ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977, read this session) is false when the attack was declared at a permanent or ally; no params for the plain-hero case.\n\nTHE UNLESS: PAY_OR_ELSE (effect_types.py:3207-3257, read this session) reads player/resources/on_failure - all three verified. player=OPPONENT resolves relative to this card's controller, so the asked player is the hit hero. Holding >= 2 resources they are offered pay/decline; declining - or holding fewer than 2, where no prompt is offered at all - runs on_failure. on_failure effect player params are relative to the SAME source card (handler docstring), so the inner DISCARD with player=OPPONENT hits the same hero that was asked to pay. DISCARD reads amount/player (effect_types.py:1251+); discarding from an empty hand removes nothing rather than erroring.\n\nRELEASE NOTE ('they can still elect to discard a card even if they do not have any cards in hand') holds behaviourally: whenever the election exists (defender holds >= 2 resources) declining leads to a discard that harmlessly discards nothing on an empty hand; when they cannot afford it there is no election to preserve and the discard runs forced, which is what 'discard unless they pay' says.\n\nNo printed keywords, so no conditional-keyword machinery applies."
+}

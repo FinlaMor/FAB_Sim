@@ -1,0 +1,23 @@
+{
+  "slug": "enion_surge_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "DEAL_ARCANE", "amount": 2, "target": "ANY"},
+        {
+          "type": "MAY",
+          "prompt": "Tap your hero to create a Lightning Flow token?",
+          "conditions": [
+            {"type": "EVENT_THIS_TURN", "event": "damage", "qualifier": "arcane"}
+          ],
+          "effects": [
+            {"type": "TAP", "target": "YOUR_HERO"},
+            {"type": "CREATE_TOKEN", "token": "lightning_flow", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Deal 2 arcane damage to any target. / If this deals damage, you may {t} your hero. If you do, create a Lightning Flow token.' Lightning Wizard Action (OmensOfTheThirdAge). Yellow printing: amount 2 (release note 1 gives 3/2/1 for red/yellow/blue; red and blue drafts already exist alongside this one).\n\nABILITY TYPE: non-attack Wizard action, so PLAY (maps to ON_PLAY) - effects resolve when the card layer resolves.\n\n'DEAL 2 ARCANE DAMAGE TO ANY TARGET': DEAL_ARCANE target 'ANY' routes through _deal_arcane_to_objects (effect_types.py:988-1040), which pools BOTH heroes and all allies and asks the controller who takes the 2 ('none' always offered; max_targets defaults to 1 = exactly one target). Damage goes through the canonical deal_damage primitive, so prevention/replacements and the ally-death check see it. DISCLOSED DEVIATION: release note 1 says a target is declared at play time and the play is illegal without one; play-time target declaration cannot express an unqualified 'any target' pool, so the choice happens at resolution instead (same disclosure as .drafts/enion_surge_red and .drafts/destructive_aethertide_blue). With nothing able to respond inside one resolution, the observable difference is narrow.\n\n'IF THIS DEALS DAMAGE' - DEVIATION FROM THE TRIAGE LIST, which said TRIGGERED/ON_DEAL_DAMAGE: that trigger cannot hear effect damage (_dsl_deal_damage_listener returns unless state.combat.attack_card exists, engine.py:1742-1754 - combat damage only), and release note 2 ('no priority between any of the effects generated') rules out a triggered layer anyway - this is ONE flat PLAY resolution, effects in printed order. So the MAY carries an effect-level conditions gate: EVENT_THIS_TURN {event: damage, qualifier: arcane} - the documented example in condition_types.py:1070-1075 - evaluated AFTER the DEAL_ARCANE effect ran in the same sequential list (interpreter.py:148-159). deal_damage records that marker against the dealing player only once the damage is FINAL, past replacements/cancellation and only when amount > 0 (effect_keywords.py:503-509), so fully-prevented damage offers no prompt. KNOWN IMPRECISION: the marker is player-scoped, not card-scoped - if you dealt arcane damage earlier this turn AND this hit was fully prevented, the prompt would still be offered where printed it would not. There is no condition reader for state._last_damage_dealt (only the LAST_DAMAGE_DEALT amount expression reads it) and no per-source damage condition; a generic 'last damage > 0' condition would close this class.\n\nMAY sub-effects run in order: TAP your hero (TAP_SELF would tap the SOURCE CARD, not the hero - handler at effect_types.py:3641-3682 maps TAP_SELF to target SELF = the card), then CREATE_TOKEN lightning_flow (token definition exists at json/tokens/lightning_flow.json). If the hero is already tapped, TAP fails but the token is still created - sub-effects do not cascade on failure; printed text has the same shape ({t} is not a cost here), so this matches."
+}

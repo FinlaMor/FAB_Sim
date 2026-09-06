@@ -1,0 +1,16 @@
+{
+  "slug": "caress_of_the_reaper_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEAL_DAMAGE",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "DESTROY_PERMANENT", "subtype": "Aura", "player": "OPPONENT", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Whenever this deals damage to a hero, destroy target aura they control.'\n\nTrigger: ON_DEAL_DAMAGE maps to the 'damage_dealt' event (trigger_types.py:74), which engine._dsl_deal_damage_listener dispatches to the ATTACK CARD itself (engine.py:1749-1754) - Caress IS the attack card, so it hears its own damage. The event only fires when net damage > 0 (engine.py:2116-2140), which is 'deals damage'; a fully blocked attack triggers nothing. ATTACK_TARGET_IS_HERO (combat.attack_target is None) excludes hits declared at an ally/Spectra aura - 'damage_dealt' emits for those too.\n\nDestroy clause: DESTROY_PERMANENT {subtype: Aura, player: OPPONENT} - the cut_through_the_facade_red triage precedent for exactly this wording. Auras are a SubZoneView over player.permanents (state.py:869), so the handler's permanents pool sees them; with several opposing auras the controller picks one (_ask_player); if they control none, nothing is destroyed.\n\nDEVIATION, flagged: the release notes make this a TARGETED triggered effect - the aura must be chosen when the trigger goes on the stack, and with no legal aura the trigger never goes on. Triggered-layer target declaration is a known engine gap, so this draft instead lets the trigger resolve and destroy nothing (fails closed: no spurious destruction, but the trigger 'fires' where printed it would not).\n\nNo printed keywords; the Action - Attack body needs no authoring."
+}

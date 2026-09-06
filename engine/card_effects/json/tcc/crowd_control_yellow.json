@@ -1,0 +1,26 @@
+{
+  "slug": "crowd_control_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Crowd Control: pay {r}{r}{r} to give this +1{d} for each opposing hero?",
+          "cost": [
+            {"type": "PAY_RESOURCES", "amount": 3}
+          ],
+          "effects": [
+            {
+              "type": "MODIFY_DEFENSE_VALUE",
+              "mod": "add",
+              "amount": {"type": "COUNT_OPPOSING_HEROES"}
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends, you may pay {r}{r}{r}. If you do, it gets +1{d} for each opposing hero.' Bard Block.\n\n'When this defends' = TRIGGERED ON_DEFEND: _dsl_defend_listener dispatches to the actual defending card object (engine.py:1640-1646), so this card's own trigger fires whenever it is a declared defender. No printed keywords, so nothing else to author.\n\nOPTIONAL PAYMENT: one MAY block whose cost gates the OPTION - declining runs nothing, so 'if you do' needs no plumbing. The MAY handler reads cost/costs through compile_cost (effect_types.py:3830-3836): can_pay makes the prompt unavailable below 3 resources and pay deducts via PAY_RESOURCES (cost_types.py:691-699, reads amount). This copies shipped evo/infuse_alloy_yellow.json (Galvanize - the same 'when this defends, you may <pay>; if you do, +N{d}' sentence) and the .drafts/brothers_in_arms_* drafts of the identical wording.\n\nDEVIATION FROM THE TRIAGE LIST, disclosed: it named MODIFY_DEFENSE. A per-card bump written at defend time via MODIFY_DEFENSE is WIPED before damage - engine._recalculate_total_defense resets every declared defender to its base {d} first and reruns immediately pre-damage, so only something re-applied at recalc survives. The untargeted MODIFY_DEFENSE_VALUE records (_m, delta) on combat.defense_mods (effect_types.py:2656-2675), which the recalculation re-applies after the reset. Since this card is a declared defender whenever its ON_DEFEND trigger fires, +N to the defending total for the link IS 'it gets +N{d}'.\n\nAMOUNT: {'COUNT_OPPOSING_HEROES'} is a real amount expression resolved inside MODIFY_DEFENSE_VALUE's dict branch (effect_types.py:2660 -> _resolve_amount, effect_types.py:179-195): it counts the players other than the controller still in the game. That matches official_release_notes 1 ('the number of heroes that are not in your party that are left in the game') exactly, and is 1 in 1v1."
+}

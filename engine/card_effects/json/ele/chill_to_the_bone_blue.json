@@ -1,0 +1,28 @@
+{
+  "slug": "chill_to_the_bone_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "player": "SELF",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "ATTACK_CLASS_IN", "classes": ["Ice", "Elemental"]},
+              {"type": "ATTACK_TARGET_IS_HERO"},
+              {"type": "NOT", "inner_type": "FLAG_SET", "flag": "chill_to_the_bone_spent"}
+            ],
+            "effects": [
+              {"type": "CREATE_TOKEN", "token": "frostbite", "amount": 1, "player": "OPPONENT"},
+              {"type": "SET_FLAG", "flag": "chill_to_the_bone_spent"}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next time an Ice or Elemental attack hits a hero this turn, create a Frostbite token under their control.' Blue printing of the same text already drafted as .drafts/chill_to_the_bone_yellow.json (amount 1 here vs 2 there); identical shape and reasoning.\n\nDEVIATION FROM TRIAGE on the vehicle: it named DELAYED_TRIGGERED + ON_HIT on the card itself, but that can never fire - after resolution this action card sits in the graveyard, and the engine dispatches ON_HIT only to combat.attack_card, the attacker's hero, and the attacker's equipment/permanents (engine.py:1410-1450); a graveyard card hears nothing. The working vehicle for this sentence family is INJECT_TRIGGER scope=TURN (shipped-shape precedent .drafts/blizzard_bolt_blue.json prints a near-identical clause), whose hook lives on player.turn_attack_hooks and is re-applied to every attack until end of turn (engine.py:1238-1281). The nested-dict form is REQUIRED so the inner conditions are evaluated per-hit rather than popped as an effect-level gate at registration (effect_types.py:2103-2119).\n\n'THE NEXT time' needs a fire-once gate: NOT FLAG_SET / SET_FLAG pair per .drafts/burn_up__shock_red.json ('The next time an attack you control hits a hero this turn...'), which documents that injected triggers fire with card=combat.attack_card (engine.py:1414-1423). Without the flag the hook would create a token on EVERY qualifying hit this turn.\n\n'Ice or Elemental attack': ATTACK_CLASS_IN with classes [Ice, Elemental] - deliberate second deviation from triage's CARD_IS_TALENT. Both compile against the attack card (the injected trigger's context object), but ATTACK_CLASS_IN reads classes AND talents of combat.attack_card via _card_traits and its own docstring cites 'Ice or Elemental attack action card' verbatim (condition_types.py:204-216); CARD_IS_TALENT is the play-time-queue spelling. Release note 2 (an Elemental WEAPON attack counts) holds: weapons attack as themselves, so combat.attack_card is the weapon and its talents are read.\n\n'Hits a hero': ATTACK_TARGET_IS_HERO (combat.attack_target stays None for hero attacks; condition_types.py:1960-1977).\n\n'Under their control' (= the hit hero): CREATE_TOKEN player OPPONENT. The handler (effect_types.py:1942-2013) maps OPPONENT/DEFENDING/DEFENDER/TARGET_HERO to 3 - _controller_id(card), and card is the ATTACK here, so OPPONENT resolves to the defender - correct even when the opponent's own Ice attack hits me (the token lands under MY control, exactly 'their control'). token/count/player all verified read ('amount' is accepted alongside 'count').\n\nGo again is a printed DB keyword (printed_keywords carries GoAgain) - deliberately NOT authored; authoring it again would be a defect.\n\nGAPS / APPROXIMATIONS:\n(1) MISSING TOKEN DEFINITION - json/tokens/frostbite.json does not exist anywhere under json/ (glob confirmed; the chill_to_the_bone_yellow draft flags the same dependency). create_token calls require_card('frostbite'), so the FIRST resolution raises MissingCardImplementation mid-game. The token definition (Elemental Aura, 'Cards and activated abilities you control cost an additional {r}' per release note 1) must be authored alongside adoption; I cannot file it from .drafts/.\n(2) The once-only flag keys on the ATTACK CONTROLLER's current_turn_effects (FLAG_SET/SET_FLAG resolve against c = the attack), while the printed sentence is global - 'an Ice or Elemental attack', not 'an attack you control'. If the opponent's Ice attack hits first, the flag sets on THEIR side and my later Ice attack pays out again (and vice versa). No player-global once-only primitive exists in the DSL; in the common case (your turn, your attacks) behaviour matches printed.\n(3) Shared flag name across copies: a second copy of Chill to the Bone played the same turn never pays out after the first does - printed text gives each copy its own 'next time' (same approximation burn_up__shock_red records).\n(4) The hook expires end of turn, matching 'this turn'."
+}

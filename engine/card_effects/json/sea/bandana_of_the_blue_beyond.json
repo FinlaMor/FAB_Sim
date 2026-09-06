@@ -1,0 +1,39 @@
+{
+  "slug": "bandana_of_the_blue_beyond",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {
+          "type": "DISCARD_CARD",
+          "amount": 1
+        },
+        {
+          "type": "DESTROY_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "from_zone": "GRAVEYARD",
+          "color": "blue",
+          "amount": 1,
+          "record_as": "picked"
+        },
+        {
+          "type": "MOVE_REF",
+          "ref": "picked",
+          "to_zone": "deck",
+          "position": "bottom"
+        },
+        {
+          "type": "GAIN",
+          "asset": "ACTION_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'Action - Discard a card, destroy this: Put a blue card from your graveyard on the bottom of your deck. Go again'. Costs are costs: DISCARD_CARD then DESTROY_SELF (text order) sit in the ability cost array so they gate legality and _apply_activate pays them before effects run; DESTROY_SELF-as-cost is the documented spelling (cost_types.py:43). Graveyard clause is the adopted avalon_archangel_of_rebirth route - BANISH(from_zone GRAVEYARD, color blue, record_as) + MOVE_REF(position bottom) - because SEARCH_GRAVEYARD (the triage suggestion) reads NO colour/pitch filter at all, and LOOK_AT has no graveyard zone. MOVE_REF position 'bottom' -> put_object zone-default append = bottom of deck, which also covers release note 1 ('becomes the only card there' when deck is empty). No blue card in graveyard: BANISH pool empty breaks before prompting, ref never set, MOVE_REF no-ops = release note 2. MODELLING ARTIFACT (same as adopted avalon): the picked card transits the banished zone for an instant before MOVE_REF bottoms it; net zones match the printed text. Bandana itself is blue and IS in the graveyard when the effect resolves (destroyed as a cost), so the choice pool legitimately includes it - correct tabletop behaviour. GO AGAIN: authored as GAIN ACTION_POINTS 1, NOT the GO_AGAIN effect - that handler (effect_types.py:4854) only writes state.combat.keywords, dead on an out-of-combat activation (and per the draw_swords_red review it would wrongly stamp an unrelated live chain if activated mid-combat). The printed GoAgain DB keyword grants nothing here either way: activations create no 'card' stack layer (play._apply_activate dispatches ON_ACTIVATE inline), so engine.py's has_go_again resolution path never runs - no double-grant. GAIN ACTION_POINTS routes through effect_keywords.gain with the CR 8.5.7b turn-player check, exactly ability_keywords.go_again's behaviour. KNOWN ENGINE APPROXIMATION (not fixable in JSON): the unfiltered DISCARD_CARD cost discards RANDOMLY (cost_types.py:106-114 keeps corpus-wide random behaviour for unfiltered discard costs); printed text implies the player chooses which card to discard."
+}

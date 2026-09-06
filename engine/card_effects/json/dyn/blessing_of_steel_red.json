@@ -1,0 +1,31 @@
+{
+  "slug": "blessing_of_steel_red",
+  "_comment": "Aura: at the start of your turn it destroys itself then the next weapon attack this turn gets +3{p}. Shape copied from dyn/blessing_of_savagery_blue (same set, same 'destroy self, then next attack gets +N' wording). Release note 'applies to the next weapon attack only' matches MODIFY_NEXT_ATTACK's one-shot consumption - unused mods expire at end of turn. ATTACK_IS_WEAPON reads combat.from_weapon and takes no params.",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "IS_ACTIVE_PLAYER"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        },
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

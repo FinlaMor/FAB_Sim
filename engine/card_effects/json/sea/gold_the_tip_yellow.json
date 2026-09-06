@@ -1,0 +1,28 @@
+{
+  "slug": "gold_the_tip_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Arrow"]}
+          ]
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "CARD_IN_ZONE", "zone": "arsenal", "color": "yellow", "subtypes": ["Arrow"], "face_up": true}
+          ],
+          "then": [
+            {"type": "CREATE_TOKEN", "token": "gold", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next arrow attack this turn gets +3{p}. If there is a yellow arrow face-up in your arsenal, create a Gold token. Go again.' Pirate Ranger Action.\n\nGO AGAIN NOT AUTHORED: it is in printed_keywords, so the card DB carries it and the engine applies it unconditionally. Re-authoring a printed keyword in JSON is a defect.\n\nPUMP: MODIFY_NEXT_ATTACK reads mod/amount/filter/scope (effect_types.py:4592-4618); scope defaults to TURN, which is exactly 'this turn'. The filter is pass-through data evaluated against each future attack; ATTACK_SUBTYPE_IN unions the attack's subtypes AND types (condition_types.py:296-316), so 'Arrow' matches arrow attacks whether the word is a subtype or type on the printing.\n\nARSENAL CHECK - DEVIATION FROM THE TRIAGE LIST, disclosed: triage proposed LOOK_AT + REF_EXISTS/REF_PITCH_IS. REF_PITCH_IS returns False unless the referenced list holds EXACTLY ONE card (condition_types.py:2002-2005), so with two arrows in the arsenal the token clause would silently never fire. CARD_IN_ZONE states the sentence directly and every parameter is read by the handler (condition_types.py:844-996): zone 'arsenal' is a real Player attribute; color matches base_color/pitch ('yellow' = pitch 2); 'subtypes' is matched against the card's subtypes AND types lowercased; face_up compares card.is_public; with no count given the default threshold is >= 1. Same shape as .drafts/enchanted_quiver.json minus color. It is evaluated when the CONDITIONAL resolves, matching the printed 'if there is' being checked as the card's effect resolves.\n\nTOKEN: CREATE_TOKEN reads token/count|amount/player (effect_types.py:1942-2013); player defaults to SELF. json/tokens/gold.json already exists (Gold: 'Action - {r}{r}, destroy this: Draw a card. Go again.'), so require_card inside create_token passes."
+}

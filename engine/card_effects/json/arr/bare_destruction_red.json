@@ -1,0 +1,33 @@
+{
+  "slug": "bare_destruction_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "EVENT_THIS_TURN", "event": "beat_chest"},
+        {"type": "NOT", "inner_type": "CARD_IN_ZONE", "zones": ["chest"]}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "EVENT_THIS_TURN", "event": "beat_chest"},
+        {"type": "NOT", "inner_type": "CARD_IN_ZONE", "zones": ["chest"]}
+      ],
+      "effects": [
+        {"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 2,
+         "filter": [
+           {"type": "ATTACK_CLASS_IN", "classes": ["Brute"]},
+           {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+           {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, if you've beaten chest this turn and you don't control a chest equipment, this gets go again and the next Brute attack action card you play this turn gets +2{p}.'\n\nGoAgain appears in printed_keywords, so the conditional-keyword shape is mandatory: the engine applies every DB keyword unconditionally, and loader.conditional_keywords() (loader.py:255-296) suppresses the printed keyword ONLY for an ability whose conditions include SOURCE_IS_ATTACK and whose DIRECT effects grant it - both verified (go_again is in _GRANTABLE_KEYWORDS; the scan reads ability.effects directly, so the GAIN sits un-nested on the WHILE_STATIC). That static re-fires on every RECALC_ATTACK_POWER dispatch (which reaches the attack card itself), SOURCE_IS_ATTACK scopes it to this card's own attack, and GAIN keyword writes into state.combat.keywords (effect_types.py:4846-4852), the set consulted when the chain link resolves - so go again lands while attacking under the gate and never otherwise.\n\nEVENT_THIS_TURN event=beat_chest reads the marker recorded by KEYWORD_COSTS['beat_chest'] exactly when the player pays the cost (costs/effect_costs.py:62), which happens at PLAY time - before this card attacks - so the gate is live by the first recalc. Player-scoped across the turn: beating chest on any earlier card counts. Precedent: shipped ako/pound_town_blue.json carries the identical gate.\n\nDEVIATION FROM TRIAGE on the chest clause: triage said NOT CONTROLS_SUBTYPE(Chest), but CONTROLS_SUBTYPE scans ONLY player.permanents (condition_types.py:1840) while chest equipment lives in the dedicated chest slot zone (state.py:858; deck.py:27 routes Chest/Base subtypes there at deck build) - that gate would be vacuously true and the buff would apply even while controlling chest equipment, the opposite of the printed restriction. Used NOT CARD_IN_ZONE zones:[chest] instead (same deviation as the sibling .drafts/bare_swing_red.json): anything in the chest slot IS a chest piece by construction, and deliberately with NO subtype filter because Base-subtyped chest pieces also route there (state.py:37).\n\nThe +2{p} is TRIGGERED + ON_ATTACK + MODIFY_NEXT_ATTACK filtered to Brute class / Action type / Attack subtype (param names verified against the handlers: classes/types/subtypes; ATTACK_CLASS_IN matches talents too via _card_traits). Timing verified safe against self-consumption: the queue is consumed in _apply_turn_attack_effects (engine.py:1175), which runs BEFORE the 'attacking' event emits (engine.py:542 vs 578), so the mod queued by this attack's own trigger cannot land on this attack - it waits for the NEXT matching Brute attack action card played this turn, which is the printed reading (this card was already played when it attacks).\n\nPrinted BeatChest keyword is deliberately NOT authored - it fires from the card DB keywords field; re-authoring a printed keyword is a defect. Both gates are live checks (marker presence, chest-slot occupancy), so mid-turn changes flip them correctly. No known gaps."
+}

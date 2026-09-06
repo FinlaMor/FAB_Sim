@@ -1,21 +1,8 @@
 {
   "slug": "ebbing_arcstride_red",
-  "abilities": [
-    {
-      "ability_type": "TRIGGERED",
-      "trigger": "ON_BECOME",
-      "conditions": [
-        {
-          "type": "HAS_KEYWORD",
-          "keyword": "FRAGMENT"
-        }
-      ],
-      "effects": [
-        {
-          "type": "GAIN",
-          "keyword": "GO_AGAIN"
-        }
-      ]
-    }
-  ]
+  "abilities": [],
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
+  "_comment": "'Whenever this fragments, it gets go again. Fragment'\n\nFRAGMENT IS NOT IMPLEMENTED ANYWHERE: it appears in no trigger table, no keyword handler, and not once in the comprehensive rules (docs/ref) -- it is newer than that document. 27 cards print it. The ability this card shipped with was a fabricated ON_BECOME trigger gated on HAS_KEYWORD 'Fragment', which nothing dispatches; it was a dead trigger, removed.\n\nTHE PRINTED GO AGAIN IS STILL WITHDRAWN, and that is deliberate. The card DB lists GoAgain unconditionally because it flattens the sentence, so leaving it would give the attack go again in every state -- while the text grants it only on a fragment, which cannot happen here. Withdrawing it makes the card never have go again, which is exactly right for as long as fragmenting is impossible. Definition of done: a fragment trigger exists, this file gains a TRIGGERED ability on it, and the conditional_keywords declaration finally has something to gate."
 }

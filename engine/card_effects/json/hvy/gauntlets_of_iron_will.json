@@ -1,0 +1,13 @@
+{
+  "slug": "gauntlets_of_iron_will",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "REPLACE_NEXT_POWER_GAIN", "amount": -1}
+      ]
+    }
+  ],
+  "_comment": "'When this defends, the next time an attack would gain {p} this chain link, instead it gains that much minus 1.' + printed **Temper**. Guardian Equipment - Arms (Heavy Hitters).\n\nTEMPER NOT AUTHORED: printed keyword on the card DB keywords field (ability_keywords.temper) - re-authoring it would be a defect.\n\nTRIGGER: TRIGGERED + ON_DEFEND - _dsl_defend_listener dispatches ON_DEFEND to the DEFENDING card itself (engine.py:1640-1646), so the defending equipment hears its own defend; no source-scoping condition needed. Release notes confirm it triggers when this defends.\n\nREPLACEMENT: REPLACE_NEXT_POWER_GAIN {amount: -1} (effect_types.py:4046-4059) registers a one-shot entry consumed by apply_power_gain_replacements (effect_types.py:1071-1097), the choke point both power-gain call sites run through. Several release-note behaviours fall out of the handler for free: only the FIRST gain is modified ('one-shot: the NEXT time', note 3); gains of 0 or less pass through untouched (early return on amount <= 0, note 4); and set/decrease modifications never consult the replacement at all (MODIFY_ATTACK applies it only for add-mods, effect_types.py:4130-4133, note 5).\n\nKNOWN GAP - CHAIN-LINK SCOPE INEXPRESSIBLE: release note 1 says the effect stops applying once this chain link resolves. The handler reads ONLY 'amount' - there is no scope/span parameter - and the pending entry sits in state._power_gain_replacements until ANY first power gain consumes it, with no expiry. So a gain on a LATER chain link (or even a later turn, if no gain happened meanwhile) would wrongly be reduced by 1. The common case (a pump on the very attack being defended) behaves correctly; the edge case over-applies. Fixing it needs a scope param on REPLACE_NEXT_POWER_GAIN (chain-link identity capture, the pattern MAKE_NEXT_DAMAGE_UNPREVENTABLE already uses for its 'combat_chain' scope at effect_types.py:4086-4094), not a re-author of this JSON."
+}

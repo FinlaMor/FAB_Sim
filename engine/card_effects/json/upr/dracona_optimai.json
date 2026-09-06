@@ -1,0 +1,40 @@
+{
+  "slug": "dracona_optimai",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "REVEAL_TOP_DECK", "amount": 3, "into": "dracona_revealed"},
+        {"type": "SELECT_FROM_REF", "ref": "dracona_revealed", "mode": "ANY", "min": 1, "max": 1, "into": "dracona_c1", "rest_into": "dracona_rest1"},
+        {"type": "SELECT_FROM_REF", "ref": "dracona_rest1", "mode": "ANY", "min": 1, "max": 1, "into": "dracona_c2", "rest_into": "dracona_c3"},
+        {"type": "CONDITIONAL",
+         "when": [{"type": "REF_PITCH_IS", "ref": "dracona_c1", "pitch": 1}],
+         "then": [{"type": "PUT_COUNTER", "counter_type": "dracona_reds", "amount": 1}]},
+        {"type": "CONDITIONAL",
+         "when": [{"type": "REF_PITCH_IS", "ref": "dracona_c2", "pitch": 1}],
+         "then": [{"type": "PUT_COUNTER", "counter_type": "dracona_reds", "amount": 1}]},
+        {"type": "CONDITIONAL",
+         "when": [{"type": "REF_PITCH_IS", "ref": "dracona_c3", "pitch": 1}],
+         "then": [{"type": "PUT_COUNTER", "counter_type": "dracona_reds", "amount": 1}]},
+        {"type": "CHOOSE", "amount": 1, "options": [
+          {"name": "The defending hero",
+           "effects": [{"type": "DEAL_ARCANE", "target": "OPPONENT",
+                        "amount": {"type": "SUM", "values": [
+                          {"type": "COUNT_COUNTERS", "counter": "dracona_reds"},
+                          {"type": "COUNT_COUNTERS", "counter": "dracona_reds"}]}}]},
+          {"name": "An ally they control",
+           "effects": [{"type": "DEAL_ARCANE", "target": "ALLY",
+                        "amount": {"type": "SUM", "values": [
+                          {"type": "COUNT_COUNTERS", "counter": "dracona_reds"},
+                          {"type": "COUNT_COUNTERS", "counter": "dracona_reds"}]}}]}
+        ]},
+        {"type": "REMOVE_COUNTERS", "counter_type": "dracona_reds", "amount": 3}
+      ]
+    }
+  ],
+  "_comment": "'Whenever Dracona Optimai attacks a hero, reveal the top 3 cards of your deck. He deals arcane damage equal to twice the number of red cards revealed this way to them or an ally they control.' Draconic Illusionist - Dragon Ally.\n\nTRIGGER: TRIGGERED ON_ATTACK dispatched to combat.attack_card, which Dracona IS when it attacks (display_loyalty/bone_vizier shape); ATTACK_TARGET_IS_HERO (condition_types.py:1960) gates to hero-targeted attacks - 'attacks a HERO'.\n\nREVEAL: REVEAL_TOP_DECK amount 3 into a ref reads amount/into only (effect_types.py:2229-2256), hard-codes the CONTROLLER's own deck (= 'your deck'), marks the cards is_public (a real public reveal), and never moves them off the deck - matching the printed reveal-only wording.\n\nGAP - COUNTING REDS (the triage list's CARD_IS_COLOR + COUNT_REF + SUM does not compose): no amount expression accepts condition specs, and COUNT_REF's filter vocabulary is power_gte/cost_gte/subtype/card_type/card_class only - no colour/pitch member (read directly at effect_types.py:139-177; same gap recorded in .triage/chart_the_high_seas_blue and flamescale_furnace). CARD_IS_COLOR exists purely as a CONDITION, unusable inside an amount. The workaround composes per-card instead: two SELECT_FROM_REF calls peel the revealed list into three single-card refs (c1 from the full list; c2 from the rest; c3 = rest_into remainder, which REF_PITCH_IS unwraps when it is a one-element list, condition_types.py:2002-2005), and each ref is tested REF_PITCH_IS pitch 1, putting one bookkeeping counter on Dracona per red. Every revealed card lands in exactly one of the three refs regardless of which card the player picks in each prompt, so the total counted is exact; the two selection prompts are busywork the printed text does not have. Empty-deck / 1-and-2-card edges are safe: SELECT_FROM_REF on an empty pool stores [] without prompting, REF_PITCH_IS answers False on [] and on multi-element lists, and the deal resolves to 0.\n\nDAMAGE: one instance of N arcane, N = 2x reds via SUM of COUNT_COUNTERS twice (COUNT_COUNTERS reads 'counter', effect_types.py:310-327, over this card's own slug-keyed counters). PUT_COUNTER defaults its target to the source card (effect_types.py:2026-2031) - the ally in play - and REMOVE_COUNTERS amount 3 clears the bookkeeping after the deal, so nothing persists across attacks. DEAL_ARCANE target OPPONENT resolves through _damage_target_player relative to the controller = the defending hero ('them'); target ALLY routes to _deal_arcane_to_objects with ally_player defaulting OPPONENT and max_targets defaulting 1 (effect_types.py:1188-1219) = 'an ally they control'.\n\nDEVIATIONS, disclosed: (1) CHOOSE offers the ally option even when the opponent controls no allies - choosing it then deals nothing; there is no conditional-option form (a CARD_IN_ZONE pre-gate would skip the whole choice, changing the hero case too). (2) The printed sentence reveals all 3 before choosing the target; here the target is chosen after the counting steps, but the counted number is identical either way and the reveal itself is still public and simultaneous."
+}

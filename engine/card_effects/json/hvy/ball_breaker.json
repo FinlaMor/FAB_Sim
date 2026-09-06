@@ -1,0 +1,34 @@
+{
+  "slug": "ball_breaker",
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "effects": [
+        {"type": "ATTACK"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DISCARD",
+      "conditions": [
+        {"type": "DISCARDED_CARD_POWER_GTE", "amount": 6}
+      ],
+      "effects": [
+        {"type": "SET_FLAG", "flag": "BALL_BREAKER_SIX_PLUS_DISCARD"}
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "FLAG_SET", "flag": "BALL_BREAKER_SIX_PLUS_DISCARD"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Once per Turn Action - {r}{r}: Attack' is declared ACTIVATE + activation_cost 2 + ATTACK, copied from shipped cru/sledge_of_anvilheim.json; the engine offers the attack itself (_add_weapon_attacks, play.py:86) from printed power + parsed activation cost, and enforces once-per-turn via has_per_turn_limit/weapon_exhausted - so the JSON ability is declarative, matching DSL_REFERENCE's note that ATTACK mainly declares the ability.\n\nDELIBERATE DEVIATION FROM TRIAGE: it listed WHILE_STATIC gated directly by DISCARDED_CARD_POWER_GTE, but the .review finding on predatory_assault_blue established that condition reads .power off the DISPATCHING EVENT - inside a WHILE_STATIC that event is the RECALC_ATTACK_POWER dispatch, which carries no discarded card, so the gate is false at every evaluation (a dead gate shipping as implemented). Instead the condition runs where its docstring says it works: a TRIGGERED ON_DISCARD ability. _fire_on_discard (ability_keywords.py:1503-1535) dispatches ON_DISCARD to the discarding player's persistent cards INCLUDING weapon zones, passing the discarded card AS the event - exactly the plumbing DISCARDED_CARD_POWER_GTE expects (condition_types.py:1018-1024). The qualifying discard sets a turn flag; the WHILE_STATIC (SOURCE_IS_ATTACK scopes it to this weapon's own attacks - the recalc event reaches both heroes and all weapons, so without it the +1 would leak onto the opponent's attacks; arcanic_spike drafts use the same guard) applies MODIFY_ATTACK add 1 in the stage-8 window on every recalculation while the flag lives.\n\nRelease-note cap ('if you discard 2 or more cards with 6 or more {p} in a turn, Ball Breaker doesn't get any more than +1{p}') falls out for free: SET_FLAG appends to current_turn_effects but FLAG_SET is a membership test, so N qualifying discards still yield exactly +1 per recalculation. Flag scope CURRENT expires at end of turn, matching 'this turn'. Attack-then-discard ordering is respected: the static re-evaluates live at each recalculation, so an attack made before any qualifying discard gets no bonus.\n\nKNOWN GAP, fails closed: discards that bypass effect_discard never fire ON_DISCARD. The Beat Chest keyword cost (costs/effect_costs.py KEYWORD_COSTS['beat_chest']) moves the chosen 6+{p} card hand->graveyard directly with no _fire_on_discard call (documented in .drafts/alpha_instinct_blue.json), so beating chest with a 6+{p} card does NOT set the flag even though the printed 'you've discarded a card with 6 or more {p}' would count it. Every hand-discard routed through effect_discard (Bare Fangs, Out Muscle, random Brute discards, etc.) is observed correctly. Fixing needs the beat-chest cost to route through the canonical discard path - a generic engine change, not expressible in JSON. Card-level 'per_turn': 1 authored explicitly: DSL-authoritative per DSL_REFERENCE, which prefers the explicit field over the printed-text fallback documented at schema.py:59 (the fallback works - shipped cru/sledge_of_anvilheim.json relies on it - but explicit removes the dependence on text parsing)."
+}

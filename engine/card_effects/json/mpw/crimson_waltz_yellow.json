@@ -1,0 +1,29 @@
+{
+  "slug": "crimson_waltz_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 4,
+         "filter": [{"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Sword"]}]},
+        {"type": "INJECT_TRIGGER",
+         "scope": "TURN",
+         "player": "SELF",
+         "trigger": {
+           "trigger_type": "ON_HIT",
+           "conditions": [
+             {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Sword"]},
+             {"type": "ATTACK_CONTROLLED_BY_YOU"},
+             {"type": "NOT", "inner_type": "FLAG_SET", "flag": "crimson_waltz_sword_draw_spent"}
+           ],
+           "effects": [
+             {"type": "DRAW", "amount": 1},
+             {"type": "PUT_HAND_CARD_TOP", "optional": false},
+             {"type": "SET_FLAG", "flag": "crimson_waltz_sword_draw_spent"}
+           ]
+         }}
+      ]
+    }
+  ],
+  "_comment": "'Your next sword attack this turn gets +4{p}. / The next time you attack with a sword this turn, draw a card, then put a card from your hand on top of your deck. / Go again'\n\nGo again is a printed keyword (batch printed_keywords) -> card DB keywords field, deliberately NOT authored.\n\nClause 1: MODIFY_NEXT_ATTACK queue, consumed by the first attack passing the filter (engine.py:1171-1198). ATTACK_SUBTYPE_IN reads types AND subtypes of combat.attack_card (condition_types.py:296-303); swords are WEAPONS and attack as themselves, so the weapon's ['Sword'] subtype is what matches - the DSL_REFERENCE's own prescription for 'next sword attack'.\n\nClause 2 - DEVIATION FROM BOTH TRIAGE AND THE RELEASE NOTES, flagged loudly. Triage named TRIGGERED/DELAYED_TRIGGERED + ON_ATTACK on this card; that can never fire: _dsl_attacking_listener dispatches ON_ATTACK ONLY to the attacking card's own slug (engine.py:1524-1529), and after resolving this action card sits in the graveyard, which hears nothing - the triage note's 'cards receive dispatch from graveyard' is true only of START_OF_TURN_IN_GRAVEYARD (engine.py:1485-1486), not of ON_ATTACK. DELAYED_TRIGGERED dispatches identically to TRIGGERED with no expire-once machinery (interpreter.py:171-180), and no effect type arms one retroactively. The only working vehicle for a played card to react to later attacks is INJECT_TRIGGER scope=TURN - but its hooks are consumed solely inside the 'hit' and 'damage_dealt' listeners (engine.py:1414-1423, 1763-1772); there is NO attack-time consumption point.\n\nSo clause 2 is drafted as INJECT_TRIGGER scope=TURN gated ON_HIT + ATTACK_SUBTYPE_IN[Sword] + ATTACK_CONTROLLED_BY_YOU (shape per shipped precedent .drafts/burn_up__shock_red.json; nested trigger dict REQUIRED so inner conditions evaluate per-attack rather than being popped as an effect-level gate at registration). KNOWN TIMING GAP vs the release notes ('triggers ... when the attack resolves on the stack'): this fires only if the sword attack HITS - a fully blocked sword attack draws nothing here but would trigger in paper. Fixing it needs an engine-side change (consume injected triggers at 'attacking', or dispatch an attack event to the graveyard), not card JSON.\n\nFire-once: SET_FLAG / NOT FLAG_SET pair, flag in current_turn_effects (SET_FLAG scope default CURRENT, condition_types.py:1032-1037); the hook itself expires end of turn, so 'this turn' holds structurally and triage's EVENT_THIS_TURN{play} qualifier would be redundant - omitted. once_per_turn from triage deliberately OMITTED: it is an ability-level gate (_run_ability), and on this PLAY ability it would burn its marker at play time and never constrain the injected hook.\n\nRelease notes 2 and 3 hold: DRAW then PUT_HAND_CARD_TOP run unconditionally in order; DRAW guards n>0 so an empty deck is a silent no-op while the put still runs. PUT_HAND_CARD_TOP authored optional:false - the printed put is mandatory and the handler defaults to optional True (effect_types.py:1573), which would have let the player decline."
+}

@@ -6,7 +6,7 @@
       "conditions": [
         {
           "type": "FLAG_SET",
-          "flag": "fused_buzz_bolt_blue"
+          "flag": "fused_buzz_bolt_red"
         }
       ],
       "effects": [

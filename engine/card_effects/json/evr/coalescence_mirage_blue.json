@@ -1,0 +1,32 @@
+{
+  "slug": "coalescence_mirage_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEATH",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Put an Illusionist aura card with cost 0 from your hand into the arena?",
+          "effects": [
+            {
+              "type": "MOVE_MATCHING",
+              "to_zone": "auras",
+              "target": {
+                "controller": "SELF",
+                "zone": "HAND",
+                "amount": 1,
+                "filter": [
+                  {"type": "CARD_IS_CLASS", "classes": ["Illusionist"]},
+                  {"type": "CARD_IS_TYPE", "subtypes": ["Aura"]},
+                  {"type": "CARD_COST_LTE", "amount": 0}
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When Coalescence Mirage is destroyed, you may put an Illusionist aura card with cost 0 from your hand into the arena.' Identical printed text to .drafts/coalescence_mirage_red.json - same shape, slug differs only.\n\nPhantasm appears in printed_keywords: it fires from the card DB keywords field (ability_keywords.phantasm_check) and is deliberately NOT authored here - authoring it again would be a defect.\n\nTrigger: TRIGGERED + ON_DEATH, the spelling shipped cards use (evr/phantasmal_haze_red.json - same Illusionist-attack death-trigger family). The engine dispatches ON_DEATH only from the 'destroy' event (listener registered engine.py:1778, dispatched at engine.py:1588), so release note 1 holds structurally: being cleared from the combat chain, or leaving the arena by any non-destroy route, never emits it.\n\nPut clause: MOVE_MATCHING reads to_zone plus the canonical dict target (effect_types.py:3593-3612). zone HAND is supported by _object_zone_cards (effect_types.py:493); destination_player_id defaults to obj.owner (= me). Filters verified against their handlers: CARD_IS_CLASS reads 'classes' (condition_types.py:1286-1307); CARD_IS_TYPE reads 'subtypes' and tests types AND subtypes (1309-1325) - note CARD_SUBTYPE_IN/CARD_TYPE_IN as listed in DSL_REFERENCE do NOT exist in condition_types.py; CARD_COST_LTE reads 'amount' (1219-1255) - 'with cost 0' is LTE 0 because costs are never negative. to_zone 'auras' resolves via Player.zone_by_name (state.py:1030) through put_object -> Zone.add, which is where Illusionist auras live.\n\nDEVIATION FROM TRIAGE LIST: it proposed LOOK_AT + SELECT_FROM_REF + MOVE_REF, but LOOK_AT's filter reads only keyword/subtype/face_down (effect_types.py:3394-3407) - it cannot express 'Illusionist' or 'cost 0', so that path would offer every Aura in hand. MOVE_MATCHING's target filter takes ordinary DSL conditions evaluated per candidate (effect_types.py:776-778), which expresses all three constraints; MAY supplies the 'you may'.\n\nCaveat 1: the MAY prompt is offered even when no matching card is in hand; accepting then does nothing (empty pool, no move). Printed CR would not offer the option at all. No existing condition cleanly expresses 'your hand contains a card matching <filter>' (CARD_IN_ZONE's filter is cost-shaped only), so it is left ungated - fails closed rather than fabricating a gate.\n\nCaveat 2 (release note 2): 'if not in the arena when destroyed, no trigger' is not explicitly gated. SELF_IN_ZONE exists but I could not verify what card.zone reads for a card sitting on the combat chain as the attack; a wrong zone string would silently kill the legitimate Phantasm-death trigger, which is worse than the rare edge case. A card outside the arena is essentially never destroy()'d in this engine, so the ungated trigger matches the shipped phantasmal_haze_red shape."
+}

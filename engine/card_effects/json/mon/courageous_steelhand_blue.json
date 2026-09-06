@@ -1,0 +1,15 @@
+{
+  "slug": "courageous_steelhand_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {"type": "EVENT_THIS_TURN", "event": "charge"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'If you've **charged** this turn, target attack gains +1{p}.' Light Warrior Attack Reaction. Blue printing = +1 (the release note's '+1/2/3{p}' spans the printings).\n\nCharge gate verified end to end, not assumed: charge() records via _record_turn_event(state, pid, \"charge\", ...) (effect_keywords.py:2368); the condition handler treats DID_THIS_TURN as an alias of EVENT_THIS_TURN (condition_types.py:1070) and matches the bare marker by exact string equality with player defaulting to SELF - so it fires for any charge by this card's controller this turn, and a cancelled charge does not count (recording sits after the replacement/cancel checks). Triage named DID_THIS_TURN; same handler.\n\nPLACEMENT OF THE GATE IS THE RELEASE NOTES, NOT A STYLE CHOICE: ability-level conditions are checked at RESOLUTION, while play.py's _legality_check evaluates only target_filter conditions at announce (play.py:424-431) - so the card is legally playable without having charged ('You can play this card even if you have not charged') and simply does nothing on resolution; charging later in the turn cannot retroactively satisfy it ('It would not have any target or effect even if you charge later'). Count defaults to >=1, so multiple charges still give exactly +1 ('Additional times charged have no effect').\n\nNo target block: the text restricts nothing about WHICH attack, and an unrestricted ATTACK_REACTION targets the current attack implicitly (rapid_reflex_yellow precedent: ATTACK_REACTION + MODIFY_ATTACK, no target). MODIFY_ATTACK modifies state.combat's current attack (effect_types.py:4123, reads mod and amount only).\n\nShape mirrors shipped dtd/resounding_courage_yellow.json, which gates its Courage token on the identical EVENT_THIS_TURN event:'charge'."
+}

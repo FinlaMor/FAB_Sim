@@ -1,0 +1,14 @@
+{
+  "slug": "demonbound_gloomblade_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "PLAYABLE_FROM_BANISHED"
+        }
+      ]
+    }
+  ],
+  "_comment": "'You may play this from your banished zone.' + printed Usurp + printed Blood Debt.\n\nONLY AUTHORED CLAUSE is the play-from-banished permission: the declarative STATIC PLAYABLE_FROM_BANISHED, spelling copied from the SHIPPED chn/rift_bind_blue.json (the card effect_types.py:1113-1117 cites for exactly this wording). Verified it is engine-read, not resolved: play._self_playable_from_banished (play.py:786-793) scans the declared statics for PLAYABLE_FROM_BANISHED and play.py:883 consults it per banished card when offering plays - so the permission is live while the card sits in the banished zone. It takes no conditions; this card's clause is unconditional, which is why it is expressible at all (a condition-gated variant is a known gap per .triage/bounding_demigon_blue).\n\nBLOOD DEBT NOT AUTHORED: CR 8 keyword on the card DB keywords field, implemented engine-side (ability_keywords.blood_debt, ability_keywords.py:428) - re-authoring it would be a defect.\n\nUSURP NOT AUTHORED, with an honest caveat: it is likewise a printed keyword on the DB keywords field, but unlike Blood Debt my grep found NO Python handler for usurp anywhere under engine/ (triggers.py:400-401 explicitly passes on card-specific keyword bodies of this family). This card's Usurp line carries no rider text to author in JSON, so there is nothing the DSL could express here either way; if plain Usurp needs behaviour beyond whatever the DB field drives today, that is an engine-side gap, not a card-JSON one.\n\nNo other clauses in the printed text."
+}

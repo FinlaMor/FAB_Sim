@@ -1,0 +1,26 @@
+{
+  "slug": "howl_from_beyond_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {"type": "PLAYABLE_FROM_BANISHED"}
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "filter": [
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'You may play Howl from Beyond from your banished zone. / The next attack action card you play this turn gains +1{p}.' + **Go again** / **Blood Debt**, Shadow Action (Monarch).\n\nPRINTED KEYWORDS NOT AUTHORED: GoAgain and BloodDebt both appear in printed_keywords and fire from the card DB keywords field engine-side (go again pays +1 AP when this non-attack card layer resolves; blood debt is a start-of-end-phase lose-1-life trigger while face-up in the banished zone). Re-authoring either would be a defect (the 'keyword-reimplemented' finding class). Both are unconditional printed lines, so no SOURCE_IS_ATTACK conditional-keyword shape applies.\n\nCLAUSE 1 - play-from-banished PERMISSION, not a cost: declarative STATIC PLAYABLE_FROM_BANISHED, shape copied from SHIPPED chn/rift_bind_blue.json (same wording). Engine-READ, never resolved: play._self_playable_from_banished (play.py:786-797) scans the card's declared static effect types while it sits in the banished zone, and the play-offering path consults it - so the permission cannot outlive or mis-time the card's presence.\n\nCLAUSE 2 - pump: MODIFY_NEXT_ATTACK with a filter, shape copied from SHIPPED wtr/nimblism_yellow.json ('The next attack action card ... you play this turn gets +2{p}'), minus Nimblism's ATTACK_COST_LTE bound since Howl has none. ATTACK_TYPE_IN ['Action'] + ATTACK_SUBTYPE_IN ['Attack'] together name exactly an attack ACTION card - the type test excludes weapon attacks (weapons carry types [Weapon]). Handler verified at effect_types.py:4592-4618: reads mod/amount/filter/scope; queues a one-shot entry on the CONTROLLER's dsl_queued_attack_mods ('you play'), consumed by the first qualifying attack declared that turn; default scope TURN and end-of-turn expiry of unused entries (engine.py ~921) carry 'this turn'.\n\nNo gaps."
+}

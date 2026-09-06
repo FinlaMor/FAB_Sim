@@ -1,0 +1,14 @@
+{
+  "slug": "herald_of_erudition_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {"type": "PUT_SELF_IN_ZONE", "zone": "soul"},
+        {"type": "DRAW", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'When this hits, put it into your soul and draw 2 cards.' + printed **Dominate** / **Phantasm**. Light Illusionist Action - Attack (ArmoryDeckLegendsPrism).\n\nPRINTED KEYWORDS NOT AUTHORED: Dominate and Phantasm are in printed_keywords and fire from the card DB keywords field; re-authoring either would be a defect.\n\nSOUL PLACEMENT: TRIGGERED ON_HIT -> PUT_SELF_IN_ZONE zone 'soul'. Handler read this session (effect_types.py:1618-1639): it takes zone/to_zone/destination (default 'soul' for this spelling) and routes through canonical put_object, so the move emits proper events. Mandatory per official_release_notes 4 ('you must put it into your hero's soul ... not optional') - hence a bare effect, outside any MAY.\n\nDEVIATION FROM THE TRIAGE LIST, deliberate and verified: it named MOVE_REF to_zone SOUL. MOVE_REF reads a ref register (its 'ref' param) and nothing in this ability stores the attack card into one - the triage route would read an unset ref. PUT_SELF_IN_ZONE is the proven sibling spelling for this exact sentence family (.drafts/herald_of_rebirth_yellow.json and _blue.json use it for the same 'when this hits, put it into your soul' clause).\n\nDRAW: amount 2, player omitted (SELF default = controller). Handler read this session (effect_types.py:1222-1249): reads amount/player, resolves via effect_draw.\n\nEFFECT ORDER follows the printing: soul placement first, then the draw.\n\nRelease notes 1-3 (combat chain does not close; Phantasm stops functioning as a triggered ability once in the soul; last-known-information go again still pays the action point) are engine-side consequences of the mid-chain zone move, not authorable in JSON."
+}

@@ -1,0 +1,21 @@
+{
+  "slug": "enion_surge_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "DEAL_ARCANE", "amount": 3, "target": "ANY"},
+        {
+          "type": "MAY",
+          "conditions": [{"type": "EVENT_THIS_TURN", "event": "damage", "qualifier": "arcane"}],
+          "prompt": "Tap your hero to create a Lightning Flow token?",
+          "effects": [
+            {"type": "TAP", "target": "YOUR_HERO"},
+            {"type": "CREATE_TOKEN", "token": "lightning_flow", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Deal 3 arcane damage to any target. If this deals damage, you may {t} your hero. If you do, create a Lightning Flow token.' Lightning Wizard Action (OmensOfTheThirdAge). Red printing: amount 3 (yellow 2, blue 1 are separate files).\n\nABILITY TYPE: non-attack Wizard action, so PLAY (maps to ON_PLAY) - effects resolve when the card is played.\n\n'DEAL 3 ARCANE DAMAGE TO ANY TARGET': DEAL_ARCANE target 'ANY' routes through _deal_arcane_to_objects (effect_types.py:988-1040), which pools BOTH heroes and all allies and asks the controller who takes the 3. DISCLOSED DEVIATION, fails open: release note 1 says a target MUST be declared at play and the play is illegal without one; targeted-play declaration is a known engine gap (same disclosure as .drafts/caress_of_the_reaper_red), so this draft offers 'none' at resolution instead of blocking the play. max_targets left at default 1 = exactly one target.\n\n'IF THIS DEALS DAMAGE' - best available test, with an imprecision named: deal_damage records the turn event did_this_turn:damage:arcane against the dealing player once the damage is FINAL - past replacements/cancellation, only when amount > 0 (effect_keywords.py:503-509) - so EVENT_THIS_TURN {event: damage, qualifier: arcane} evaluated after the DEAL_ARCANE in the same effects list is true exactly when this resolution dealt arcane damage. The gap: it cannot distinguish THIS card's damage from earlier arcane damage you dealt the same turn, so if you dealt arcane earlier this turn AND this hit was fully prevented (spellvoid/ward), the tap prompt would still be offered where printed it would not. There is no condition reader for state._last_damage_dealt (only the LAST_DAMAGE_DEALT amount expression reads it) and no per-source damage condition; a REF_COST-style 'last damage > 0' condition would close this class generically.\n\nMAY carries the damage test as EFFECT-LEVEL conditions: the loader pops them into EffectDef.conditions and the interpreter enforces them per-effect before running the node, so the prompt is not even offered when no arcane damage landed - which is also the release-note reading ('if Enion Surge deals damage'). Declining runs nothing in the block: no tap, no token ('if you do' falls out of MAY's construction, effect_types.py:3788-3856).\n\n'{t} YOUR HERO': TAP with target 'YOUR_HERO' - the handler's explicit branch taps state.players[cid].hero through canonical effect_keywords.tap (CR 8.5.55, TapEvent emitted). TAP_SELF would have tapped the SOURCE CARD (the action card), not the hero - wrong object, do not copy that spelling here.\n\nTOKEN: CREATE_TOKEN reads token/count|amount/player/destination (effect_types.py:1942-2013); 'lightning_flow' resolves against json/tokens/lightning_flow.json, which EXISTS (aura token; zone routing derives from its template subtypes into controller.auras). amount 1 explicit.\n\nRelease note 2 ('no priority between any of the effects') is plain sequential resolution of one PLAY ability's effects list - nothing between the deal, the choice, and the token."
+}

@@ -1,0 +1,37 @@
+{
+ "slug": "ice_quake_red",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "effects": [
+    {
+     "type": "MODIFY_NEXT_ATTACK",
+     "mod": "add",
+     "amount": 3
+    },
+    {
+     "type": "INJECT_TRIGGER",
+     "scope": "TURN",
+     "player": "SELF",
+     "trigger": {
+      "trigger_type": "ON_HIT",
+      "conditions": [
+       {
+        "type": "ATTACK_TARGET_IS_HERO"
+       }
+      ],
+      "effects": [
+       {
+        "type": "CREATE_TOKEN",
+        "token": "frostbite",
+        "amount": 1,
+        "player": "OPPONENT"
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ],
+ "_comment": "Go again is printed keyword. Frostbite token is partial (cost-tax not implemented). Two INJECT_TRIGGERs not needed: TURN-scoped hooks live on turn_attack_hooks and cover all attacks that turn."
+}

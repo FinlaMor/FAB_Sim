@@ -1,0 +1,75 @@
+{
+ "slug": "looming_doom_blue",
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_ENTER_PLAY",
+   "effects": [
+    {
+     "type": "DESTROY_MATCHING",
+     "target": {
+      "controller": "SELF",
+      "zone": "ARENA",
+      "filter": [
+       {
+        "type": "SUBTYPE_IN",
+        "subtypes": [
+         "Runechant"
+        ]
+       }
+      ],
+      "amount": "ALL",
+      "record_as": "doomed"
+     }
+    },
+    {
+     "type": "PUT_COUNTER",
+     "counter_type": "doom",
+     "amount": {
+      "type": "COUNT_REF",
+      "ref": "doomed"
+     }
+    }
+   ]
+  },
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "BEGINNING_OF_END_PHASE",
+   "conditions": [
+    {
+     "type": "IS_ACTIVE_PLAYER"
+    }
+   ],
+   "effects": [
+    {
+     "type": "CONDITIONAL_EFFECT",
+     "when": [
+      {
+       "type": "COUNTER_GTE",
+       "counter_type": "doom",
+       "min": 1
+      }
+     ],
+     "then": [
+      {
+       "type": "REMOVE_COUNTERS",
+       "counter_type": "doom",
+       "amount": 1
+      },
+      {
+       "type": "DEAL_ARCANE",
+       "amount": 2,
+       "target": "ANY"
+      }
+     ],
+     "else": [
+      {
+       "type": "DESTROY_SELF"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "_comment": "IS_ACTIVE_PLAYER required: BEGINNING_OF_END_PHASE dispatches to both players' permanents. Runechants are Aura tokens in player.auras (SubZoneView of permanents), so ARENA finds them. KNOWN GAPS: DEAL_ARCANE ANY offers 'none' though damage is mandatory; play-time target declaration not expressible."
+}

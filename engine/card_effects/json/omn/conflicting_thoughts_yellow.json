@@ -1,0 +1,13 @@
+{
+  "slug": "conflicting_thoughts_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {"type": "OPT", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, **opt 1**.' Yellow printing; identical text to the sibling .drafts/conflicting_thoughts_red.json and .drafts/conflicting_thoughts_blue.json, whose verified shape this copies (no amount differs between printings).\n\nSHAPE: an Action - Attack card's when-this-attacks ability is TRIGGERED + ON_ATTACK (per DSL_REFERENCE an Action - Attack is never ATTACK_REACTION - that ability type would never fire). Release note ('triggers when it resolves on the stack and becomes an attacking card') = ON_ATTACK.\n\nTypes re-verified against source this session: ON_ATTACK maps to engine event ON_ATTACK (trigger_types.py:7); the OPT handler (effect_types.py:1288) reads 'amount' (default 1) and calls the canonical opt primitive, so {\"type\": \"OPT\", \"amount\": 1} is the corpus spelling (23 existing uses).\n\nNOT A DOUBLE-AUTHOR of the DB keyword (checked, not assumed): printed_keywords carries 'Opt' with no number, and build_keyword_triggers maps a bare 'opt' to an 'on_play' trigger - but an attack action card registers its keyword triggers only when it enters combat, AFTER the play-time on_play event has already fired, so the keyword path is dead for this card as the engine stands and this DSL trigger is the only live opt. It fires at the release-note timing. If keyword-registration order is ever fixed, this card would double-opt and one of the two paths should then be removed."
+}

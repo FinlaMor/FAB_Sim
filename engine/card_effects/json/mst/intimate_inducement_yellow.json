@@ -1,0 +1,87 @@
+{
+ "slug": "intimate_inducement_yellow",
+ "abilities": [
+  {
+   "ability_type": "ATTACK_REACTION",
+   "target": {
+    "filter": [
+     {
+      "type": "ATTACK_CLASS_IN",
+      "classes": [
+       "Assassin",
+       "Mystic"
+      ]
+     },
+     {
+      "type": "ATTACK_TYPE_IN",
+      "types": [
+       "Action"
+      ]
+     },
+     {
+      "type": "ATTACK_SUBTYPE_IN",
+      "subtypes": [
+       "Attack"
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "type": "MODIFY_ATTACK",
+     "mod": "add",
+     "amount": 1
+    },
+    {
+     "type": "LOOK_AT",
+     "zone": "DECK_TOP",
+     "player": "DEFENDING",
+     "amount": 3,
+     "into": "looked"
+    },
+    {
+     "type": "SELECT_FROM_REF",
+     "ref": "looked",
+     "mode": "ANY",
+     "min": 1,
+     "max": 1,
+     "into": "chosen",
+     "rest_into": "rest"
+    },
+    {
+     "type": "CONDITIONAL_EFFECT",
+     "when": [
+      {
+       "type": "REF_PITCH_IS",
+       "ref": "chosen",
+       "pitch": 3
+      }
+     ],
+     "then": [
+      {
+       "type": "ADD_DEFEND",
+       "target": {
+        "ref": "chosen"
+       },
+       "defense": 0
+      }
+     ],
+     "else": [
+      {
+       "type": "ADD_DEFEND",
+       "target": {
+        "ref": "chosen"
+       }
+      }
+     ]
+    },
+    {
+     "type": "REORDER_REF",
+     "ref": "rest",
+     "player": "DEFENDING"
+    }
+   ]
+  }
+ ],
+ "_comment": "ATTACK_REACTION targeting an Assassin/Mystic attack action card. MODIFY_ATTACK +1{p} on the targeted attack (the current attack). LOOK_AT top 3 of defending hero's deck (player DEFENDING maps to defender). SELECT_FROM_REF chooses 1 card. CONDITIONAL_EFFECT checks if chosen card is blue (pitch 3) - if so, ADD_DEFEND with defense 0 (sets base_defense=0 per effect_types.py:2780-2781); else ADD_DEFEND with printed defense. REORDER_REF puts the rest on top of defending hero's deck in any order. ADD_DEFEND target uses a ref spec to add the chosen card (not the source)."
+}

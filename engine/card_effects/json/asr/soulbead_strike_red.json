@@ -1,0 +1,19 @@
+{
+  "slug": "soulbead_strike_red",
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits, it gets go again.' The card DB prints GoAgain unconditionally because it flattens the sentence, so the gate would be decoration and the attack would ALWAYS have go again -- strictly stronger than printed, and silent. The grant is a timed event rather than a static condition, so it stays on an ON_HIT trigger and the printed copy is withdrawn by the card-level `conditional_keywords` declaration, which is the second of the two routes IMPLEMENTATION_GUIDE step 3 names (the first, a WHILE_STATIC gated on SOURCE_IS_ATTACK, cannot express 'when this HITS'). Both directions are tested: a declaration whose trigger never fires converts a fail-open bug into a fail-closed one."
+}

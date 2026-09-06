@@ -1,0 +1,16 @@
+{
+  "slug": "grimoire_of_fellingsong",
+  "activation_cost": 1,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "runechant"}
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - {r}, destroy this: Create a Runechant token.' Runeblade Equipment - Off-Hand (Compendium of Rathe).\n\nACTIVATION SHAPE copied from the .drafts/glidewell_fins.json and .drafts/gauntlet_of_might.json precedents (the same '{r}, destroy this' equipment skeleton), with one deliberate difference: ability_type INSTANT, not ACTIVATE, because the printed timing word is 'Instant'. INSTANT maps to ON_ACTIVATE (trigger_types.py ABILITY_TYPE_TO_EVENT) and is offered by _add_hero_dsl_activations in ANY priority window (play.py:244 'INSTANT - any priority window'), which is what the Instant line means; glidewell's ACTIVATE would wrongly demand an action point and the action phase.\n\nThe {r} rides card-level activation_cost 1 - never also a PAY_RESOURCES cost (double-charge; DSL_REFERENCE rule). Verified the plumbing end to end: CardDef.activation_cost is stamped onto every runtime card at retrieval (card.py:519-520) and is what _calculate_resource_cost charges for a non-weapon ACTIVATE_CARD (play.py:1522). 'Destroy this' is the DESTROY_SELF cost (cost_types.py:43-51), which pays through canonical destroy() so the card leaves its equipment slot cleanly; costs gate the offer via play.py:311-313, so a destroyed/absent Grimoire can never activate.\n\nCREATE_TOKEN reads 'token' as the slug (effect_types.py:1947) and json/tokens/runechant.json exists, so the token definition resolves; destination left at the default so create_token routes the token by its template subtypes (Runechant is an aura-family token). No gaps."
+}

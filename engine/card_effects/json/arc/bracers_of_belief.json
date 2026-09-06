@@ -1,0 +1,40 @@
+{
+  "slug": "bracers_of_belief",
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "REVEAL_TOP_DECK", "amount": 1, "into": "revealed"},
+        {"type": "CONDITIONAL_EFFECT",
+         "when": [
+           {"type": "REF_EXISTS", "ref": "revealed"},
+           {"type": "REF_PITCH_IS", "ref": "revealed", "pitch": 1}
+         ],
+         "then": [
+           {"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 2,
+            "filter": [
+              {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+              {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+            ]}
+         ]},
+        {"type": "CONDITIONAL_EFFECT",
+         "when": [
+           {"type": "REF_EXISTS", "ref": "revealed"},
+           {"type": "REF_PITCH_IS", "ref": "revealed", "pitch": 2}
+         ],
+         "then": [
+           {"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 1,
+            "filter": [
+              {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+              {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+            ]}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - Destroy Bracers of Belief: Reveal the top card of your deck. If you do, the next attack action card you play this turn gains +X{p}, where X is 3 minus the pitch value of the card revealed this way. **Go again**'\n\nACTIVATE ability: equipment in the arms zone is scanned by play.available_actions (play.py:262-265) and ACTIVATE is offered in the action phase with an action point (play.py:284). activation_cost 0 - the clause before the colon names no resource, only the destroy. 'Destroy Bracers of Belief:' is the ability COST, not an effect: cost [DESTROY_SELF] (cost_types.py:43-51, canonical destroy through effect_keywords.destroy which resolves the arms-slot zone). Shipped precedents: dyn/blacktek_whisperers.json (ATTACK_REACTION + DESTROY_SELF cost), hvy/flat_trackers.json (ACTIVATE + destroy-self cost).\n\nREVEAL: REVEAL_TOP_DECK amount 1 into 'revealed' (handler effect_types.py:2229-2256 reads amount/into, marks the card is_public, and stores the list under the ref). It hard-codes the CONTROLLER's own deck, which is 'your deck'.\n\n'If you do': gated per-branch on REF_EXISTS ref 'revealed' (condition_types.py:2212-2218). An empty deck stores an empty list, REF_EXISTS is False, no pump queues - the printed 'if you do' fails closed.\n\nX = 3 minus pitch value: NO amount expression reads a ref's pitch (the resolver's vocabulary is SUM/X/ROLL/COUNT_*/HALF/VALUE plus plus/minus arithmetic over those - none takes a ref), so the three pitch cases are spelled out, exactly as this card's .triage note prescribes: pitch 1 (red) -> MODIFY_NEXT_ATTACK +2, pitch 2 (yellow) -> +1, pitch 3 (blue) -> +0 which needs no branch. The cases are mutually exclusive (one revealed card has one pitch value), so separate CONDITIONAL_EFFECT branches cannot stack. CONDITIONAL_EFFECT reads when/then (effect_types.py:3697+); 'when', NOT 'conditions' - the loader pops the latter as an effect-level gate.\n\n'next attack action card you play this turn': MODIFY_NEXT_ATTACK with filter ATTACK_TYPE_IN ['Action'] + ATTACK_SUBTYPE_IN ['Attack'] - the DSL_REFERENCE's own spelling for this wording ('Action' is the type, 'Attack' the subtype; condition_types.py:273-316 read types AND subtypes together). Filters AND-combine and the entry is consumed by the first matching attack (engine.py:1175-1236); unused entries expire at end of turn.\n\nGO AGAIN - deliberate deviation from the .triage note ('GoAgain fires from DB keywords'): that is true for a played CARD layer, but this is an ACTIVATED EQUIPMENT ability - _apply_activate dispatches ON_ACTIVATE directly with no stack entry (play.py:1313-1315), and the engine's has_go_again payout only runs when a non-attack card LAYER resolves off the stack (engine.py:2322). Without an authored grant the activation would end the turn with no action point. Authored as {\"type\": \"GO_AGAIN\"}, whose non-combat path pays 1 AP to the controller (effect_types.py:4943-4963, CR 8.3.5a) - the shipped hvy/flat_trackers.json is the same shape (ACTIVATE + destroy-self cost + GO_AGAIN). No double-grant: nothing else pays the printed keyword on this path, and conditional_keywords() leaves the DB listing alone (no SOURCE_IS_ATTACK gate) where it is inert for equipment."
+}

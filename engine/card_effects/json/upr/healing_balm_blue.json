@@ -1,0 +1,13 @@
+{
+  "slug": "healing_balm_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Gain 1{h}' Generic Action (Uprising). Whole card is one sentence.\n\nShape copied from shipped wtr/sigil_of_solace_red.json ('Gain 3{h}'), the closest printed cousin. GAIN handler (effect_types.py:4869-4896) reads asset/amount/player; asset LIFE_POINTS routes to effect_gain_life, player defaults SELF - both verified in the handler this session. No printed keywords, nothing else to author.",
+  "_source_batch": "_batch3.json"
+}

@@ -1,0 +1,37 @@
+{
+  "slug": "blasmophet_the_soul_harvester",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 0,
+      "per_turn": 1,
+      "effects": [
+        {"type": "ATTACK"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Banish a Shadow card from your hand?",
+          "cost": [
+            {"type": "BANISH_FROM_HAND", "amount": 1, "talent": "Shadow"}
+          ],
+          "effects": [
+            {
+              "type": "MAY",
+              "prompt": "Banish a card from the defending hero's soul?",
+              "effects": [
+                {"type": "BANISH", "target": {"controller": "opponent", "zone": "SOUL"}, "amount": 1}
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Shadow Token - Demon Ally, 6{p}/6{h}. 'Once per Turn Action - 0: Attack' / 'Whenever Blasmophet attacks, you may banish a Shadow card from your hand. If you do, you may banish a card from the defending hero's soul.'\n\nTHE FILE HAD TO EXIST AT ALL: create_token calls require_card, so doomsday_blue's token creation raised MissingCardImplementation and aborted the game.\n\nACTIVATION COST IS DECLARED TOP-LEVEL AND IT IS LOAD-BEARING. card.py derives an activation cost by counting {r} in the 'TYPE - COST:' prefix and only accepts a count > 0, so a printed cost of '0' leaves activation_cost None -- and play._add_weapon_attacks refuses to offer an attack whose activation_cost is None. Without the declaration this ally could never attack. loader.compile_card reads raw['activation_cost'] TOP-LEVEL; one nested only inside an ability is silently unread (the same trap raydn_duskbane documents).\n\nTHE TWO 'MAY'S NEST because the second is gated on the first: 'if you do' means the soul banish happens only when the hand banish was actually paid. A MAY whose `cost` cannot be paid runs nothing, so an empty hand skips both halves rather than granting the payoff for free.\n\n'A SHADOW CARD' IS A TALENT, not a class. _hand_card_filter's class check read only `c.classes`, so a class_filter of 'Shadow' matched nothing and the cost could never be paid; it now matches classes OR talents (the names are disjoint in FAB) and takes an explicit `talent` key, which is what this file uses.\n\nDefending hero's soul: BANISH's target spec resolves controller 'opponent' + zone SOUL through the shared zone map. The attacking player is this token's controller, so the opponent IS the defending hero in every state this trigger fires in."
+}

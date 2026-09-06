@@ -1,0 +1,42 @@
+{
+  "slug": "cut_the_deck_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_CLASS_IN", "classes": ["Warrior"]}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1},
+        {
+          "type": "CONDITIONAL",
+          "when": [{"type": "CONTROLS_ATTACK_ACTION", "player": "OPPONENT"}],
+          "then": [
+            {"type": "DRAW", "amount": 1},
+            {
+              "type": "CHOOSE",
+              "amount": 1,
+              "options": [
+                {
+                  "name": "Put a card from your hand on the bottom of your deck",
+                  "effects": [
+                    {"type": "PUT_HAND_CARD_BOTTOM", "player": "SELF", "optional": false, "amount": 1}
+                  ]
+                },
+                {
+                  "name": "Put your arsenal card on the bottom of your deck",
+                  "effects": [
+                    {"type": "PUT_ARSENAL_BOTTOM", "player": "SELF"}
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target Warrior attack gets +1{p}. If it's defended by an attack action card, draw a card, then put a card from your hand or arsenal on the bottom of your deck.' Warrior Attack Reaction. Blue printing of .drafts/cut_the_deck_red.json (+3 there, +1 here per each printing's text); shape re-verified against handlers this session.\n\nCLAUSE 1: ATTACK_REACTION + target.filter ATTACK_CLASS_IN ['Warrior'] + MODIFY_ATTACK add. ATTACK_CLASS_IN reads the 'classes' key (condition_types.py:204-216) and matches the live attack's classes AND talents via _card_traits - what 'Warrior attack' means. MODIFY_ATTACK reads mod/amount (effect_types.py:4123-4158); from a one-shot reaction it appends to combat.power_mods so the pump survives later recalcs.\n\nDEVIATION FROM TRIAGE on the gate: triage named DEFENDING_CARD_IS, but that condition reads combat.defense_recalc_card, set ONLY inside _recalculate_total_defense around the RECALC_DEFENSE dispatches; its non-self form returns False everywhere else (condition_types.py:564-627). At this reaction's resolution that pointer is None, so a gate built on it would be silently dead in every game. CONTROLS_ATTACK_ACTION with player OPPONENT is the verified route (same conclusion as .drafts/cut_the_deck_red.json and agile_engagement_blue.json for the identical printed clause): condition_types.py:398-431 reads 'player'/'controller'/'opponent' and calls controlled_attack_action_cards (ability_keywords.py), which returns exactly the Action-type + Attack-subtype cards the DEFENDER controls on the chain - i.e. what they defended with. By reaction-step resolution the defend step has run, so evaluating once at resolution matches release note 1 ('checked at the time Cut the Deck resolves'). Residual approximation: a defender added LATER in the same reaction step is not seen; blocks from the normal defend step are.\n\nThe gate wraps ONLY the payoff (CONDITIONAL when/then, effect_types.py:3697-3724 - 'when' is the test key it reads). An ability-level conditions array would gate the whole ability and suppress the unconditional +1{p}.\n\nORDER: draw THEN bottom, per printed text. DRAW defaults to SELF (effect_types.py:1222-1249); an empty deck draws 0 and the bottom-put still runs - release note 4 says the put is mandatory if able even without the draw.\n\nHAND-OR-ARSENAL: runtime CHOOSE between two named option blocks (handler effect_types.py:5107-5136 reads 'amount' + 'options' with 'name'/'effects'). PUT_HAND_CARD_BOTTOM carries optional as JSON BOOLEAN false - the handler tests Python truthiness (params.get('optional', True), effect_types.py:1573), so the guide's string \"FALSE\" would read truthy and leave it skippable; false makes it mandatory, and an empty hand no-ops safely (effect_types.py:1594-1595). PUT_ARSENAL_BOTTOM MUST carry player SELF: its default is OPPONENT (effect_types.py:2334, inherited from the Disable printings), so silence would bottom the opponent's arsenal card.\n\nKNOWN APPROXIMATION: CHOOSE cannot gate an option on availability - picking the hand option with an empty hand bottoms nothing although the arsenal held a card ('if able' would force the arsenal). No per-option condition exists in the DSL; flagged rather than worked around."
+}

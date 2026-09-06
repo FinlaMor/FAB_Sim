@@ -8,7 +8,7 @@
       "effects": [
         {
           "type": "MAKE_NEXT_DAMAGE_UNPREVENTABLE",
-          "source_slug": "malign_blue"
+          "source_slug": "malign_red"
         }
       ]
     }

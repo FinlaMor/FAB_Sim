@@ -1,0 +1,19 @@
+{
+  "slug": "beckoning_brilliance_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_CARD_COST",
+          "amount": 1,
+          "filter": [
+            { "type": "CARD_IS_TYPE", "card_types": ["Instant"] }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, the next instant card you play this chain link costs {r} less to play.'\n\nTiming comes from the release note ('triggers when it resolves on the stack and becomes an attacking card on the combat chain'), which is exactly what ON_ATTACK covers: _dsl_attacking_listener dispatches it on the 'attacking' event to combat.attack_card (engine.py:1524-1529).\n\nMODIFY_NEXT_CARD_COST (effect_types.py:4584-4662) queues a one-shot entry on the controller's dsl_queued_card_mods with amount/filter raw; the reduction is applied while computing the played card's cost (play.py:1447-1451) and consumed by the first matching card (play.py:1713-1747). Filter specs are compiled against the card being played (_cost_mod_matches, play.py:625-643); CARD_IS_TYPE unions types and subtypes (condition_types.py:1281-1297) and reads plural keys, so 'Instant' - a card TYPE - matches.\n\nGAP, disclosed: the printed scope is 'this chain link', but the queue has NO chain-link scope - entries persist until consumed or end of turn (cleared at engine.py:933-934). An instant played on a LATER chain link this turn would also be discounted. Nothing in the DSL expresses chain-link expiry for this queue; fixing it needs either a span/expiry param on MODIFY_NEXT_CARD_COST or a chain-close sweep mirroring the end-of-turn one. Over-application is bounded by the queue being one-shot: exactly one instant gets the discount, just possibly the wrong one.\n\nRelease note 2 (cost increases apply before decreases) is CR 5.1.6a cost-pipeline ordering, engine-side incl. the max(0, cost) floor (play.py:1464) - nothing to author."
+}

@@ -96,13 +96,42 @@ def test_there_are_copies_to_check():
 
 @pytest.mark.parametrize("slug", COPIES)
 def test_a_copy_still_matches_its_source(slug):
+    from scripts.copy_identical_text_cards import _rename_self_references
+
     source = CARDS[slug]["_copied_from"]
     assert source in CARDS, (
         slug + " was copied from " + source + ", which no longer exists")
-    assert CARDS[slug]["abilities"] == CARDS[source]["abilities"], (
+    # ONE thing legitimately differs: a string in which the source names ITSELF
+    # by slug. ability_keywords.fuse writes its marker as f"fused_{card.slug}",
+    # so a copy carrying `{"flag": "fused_buzz_bolt_blue"}` would ask whether a
+    # DIFFERENT card had been fused -- false in every state, and silent. Thirty
+    # copies shipped that way. The copy repoints those at itself, so the
+    # comparison has to apply the same repointing to the source.
+    expected = _rename_self_references(CARDS[source]["abilities"], source, slug)
+    assert CARDS[slug]["abilities"] == expected, (
         slug + " has drifted from " + source + ". They implement one printed "
         "sentence; if this one genuinely needs to differ, drop its "
         "_copied_from marker and say why in its _comment.")
+
+
+def test_no_card_gates_on_another_cards_identity():
+    """The defect the repointing exists to prevent, checked corpus-wide.
+
+    A flag named after a DIFFERENT card, or a `source_slug` pointing at one, is
+    a gate that can never be true. It loads, it compiles, it reads all its
+    parameters -- and the clause under it never runs. Nothing else in the suite
+    would notice.
+    """
+    import json as _json
+    bad = []
+    for slug, raw in CARDS.items():
+        blob = _json.dumps(raw.get("abilities") or [])
+        for other in (raw.get("_copied_from"), raw.get("_derived_from")):
+            if other and other != slug and other in blob:
+                bad.append(slug + " names " + other)
+    assert not bad, (
+        "these cards gate on another card's identity, so the gate is false in "
+        "every state:\n  " + "\n  ".join(sorted(bad)))
 
 
 @pytest.mark.parametrize("slug", COPIES)

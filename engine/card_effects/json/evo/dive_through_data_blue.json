@@ -1,0 +1,13 @@
+{
+  "slug": "dive_through_data_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {"type": "OPT", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Boost / When this hits, opt 1.' Mechanologist Action - Attack. Shape copied from .drafts/data_link_blue.json / _red / _yellow, which print this exact text and whose reasoning was re-verified against the handlers this session.\n\nBOOST: printed DB keyword (printed_keywords confirms it) - build_keyword_triggers turns it into the optional on_play boost trigger. NOT authored here; re-authoring a printed keyword is a defect.\n\nOPT: TRIGGERED ON_HIT + OPT amount 1, because the printed timing is 'When this hits' - not on play. ON_HIT is a mapped trigger name and an Action - Attack's own ON_HIT is dispatched to combat.attack_card, i.e. this card while it attacks. The OPT handler reads 'amount' (default 1) and routes through effect_opt -> canonical effect_keywords.opt (effect_types.py:1288-1293).\n\nCONFLICT FOR REVIEW, DISCLOSED LOUDLY (inherited from the data_link siblings): printed_keywords also lists bare 'Opt', and build_keyword_triggers converts a bare Opt keyword into an ON_PLAY opt-1 trigger with no hit gate. Keyword triggers for an attack action card register only when it enters combat - AFTER the play-time on_play event has fired - so as the engine stands that keyword path is dead here and this DSL trigger is the only live opt, firing at the printed timing. If keyword-registration order is ever fixed, this card would opt TWICE and one of the two paths should then be removed; the generic fix belongs engine-side or in card_data (drop 'Opt' from this slug's keywords now that the JSON owns the behaviour). Neither is reachable from .drafts/.\n\nIf review prefers single-fire over correct timing until that fix lands, deleting the ability above leaves the DB's on_play opt as the only one - but that is the wrong timing per the printed text, so it is not what I drafted."
+}

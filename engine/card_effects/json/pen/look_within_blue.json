@@ -1,0 +1,16 @@
+{
+ "slug": "look_within_blue",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "effects": [
+    {
+     "type": "SEARCH_DECK",
+     "subtype": "Chi",
+     "put_on_top": true
+    }
+   ]
+  }
+ ],
+ "_comment": "Go again is a printed keyword - not authored. SEARCH_DECK verified against the handler (effect_types.py:1683-1848): subtype 'Chi' filters c.subtypes (only Inner Chi carries the Chi subtype in the DB); put_on_top:true -> destination deck_top -> zone deck position top; shuffle runs BEFORE placement (line 1830) matching the printed order; is_public=True on put_object is the reveal; the FAIL_TO_FIND sentinel lets the player fail to find while still shuffling - both release notes satisfied. No priority between sub-effects is inherent (one handler does the whole search)."
+}

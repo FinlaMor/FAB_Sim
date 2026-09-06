@@ -1,0 +1,55 @@
+{
+  "slug": "burn_them_all_red",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "once_per_turn": "burn_them_all_dragon",
+      "conditions": [
+        { "type": "ATTACK_CONTROLLED_BY_YOU" },
+        { "type": "ATTACK_SUBTYPE_IN", "subtypes": ["Dragon"] }
+      ],
+      "effects": [
+        { "type": "DEAL_ARCANE", "amount": 1, "target": "OPPONENT" }
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "BEGINNING_OF_END_PHASE",
+      "conditions": [
+        { "type": "IS_ACTIVE_PLAYER", "value": true }
+      ],
+      "effects": [
+        { "type": "PUT_COUNTER", "counter_type": "raze", "amount": 1 },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "graveyard",
+              "color": "red",
+              "count_gte": { "type": "COUNT_COUNTERS", "counter": "raze" }
+            }
+          ],
+          "then": [
+            {
+              "type": "MAY",
+              "prompt": "Banish a red card from your graveyard for each raze counter on Burn Them All?",
+              "effects": [
+                {
+                  "type": "BANISH",
+                  "from_zone": "GRAVEYARD",
+                  "amount": { "type": "COUNT_COUNTERS", "counter": "raze" },
+                  "color": "red"
+                }
+              ],
+              "else": [ { "type": "DESTROY_SELF" } ]
+            }
+          ],
+          "else": [ { "type": "DESTROY_SELF" } ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Aura with two watched abilities.\n\nAbility 1 ('Once per turn, when a dragon you control attacks, it deals 1 arcane damage to each opposing hero'): STATIC_TRIGGERED on ON_PLAY_ACTIVATE_ATTACK, NOT ON_ATTACK - engine._dsl_attacking_listener (engine.py:1524-1529) dispatches ON_ATTACK only to the ATTACKING CARD's slug, so an aura can never receive it; ON_PLAY_ACTIVATE_ATTACK (engine.py:1531-1558) broadcasts to every permanent zone of the attacker, which is the hook a granting permanent needs (same precedent as tokens/runechant.json and ele/sting_of_sorcery_blue.json). Conditions read combat.attack_card: ATTACK_CONTROLLED_BY_YOU (condition_types.py:389) + ATTACK_SUBTYPE_IN ['Dragon'] (reads the attack card's types+subtypes, condition_types.py:296). once_per_turn is an ability-level extra carried in AbilityDef.params and consumed by interpreter._run_ability (interpreter.py:69-85). DEAL_ARCANE target OPPONENT resolves via _damage_target_player to the single opposing hero - 'EACH opposing hero' is only distinguishable from 'the opposing hero' in multiplayer, which the engine does not model; flagged as a known 2-player approximation.\n\nAbility 2 (end phase): BEGINNING_OF_END_PHASE is dispatched to BOTH players' permanent zones at EITHER hero's end phase (engine.py:1495-1503), so IS_ACTIVE_PLAYER value:true narrows it to 'YOUR end phase'. PUT_COUNTER defaults to the source card (effect_types.py:2031), and 'raze' is not a DEFENSE_COUNTER_KINDS kind, so it is plain bookkeeping. Counters accumulate across turns and the payment count includes the counter just put (COUNT_COUNTERS resolves after PUT_COUNTER ran, reading the player-level tally keyed by this card's slug+zone).\n\n'Destroy it UNLESS you banish red card ... for EACH raze counter' is authored as one branch, not two stacked effects: CONDITIONAL_EFFECT first tests CARD_IN_ZONE graveyard color:red count_gte = number of raze counters. Fewer red cards than counters -> destroyed outright (release note: you cannot resolve part of the banish payment). Enough -> MAY offers the payment, whose else is DESTROY_SELF so DECLINING also destroys (release note: choosing not to pay destroys it). Accepting runs the BANISH effect (from_zone GRAVEYARD, color filter via _hand_card_filter, amount = COUNT_COUNTERS raze resolved at execution).\n\nPrinted GoAgain is left entirely to the card DB: it is unconditional printed text, so authoring it in JSON would be a defect.\n\nMinor deviation: within an accepted payment the BANISH effect picks cards one prompt at a time and stops early only if the pool empties mid-loop; the pre-check makes that unreachable in practice."
+}

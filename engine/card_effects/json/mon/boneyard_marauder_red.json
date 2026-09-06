@@ -1,0 +1,11 @@
+{
+  "slug": "boneyard_marauder_red",
+  "cost": {
+    "play_activate": "PLAY",
+    "optional": "FALSE",
+    "type": "BANISH_RANDOM_FROM_GRAVEYARD",
+    "amount": 3
+  },
+  "abilities": [],
+  "_comment": "'As an additional cost to play Boneyard Marauder, banish 3 random cards from your graveyard. Blood Debt.' Red printing; identical text to the blue LeviaBlitzDeck and yellow Monarch printings (.drafts/boneyard_marauder_blue.json / _yellow.json), whose shape this copies - no amount differs between printings.\n\nThe cost is the card's ENTIRE printed behaviour, so it is authored at CARD level as the top-level cost object, not as a PLAY ability's additional_cost: the card has no play effect, and test_card_json_hygiene fails any ability whose effects list is empty - a cost-only PLAY ability would be a hygiene defect by construction. Engine path verified in the loader: a top-level cost dict compiles through compile_cost into CardDef.play_cost (loader.py:148-151), which play.py checks before offering the play (blocking when fewer than 3 graveyard cards exist - correct for a MANDATORY additional cost) and pays on application.\n\nBANISH_RANDOM_FROM_GRAVEYARD read live in cost_types.py:192-224: takes 'amount' (default 1); can_pay requires >= N cards in the controller's graveyard; pay samples N RANDOM cards (random.sample - 'random cards', not chosen) and banishes each through canonical banish(origin_zone=\"graveyard\") - the origin zone matters, or banished cards would sit in both zones. It also records what it banished under the shared banished_cards ref, unused here but harmless. Mandatory per text ('banish 3 random cards', not 'you may'). Shipped precedent for the type: lev/writhing_beast_hulk_red.json uses it as an ability-level additional_cost - that card has a real effect after the cost, which this one lacks.\n\nBlood Debt is deliberately NOT authored: it is a printed keyword implemented from the DB keywords field (build_keyword_triggers maps blood debt to a start-of-end-phase lose-1-life trigger while the card is face-up in the banished zone). Re-authoring it in JSON would be a defect. On adoption file under a set from setIdentifiers (batch says LeviaBlitzDeck; check where the red printing's identifiers point)."
+}

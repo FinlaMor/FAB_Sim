@@ -1,0 +1,18 @@
+{
+  "slug": "high_speed_impact_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "GRANT_NEXT_ATTACK_KEYWORD",
+          "keyword": "Dominate",
+          "filter": [{"type": "ATTACK_WAS_BOOSTED"}],
+          "scope": "CHAIN"
+        }
+      ]
+    }
+  ],
+  "_comment": "'If High Speed Impact hits, the next attack you boost this combat chain gains **dominate**.' + printed **Boost** (Mechanologist Action - Attack, CrucibleOfWar).\n\nBOOST NOT AUTHORED: printed keyword, fires from the card DB keywords field via ability_keywords.boost - re-authoring it would be a defect.\n\nTRIGGER UNGATED: the text says 'hits', not 'hits a hero', so deliberately no ATTACK_TARGET_IS_HERO gate. HSI hits during its OWN attack, so the grant is consumed by a LATER attack of the same chain.\n\nDELIVERY DEVIATES FROM THE TRIAGE LIST, deliberately and with source verification. The list named INJECT_TRIGGER scope=CHAIN with an inner ON_ATTACK trigger gated by ATTACK_WAS_BOOSTED granting DOMINATE. That delivery is DEAD in this engine: combat.injected_triggers is consumed at exactly two sites - the hit listener (engine.py:1412-1423), which fires only event_type=='ON_HIT' entries, and the damage-dealt listener (engine.py:1764-1772) - nothing anywhere consumes an injected ON_ATTACK, so the hook would sit unfired forever. An inner ON_HIT variant would fire, but at hit time - AFTER the defend step - where a dominate grant does nothing.\n\nWORKING COMPOSITION: GRANT_NEXT_ATTACK_KEYWORD (effect_types.py:4816-4840, read this session; GRANT_NEXT_ATTACK is an alias of the same handler, used by shipped evr/ride_the_tailwind_blue.json for near-identical wording) reads keyword/filter/scope and queues {'mod': 'grant_keyword'} on the controller's dsl_queued_attack_mods. engine._apply_turn_attack_effects compiles the filter specs against each incoming attack (engine.py:1177-1185) and on first match calls state.combat.grant_keyword(kw) (engine.py:1199-1211) - at attack DECLARATION, before the defend step, which is when dominate matters; actions.py:1196 gates hand-block limits on 'Dominate' in combat.keywords, so the granted keyword functions. A non-boosted attack leaves the entry queued (not consumed), which is exactly 'the NEXT attack you boost'. Filter ATTACK_WAS_BOOSTED (condition_types.py:1175-1192) reads combat.attack_card.was_boosted, stamped by boost() at cost-payment time (ability_keywords.py:505) before the queue is consulted. scope CHAIN expires the unused entry at chain close (engine.py chain-close cleanup filters dsl_queued_attack_mods by scope).\n\nKNOWN DEFECT OUTSIDE .drafts/ SCOPE: the card DB lists 'Dominate' among this card's keywords (verified in card_data/slug_index.json). The engine applies every printed keyword unconditionally, so HSI itself wrongly has dominate on EVERY attack, hit or not - the printed text gives dominate only to the next boosted attack after a hit. loader.conditional_keywords() cannot strip it here: it only recognises abilities gated on SOURCE_IS_ATTACK that grant the keyword to SELF (loader.py:255-296), and authoring such an ability would codify the wrong behaviour (HSI never has dominate itself; the beneficiary is definitionally a later attack). Fixing this needs either removing 'Dominate' from the card_data keywords entry or extending conditional_keywords - both outside what a draft may change."
+}

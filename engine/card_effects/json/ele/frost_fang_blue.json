@@ -1,0 +1,23 @@
+{
+  "slug": "frost_fang_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_ELSE",
+          "player": "OPPONENT",
+          "resources": 2,
+          "on_failure": [
+            {"type": "DISCARD", "player": "OPPONENT", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If Frost Fang hits a hero, they discard a card unless they pay {r}{r}.' Ice Action - Attack.\n\nTRIGGER: ON_HIT, not ON_ATTACK - 'hits' means the attack dealt damage; ON_ATTACK would fire even when fully blocked. ON_HIT is dispatched to combat.attack_card (engine hit listener), so it rides this resolving attack directly. Gated by ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977) because the text says 'a hero': the condition is false when the attack was declared at a permanent/ally and needs no params for the plain hero case.\n\nPAYOFF: PAY_OR_ELSE (effect_types.py:3207-3255) reads exactly 'player'/'resources'/'on_failure'. player OPPONENT resolves relative to THIS card's controller (the attacker), so the asked player is the hit hero. With resources >= 2 the defender is ASKED pay-or-decline; declining or being unable to afford runs on_failure. on_failure effect 'player' params are relative to the same source card (handler docstring), so DISCARD with player OPPONENT hits the same hero that was asked to pay - verified the DISCARD handler reads 'player' and 'amount' (effect_types.py:1251-1286) and discards min(n, hand size), so an empty-hand discard is a no-op rather than an error.\n\nRELEASE NOTE ('they can still elect to discard even if they do not have any cards in hand') holds structurally: whenever the election exists (defender has >= 2 resources) declining leads to a discard that harmlessly discards nothing on an empty hand; when they cannot pay there is no election to preserve and the discard is forced, which matches 'discard unless they pay {r}{r}'."
+}

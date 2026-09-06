@@ -1,0 +1,21 @@
+{
+  "slug": "fatal_engagement_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {"type": "CONTROLS_ATTACK_ACTION", "player": "OPPONENT"}
+      ],
+      "target": {
+        "filter": [
+          {"type": "CONTROLS_ATTACK_ACTION", "player": "OPPONENT"},
+          {"type": "ATTACK_TYPE_IN", "types": ["Action", "Weapon"]}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}
+      ]
+    }
+  ],
+  "_comment": "'Play this only if an attack action card is defending this chain link. Target attack gets +3{p}.' Warrior Attack Reaction (HeavyHitters; blue printing pumps +3, +4/+5 printings of the same sentence exist).\n\nDEVIATION FROM TRIAGE on the gate: triage named DEFENDING_CARD_IS, but that condition reads combat.defense_recalc_card, which is set ONLY inside _recalculate_total_defense around the RECALC_DEFENSE dispatches; its non-self form returns False everywhere else (condition_types.py:564-627, read this session). At this reaction's play/resolution time that pointer is None, so a gate built on it would be silently dead in every game. CONTROLS_ATTACK_ACTION with player OPPONENT is the verified route (same conclusion as .drafts/fatal_engagement_yellow.json and .drafts/cut_the_deck_*.json for the identical printed clause): condition_types.py:398-431 reads 'player'/'controller'/'opponent' and calls controlled_attack_action_cards (ability_keywords.py), which from the attacker's seat returns exactly the Action-type + Attack-subtype cards the DEFENDER controls on the chain - i.e. what they defended with. By the reaction step the defend step has run, so combat.defending_cards is populated.\n\nPLACEMENT OF THE PLAY RESTRICTION: 'Play this only if...' is a play-LEGALITY restriction. No top-level card-conditions mechanism exists, and ability-level conditions are checked at RESOLUTION only, so the gate is authored in target.filter - _legality_check evaluates every ATTACK_REACTION ability's target_filter at play time and refuses the play if any fails (play.py:420-431, read this session). The same CONTROLS_ATTACK_ACTION is mirrored in ability-level conditions for a resolution-time re-check, matching the sibling draft's shape.\n\nRELEASE NOTE 2 ('cannot be played during the reaction step of an ally attack, e.g. Cintari Sellsword'): encoded as ATTACK_TYPE_IN ['Action','Weapon'] in the target filter. In this card data an attack action card is types=['Action'] subtypes=['Attack'], a weapon is type 'Weapon' (subtypes carry Sword/Axe/...), and an ally is type 'Ally' (condition_types.py:273-294 merges types+subtypes of the live attack). So during an ally attack no legal target exists and the reaction is unplayable, while weapon attacks stay legal targets - the note excludes only ally attacks. This clause goes beyond the yellow sibling draft, which omits it and could pump an ally attack whenever the defender blocked with an attack action card.\n\nTHE PUMP: ATTACK_REACTION + MODIFY_ATTACK add 3, spelling copied from shipped wtr/pummel_red.json. MODIFY_ATTACK reads mod/amount (effect_types.py:4123-4158); from a one-shot reaction it appends to combat.power_mods so the +3 survives later power recalculations within the chain link. MODIFY_ATTACK acts on the current attack, which is the only thing an attack reaction can be resolving against."
+}

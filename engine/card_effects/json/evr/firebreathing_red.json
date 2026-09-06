@@ -1,0 +1,16 @@
+{
+  "slug": "firebreathing_red",
+  "activation_cost": 1,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - {r}: Firebreathing gains +1{p}. Activate this ability only while Firebreathing is attacking.'\n\nDEVIATION FROM TRIAGE, disclosed: it named SELF_IS_ATTACK for the 'while attacking' gate, but that condition reads card.is_attack == ('Attack' in subtypes) (card.py:352-353) - a TYPE property that is true in hand, deck and arsenal alike, so as a gate it does nothing beyond what the card already is (the arcanic_cunning triage note records exactly this trap). SOURCE_IS_ATTACK (condition_types.py:381-387, reads no params) tests state.combat.attack_card IS the source card, which is precisely 'while Firebreathing is attacking'; it also excludes release note 1's defending case, since when defending, attack_card is the opponent's attack, not this card. Conditions are checked both when the activation is offered (play.py:307-309) and at resolution.\n\nactivation_cost 1 sits at CARD level (loader-authoritative per DSL_REFERENCE; play.py charges card.activation_cost on activation) - NOT modelled again as PAY_RESOURCES, which would double-charge. No per_turn field: release note 2 rules the activations unlimited ('any number of times provided you can pay').\n\nMODIFY_ATTACK add 1 (effect_types.py:4123-4154, reads mod/amount) appends to combat.power_mods AND bumps live power, so the +1{p} survives later defend/damage-step recalculations of the same chain link - correct for pumping the ongoing attack.\n\nKNOWN GAP - ENGINE OFFER PATH, NOT DSL (flagged, not worked around): no code path will ever OFFER this activation. _add_hero_dsl_activations (play.py:238-339) scans only the hero plus head/chest/arms/legs/weapon1/weapon2/items/auras/allies/permanents; an attacking action card sits on the combat chain (engine.py:515 moves it there at 7.2.3), which none of those paths scan. The legacy activatable route is dead - base_activatable defaults False and nothing sets it True (card.py:162, play.py:894-906; documented in .draft-review/cutty_shark_quick_clip_yellow.json). So the JSON loads clean and the shape is right, but until a GENERIC engine change adds the current attack_card as an activation source for its controller, the pump is unreachable in play. Fix belongs in play.py action generation, not in this file."
+}

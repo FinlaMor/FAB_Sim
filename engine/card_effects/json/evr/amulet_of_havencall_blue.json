@@ -1,0 +1,28 @@
+{
+  "slug": "amulet_of_havencall_blue",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {"type": "HAND_SIZE_EQ", "amount": 0}
+      ],
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "SEARCH_DECK", "name": "Rally the Rearguard", "destination": "hand"},
+        {
+          "type": "ADD_DEFEND",
+          "target": {
+            "controller": "SELF",
+            "zone": "HAND",
+            "name": "Rally the Rearguard",
+            "amount": 1
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'Defense Reaction - Destroy Amulet of Havencall: Search your deck for a card named Rally the Rearguard, add it to this chain link as a defending card, then shuffle. Activate this ability only if you have no cards in hand.'\n\nVerified end to end. DEFENSE_REACTION activations on items are offered by play._add_dsl_activations to the DEFENDER in the reaction step (play.py ~290-302), which also evaluates ability 'conditions' at offer time (~307) - so the 'only if you have no cards in hand' restriction gates legality, not just resolution. HAND_SIZE_EQ is a real condition (condition_types.py ~1091) reading 'amount'; amount 0 means an exactly-empty hand. The triage note's primitive name was right.\n\n'Destroy Amulet of Havencall' is the ability-level cost [{DESTROY_SELF}] (cost_types.py ~43), paid by _apply_activate_card before run_ability (play.py ~1291-1296); reaction abilities then run directly (~1303-1312).\n\nThe search: SEARCH_DECK (effect_types.py ~1616) reads 'name' and shuffles before placement; it has NO 'add to this chain link as a defending card' destination, so the clause is expressed as search-into-hand followed by ADD_DEFEND with an object target resolving a card NAMED Rally the Rearguard from HAND (_compile_object_target reads controller/zone/name/amount; effect_types.py ~623). add_defend (effect_keywords.py ~4010) removes the card from its current zone - typically hand - onto combat.defending_cards and credits its {d}, so the END state matches the printed text; the intermediate hand stop happens inside one ability resolution. If the deck has no Rally the Rearguard, ask_optional's fail-to-find leaves the hand unchanged and ADD_DEFEND's pool comes back empty, so nothing is added.\n\nPrinted **Go again** fires from the card DB keywords field - deliberately NOT re-authored here. Note for reviewers: Rally the Rearguard needs its own JSON definition (and the engine must allow playing a defending card already on the chain) for the fetched card to actually block with its effect; that is that card's implementation, not this one."
+}

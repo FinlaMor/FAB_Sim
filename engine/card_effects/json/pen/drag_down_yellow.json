@@ -1,0 +1,13 @@
+{
+  "slug": "drag_down_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": -2}
+      ]
+    }
+  ],
+  "_comment": "'When this defends an attack, it gets -2{p}.' Generic Defense Reaction.\n\nSHAPE: TRIGGERED + ON_DEFEND, the corpus spelling for 'when this defends' (shipped pen/blunten_yellow; dig_in_blue / brothers_in_arms_* drafts). _dsl_defend_listener (engine.py:1640-1646) dispatches ON_DEFEND to the DEFENDING CARD ITSELF (event.data['card']), so only Drag Down's own defends fire it and no source-scoping condition is needed. Release note confirms timing: it triggers on BECOMING a defending card against an attack (weapon attacks, attack action cards, ally attacks alike), which is exactly when the defend event fires.\n\nOBJECT OF THE DEBUFF: 'it' is the ATTACK, not Drag Down - the release note settles it ('That attack will get the prescribed power decrease when this triggered effect resolves'), so MODIFY_ATTACK with amount -2, not a defense buff. The handler (effect_types.py:4123-4158) reads mod/amount, appends (_mod, val) to combat.power_mods so the -2 survives every later recalculation of this chain link, and bumps live attack_power immediately for visibility.\n\nNot authored as ability_type DEFENSE_REACTION: that type means a defense reaction PLAYED in the reaction step targeting the current attack, whereas this card's whole text is a trigger on defending. No printed keywords, so no conditional-keyword shape applies."
+}

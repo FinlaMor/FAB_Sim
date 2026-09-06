@@ -1,0 +1,17 @@
+{
+  "slug": "figment_of_erudition_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "ponder",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Legendary** / When this enters the arena, create a Ponder token.' Light Illusionist Instant - Figment (DuskTillDawn).\n\nLEGENDARY NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field - re-authoring it would be a defect.\n\nETB TRIGGER: TRIGGERED + ON_ENTER_PLAY, mapped at trigger_types.py:30 and dispatched from Zone.add on real arena entry from a non-arena zone (state.py:293-310, read this session) - covers BOTH paths: resolving on the stack when played AND being put into the arena by another card's effect.\n\nTOKEN: CREATE_TOKEN handler reads token/count|amount/player/destination (effect_types.py:1942-2013, read this session). 'ponder' is the slug of json/tokens/ponder.json, which EXISTS (carrying its own end-of-turn destroy+draw ability), so create_token's require_card passes; count defaults to 1 anyway, authored explicitly; player defaults SELF = the controller ('create a Ponder token' under your control); destination omitted so zone routing derives from the token template's subtypes.\n\nDISCLOSED RESIDUAL RISK (not fixable in JSON), SHARPER THAN THE SIBLING DRAFT'S VERSION: this session re-read the resolution router and found a DEDICATED Figment branch - engine.py:2332-2342 tests \"Figment\" in card.TYPES (not subtypes) and routes such cards into player.permanents per CR 8.2.16a instead of letting them cease to exist, so the embolden_blue Aura-in-subtypes failure mode does not apply here by way of Aura. The remaining gate is narrower: does the DB record carry 'Figment' in TYPES? card_data/slug_index.json was permission-blocked both sessions, and the work-queue mirror cannot answer it (its generator writes no types field at all, scripts/dsl_work_queue.py:61-78). Two facts bound the risk: state.py:29-32 (_PERMANENT_SUBTYPES) accepts Figment by SUBTYPE for permanent-zone entry, so once routed, entry succeeds and ON_ENTER_PLAY fires; but if the DB stores Figment in subtypes only, engine.py:2339-2340 fails, the card resolves to the graveyard, and this trigger can never fire - the exact dead-in-every-state shape .review/embolden_blue recorded for Auras. Triage blessed ON_ENTER_PLAY for all seven figments, so the draft follows it; if scripts/dsl_coverage.py ever shows this trigger inert, check the DB types field first - the generic fix would be extending the engine's routing test to subtypes, as it already does for Ally/Landmark two lines below (engine.py:2343-2351)."
+}

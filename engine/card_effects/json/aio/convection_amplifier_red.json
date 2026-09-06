@@ -1,0 +1,83 @@
+{
+  "slug": "convection_amplifier_red",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "target": "self",
+          "counter_type": "steam",
+          "amount": 2
+        }
+      ]
+    },
+    {
+      "ability_type": "ACTIVATE",
+      "conditions": [
+        {
+          "type": "COUNTER_GTE",
+          "counter_type": "steam",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "REMOVE_COUNTER",
+          "counter_type": "steam",
+          "amount": 1
+        },
+        {
+          "type": "GRANT_NEXT_CARD",
+          "amount": 0,
+          "keywords": ["Dominate"],
+          "filter": [
+            {
+              "type": "CARD_IS_ATTACK"
+            }
+          ]
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "COUNTER_LTE",
+              "counter_type": "steam",
+              "amount": 0
+            }
+          ],
+          "then": [
+            {
+              "type": "DESTROY_PERMANENT",
+              "target": "self"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "conditions": [
+        {
+          "type": "COUNTER_LTE",
+          "counter_type": "steam",
+          "amount": 0
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "target": "self"
+        }
+      ]
+    }
+  ],
+  "_comment": "REWRITES AN EARLIER DRAFT OF THIS SAME FILE, which authored the removal as a REMOVE_COUNTERS cost; that draft's destroy clause could never fire. Verified handler divergence: the COST REMOVE_COUNTERS (cost_types.py:548-573) reads and decrements ONLY the player-level tally state.players[pid].counters[(slug, zone, kind)], while the CONDITION COUNTER_LTE (condition_types.py:998-1030) reads card.counters FIRST and falls back to the player-level dict only when card.counters lacks the key entirely - and PUT_COUNTER (effect_put_counter, ability_keywords.py:1653-1660) writes BOTH tallies at entry. So under the cost shape card.counters['steam'] stays 2 forever and 'when it has no steam counters, destroy it' is unreachable. FIX: the removal is authored as the ability's FIRST EFFECT via the canonical REMOVE_COUNTER effect (effect_types.py:2015, decrements both tallies), gated by an ability-level COUNTER_GTE condition - on ACTIVATE abilities play.py:307 checks conditions when OFFERING the activation, so with no counter the activation is not offered, which is exactly what a cost would do here (the removal cannot fail once offered). Deviation from triage ('ACTIVATE with REMOVE_COUNTERS cost') disclosed for that reason. Shipped arc/teklo_plasma_pistol.json uses the cost spelling safely only because it never READS its counter count afterwards.\n\n'The next attack action card you play this turn gains dominate' = GRANT_NEXT_CARD (alias of MODIFY_NEXT_CARD_COST, effect_types.py:4665-4743), NOT GRANT_NEXT_ATTACK_KEYWORD as the earlier draft had it: the attack queue is consumed when an attack is MADE (_apply_turn_attack_effects), while the text names the card you PLAY - the captains_call_blue rewrite established the card-play queue as the blessed shape for this exact phrase. amount IS AUTHORED AS 0, DELIBERATELY: compile-side default is 1 and _calculate_resource_cost SUBTRACTS it from the next matching card's cost (play.py:1447-1451), so omitting it adds an unprinted {r} discount. Filter CARD_IS_ATTACK reads card.is_attack = 'Attack' in subtypes (card.py:352-353) = precisely an attack action card; _cost_mod_matches compiles filter specs against the played card (play.py:625-643); queue cleared end of turn (engine.py:933-934) = 'this turn'. Keyword spelled title-case 'Dominate': appended verbatim to the played card's keywords (play.py:1726-1729), combat keywords seed from attack_card.keywords (engine.py:529, stage 6 ~1903), defend step enforces 'Dominate' in combat_keywords (engine.py:625) - same verified pipeline as azalea_ace_in_the_hole's dominate grant.\n\nGO AGAIN IS AUTHORED despite printed_keywords carrying GoAgain, and this is NOT the captains_call 're-authoring is a defect' case: the DB-keyword payout at engine.py:2420 fires only for layer_type=='card' layers, while _apply_activate creates layer_type='activated' (play.py:1253), so the printed keyword can never pay out for this ACTIVATION - without the grant the activation consumes an action point and returns none, ending the turn early (the monstrous_veil review finding and the cracker_jax draft both document this exact trap). GAIN keyword GO_AGAIN routes to _grant_go_again (effect_types.py:4927-4941), which outside combat pays +1 AP directly (CR 8.3.5a); no double-pay risk since the card-layer payout does not apply to activated layers.\n\nPRINTED Dominate is inert on an item (combat keywords come only from attack cards); its real behaviour IS the grant above.\n\n'DESTROY WHEN EMPTY' rides the activation as a CONDITIONAL over COUNTER_LTE 0 evaluated after the removal (use 'when', not 'conditions' - the loader pops the latter into an effect-level gate). A START_OF_TURN poll (shipped teklo_core_blue shape) is added as a safety net because there is no counter-change event to watch: if any future effect removes steam counters by another path, the immediate check bypasses and the poll bounds the stale-item window to one turn cycle. Known residual gap either way."
+}

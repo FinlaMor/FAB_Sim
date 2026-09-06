@@ -453,7 +453,16 @@ def severity(type_name: str, key: str, value) -> str:
     return "inert" if str(value).strip().lower() in allowed else "active"
 
 
-def card_files(set_code: str | None = None) -> list[Path]:
+def card_files(set_code: str | None = None,
+               path: Path | None = None) -> list[Path]:
+    # An explicit --path is how DRAFTS get audited. They live in .drafts/, and
+    # the normal walk skips dot-directories on purpose, so without this the
+    # audit that finds the quiet defect class cannot see a card until it has
+    # already been adopted into a set -- which is the wrong order.
+    if path is not None:
+        return sorted(f for f in path.rglob("*.json")
+                      if not f.stem.startswith("_")
+                      and not f.stem.endswith("_work_queue"))
     return [p for p in JSON_ROOT.rglob("*.json")
             if not p.stem.endswith("_work_queue")
             and "needs_review" not in p.parts
@@ -500,6 +509,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--set", dest="set_code", help="set folder to audit")
+    ap.add_argument("--path", type=Path,
+                    help="audit a directory outside the set tree (e.g. .drafts)")
     ap.add_argument("--quiet", action="store_true", help="summary only")
     ap.add_argument("--all", action="store_true",
                     help="include INERT findings (keys whose value is the default anyway)")
@@ -511,7 +522,7 @@ def main() -> int:
               "the AST walk is stale, and every check below would pass vacuously.")
         return 2
 
-    paths = card_files(args.set_code)
+    paths = card_files(args.set_code, args.path)
     print(f"auditing {len(paths)} card file(s) against {len(index)} compiled types\n")
 
     findings: dict[str, list[str]] = {}

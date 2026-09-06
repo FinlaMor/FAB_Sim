@@ -1,0 +1,31 @@
+{
+  "slug": "glistening_steelblade_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GRANT_NEXT_ATTACK_KEYWORD",
+          "keyword": "GO_AGAIN",
+          "filter": [{"type": "ATTACK_IS_NAMED", "name": "Dawnblade"}]
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "player": "SELF",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "ATTACK_IS_NAMED", "name": "Dawnblade"},
+              {"type": "ATTACK_TARGET_IS_HERO"}
+            ],
+            "effects": [
+              {"type": "PUT_COUNTER", "counter_type": "power", "amount": 1}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next Dawnblade attack this turn has go again. / Whenever Dawnblade hits a hero this turn, put a +1{p} counter on it.' + printed Go again.\n\nPRINTED GO AGAIN NOT AUTHORED: the trailing 'Go again' is this card's own unconditional keyword line (printed_keywords) and fires from the card DB keywords field; re-authoring it would double-pay. It is also not the conditional-keyword case - the first sentence grants go again to a DIFFERENT object (a future attack), so no SOURCE_IS_ATTACK shape applies. Specialization is deck-building only, not behaviour.\n\nCLAUSE 1: GRANT_NEXT_ATTACK_KEYWORD (effect_types.py:4816-4840) reads keyword/filter/scope; 'GO_AGAIN' is normalised to 'Go Again' (line 4824). Queued one-shot on dsl_queued_attack_mods, consumed by engine.py:1199-1211 on the first attack whose filter matches - ATTACK_IS_NAMED (condition_types.py:218-232) strips colour suffixes and matches slug or name against combat.attack_card, which for a weapon attack IS Dawnblade. A non-Dawnblade attack leaves the entry queued (correct 'next' semantics); unused entries expire end of turn = 'this turn'. Edge: dawnblade_resplendent ('Dawnblade, Resplendent') does NOT match the exact name 'Dawnblade'; Classic Battles prints only plain Dawnblade, so behaviour is exact for this product.\n\nCLAUSE 2: INJECT_TRIGGER with the NESTED trigger dict, which is REQUIRED here - the loader pops a top-level 'conditions' key as an effect-level gate evaluated once at registration (effect_types.py:2103-2119), while nested conditions survive and are evaluated per-hit. scope TURN stores the hook on the controller's turn_attack_hooks (player SELF default), cleared end of turn = 'this turn', re-injected onto EVERY attack by engine._apply_turn_attack_effects (engine.py:1260-1281).\n\nCOUNTER LANDS ON DAWNBLADE: injected triggers fire with combat.attack_card as their source card (engine.py:1421), and PUT_COUNTER's default target is that source (effect_types.py:2031) - so the +1{p} counter goes on Dawnblade itself, matching 'put a +1{p} counter on IT'. counter_type 'power' feeds _recalculate_attack_power directly (engine.py:1936-1939 adds card.counters['power'] to attack power); same spelling SHARPEN uses for its '+1{p} counter' (effect_types.py:5213). ATTACK_TARGET_IS_HERO takes no params and reads true whenever combat.attack_target is unset, i.e. a hero attack (condition_types.py:1960-1977)."
+}

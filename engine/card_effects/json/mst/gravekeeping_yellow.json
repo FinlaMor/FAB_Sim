@@ -1,0 +1,28 @@
+{
+  "slug": "gravekeeping_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Banish a card from the defending hero's graveyard?",
+          "effects": [
+            {
+              "type": "BANISH",
+              "player": "OPPONENT",
+              "from_zone": "GRAVEYARD",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks a hero, you may banish a card from their graveyard.' Generic Action - Attack (PartTheMistveil). No printed keywords (printed_keywords empty); the attack itself is engine-offered from the card DB, so the JSON carries only the trigger.\n\nTRIGGER: TRIGGERED + ON_ATTACK. Ability-level conditions are checked at resolution, and ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977, read this session) is false whenever combat.attack_target is set - which the engine does only for attacks declared at a permanent or ally - so release note 2 ('does not trigger if you attack anything other than a hero') falls out of the condition with no extra plumbing. ON_ATTACK fires even if the attack ends up fully blocked; the printed text is 'when this attacks', so that timing matches.\n\nEFFECT: MAY wraps BANISH per the triage list. Release note 1 settles WHEN - the choice happens when the triggered effect resolves, and both prompts do run then: ask_yes_no inside MAY (effect_types.py:3838-3856), then BANISH asks WHICH graveyard card at that same moment (:1398-1412), not when the trigger was queued. BANISH reads player/from_zone/amount explicitly (:1313-1315); GRAVEYARD is a valid from_zone (:1380-1385); player OPPONENT resolves relative to the controller, i.e. the attacked hero in the 2-player engine - 'their graveyard'.\n\nDISCLOSED DEVIATION - WHO PICKS THE CARD (verified this session): the printed text and release note 1 say YOU choose ('which card you choose to banish is determined now'), but BANISH hard-codes the which-card prompt to the ZONE OWNER - _ask_player(state, tid, ...) where tid is the banish target player (:1403), and _ask_player has no controller delegation (ability_keywords.py:148-151). So the defending hero's agent chooses which of their own cards leaves. Not fixable in JSON: no BANISH parameter redirects the ask (a LOOK_AT + SELECT_FROM_REF + BANISH_REF chain cannot substitute - LOOK_AT serves only DECK_TOP/ARSENAL/HAND, :3390-3391). Behavioural impact is limited to WHICH card is taken (count and destination are exact); under default agents it picks the first option either way. Generic fix would be a 'chooser' param on BANISH defaulting to the zone owner.\n\nCOSMETIC: MAY offers yes/no even when the opponent's graveyard is empty; accepting then finds an empty pool and no-ops (:1399-1401). Gating the offer with CARD_IN_ZONE was skipped because that condition reads the source controller's zones, not the opponent's.",
+  "_known_deviation": "Which-card choice is asked of the defending hero (zone owner) instead of Gravekeeping's controller; engine-side, see _comment."
+}

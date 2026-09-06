@@ -1,0 +1,19 @@
+{
+  "slug": "endless_maw_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {"type": "BANISH_RANDOM_FROM_GRAVEYARD", "amount": 3}
+      ],
+      "effects": [
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [{"type": "REF_POWER_GTE", "ref": "banished_cards", "amount": 6}],
+          "then": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}]
+        }
+      ]
+    }
+  ],
+  "_comment": "'As an additional cost to play Endless Maw, banish 3 random cards from your graveyard. If a card with 6 or more {p} is banished this way, Endless Maw gains +3{p}.' + printed **Blood Debt**. Shadow Brute Action - Attack.\n\nSHAPE COPIED FROM .drafts/dread_screamer_red/_blue/_yellow.json - same cost, same '6 or more {p} banished this way' clause, only the payoff differs (+3{p} vs go again).\n\nCOST: additional_cost BANISH_RANDOM_FROM_GRAVEYARD amount 3 (cost_types.py:192-224, read this session). Mandatory: can_pay requires >= 3 graveyard cards, so it BLOCKS the play when unpayable; pay samples N RANDOM cards (random.sample) and banishes each through canonical banish(origin_zone='graveyard'), then records what it banished under the shared 'banished_cards' ref via _record_banished.\n\nDEVIATION FROM TRIAGE, deliberate: it named TRIGGERED ON_ATTACK gated on REF_POWER_GTE, but that cannot work here. Ref registers are scoped to ONE ability execution - interpreter.run_ability pushes the scope at interpreter.py:31 and pops it at :35 - so a separate ON_ATTACK execution would find no 'banished_cards' ref and the condition would fail closed forever. Keeping the payoff in the SAME PLAY execution as the cost (costs are paid inside the scope, interpreter.py:48-52) is what makes the ref visible; the cost handler's own comment ('run_ability pushes the reference scope before paying additional costs, so the effects see it') describes exactly this pairing. Also matches the siblings' reading: no 'when' clause, so one flat PLAY resolution.\n\nPAYOFF: CONDITIONAL_EFFECT reads when/then (effect_types.py:3697-3724, read; authoring 'conditions' would have popped it as an effect-level gate and skipped the branch). REF_POWER_GTE (condition_types.py:2090-2118, read) takes ref+amount and ANY list entry meeting the threshold counts - written for this exact wording. MODIFY_ATTACK (effect_types.py:4123-4158, read) takes mod+amount, requires state.combat - which exists when an attack action's PLAY ability resolves (ON_PLAY dispatches from inside the attack step after CombatState creation) - and appends to combat.power_mods so later recalculations keep the +3.\n\nBloodDebt deliberately NOT authored: printed keyword firing from the card DB keywords field (build_keyword_triggers maps blood debt to a start-of-end-phase lose-1-life trigger while face-up in the banished zone). Unlike Dread Screamer's conditional go again, Blood Debt is UNCONDITIONAL on this card, so no SOURCE_IS_ATTACK conditional-keyword machinery applies and there is no over-grant concern.\n\nOn adoption, pick the json/<set>/ folder from the card's setIdentifiers (batch label says Monarch), not from the batch."
+}

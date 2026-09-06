@@ -1,0 +1,17 @@
+{
+  "slug": "blue_sea_tricorn",
+  "activation_cost": 3,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "DRAW", "amount": 1},
+        {"type": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'Action - {r}{r}{r}, destroy this: Draw a card. Go again.' The {r}{r}{r} is the card-level activation_cost (DSL-authoritative; read by play.py's cost gate at play.py:1513-1522), NOT a PAY_RESOURCES cost - that would double-charge. 'destroy this' is an ability-level cost: DESTROY_SELF is the documented cost-namespace spelling (cost_types.py:43, pay routes through canonical destroy()). Costs sit in the ability 'cost' array so they gate legality and are paid before effects. DRAW reads amount/player (defaults SELF) - verified effect_types.py:1222. GO AGAIN: authored as the GO_AGAIN effect, not GAIN ACTION_POINTS. The sibling draft bandana_of_the_blue_beyond avoided GO_AGAIN because the handler then only wrote state.combat.keywords (dead out of combat), but that fix has since landed: the current handler (effect_types.py:4943) splits on CR 8.3.5a/b and grants the action point for non-attack layers, explicitly citing activated equipment abilities as the case it serves; GAIN keyword GO_AGAIN routes through the same _grant_go_again. Printed GoAgain DB keyword is harmless here: activations create no card stack layer (play._apply_activate dispatches ON_ACTIVATE inline), so the engine's has_go_again resolution path never runs - no double-grant (same reasoning as the adopted bandana draft). Blade Break is a printed DB keyword, deliberately not authored."
+}

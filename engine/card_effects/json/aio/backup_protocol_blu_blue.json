@@ -1,0 +1,64 @@
+{
+  "slug": "backup_protocol_blu_blue",
+  "activation_cost": 2,
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {"type": "PUT_COUNTER", "target": "self", "counter_type": "steam", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "COUNTER_GTE", "counter_type": "steam", "min": 1}
+          ],
+          "then": [
+            {
+              "type": "MAY",
+              "prompt": "Remove a steam counter from Backup Protocol: BLU? (If not, it is destroyed.)",
+              "effects": [
+                {"type": "REMOVE_COUNTERS", "counter_type": "steam", "amount": 1}
+              ],
+              "else": [
+                {"type": "DESTROY_SELF"}
+              ]
+            }
+          ],
+          "else": [
+            {"type": "DESTROY_SELF"}
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {
+          "type": "BANISH",
+          "from_zone": "GRAVEYARD",
+          "player": "SELF",
+          "amount": 1,
+          "color": "blue",
+          "class_filter": "Mechanologist",
+          "subtype": "Attack",
+          "record_as": "retrieved"
+        },
+        {
+          "type": "MOVE_REF",
+          "ref": "retrieved",
+          "to_zone": "hand"
+        }
+      ]
+    }
+  ],
+  "_comment": "Three clauses plus the Crank keyword. Crank itself is engine-side from the card DB keywords field (ability_keywords.crank) - deliberately not authored. (1) 'Enters the arena with a steam counter': TRIGGERED ON_ENTER_PLAY + PUT_COUNTER, the shipped arc/teklo_core_blue.json pattern. (2) Upkeep: CONDITIONAL wraps MAY so both edges are right - with a steam counter the MAY offers remove-or-destroy (declining runs MAY's else = DESTROY_SELF); with zero counters (stripped by another effect) the CONDITIONAL else destroys it since removal is impossible. The gate sits on CONDITIONAL's 'when', NOT ability-level conditions (checked at resolution; would skip the destroy too) and NOT on the MAY (loader pops those into an effect-level gate, skipping the destroy). Same shape as the sibling draft .drafts/assembly_module_blue.json. START_OF_TURN reaches only the turn player's permanents, which is exactly 'your turn'. (3) Instant: card-level activation_cost 2 carries the {r}{r} (a PAY_RESOURCES cost would double-charge); DESTROY_SELF is the ability cost. The retrieval is BANISH(from_zone GRAVEYARD, color/class_filter/subtype) + MOVE_REF(hand) rather than SEARCH_GRAVEYARD because SEARCH_GRAVEYARD reads only type/subtype/slug/name filters - it has NO colour or class filter, so it could not express 'blue Mechanologist'. _hand_card_filter (which BANISH's graveyard branch uses) ANDs colour + type/subtype + class, so all three printed restrictions hold. MODELLING ARTIFACT: the card transits the banished zone for an instant before MOVE_REF puts it in hand - net zones match the printed text (graveyard -> hand) but any respond-to-banish triggers on the retrieved card would fire spuriously; same accepted artifact as .drafts/avalon_archangel_of_rebirth.json. No matching card in the graveyard: BANISH pool empty, ref unset, MOVE_REF no-ops (fail to find)."
+}

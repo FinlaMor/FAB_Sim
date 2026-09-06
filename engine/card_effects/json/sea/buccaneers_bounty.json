@@ -1,0 +1,17 @@
+{
+  "slug": "buccaneers_bounty",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 1},
+        {"type": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - Destroy this: Gain {r}. **Go again**' + printed Blade Break.\n\nBlade Break is a printed keyword (printed_keywords) and fires from the card DB keywords field - deliberately NOT authored here; authoring it again is a defect.\n\nFIX VS THE PREVIOUS REVISION OF THIS DRAFT: activation_cost sat INSIDE the ability object, where nothing reads it - AbilityDef (dsl/schema.py) has no such field and the loader keeps unknown ability keys in AbilityDef.params (loader.py:124), so it looked implemented and charged nothing. Moved to CARD level, which play._get_base_resource_cost reads off runtime card.activation_cost. 0 is also what the printed-text heuristic would find: the clause before the colon ('Destroy this') names no resource.\n\nACTIVATION: ability_type ACTIVATE maps to ON_ACTIVATE (trigger_types.ABILITY_TYPE_TO_EVENT); chest equipment is scanned by play.available_actions (play.py:262-265) and ACTIVATE is offered in the action phase with an action point. 'Destroy this:' is the activation COST, not an effect: cost_types.py:43-51 implements DESTROY_SELF for exactly this wording - can_pay always true, pay routes through canonical destroy(), which resolves the chest slot zone. _apply_activate pays costs check-then-pay BEFORE dispatching ON_ACTIVATE (play.py:1288-1296).\n\nGO AGAIN: the triage note says 'keywords:BladeBreak+GoAgain (DB field, no authoring)'. Right for Blade Break, NOT for this Go again: it is part of the ACTIVATED ABILITY's resolution, not a static property of the equipment. The GO_AGAIN effect handler (effect_types.py:4943+) splits on CR 8.3.5a/b and pays the action point on the non-attack-layer path - written for exactly this case. NO DOUBLE-GRANT from the printed GoAgain DB keyword: activations create no card stack layer (play._apply_activate dispatches ON_ACTIVATE inline), so the engine's card.has_go_again payout at layer resolution never runs for an equipment activation (same reasoning documented on .drafts/blue_sea_tricorn.json and .triage/diamond.json, whose text is near-identical: 'Action - Destroy Diamond: Draw a card. Go again'). Spelling matches shipped sea/captains_coat.json (same set, same sentence shape: GAIN RESOURCE_POINTS 1 + GO_AGAIN under ACTIVATE).\n\nGAIN asset RESOURCE_POINTS routes through effect_gain_resources (effect_types.py:4887-4889); amount 1 read."
+}

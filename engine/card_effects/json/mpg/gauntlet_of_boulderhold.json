@@ -1,0 +1,26 @@
+{
+  "slug": "gauntlet_of_boulderhold",
+  "activation_cost": 3,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {"type": "ATTACK_CLASS_IN", "classes": ["Guardian"]},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "PLAYED_FROM_ARSENAL"}
+          ]
+        },
+        {"type": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - {r}{r}{r}, destroy this: The next Guardian attack action card you play from arsenal this turn gets +2{p}. **Go again** / **Battleworn**'\n\nCOSTS: the {r}{r}{r} is the card-level activation_cost = 3 (read by _cost_check for ACTIVATE_CARD, play.py:1513-1524; authoring it as a PAY_RESOURCES cost would double-charge per IMPLEMENTATION_GUIDE). 'destroy this' is the ability-level DESTROY_SELF cost (cost_types.py:43-51; canonical destroy resolves the arms slot). OFFERING: equipment-slot ACTIVATE abilities are offered by play._add_hero_dsl_activations — arms is in its source zones (play.py:262) and ACTIVATE timing is action phase + action point + empty stack (play.py:284).\n\n'+2{p} TO THE NEXT ...' is MODIFY_NEXT_ATTACK mod add amount 2, scope TURN (default) — NOT a turn-long static, which would buff every matching attack for the rest of the turn. Queue consumption verified (engine.py:1175-1236): filter specs are compiled and evaluated against the attacking card, non-matching mods are KEPT for later attacks, matching ones are consumed and applied as a stage-7 power effect through apply_power_gain_replacements; unused mods expire at end of turn (engine.py:921-922). FILTER handlers read this session: ATTACK_CLASS_IN takes 'classes', tests class+talent traits of combat.attack_card (condition_types.py:204-216) — Guardian is a class. ATTACK_TYPE_IN takes 'types', tests types UNION subtypes (condition_types.py:273-294) — 'Action' matches attack action cards and rejects weapon/ally attacks so they do not burn the one-shot. PLAYED_FROM_ARSENAL is parameterless for the positive form (value defaults True), reads played_from_zone stamped by play.py at the moment of play with a prev_zone fallback (condition_types.py:789-809). DEVIATION FROM TRIAGE LIST disclosed: triage named ATTACK_PLAYED_FROM_ZONE (condition_types.py:544); PLAYED_FROM_ARSENAL used instead — both exist and both ask the attacking card's played-from zone, but PLAYED_FROM_ARSENAL is the spelling the sibling draft craterhoof.json (identical printed sentence family) verified end-to-end against this exact queue-consumption path.\n\nGO AGAIN: the GO_AGAIN effect's non-attack-layer path (CR 8.3.5a) exists precisely for activated equipment abilities — its handler grants the action point outside combat (effect_types.py:4943-4963). NOT re-authoring printed_keywords: Battleworn stays DB-side (wanted unconditionally on the equipment). GoAgain also appears in printed_keywords, but it belongs to the ACTIVATION text, not to the equipment: the gauntlet is never played as a card so the DB keyword is inert, and the SOURCE_IS_ATTACK conditional-keyword shape does not apply — neither printed keyword is gated on THIS card attacking (one buffs another card, one is a resolution payoff). Same reasoning recorded on craterhoof.json.\n\nBattleworn needs no JSON; it fires from the card DB keywords field."
+}

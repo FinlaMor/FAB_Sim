@@ -1,0 +1,21 @@
+{
+  "slug": "constella_contemplation_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "ponder", "amount": 1},
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "EVENT_THIS_TURN", "event": "graveyard", "qualifier": "instant"}
+          ],
+          "then": [
+            {"type": "DEAL_ARCANE", "amount": 1, "target": "TARGET_HERO"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Create a Ponder token. **Starfall** - If an instant card has been put into your graveyard this turn, deal 1 arcane damage to target hero.' Lightning Wizard Instant.\n\nSTARFALL keyword NOT AUTHORED: it is a clause marker, not an engine keyword - nothing in build_keyword_triggers or the loader consumes it; the conditional carries the whole meaning. EVENT_THIS_TURN event graveyard qualifier instant is the documented Starfall shape (DSL_REFERENCE); the marker is recorded in Zone.add (state.py:270-277) from card.types on EVERY graveyard path (destroy, discard, attack resolution, chain close, CR 3.0.12 CLEAR redirect), and the condition normalises both sides so type 'Instant' matches qualifier 'instant'.\n\nSHAPE: one PLAY ability (an Instant CARD whose effect happens when you play it is PLAY, not the INSTANT activated-ability type), effects in printed order; release note 3 ('no priority between any of the effects') = plain sequential list. CONDITIONAL_EFFECT reads 'when'/'then'/'else' (effect_types.py:3697-3724); an unmet test runs the empty else, i.e. nothing - correct for a Starfall clause whose damage only happens on the 'if' (triage note concurs: no else branch needed). CREATE_TOKEN handler reads token/count|amount/player/destination (effect_types.py:1942+); 'ponder' resolves via json/tokens/ponder.json, which exists.\n\nRELEASE NOTE 2 / TARGETING GAP: 'You must target any hero when playing Constella Contemplation regardless of whether a card with the instant type has been put into your graveyard this turn' requires declaring a hero target at PLAY time, but the DSL has no play-time hero-target machinery an effect can read - DEAL_ARCANE picks its victim from its own 'target' STRING param (_damage_target_player, effect_types.py:907-931), and an ability-level target.filter would only compile into a resolution-time gate the damage effect never consults. Used the recognised spelling 'TARGET_HERO', which hits the opposing hero - in this 1v1 engine the only hero a player would ever name. Declaring your OWN hero as the target (legal, if pointless, in paper FAB) is not expressible; flagging rather than guessing. Shape and gap handling copied verbatim from the sibling .drafts/constella_flowslide_yellow.json (identical Starfall sentence family, token differs)."
+}

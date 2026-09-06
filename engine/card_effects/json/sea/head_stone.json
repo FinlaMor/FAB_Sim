@@ -1,0 +1,16 @@
+{
+  "slug": "head_stone",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DESTROY_PERMANENT", "target": "self"}
+      ],
+      "effects": [
+        {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "SELF", "amount": 1, "into": "top"},
+        {"type": "DESTROY_REF", "ref": "top"}
+      ]
+    }
+  ],
+  "_comment": "'Instant - Destroy this: Destroy the top card of your deck.' Shape copied from shipped wtr/barkbone_strapping (same 'Instant - Destroy this:' equipment ability): INSTANT + cost DESTROY_PERMANENT target self (cost_types.py reads target=='self' and destroy() resolves the head-slot zone itself). LOOK_AT defaults to player OPPONENT, so SELF is explicit; amount 1 stores the single card unwrapped and DESTROY_REF handles both shapes. Empty deck: LOOK_AT stores None and DESTROY_REF returns early -- no crash.\n\nBattleworn is in printed_keywords and comes from the card DB keywords field (combat_chain_close trigger built by triggers/triggers.py); deliberately NOT authored here.\n\nRELEASE NOTES NOT MODELED (engine-side semantics, not expressible per-card in JSON): (1) destroying the top card of your deck must not trigger other cards' 'when this is destroyed' effects unless their condition says so, and (2) it must not satisfy 'you destroyed an object you control' conditions since deck cards are not controlled. DESTROY_REF goes through canonical destroy(), which emits its normal events; whether those listeners fire for a deck card is decided engine-side. If either note is violated today, the fix belongs in the generic destroy/listener path, not in this JSON."
+}

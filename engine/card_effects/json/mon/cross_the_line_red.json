@@ -1,0 +1,17 @@
+{
+  "slug": "cross_the_line_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {
+          "type": "CHARGE",
+          "amount": 1,
+          "optional": true
+        }
+      ],
+      "effects": []
+    }
+  ],
+  "_comment": "'As an additional cost to play Cross the Line, you may **charge** your hero's soul.' Light Warrior Action - Attack; otherwise a vanilla attack action with no other ability text.\n\nShape copied verbatim from the adopted dtd/light_the_way_red.json, whose printed sentence is the same family ('As an additional cost to play this, you MAY charge your hero's soul...').\n\nCOST, NOT EFFECT: 'as an additional cost to play' is additional_cost on the PLAY ability (loader.py:109 compiles it through cost_types.compile_cost). The CHARGE cost branch (cost_types.py:266-318) reads amount and optional/may; with optional set, can_pay returns True unconditionally so the cost NEVER blocks the play - that is the printed 'you may'. pay_fn asks the controller which hand card to charge (no silent hand-position-0 take) and routes through the canonical charge keyword (CR 8.5.29 per the handler).\n\nEmpty effects list is deliberate and sanctioned: light_the_way_red's own comment records that 'an ability carrying only a cost has an empty effects list, which compiles fine and resolves as a no-op'. This card's only behaviour IS the optional cost.\n\nCharge in printed_keywords fires from the card DB keywords field - deliberately NOT authored here; re-authoring a printed keyword is a defect."
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "felling_swing_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 6,
+          "filter": [
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Axe"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next axe attack this turn gains +6{p}. / **Go again**' Warrior Action (Dynasty) - note the type_text is plain 'Warrior Action', NOT 'Action - Attack', so the pump rides a PLAY ability that resolves when the card is played.\n\nPUMP: MODIFY_NEXT_ATTACK reads mod/amount/filter/scope (effect_types.py:4592-4618, read this session); scope defaults to TURN, which is the printed 'this turn'. The mod is queued on the card's CONTROLLER and consumed by the FIRST matching attack only - official release note ('applies to the next axe attack only. It does not apply to any additional axe attacks made that turn') is that consumption rule verbatim; nothing extra to author. The filter key is 'filter', never 'conditions' - conditions would be popped as an effect-level gate and evaluated NOW, when no axe attack exists.\n\n'Axe' IS A SUBTYPE: ATTACK_SUBTYPE_IN reads 'subtypes' (also accepts 'types'; it merges both lists, condition_types.py:296-316, read this session), and 'Axe' is a real subtype string in the corpus (mon/hvy/gem/dyn/dtd/batch/aps work queues all carry it). Axe lives on WEAPONS, which attack as themselves, so ATTACK_SUBTYPE_IN over the attack card's subtypes is the right shape - same family as the documented Arrow/Dagger/Sword filters.\n\nGO AGAIN NOT AUTHORED, deliberately: it is unconditional printed text and appears in printed_keywords, so it fires from the card DB keywords field. Re-authoring it would be a defect, and the conditional-keyword (SOURCE_IS_ATTACK) wrapper is only for cards whose printed keyword is gated by a condition - this one has no condition.\n\nAdoption note: batch lists set Dynasty - derive the folder from the card's own sets/setIdentifiers in card_data/slug_index.json at adoption time."
+}

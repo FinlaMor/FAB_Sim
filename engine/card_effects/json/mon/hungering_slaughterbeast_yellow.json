@@ -1,0 +1,13 @@
+{
+  "slug": "hungering_slaughterbeast_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {"type": "BANISH_RANDOM_FROM_GRAVEYARD", "amount": 3}
+      ],
+      "effects": []
+    }
+  ],
+  "_comment": "'As an additional cost to play Hungering Slaughterbeast, banish 3 random cards from your graveyard.' + printed **Blood Debt**. Shadow Brute Action - Attack (LeviaBlitzDeck printing; identical text to the blue sibling .drafts/hungering_slaughterbeast_blue.json, whose shape this copies verbatim - no amount differs between printings).\n\nBLOOD DEBT NOT AUTHORED: printed_keywords carries BloodDebt - a CR section 8 keyword on the card DB keywords field, implemented engine-side (ability_keywords.blood_debt); re-authoring it would be a defect.\n\nCOST NOT EFFECT: 'As an additional cost to play' must be able to BLOCK the play, so it lives in the ability-level additional_cost array, never as an ON_PLAY effect. BANISH_RANDOM_FROM_GRAVEYARD (cost_types.py:192-224, read this session) is the exact primitive the triage named and reads exactly one parameter, amount: can_pay requires >= N cards in the controller's graveyard (so with fewer than 3 graveyard cards the play is not offered), and pay samples N at random and removes them via the canonical banish with origin_zone='graveyard' (so they leave the graveyard - no double-zone bug). Mandatory and unchosen, matching 'banish 3 random'.\n\nEMPTY EFFECTS LIST IS THE DOCUMENTED SHAPE here, per the Scrap pattern in DSL_REFERENCE ('{\"ability_type\": \"PLAY\", \"additional_cost\": [...], \"effects\": []}'): the card's only authored text is its cost line; the attack itself needs no authored ability because an Action - Attack card is put onto the combat chain by the engine from its type/subtype when played.\n\nOn adoption, file under a set folder derived from the card's own setIdentifiers (batch says LeviaBlitzDeck).\n\nNo gaps."
+}

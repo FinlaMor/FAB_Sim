@@ -1,0 +1,81 @@
+{
+ "slug": "intimate_inducement_red",
+ "abilities": [
+  {
+   "ability_type": "ATTACK_REACTION",
+   "target": {
+    "filter": [
+     {
+      "type": "ATTACK_CLASS_IN",
+      "classes": [
+       "Assassin",
+       "Mystic"
+      ]
+     },
+     {
+      "type": "ATTACK_TYPE_IN",
+      "types": [
+       "Action"
+      ]
+     }
+    ]
+   },
+   "effects": [
+    {
+     "type": "MODIFY_ATTACK",
+     "mod": "add",
+     "amount": 1
+    },
+    {
+     "type": "LOOK_AT",
+     "zone": "DECK_TOP",
+     "player": "OPPONENT",
+     "amount": 4,
+     "into": "seen"
+    },
+    {
+     "type": "SELECT_FROM_REF",
+     "ref": "seen",
+     "mode": "ANY",
+     "min": 1,
+     "max": 1,
+     "into": "chosen",
+     "rest_into": "rest"
+    },
+    {
+     "type": "CONDITIONAL",
+     "when": [
+      {
+       "type": "REF_PITCH_IS",
+       "ref": "chosen",
+       "pitch": 3
+      }
+     ],
+     "then": [
+      {
+       "type": "ADD_DEFEND",
+       "target": {
+        "ref": "chosen"
+       },
+       "defense": 0
+      }
+     ],
+     "else": [
+      {
+       "type": "ADD_DEFEND",
+       "target": {
+        "ref": "chosen"
+       }
+      }
+     ]
+    },
+    {
+     "type": "REORDER_REF",
+     "ref": "rest",
+     "player": "OPPONENT"
+    }
+   ]
+  }
+ ],
+ "_comment": "Pre-existing draft verified. target.filter uses ATTACK_CLASS_IN (reads classes AND talents via _card_traits so Assassin+Mystic in one list) and ATTACK_TYPE_IN (unions types+subtypes). REF_PITCH_IS reads ref+pitch (3=blue). ADD_DEFEND with target ref pulls from context register. REORDER_REF lets opponent controller order rest on top."
+}

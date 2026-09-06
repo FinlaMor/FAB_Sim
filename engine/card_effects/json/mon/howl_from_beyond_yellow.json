@@ -1,0 +1,26 @@
+{
+  "slug": "howl_from_beyond_yellow",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {"type": "PLAYABLE_FROM_BANISHED"}
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'You may play Howl from Beyond from your banished zone. / The next attack action card you play this turn gains +2{p}. / Go again / Blood Debt.' Shadow Action (Monarch).\n\nPRINTED KEYWORDS NOT AUTHORED: GoAgain and BloodDebt both appear in printed_keywords, so they fire from the card DB keywords field engine-side; re-authoring either would be a defect. Both are unconditional printed lines, so no SOURCE_IS_ATTACK conditional-keyword shape applies.\n\nCLAUSE 1 - play-from-banished permission: the declarative STATIC PLAYABLE_FROM_BANISHED. Spelling copied from SHIPPED chn/rift_bind_blue.json (read this session: same STATIC + bare PLAYABLE_FROM_BANISHED effect) and from the sibling draft .drafts/howl_from_beyond_blue.json (identical card, blue printing). Engine-READ, never resolved: play._self_playable_from_banished scans each banished card's declared statics and play.py consults it when offering plays. Takes no parameters; this clause is unconditional.\n\nCLAUSE 2 - pump: MODIFY_NEXT_ATTACK with a filter; ATTACK_TYPE_IN ['Action'] + ATTACK_SUBTYPE_IN ['Attack'] together name exactly an attack action card (both condition types verified at condition_types.py:273/296). Handler (effect_types.py:4592-4618) reads mod/amount/filter/scope; default scope TURN matches 'this turn', the mod queues on the card's controller, and it is consumed by the first qualifying attack that turn. Amount 2 for the yellow printing (blue sibling drafts 1). Filter spelling copied from .drafts/howl_from_beyond_blue.json, which took it from SHIPPED wtr/nimblism_yellow.json ('The next attack action card ... you play this turn gets +2{p}' - the same sentence with a cost bound this card lacks).\n\nNo gaps."
+}

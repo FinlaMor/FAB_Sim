@@ -1,0 +1,40 @@
+{
+  "slug": "burn_up__shock_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {"type": "MELD_SIDE", "side": "top"}
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "player": "SELF",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "ATTACK_CONTROLLED_BY_YOU"},
+              {"type": "ATTACK_TARGET_IS_HERO"},
+              {"type": "NOT", "inner_type": "FLAG_SET", "flag": "burn_up_shock_top_spent"}
+            ],
+            "effects": [
+              {"type": "DEAL_ARCANE", "amount": 4, "target": "OPPONENT"},
+              {"type": "SET_FLAG", "flag": "burn_up_shock_top_spent"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {"type": "MELD_SIDE", "side": "bottom"}
+      ],
+      "effects": [
+        {"type": "DEAL_ARCANE", "amount": 1, "target": "ANY", "max_targets": 1}
+      ]
+    }
+  ],
+  "_comment": "Meld card authored as two PLAY abilities gated on MELD_SIDE, following shipped vaporize__shock_yellow; the MELD_SIDE condition also returns true when 'both' was played (condition_types.py:1562-1577), so no OR wrapper is needed. Meld and Go again are printed keywords -> card DB keywords field, deliberately NOT authored here. TOP HALF ('The next time an attack you control hits a hero this turn, deal 4 arcane damage to them'): PLAY arms an INJECT_TRIGGER scope=TURN hook; the nested dict form is required so the inner conditions are evaluated per-hit rather than popped as an effect-level gate at registration. The SET_FLAG / NOT FLAG_SET pair is what makes it fire on the NEXT qualifying hit only - without the flag the hook would pay 4 on every hit this turn. ATTACK_TARGET_IS_HERO is the engine's 'attacked a hero' test (combat.attack_target stays None for hero attacks), and under that gate DEAL_ARCANE target OPPONENT resolves to exactly the hero that was hit (_damage_target_player). Verified against effect_types.py:2103-2189 (hook registration + per-hit compile), engine.py:1238-1281 (turn_attack_hooks re-applied to every attack, not consumed) and engine.py:1410-1423 (ON_HIT injected triggers fire with card=combat.attack_card, so ATTACK_CONTROLLED_BY_YOU / FLAG_SET resolve against my own attack and my own current_turn_effects). Known approximations: (1) the flag name is shared, so a second copy of this half played the same turn never pays out after the first does - printed text gives each copy its own 'next time'; (2) the flag lives in current_turn_effects and the hook expires end of turn, matching 'this turn'. BOTTOM HALF ('Deal 1 arcane damage to any target'): DEAL_ARCANE target ANY + max_targets 1 prompts over both heroes and all allies with a 'none' escape (_deal_arcane_to_objects, effect_types.py:988-1040). No known gaps beyond approximation (1)."
+}

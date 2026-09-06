@@ -1,0 +1,30 @@
+{
+  "slug": "kindle_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "AMP",
+          "amount": 1
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "HAND_SIZE_EQ",
+              "amount": 0
+            }
+          ],
+          "then": [
+            {
+              "type": "DRAW",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Wizard Instant (PartTheMistveil). '**Amp 1**\n\nIf you have no cards in hand, draw a card.' Amp is NOT consumed from the card DB keywords field by the engine (high_voltage_blue.json comment verifies this) — it MUST be authored in JSON. The AMP effect (effect_types.py:1894-1899) calls effect_amp -> canonical amp() (effect_keywords.py:2853-2877, CR 8.5.47): next arcane damage this turn deals +1, stored in player.class_counters['amp']. The conditional draw uses CONDITIONAL_EFFECT (effect_types.py:3739-3766) with 'when' (NOT 'conditions' — the loader pops 'conditions' into an effect-level gate that would skip the whole branch). HAND_SIZE_EQ amount 0 (condition_types.py:1119-1144) tests for exactly empty hand. DRAW amount 1 defaults to SELF. Release note: 'You will draw a card if you have no cards in hand when this card resolves.' The condition is evaluated at resolution (interpreter runs ability effects at resolution), matching the note."
+}

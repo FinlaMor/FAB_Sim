@@ -1,0 +1,16 @@
+{
+  "slug": "amethyst_amulet_blue",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'Instant - Destroy this: Your next attack this turn gets +2{p}.' Shape copied from shipped sea/platinum_amulet_blue (an amulet item whose Instant activation destroys itself as the ability-level cost). Verified end to end: INSTANT abilities on items are offered by play._add_dsl_activations (items zone is in the sources list) at any priority window; the ability-level 'cost' array compiles to AbilityDef.costs (loader.py ~108) and _apply_activate_card pays it before dispatch (play.py ~1291-1296); DESTROY_SELF is a real cost type (cost_types.py ~43, can_pay always True, pay routes through canonical destroy()). INSTANT maps to ON_ACTIVATE (trigger_types.ABILITY_TYPE_TO_EVENT), and MODIFY_NEXT_ATTACK (effect_types.py ~4511) queues the mod on the card's CONTROLLER - correct for an instant-speed activation - with default scope TURN matching 'this turn'; unused mods expire at end of turn. No filter: 'your next attack' is unqualified.\n\nactivation_cost 0 is the TOP-LEVEL CardDef field ('Instant - Destroy this' has no {r} in its cost); do not also model the destroy as PAY_RESOURCES or move activation_cost into the ability, where no handler reads it.\n\nThe '**Legend of the Watery Grave**' line is the Legendary/WateryGrave entries in printed_keywords, which fire from the card DB keywords field - deliberately NOT re-authored here."
+}

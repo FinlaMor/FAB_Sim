@@ -1,0 +1,44 @@
+{
+  "slug": "edge_ahead_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {"type": "ATTACK_CLASS_IN", "classes": ["Warrior"]}
+          ]
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "player": "SELF",
+          "trigger": {
+            "trigger_type": "ON_ATTACK",
+            "conditions": [
+              {"type": "NOT", "inner_type": "FLAG_SET", "flag": "edge_ahead_wager_spent"},
+              {"type": "ATTACK_CLASS_IN", "classes": ["Warrior"]}
+            ],
+            "effects": [
+              {"type": "SET_FLAG", "flag": "edge_ahead_wager_spent"},
+              {
+                "type": "MAY",
+                "prompt": "Wager an Agility token with the defending hero?",
+                "conditions": [
+                  {"type": "ATTACK_TARGET_IS_HERO"}
+                ],
+                "effects": [
+                  {"type": "WAGER", "prize": "agility"}
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next Warrior attack this turn gets +3{p} and \"When this attacks a hero, you may wager an Agility token with them.\" Go again'.\n\nPUMP: MODIFY_NEXT_ATTACK (handler effect_types.py:4592-4618 reads mod/amount/filter/scope) queues a one-shot on dsl_queued_attack_mods, consumed by engine._apply_turn_attack_effects on the first attack whose card matches the filter; ATTACK_CLASS_IN matches CLASSES AND TALENTS of combat.attack_card via _card_traits (condition_types.py:204-216), so 'Warrior attack' is exact. Non-matching attacks leave the entry queued, so the +3 waits for the next WARRIOR attack rather than burning on any attack.\n\nRIDER VEHICLE: INJECT_TRIGGER scope TURN with the NESTED trigger dict - required so the inner conditions are evaluated per-attack instead of being popped by the loader as an effect-level gate evaluated once at registration (effect_types.py:2103-2119). TURN hooks live on Player.turn_attack_hooks and are re-applied to EVERY attack until end of turn, never consumed after firing (engine.py:1243-1281) - so 'your NEXT Warrior attack' needs a fire-once gate: the NOT FLAG_SET / SET_FLAG pair, the corpus idiom for exactly this sentence family (.drafts/chill_to_the_bone_blue.json, burn_up__shock_red, electrify_blue). Injected triggers fire with card=combat.attack_card (engine.py:1414-1423), so FLAG_SET resolves against the ATTACKER's current_turn_effects - the same player Edge Ahead's controller, since an action played in its own action phase can only ever see that player's attacks this turn.\n\nCONSUMPTION SEMANTICS (deliberate): the flag is set by ANY Warrior attack, because the granted triggered ability rides THAT attack whether or not its condition is met; the wager OFFER is then gated by ATTACK_TARGET_IS_HERO on the MAY itself (a conditions list there gates whether the prompt is offered at all, effect_types.py:3794-3798). This models release note 2 ('does not trigger if you attack anything other than a hero') under the strict reading that both clauses attach to the one next Warrior attack - an ally-targeting Warrior attack consumes the grant and offers nothing, and does not defer the rider to a later attack. ON_ATTACK not ON_HIT: the text says 'when this attacks', and combat.attack_target is populated before _apply_turn_attack_effects runs (engine.py:534-542), so the hero test is answerable at that timing.\n\nWAGER: handler reads prize/token (effect_types.py:5246) and registers an independent entry on combat.wagers (ability_keywords.add_wager:1039); each resolves separately at chain-link resolution per release note 1 - independence falls out of the list representation. prize 'agility' resolves to json/tokens/agility.json, which EXISTS.\n\nGoAgain is in printed_keywords: it fires from the card DB keywords field and is deliberately NOT authored here (re-authoring a printed keyword is a defect).\n\nKNOWN APPROXIMATION: the flag name is shared across copies, so a second Edge Ahead played the same turn gets no second rider after the first fires - printed text gives each copy its own 'next attack'. Same disclosed limitation as .drafts/burn_up__shock_red.json."
+}

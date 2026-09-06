@@ -1,0 +1,20 @@
+{
+  "slug": "emissary_of_moon_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {"type": "PUT_HAND_CARD_BOTTOM", "optional": true, "amount": 1},
+        {"type": "CONDITIONAL",
+         "when": [
+           {"type": "REF_EXISTS", "ref": "bottomed_from_hand"}
+         ],
+         "then": [
+           {"type": "DRAW", "amount": 1}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, you may put a card from your hand on the bottom of your deck. If you do, draw a card.' - Generic Action - Attack.\n\nTRIGGER: ON_ATTACK is dispatched to the attack card itself (engine._dsl_attacking_listener, engine.py:1524-1529 passes card=combat.attack_card), so Emissary hears its own attack with no source-scoping condition. 'When this attacks' fires regardless of whether the attack is later blocked, which matches the printed timing.\n\n'IF YOU DO': the triage list's PUT_HAND_CARD_BOTTOM + DRAW is necessary but not sufficient - sequencing them unconditionally would draw even when the player declines, and the 'conditional_effect' key documented on PUT_HAND_CARD_BOTTOM in DSL_REFERENCE.md is read by NOTHING (grep of dsl/ finds zero readers), so using it would silently drop the draw while looking implemented. Instead PUT_HAND_CARD_BOTTOM sets the ability-scoped ref 'bottomed_from_hand' ONLY when a card actually moved (effect_types.py:1610-1615), and the draw is a CONDITIONAL gated on REF_EXISTS over that ref - the exact shape of the already-implemented sink_below_red and the crown_of_providence draft. Declining and an empty hand both leave the ref unset, so neither draws.\n\n'RESOLVES AS ONE': release note 1 (no priority between the bottoming and the draw) holds because both effects sit in one triggered layer resolved back-to-back; nothing here needs to model it separately."
+}

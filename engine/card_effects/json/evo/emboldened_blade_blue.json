@@ -1,0 +1,91 @@
+{
+  "slug": "emboldened_blade_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "zone": "ARSENAL",
+          "player": "SELF",
+          "amount": "ALL",
+          "filter": {"face_down": true},
+          "into": "mine"
+        },
+        {
+          "type": "LOOK_AT",
+          "zone": "ARSENAL",
+          "player": "OPPONENT",
+          "amount": "ALL",
+          "filter": {"face_down": true},
+          "into": "theirs"
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "REF_EXISTS", "ref": "mine"},
+            {"type": "NOT", "inner_type": "REF_EXISTS", "ref": "theirs"}
+          ],
+          "then": [
+            {"type": "SELECT_FROM_REF", "ref": "mine", "mode": "ANY", "min": 1, "max": 1, "into": "picked"}
+          ]
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "NOT", "inner_type": "REF_EXISTS", "ref": "mine"},
+            {"type": "REF_EXISTS", "ref": "theirs"}
+          ],
+          "then": [
+            {"type": "SELECT_FROM_REF", "ref": "theirs", "mode": "ANY", "min": 1, "max": 1, "into": "picked"}
+          ]
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "REF_EXISTS", "ref": "mine"},
+            {"type": "REF_EXISTS", "ref": "theirs"}
+          ],
+          "then": [
+            {
+              "type": "CHOOSE",
+              "amount": 1,
+              "options": [
+                {
+                  "name": "Your arsenal",
+                  "effects": [
+                    {"type": "SELECT_FROM_REF", "ref": "mine", "mode": "ANY", "min": 1, "max": 1, "into": "picked"}
+                  ]
+                },
+                {
+                  "name": "Opponent's arsenal",
+                  "effects": [
+                    {"type": "SELECT_FROM_REF", "ref": "theirs", "mode": "ANY", "min": 1, "max": 1, "into": "picked"}
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {"type": "FLIP_REF", "ref": "picked", "face_up": true},
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "REF_IS_TYPE", "ref": "picked", "types": ["Defense Reaction"]}
+          ],
+          "then": [
+            {"type": "DESTROY_REF", "ref": "picked"},
+            {
+              "type": "MODIFY_NEXT_ATTACK",
+              "mod": "add",
+              "amount": 1,
+              "scope": "TURN",
+              "filter": [{"type": "ATTACK_IS_WEAPON"}]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Turn a face-down card in ANY arsenal face-up' needs one choice over two zones, but there is no merge-two-refs primitive, so the draft looks at both arsenals separately (LOOK_AT filter face_down scans the whole zone and stores a list; face_down:true selects is_public==false) and branches: only mine / only theirs / both. Only-branch forces the pick (SELECT_FROM_REF min 1, no STOP offered below min) per the release note that the effect is MANDATORY; the both-branch offers a CHOOSE between arsenals with no decline option, then forces the card pick inside the chosen arsenal. With no face-down card anywhere, 'picked' stays unset and FLIP_REF/DESTROY_REF no-op safely.\n\n'If it's a defense reaction' is REF_IS_TYPE (types and subtypes both count, so 'Defense Reaction' matches the card type) wrapping BOTH the destroy and the +1{p}, since the note confirms you get the pump when you destroy. Destroy goes through canonical destroy via DESTROY_REF; the pump is MODIFY_NEXT_ATTACK scoped TURN filtered ATTACK_IS_WEAPON ('your next weapon attack this turn').\n\nGo again is deliberately NOT authored: it is an UNconditional printed keyword, so it fires from the card DB keywords field.\n\nKnown modelling gap vs CR: the real play is a single target declaration ('a face-down card in any arsenal'); here it resolves as arsenal-choice-then-card-choice (two prompts when both arsenals qualify). The outcome set is identical; only the prompt shape differs."
+}

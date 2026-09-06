@@ -271,6 +271,18 @@ def test_every_card_saying_sharpen_uses_the_sharpen_effect():
     idx = json.load(open(root / "card_data" / "slug_index.json",
                          encoding="utf-8"))["by_slug"]
 
+    def _nodes(node):
+        """Every dict in the ability tree, so a CONDITION can be inspected too
+        -- `types_of` collects only type NAMES and cannot tell
+        EVENT_THIS_TURN(sharpen) from EVENT_THIS_TURN(charge)."""
+        if isinstance(node, dict):
+            yield node
+            for v in node.values():
+                yield from _nodes(v)
+        elif isinstance(node, list):
+            for v in node:
+                yield from _nodes(v)
+
     def types_of(node, out):
         if isinstance(node, dict):
             t = node.get("type")
@@ -301,7 +313,19 @@ def test_every_card_saying_sharpen_uses_the_sharpen_effect():
         # only says "the next time you would sharpen ... sharpen an additional
         # time"), so the whole family counts.
         family = {"SHARPEN", "SHARPEN_EXTRA_NEXT_TIME", "REPLACE_NEXT_SHARPEN"}
-        if not (used & family):
+        # ...and a card may only REFER to one having happened: "if the weapon
+        # has been sharpened this turn" (Deadly Display), "activate this only if
+        # you've sharpened a sword this turn" (Edge-Laden Plate). Those are
+        # correct without performing a sharpen -- SHARPEN records the turn event
+        # and they read it. Requiring the family of them reported four correct
+        # cards, which is the precision failure this project has already paid
+        # for once: a sweep that manufactures findings costs more than it saves.
+        reads_the_event = any(
+            isinstance(n, dict)
+            and str(n.get("type", "")).upper() == "EVENT_THIS_TURN"
+            and str(n.get("event", "")).lower() == "sharpen"
+            for n in _nodes(raw.get("abilities")))
+        if not (used & family) and not reads_the_event:
             bad.append(slug)
     assert bad == [], (
         f"cards whose text says sharpen but which use nothing from the "

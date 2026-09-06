@@ -1,0 +1,39 @@
+{
+  "slug": "fire_that_burns_within_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Discard a Phoenix Flame?",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "hand",
+              "card_name": "Phoenix Flame"
+            }
+          ],
+          "effects": [
+            {
+              "type": "DISCARD",
+              "amount": 1,
+              "card_name": "Phoenix Flame"
+            },
+            {
+              "type": "DRAW",
+              "amount": 1
+            },
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, you may discard a Phoenix Flame. If you do, draw a card and this gets +2{p}. / **Go again**' Draconic Action - Attack (CompendiumOfRathe).\n\nGO AGAIN NOT AUTHORED: GoAgain is in printed_keywords as an UNCONDITIONAL line of the text, so it fires from the card DB keywords field - re-authoring it would be a defect. No SOURCE_IS_ATTACK conditional-keyword machinery applies (nothing gates it).\n\nTIMING IS THE RELEASE NOTE: 'triggers when it resolves on the stack and becomes an attacking card on the combat chain' is exactly TRIGGERED + ON_ATTACK - _dsl_attacking_listener dispatches ON_ATTACK to combat.attack_card once this card IS the attack (engine.py ~1524-1529); identical release-note wording was drafted as TRIGGERED+ON_ATTACK in .drafts/chase_the_tail_red.json. An Action - Attack card is deliberately NOT an ATTACK_REACTION (DSL_REFERENCE warning - that ability type never fires on one).\n\nOPTIONAL CLAUSE: MAY (effect_types.py:3788-3856, read this session). Its conditions list is popped by the loader into an effect-level gate, so the prompt is not even offered without a Phoenix Flame in hand; CARD_IN_ZONE reads zone (singular, lowercased to player.hand) and card_name via _first_present(card_name/card/name) with count defaulting to >=1 (condition_types.py:844-996). Declining runs none of the block, which is the printed 'if you do'.\n\nBLOCK EFFECTS in printed order, each param read out of its handler this session: DISCARD name-filtered - _hand_card_filter reads card_name (effect_types.py:498-565), spelling proven by shipped pen/art_of_the_phoenix_war_red.json ('discard a Phoenix Flame', card_name key); DRAW reads amount/player (:1222-1249); MODIFY_ATTACK add 2 reads mod/amount (:4123-4158) and during ON_ATTACK appends to combat.power_mods AND bumps live power, so the +2 survives later defend/damage-step recalculations without double-counting - the in-handler-cited Reckless Arithmetic 'when this attacks, +X{p}' pattern. Release note 2 ('no priority between any of the effects') is plain sequential resolution of one effects list.\n\nRESIDUAL (theoretical, unreachable): the draw/pump ride acceptance rather than the discard actually removing a card; since offer and resolution are one uninterrupted ability execution and the condition just verified a match exists, the filtered discard cannot miss. If it ever could, DISCARD would remove nothing while the payoffs still ran."
+}

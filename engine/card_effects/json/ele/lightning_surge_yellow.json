@@ -1,0 +1,23 @@
+{
+ "slug": "lightning_surge_yellow",
+ "abilities": [
+  {
+   "ability_type": "WHILE_STATIC",
+   "conditions": [
+    {
+     "type": "SOURCE_IS_ATTACK"
+    },
+    {
+     "type": "PLAYED_FROM_ARSENAL"
+    }
+   ],
+   "effects": [
+    {
+     "type": "GAIN",
+     "keyword": "GO_AGAIN"
+    }
+   ]
+  }
+ ],
+ "_comment": "Conditional go again when played from arsenal. Printed GoAgain keyword suppressed via WHILE_STATIC with SOURCE_IS_ATTACK. PLAYED_FROM_ARSENAL condition checks card.prev_zone/played_from_zone."
+}

@@ -1,0 +1,25 @@
+{
+  "slug": "craterhoof",
+  "activation_cost": 3,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {
+          "type": "GRANT_NEXT_ATTACK_KEYWORD",
+          "keyword": "Dominate",
+          "filter": [
+            {"type": "ATTACK_CLASS_IN", "classes": ["Guardian"]},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "PLAYED_FROM_ARSENAL"}
+          ]
+        },
+        {"type": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - {r}{r}{r}, destroy this: The next Guardian attack action card you play from arsenal this turn gets **dominate**. **Go again** / **Battleworn**'\n\nThe {r}{r}{r} is the card-level activation_cost (play.py:1522 reads it for ACTIVATE_CARD; authoring it as a PAY_RESOURCES cost would double-charge per IMPLEMENTATION_GUIDE). 'destroy this' is the ability-level DESTROY_SELF cost (cost_types.py:43, canonical destroy resolves the legs slot). Equipment-slot ACTIVATE abilities are offered by play._add_hero_dsl_activations (legs is in its source zones, play.py:262).\n\n'The NEXT ... gets dominate' is GRANT_NEXT_ATTACK_KEYWORD, NOT GRANT_KEYWORD_TO_PLAYED: the latter covers EVERY matching card for the rest of the turn, while the former queues a one-shot mod consumed by _apply_turn_attack_effects on the first attack whose filter matches and kept otherwise (engine.py:1199-1211) - correct 'next' semantics. Filter verified against each handler: ATTACK_CLASS_IN reads combat.attack_card traits (Guardian is a class), ATTACK_TYPE_IN reads types+subtypes ('Action' matches an attack action card - types=['Action'] - and rejects weapon/ally attacks so they don't burn the grant), PLAYED_FROM_ARSENAL reads played_from_zone (stamped at play time) with prev_zone fallback. combat.attack_card is assigned before _apply_turn_attack_effects runs (engine.py:528 vs :542), so the grant lands. Keyword spelling 'Dominate' is exact-cased for actions.py:1196 / engine.py:625 ('Dominate' in combat.keywords).\n\n'Go again' is the GO_AGAIN effect, whose non-attack-layer path (CR 8.3.5a) exists precisely for activated equipment abilities.\n\nBattleworn is a printed DB keyword and is deliberately not authored. Dominate/GoAgain also appear in printed_keywords, but they belong to the ACTIVATION text, not to the equipment: the SOURCE_IS_ATTACK conditional-keyword shape does not apply (neither is gated on THIS card attacking - one is granted to another card, one is a resolution payoff), and loader.conditional_keywords() has no other form. They should be inert here since equipment never attacks, but if the engine ever applies DB keywords to non-attack cards more aggressively, that DB entry is the thing to fix, not this JSON."
+}

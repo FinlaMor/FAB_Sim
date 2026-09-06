@@ -1,0 +1,24 @@
+{
+  "slug": "electryn_joltstep_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {"type": "ATTACK_CLASS_IN", "classes": ["Runeblade", "Lightning"]}
+          ]
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token": "lightning_flow",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next Runeblade or Lightning attack this turn gets +2{p}.' / 'Create a Lightning Flow token.' / '**Go again**'. Lightning Runeblade Action (non-attack action, so PLAY - effects resolve when the card is played).\n\nPRINTED GO AGAIN IS DELIBERATELY NOT AUTHORED: it appears in printed_keywords and is unconditional (its own line, not 'if <condition>, this gets go again'), so it fires from the card DB keywords field. Re-authoring it as a GAIN effect would be a defect per the corpus convention (see captains_call_red draft note); the SOURCE_IS_ATTACK conditional-keyword shape does not apply because nothing conditions it.\n\nPump filter: ONE ATTACK_CLASS_IN with classes ['Runeblade', 'Lightning'] rather than the triage's OR(ATTACK_CLASS_IN [Runeblade], CARD_IS_TALENT [Lightning]). Verified against the handler (condition_types.py ~204): it normalises every entry of 'classes' (also accepting class/talent/talents keys) and tests them against _card_traits (~49), which is classes + talents + colour together - its own comment cites exactly this case ('names two TALENTS ... so a classes-only match found neither'). So one condition matches a Runeblade-class attack OR a Lightning-talent attack; the OR wrapper would be redundant. MODIFY_NEXT_ATTACK reads mod/amount/filter/scope (effect_types.py ~4592); scope defaults to TURN = 'this turn'; one-shot queue consumed by the first matching attack.\n\nToken: CREATE_TOKEN reads token/count/amount/player/destination (effect_types.py ~1942); amount 1 explicit for 'a ... token', player defaults to SELF. json/tokens/lightning_flow.json already exists. No destination override - zone routing derives from the token template's subtypes (it is an Aura).\n\nNo gaps found."
+}

@@ -1,0 +1,12 @@
+{
+  "slug": "dragon_power_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [{"type": "CARD_IS_TALENT", "talent": "Draconic"}],
+      "effects": [{"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}]
+    }
+  ],
+  "_comment": "'When this attacks, if it is Draconic, it gets +3{p}.' Ninja Action - Attack, no printed keywords.\n\nTRIGGERED + ON_ATTACK + MODIFY_ATTACK is the documented shape for an Action - Attack self-pump (an attack action card is NOT an ATTACK_REACTION - using that ability_type means the ability never fires). Under a one-shot trigger MODIFY_ATTACK records into combat.power_mods so the bonus survives later attack-power recalculations.\n\nRelease note: 'Dragon Power triggers when it resolves on the stack and becomes an attacking card. Whether it is a card with the Draconic talent supertype is checked when this trigger resolves.' That maps exactly onto this shape: ON_ATTACK fires when it becomes the attacking card (trigger_types.py:7 maps ON_ATTACK -> ON_ATTACK), and ability-level conditions are checked at RESOLUTION time (interpreter.py:54-58), i.e. after the trigger has fired - the note's timing, not a play-time gate.\n\nCARD_IS_TALENT (condition_types.py:1286-1307) asks about THIS card's classes/talents via _card_traits; an ON_ATTACK trigger on an Action - Attack card is dispatched to the attack card itself, so `c` is Dragon Power and 'Draconic' normalises against its talents list. ATTACK_CLASS_IN would have been the wrong condition - it asks about combat.attack_card from any source, and for hero/weapon statics that is a different object; here they coincide, but CARD_IS_TALENT says precisely what the text says ('if IT is Draconic')."
+}

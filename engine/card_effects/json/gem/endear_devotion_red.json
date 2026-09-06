@@ -1,0 +1,26 @@
+{
+  "slug": "endear_devotion_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Dagger"]}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3},
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "CHAIN_LINKS_CONTROLLED_GTE", "amount": 2, "attribute": "Draconic"}
+          ],
+          "then": [
+            {"type": "CREATE_TOKEN", "token": "fealty", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target dagger attack gets +3{p}' copies shipped biting_blade_blue's shape exactly: ATTACK_REACTION with target.filter declaring the legal target at play time (CR 5.1.4), MODIFY_ATTACK for the pump. Dagger is a card SUBTYPE (per IMPLEMENTATION_GUIDE), so ATTACK_SUBTYPE_IN with key 'subtypes' -- not a class.\n\nThe Fealty clause is checked at RESOLUTION (release note: 'When Endear Devotion resolves'), so it is an effect-level CONDITIONAL, NOT ability-level conditions -- those would gate the +3{p} too. CHAIN_LINKS_CONTROLLED_GTE reads amount + attribute ('Draconic' matched case-insensitively against each link's stored talents/classes/subtypes/keywords).\n\nGAP (adoption blocker): json/tokens/fealty.json DOES NOT EXIST. create_token calls require_card(token_slug) at runtime (effect_keywords.py:276), so the CREATE_TOKEN raises MissingCardImplementation the first time the clause fires. The card-DB template exists (card_data/slug_index.json has slug 'fealty', whose own functionalText references Fealty tokens and Temper) but I could not author it from .drafts/; it likely needs at least a stub, plus whatever its printed text requires.\n\nRelease-note nuance partially modelled: the handler counts state.chain_links with attacker_id == controller while the chain is open, which covers 'you still control a chain link even if the attack is no longer on it'. The Last-Known-Information rule for links whose type must be recalled after they left is approximated by the attributes each ChainLink stores at creation; a link removed from state.chain_links entirely would no longer count."
+}

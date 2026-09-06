@@ -1,0 +1,16 @@
+{
+  "slug": "flake_out_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "FLAG_SET", "flag": "fused_flake_out_red"}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "DOMINATE"}
+      ]
+    }
+  ],
+  "_comment": "'**Ice Fusion** / If Flake Out was **fused**, it gains **dominate**.' Elemental Ranger Action - Arrow Attack (batch set label TalesOfAria - pick the json/<set>/ folder from setIdentifiers at adoption).\n\nNOT AUTHORED: Ice Fusion and Dominate are both printed keywords (printed_keywords) firing from the card DB keywords field. '<X> Fusion' is an optional additional cost at PLAY time (ability_keywords.fusion, ability_keywords.py:582-607 - read directly this session: a REVEAL from hand that writes the marker 'fused_<card.slug>' into the controller's current_turn_effects, :604-606); re-authoring either keyword wholesale would be a defect.\n\nDOMINATE IS CONDITIONAL, SO THE MANDATED CONDITIONAL-KEYWORD SHAPE IS USED: the printed DB Dominate would otherwise apply unconditionally on every attack. loader.conditional_keywords() (loader.py:255-296, read this session) strips a printed keyword ONLY when an ability whose conditions include SOURCE_IS_ATTACK grants it via an UN-NESTED GAIN whose keyword is in _GRANTABLE_KEYWORDS (:243-246, dominate included) - this WHILE_STATIC is that ability (all three properties verified in source). engine._recalculate_attack_power then drops the printed copy from stage-6 keywords on every recalculation and this static re-grants it whenever its conditions hold; GAIN routes canonical_keyword('DOMINATE') -> 'Dominate' onto state.combat.keywords (effect_types.py:4927-4941, dedup-guarded, read this session), which is where the defend step enforces dominate. SOURCE_IS_ATTACK (condition_types.py:381-387) is true exactly while THIS card is combat.attack_card, i.e. during Flake Out's own attack - an Arrow Attack action card attacks as itself.\n\n'WAS FUSED' GATE DEVIATES FROM THE BATCH TRIAGE LIST (it named PITCHED_FOR_THIS), deliberately and with source verification: PITCHED_FOR_THIS reads card.pitched_for_this, stamped ONLY by play._pitch_for_cost on cards pitched to pay the resource cost. The engine's fusion() is a REVEAL from hand - it never pitches and never touches pitched_for_this, so PITCHED_FOR_THIS would be FALSE whenever the card WAS fused (and true whenever any Ice card merely paid cost). FLAG_SET (condition_types.py:1032-1037) tests exactly the 'fused_<slug>' marker fusion() writes; flag name is per-printing because fusion() keys it on card.slug - hence fused_flake_out_red. Timing holds: fusion resolves as a play cost before the attack, and WHILE_STATIC conditions are re-evaluated at every attack-power recalculation, so by then the flag is set or permanently absent.\n\nShape copied verbatim from .drafts/entwine_ice_red.json, whose printed text is IDENTICAL word for word ('If <card> was fused, it gains dominate') and which passed draft-review with the conditional-keyword machinery confirmed correct (its only finding was the shared per-printing-flag semantics, inherent to fusion()'s slug-keyed marker, not to this shape). No known gaps."
+}

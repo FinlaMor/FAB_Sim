@@ -1,0 +1,36 @@
+{
+  "slug": "ice_quake_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 1},
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "player": "SELF",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [{"type": "ATTACK_TARGET_IS_HERO"}],
+            "effects": [
+              {"type": "CREATE_TOKEN", "token": "frostbite", "amount": 1, "player": "OPPONENT"}
+            ]
+          }
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "player": "OPPONENT",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [{"type": "ATTACK_TARGET_IS_HERO"}],
+            "effects": [
+              {"type": "CREATE_TOKEN", "token": "frostbite", "amount": 1, "player": "OPPONENT"}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next attack this turn gains +1{p}. Whenever an attack hits a hero this turn, create a Frostbite token under their control. Go again.' Ice Action (TalesOfAria).\n\nGO AGAIN NOT AUTHORED: unconditional printed keyword (printed_keywords), fires from the card DB keywords field.\n\n+1{p}: MODIFY_NEXT_ATTACK (effect_types.py:4592-4618) reads mod/amount/filter/scope; queues on the card's CONTROLLER (not the turn player), consumed by their next attack this turn - exactly 'your next attack this turn'. No filter: any attack qualifies.\n\nWHENEVER-HOOK, authored TWICE on purpose: a TURN-scoped hook lives on ONE player's turn only (handler puts it on state.players[tid].turn_attack_hooks, tid from the effect's player param), and the printed 'whenever an attack hits a hero this turn' covers BOTH heroes' attacks. So one INJECT_TRIGGER with player SELF (covers my attacks) and one with player OPPONENT (covers theirs), per the ice_quake_red triage note. Release note 2 ('applies to all attacks this turn, not just the next') is what makes scope TURN right and a COMBAT one-shot wrong.\n\nNESTED DICT REQUIRED: the inner trigger's conditions sit under 'trigger'; a top-level conditions key would be popped by the loader as an effect-level gate evaluated once at registration (when there may be no attack) instead of per-hit (effect_types.py:2103-2119).\n\nUNDER THEIR CONTROL: injected ON_HIT triggers are dispatched with card=combat.attack_card (engine.py:1412-1421), so CREATE_TOKEN's player OPPONENT resolves against the ATTACKER (3 - attacker_id) = the hero that was hit - correct under both hooks, which is why both copies author the same player OPPONENT rather than mirroring SELF/OPPONENT. ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977) reads combat.attack_target (None for hero attacks), no params.\n\nADOPTION DEPENDENCY, blocking: json/tokens/frostbite.json does NOT exist anywhere under json/ (globbed this session). create_token calls require_card('frostbite') at resolution (effect_keywords.py:267-276), so the FIRST qualifying hit raises MissingCardImplementation mid-game until the token stub already drafted at .drafts/frostbite.json is adopted to json/tokens/frostbite.json - outside this pass's write scope. Note that stub itself flags the aura's printed cost-increase text ('Cards and activated abilities you control cost an additional {r}') as needing a generic continuous cost-increase primitive; the token will sit inert until then, but creation will not crash."
+}

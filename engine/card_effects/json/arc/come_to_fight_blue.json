@@ -1,0 +1,19 @@
+{
+  "slug": "come_to_fight_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "filter": [
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next attack action card you play this turn gains +1{p}. Go again.'\n\nGoAgain appears in printed_keywords, so it comes from the card DB keywords field - deliberately NOT authored here; authoring it again is a defect.\n\nShape: PLAY ability whose only effect is MODIFY_NEXT_ATTACK with a filter. Handler (effect_types.py:4592-4618) READS mod/amount/filter/scope - verified; it queues {mod, amount, filter, scope} on the CONTROLLER's dsl_queued_attack_mods (not the turn player's).\n\nFilter ATTACK_TYPE_IN ['Action']: the condition unions the attack card's types AND subtypes (condition_types.py:273-294) - an attack action card is types=['Action'], subtypes=['Attack'], so ['Action'] names exactly attack action cards; weapon attacks carry type Weapon and do not match. This is the 'attack action card' restriction the printed text makes.\n\nConsumption verified at engine.py:1175-1236: while state.combat holds each newly declared attack, queued filter specs are compiled and evaluated against that attack card; the first match appends a stage-7.5 power effect (+1, routed through apply_power_gain_replacements so 'instead' replacements still see it) and the entry is CONSUMED - one-shot, so a second attack this turn gains nothing. Unused entries expire at end of turn (engine.py:797, 921-922), matching 'this turn'. Scope left at default TURN.\n\nNo gaps; every clause expressible."
+}

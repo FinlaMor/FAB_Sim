@@ -1,0 +1,12 @@
+{
+  "slug": "frosting_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "DEAL_ARCANE", "amount": 2, "target": "ANY"}
+      ]
+    }
+  ],
+  "_comment": "'Deal 2 arcane damage to any target.' Ice Wizard Action (Uprising).\n\nSHAPE: PLAY -> DEAL_ARCANE amount 2 target ANY. The handler (effect_types.py:1188-1219) reads amount/target/max_targets/player; with target ANY it calls _deal_arcane_to_objects (:988-1040), whose pool is BOTH heroes plus ALL allies of both players, and asks the controller to pick one ('none' offered). That is exactly release note 1: 'any target that can be dealt damage ... including both allies and heroes'. Damage routes through the canonical deal_damage keyword with DamageType.ARCANE and the chosen object as target, so ally death (CR 1.10.2b) and replacement interception see it.\n\nTRIAGE SAID 'target.filter' - deliberately not used. A declared CR 1.8.5 target would need filter conditions spanning heroes AND allies AND both controllers, and the handler's ANY path already performs the selection at resolution; three precedent drafts use this exact form (figment_of_ravages_yellow, enion_surge_red/yellow/blue, comet_storm__shock_red with max_targets). max_targets omitted = default 1, matching the single unqualified 'any target'.\n\nNOT AUTHORED: Wizard class / Ice talent - card DB fields, not behaviour."
+}

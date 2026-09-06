@@ -567,7 +567,9 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             cards = list(player.permanents.cards) + [c for z in slots for c in z.cards]
             out = []
             for c in cards:
-                if _xt and getattr(c, "is_token", False):
+                # is_token is never set; "Token" in types is the mark.
+                from engine.state import _is_token
+                if _xt and _is_token(c):
                     continue
                 if _wt and not ({t.lower() for t in (getattr(c, "types", None) or [])}
                                 & set(_wt)):

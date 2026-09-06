@@ -1,0 +1,16 @@
+{
+  "slug": "bracken_rap_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "PITCHED_FOR_THIS", "talent": "Earth"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "might", "count": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Earth Bond** - When this attacks, if an Earth card was pitched to play this, create a Might token.' The Bond clause IS the authored content: ability_keywords.check_earth_bond exists but is dead code - grep shows no caller anywhere in engine/, and it is not wired to the card-DB keywords field (unlike Crank), so there is no engine-side double-fire and the bond must be authored in JSON. Same idiom as shipped pen/arc_bending_red.json (Lightning Bond) and per this card's triage note. Trigger: TRIGGERED + ON_ATTACK is the documented pattern for an Action - Attack card (DSL_REFERENCE: an attack action is NOT an ATTACK_REACTION); ON_ATTACK fires when the card enters the combat chain, matching release note 1 ('triggers when the card resolves on the stack and becomes an attacking card'). Gate: PITCHED_FOR_THIS reads card.pitched_for_this, stamped by play._pitch_for_cost on the cards pitched to pay THIS card's resource cost before resolution - so it holds at ON_ATTACK time, satisfies release note 2 (must be pitched while paying for this card, not earlier in the turn; distinct from the pitch zone), and survives release note 3 (the stamp is a list of card references on the played card, unaffected by the pitched card later leaving the pitch zone). Param spelling 'talent' verified read: the handler resolves card_class/class/talent and matches via _card_traits, which includes talents (condition_types.py:49-64). Payoff: CREATE_TOKEN reads token/count|amount/player/destination (effect_types.py:1942-1991); count defaults 1, controller SELF. json/tokens/might.json exists (globbed). No known gaps."
+}

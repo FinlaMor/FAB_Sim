@@ -1,0 +1,16 @@
+{
+  "slug": "endless_arrow_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "RETURN_TO_HAND",
+          "to_owner": true
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits, put it into its owner's hand.' Ranger Action - Arrow Attack (ArcaneRising).\n\nTRIGGERED + ON_HIT: the shipped idiom for attack-action hit triggers (dtd/herald_of_ravages_red.json); engine.py:550-560 registers the attack card's triggers and dispatches its abilities once state.combat exists.\n\nRETURN_TO_HAND with NO ref/target/zone falls through to objects=[card] -- the source -- which is exactly 'put IT into ... hand' for the attacking arrow itself (effect_types.py:1501-1555; the handler comment states this default is right for bounce-self cards). to_owner:true makes the destination obj.owner, matching the printed 'its OWNER's hand' literally rather than assuming the controller (for your own attack they coincide, but the printed word is owner).\n\nNo ATTACK_TARGET_IS_HERO gate: the text is unconditional over ANY hit, unlike send_packing_yellow whose text names a hero.\n\nAdopter note: batch labels the set 'ArcaneRising'; shipped Arcane Rising cards live in json/arc/ -- pick the folder from the card's own setIdentifiers per IMPLEMENTATION_GUIDE step 4."
+}

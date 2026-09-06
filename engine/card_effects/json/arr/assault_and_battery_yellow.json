@@ -1,0 +1,16 @@
+{
+  "slug": "assault_and_battery_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "EVENT_THIS_TURN", "event": "beat_chest"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "agility"}
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, if you've beaten chest this turn, create an Agility token.' Identical text to the red/blue printings; shape copied from the sibling drafts .drafts/assault_and_battery_red.json and the shipped ako/pound_town_blue.json, which carry the identical gate. EVENT_THIS_TURN event=beat_chest reads the marker recorded by the Beat Chest keyword cost exactly when the player pays it (costs/effect_costs.py KEYWORD_COSTS['beat_chest'] -> _record_turn_event(state, player_id, 'beat_chest')), so declining the cost correctly fails the gate. The release note ('you may have beaten chest on any card this turn, not just from playing Assault and Battery') is satisfied for free - the marker is player-scoped across the turn, not keyed to this card. Printed BeatChest keyword fires from the card DB keywords field; deliberately NOT authored here (re-authoring a printed keyword is a defect). ON_ATTACK rather than ON_HIT: the trigger is on attacking, not on dealing damage. json/tokens/agility.json already exists. No known gaps."
+}

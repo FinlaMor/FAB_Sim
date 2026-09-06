@@ -1,0 +1,35 @@
+{
+  "slug": "breaker_helm_protos",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "MAY",
+         "prompt": "Discard a Hyper Driver?",
+         "conditions": [
+           {"type": "CARD_IN_ZONE", "zone": "hand", "card_name": "Hyper Driver"}
+         ],
+         "effects": [
+           {"type": "DISCARD", "amount": 1, "card_name": "Hyper Driver"},
+           {"type": "DRAW", "amount": 1,
+            "conditions": [{"type": "REF_EXISTS", "ref": "discarded"}]},
+           {"type": "SET_FLAG", "flag": "breaker_helm_protos_hyper_boost",
+            "conditions": [{"type": "REF_EXISTS", "ref": "discarded"}]}
+         ]}
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "conditions": [
+        {"type": "IS_DEFENDING_CARD"},
+        {"type": "FLAG_SET", "flag": "breaker_helm_protos_hyper_boost"}
+      ],
+      "effects": [
+        {"type": "MODIFY_DEFENSE", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'When this defends' = TRIGGERED ON_DEFEND; equipment in slots hears the dispatch (shipped pen/buzzard_helm.json is the same-zone precedent).\n\n'You may discard a Hyper Driver. If you do, draw a card and this gets +1{d}' is one MAY block - declining runs nothing, so 'if you do' needs no plumbing. The MAY's own conditions are popped by the loader into an effect-level gate (effect_types.py:3794-3798), so the prompt is not even offered without a Hyper Driver in hand: with none there is nothing to choose and no penalty, which matches the printed optionality. CARD_IN_ZONE reads zone + card_name/name with normalised substring matching, so every colour printing of Hyper Driver qualifies. The name filter on DISCARD goes through _hand_card_filter (effect_types.py:498-529); effect_discard offers only matching cards and lets the discarding player choose (ability_keywords.py:1538), and DISCARD stores ref 'discarded' only when something actually moved (effect_types.py:1282-1285) - the payoff sub-effects carry their own REF_EXISTS gate on that ref (the attention_grabbers pattern), making 'if you do' hold even in the degenerate case where the discard finds nothing.\n\nDEVIATION FROM TRIAGE, disclosed: it named a bare MODIFY_DEFENSE on the ON_DEFEND dispatch for '+1{d} until end of turn'. A one-shot per-card bump written at defend time is WIPED before damage: engine._recalculate_total_defense resets every declared defender to base_defense first (engine.py:2046-2053) and runs again immediately before damage - the shipped corpus documents this verbatim on a dozen cards. The static half here is instead copied from the shipped defence statics (pen/basalt_boots.json, hvy/stacked_in_your_favor_red; verified by .drafts/boast_blue.json): WHILE_STATIC naming trigger RECALC_DEFENSE + IS_DEFENDING_CARD + MODIFY_DEFENSE. The dispatch reaches the defender itself plus both heroes and all permanents/equipment zones once per defender, so IS_DEFENDING_CARD (reads combat.defense_recalc_card) is what scopes the +1 to THIS card - without it every defending card would be inflated in turn. Because each pass resets to base before re-applying statics, the bonus cannot stack across recalculations but does survive to the damage step.\n\n'Until end of turn' scope: SET_FLAG defaults to scope CURRENT, appending to current_turn_effects, which the end-phase cleanup clears - so the flag expires with the turn and the bonus cannot outlive it. FLAG_SET is a membership test, so re-defending later the same turn keeps the +1 without re-discarding (correct: the printed buff lasts until end of turn once granted). Minor imprecision, flagged: the flag is player-scoped, so a SECOND copy of this helm defending in the same turn would also get +1{d} off the first copy's discard; per-object turn flags do not exist in the DSL.\n\nTemper is a printed DB keyword - deliberately NOT authored."
+}

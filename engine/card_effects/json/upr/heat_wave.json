@@ -1,0 +1,24 @@
+{
+  "slug": "heat_wave",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACKS_THIS_TURN",
+          "amount": 1,
+          "mod": "add",
+          "scope": "TURN",
+          "player": "SELF",
+          "filter": [
+            {"type": "ATTACK_NAME_IN", "names": ["Phoenix Flame"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - Destroy Heat Wave: Phoenix Flames you control gain +1{p} until end of turn.'\n\nSHAPE: INSTANT ability_type (activated ability with instant timing; maps to ON_ACTIVATE per trigger_types.ABILITY_TYPE_TO_EVENT) - this card's text is literally the 'Instant - Destroy this: ...' pattern DSL_REFERENCE warns not to confuse with an Instant CARD. Destroying Heat Wave is the ACTIVATION COST (ability-level cost array), not an effect: cost_types.py:43-51 implements DESTROY_SELF as a first-class cost ('the activation cost is destroying the source card') whose pay routes through canonical destroy(). A cost can block the activation; an ON_ACTIVATE effect could not.\n\nTHE PUMP: MODIFY_ATTACKS_THIS_TURN amount 1 mod add scope TURN player SELF. Handler read this session (effect_types.py:2201-2227): reads amount/mod/scope/player/filter, appends a power_mod hook to the controller's turn_attack_hooks, which the engine clears at end of turn (engine.py:913) - that IS 'until end of turn'. player SELF puts the hook on Heat Wave's controller, which is the player making the Phoenix Flame attacks (release note: 'You control Phoenix Flame cards when they are on the stack or combat chain').\n\nFILTER: ATTACK_NAME_IN names ['Phoenix Flame'] (condition_types.py:218-232, read this session - reads names/name/card_name, normalises and strips the colour suffix, so phoenix_flame_red/yellow/blue all match). Verified the evaluation path end to end: engine._apply_turn_attack_effects (engine.py:1243-1259) compiles each hook condition and evaluates it as fn(attack_card, None, state); ATTACK_NAME_IN ignores its candidate and reads state.combat.attack_card, and hooks are applied AFTER CombatState is constructed with attack_card set (engine.py:522-531 vs :542), so the current Phoenix Flame attack is what the filter sees. Hooks are re-applied to every attack for the rest of the turn and never retroactively change resolved links - matching the release note ('applies retroactively ... but does not retroactively apply the damage').\n\nNOT AUTHORED: Quell 1 is a printed keyword (batch printed_keywords) - engine-implemented from the card DB; authoring it again would be a defect. The release notes' Quell interaction (Quell does not destroy Heat Wave until end of turn, so the instant is usable the same turn) is engine-side keyword timing with nothing further to declare here."
+}

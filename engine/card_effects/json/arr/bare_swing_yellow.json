@@ -1,0 +1,17 @@
+{
+  "slug": "bare_swing_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "EVENT_THIS_TURN", "event": "beat_chest"},
+        {"type": "NOT", "inner_type": "CARD_IN_ZONE", "zones": ["chest"]}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, if you've beaten chest this turn and you don't control a chest equipment, this gets +2{p}.' Text is identical to .drafts/bare_swing_red.json (colour printing differs only); shape copied from it and from shipped ako/pound_town_blue.json, which carries the identical beat-chest gate.\n\n'When this attacks' = TRIGGERED + ON_ATTACK (the trigger is on attacking, not on dealing damage). EVENT_THIS_TURN event=beat_chest reads the marker recorded by KEYWORD_COSTS['beat_chest'] exactly when the player pays the cost (costs/effect_costs.py:62), so declining the cost correctly fails the gate; the marker is player-scoped across the turn, so beating chest on ANY card earlier this turn counts. Ability-level conditions are evaluated when the triggered ability executes (interpreter.py:54-55), which matches 'When this attacks, if ...' timing; both clauses are live checks, so a chest piece removed mid-turn flips the gate correctly.\n\nDEVIATION FROM TRIAGE on the second clause: triage said NOT CONTROLS_SUBTYPE(Chest), but CONTROLS_SUBTYPE scans ONLY player.permanents (condition_types.py:1840) while chest equipment lives in the dedicated chest slot zone (state.py:858; deck.py:27 routes Chest/Base subtypes there at deck build) - that gate would be vacuously true, so the +2{p} would apply even while controlling chest equipment, silently doing the opposite of the printed restriction. Used NOT CARD_IN_ZONE zones:[chest] instead: by construction anything in the chest slot IS a chest piece, so zone occupancy is the faithful test - deliberately with NO subtype filter, because filtering on [Chest] alone would miss Base-subtyped chest pieces that state.py:37 also routes to that slot.\n\nThe +2{p} goes through MODIFY_ATTACK's one-shot path (this card IS state.combat's attack_card when its own ON_ATTACK trigger resolves), recording on combat.power_mods (effect_types.py:4087) so it survives later recalculations.\n\nPrinted BeatChest keyword is deliberately NOT authored - it fires from the card DB keywords field, and re-authoring a printed keyword is a defect. No GoAgain on this printing, so no conditional-keyword machinery needed. No known gaps."
+}

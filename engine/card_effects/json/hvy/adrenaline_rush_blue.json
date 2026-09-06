@@ -1,0 +1,15 @@
+{
+  "slug": "adrenaline_rush_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {"type": "HEALTH_LT_OPP"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}
+      ]
+    }
+  ],
+  "_comment": "'When you play this, if you have less {h} than an opposing hero, this gets +3{p}.' Shape copied verbatim from the sibling drafts adrenaline_rush_red/yellow in this same .drafts folder (which themselves follow reckless_arithmetic_blue): PLAY + HEALTH_LT_OPP gate + MODIFY_ATTACK add 3. Verified against handlers: MODIFY_ATTACK (effect_types.py) appends to CombatState.power_mods when resolved from a non-recalc event, so the pump survives later recalculations; HEALTH_LT_OPP (condition_types.py) takes no params and compares controller.life < players[3-pid].life. Ability-level conditions are evaluated at resolution, i.e. when the card is played - matching 'when you play this, if ...'. Blue prints the same +3{p} as red per the batch text. No other clauses."
+}

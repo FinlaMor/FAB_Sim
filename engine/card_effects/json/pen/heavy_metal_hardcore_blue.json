@@ -1,0 +1,17 @@
+{
+  "slug": "heavy_metal_hardcore_blue",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_ATTACK_POWER",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "BOOST_BANISHED_IS", "types": ["Evo"]}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'If an Evo has been banished from boosting this turn, this gets +1{p}.' / '**Boost**' Mechanologist Action - Attack.\n\nABILITY TYPE settled by official_release_notes 1 ('generates a continuous effect that is always checking'): WHILE_STATIC re-evaluated on every RECALC_ATTACK_POWER dispatch, NOT the TRIGGERED ON_ATTACK form the blue triage note suggested - release notes take precedence over the triage list. Shape copied verbatim from SHIPPED evo/sprocket_rocket_blue.json (identical clause family). The interpreter fires WHILE_STATIC only on its named recalc event (interpreter.py:186-202) and MODIFY_ATTACK detects that event and applies transiently in the stage-8 static window (effect_types.py:4137-4144), so repeated recalculations never stack the bonus.\n\nBOOST_BANISHED_IS (condition_types.py:1147-1173) reads 'types' and matches each boost-banished card's types UNION subtypes via _norm, so 'Evo' hits the DB subtype. SOURCE_IS_ATTACK confines the pump to this card's own attack.\n\nPrinted **Boost** is in printed_keywords and fires from the card DB keywords field (ability_keywords.boost) - deliberately NOT authored; re-authoring a printed keyword is a defect. The +1{p} is a JSON-authored power bonus, not a conditional printed keyword, so no conditional-keyword strip is needed.\n\nRESIDUAL NUANCE, disclosed: the printed text says 'banished from boosting this TURN', while the condition reads THIS card's own boost_banished record (boost() appends to the card it boosted, ability_keywords.py:511-513) - an Evo banished by boosting a DIFFERENT attack earlier in the turn is invisible here, and no wider scope is expressible today: boost() emits an event_manager event but never calls _record_turn_event, so EVENT_THIS_TURN cannot ask it either (see the red printing's triage note). Same treatment as shipped sprocket_rocket_blue/yellow, which carry the same clause. Release note 2 (a later boost making the condition true without damage being recalculated) is engine recalc timing; the declarative static is always checking and lands whenever a recalculation next runs."
+}

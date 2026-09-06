@@ -1,0 +1,24 @@
+{
+  "slug": "log_fall_yellow",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "PITCHED_FOR_THIS",
+          "talent": "Earth"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "OVERPOWER"
+        }
+      ]
+    }
+  ],
+  "_comment": "Printed keyword Overpower would fire unconditionally from the card DB; this WHILE_STATIC gated on SOURCE_IS_ATTACK + PITCHED_FOR_THIS {talent: Earth} makes it conditional. loader.conditional_keywords() suppresses the printed keyword when it finds a SOURCE_IS_ATTACK-gated grant of the same keyword. The card is an Elemental Guardian Action - Attack; when it attacks, SOURCE_IS_ATTACK is true, and PITCHED_FOR_THIS reads the pitched_for_this stamp from play._pitch_for_cost (cards pitched to pay this card's resource cost). Release notes confirm: must pitch at least one Earth card while paying for this card's resource cost; previously pitched Earth cards don't count; condition met even if the pitched Earth card later leaves the pitch zone."
+}

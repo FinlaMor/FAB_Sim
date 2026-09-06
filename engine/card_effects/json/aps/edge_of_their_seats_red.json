@@ -1,0 +1,18 @@
+{
+  "slug": "edge_of_their_seats_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_LEAVE_PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 5,
+          "filter": []
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Suspense** / When this leaves the arena, your next attack this turn gets +5{p}.' Guardian Instant - Aura (ArmoryDeckPleiades).\n\nPRINTED KEYWORD NOT AUTHORED: Suspense is in printed_keywords and is a CR 8 keyword that fires from the card DB keywords field (triggers/triggers.py builds the suspense keyword triggers at ~line 292); re-authoring it would be a defect.\n\nSHAPE copied from the sibling draft .drafts/edge_of_their_seats_blue.json (+3{p}), which copied the SHIPPED aps/act_of_glory_blue.json whose clause is identical word for word apart from the number ('When this leaves the arena, your next attack this turn gets +4{p}'): TRIGGERED ON_LEAVE_PLAY + MODIFY_NEXT_ATTACK mod add, filter []. That precedent proves both the trigger spelling and that MODIFY_NEXT_ATTACK (not MODIFY_ATTACK) is correct here - there is no current attack when an aura leaves the arena. amount 5 = the printed +5{p} on the red printing.\n\n'this turn' SCOPE: MODIFY_NEXT_ATTACK queues onto the controller's dsl_queued_attack_mods (handler effect_types.py:4592-4618 reads mod/amount/filter/scope), consumed by the first qualifying attack and expiring at end of turn, which matches the printed 'this turn' without any explicit span.\n\nTIMING per release note: triggers whenever it leaves the arena - destroyed, banished, etc. Engine listener _dsl_leaves_arena_listener (engine.py:1560-1576) dispatches ON_LEAVE_PLAY to the leaving card itself off destroy()'s 'leaves_arena' event, so every destruction route (including Suspense's own resolution destruction) fires it. DISCLOSED ENGINE GAP, not fixable in JSON: leaving by BANISH or return-to-hand emits no leaves_arena event, so those routes named in the release note do not fire the trigger today; the listener comment already records this as a known gap. The dominant route for a Suspense aura (its own end-of-turn destruction) is covered.\n\nNo other functional text on the card - no play effect, no conditions."
+}

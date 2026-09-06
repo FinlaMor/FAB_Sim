@@ -1,0 +1,22 @@
+{
+  "slug": "biting_gale_yellow",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {"type": "FLAG_SET", "flag": "fused_biting_gale_yellow"}
+      ],
+      "effects": [
+        {
+          "type": "PAY_OR_ELSE",
+          "player": "OPPONENT",
+          "resources": 2,
+          "on_failure": [
+            {"type": "DISCARD", "player": "OPPONENT", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Yellow printing of biting_gale_blue (same .drafts folder); identical printed text, so copied verbatim per the copy-an-existing-spelling rule - only the slug and the fusion flag name differ, because ability_keywords.fusion keys the marker on card.slug ('fused_<card.slug>', ability_keywords.py:604) and FLAG_SET tests the source controller's current_turn_effects (condition_types.py:1004). Full reasoning for deviating from the triage list's PITCHED_FOR_THIS (fusion is a reveal that never stamps pitched_for_this; FLAG_SET fused_<slug> is the verified live idiom) is in biting_gale_blue.json's _comment. Adopter note: batch labels this printing's set 'OldhimBlitzDeck' - pick the json/<set>/ folder from the card's setIdentifiers per IMPLEMENTATION_GUIDE step 4, not from that label."
+}

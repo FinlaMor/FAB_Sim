@@ -1,0 +1,16 @@
+{
+  "slug": "driftwood_quiver",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "PUT_ARSENAL_BOTTOM", "player": "SELF"}
+      ]
+    }
+  ],
+  "_comment": "'**Riptide Specialization** / **Instant** - Destroy Driftwood Quiver: Put a card from your arsenal on the bottom of your deck.' Ranger Equipment - Quiver.\n\nABILITY SHAPE: INSTANT activated ability - trigger_types.py:115 maps INSTANT to ON_ACTIVATE, and play._add_hero_dsl_activations (play.py:238-250) offers INSTANT abilities of equipment at ANY priority window, which is the printed 'Instant -' timing. 'Destroy Driftwood Quiver:' is the activation COST, not an effect: cost [DESTROY_SELF] (cost_types.py:43-51; can_pay always true, pay destroys the source through canonical destroy). Shipped precedents for destroy-self activation costs: dyn/blacktek_whisperers.json, hvy/flat_trackers.json (per .drafts/bracers_of_belief.json's comment). activation_cost 0 - no {r} appears in the text; the guide says state it explicitly rather than let the printed-text heuristic guess.\n\nEFFECT: PUT_ARSENAL_BOTTOM with player SELF (effect_types.py:2325-2377). The player param is MANDATORY here: the handler defaults to OPPONENT (the three Disable printings were its first users), so omitting it would bottom the opponent's arsenal card. Release note 1 ('not targeted, not required to have a card in your arsenal to activate') holds by construction: an empty arsenal makes the handler return silently, and no target/condition gates the ability. Release note 2 ('not optional - if you have a card in arsenal, you must put it on the bottom') holds because the effect carries no optional flag; once activated it is unconditional.\n\nGAP - release note 3 ('if you have two or more in your arsenal, you choose which'): the handler takes pool[0] with no choice prompt (:2353-2365). No existing effect chooses among multiple arsenal cards. In the normal game the arsenal holds one card, so this only bites after arsenal-stacking effects; flagged rather than worked around.\n\n'Specialization' in printed_keywords is a DECKBUILDING restriction (limits the deck to Riptide), not a rules keyword the engine applies at play time - deliberately not authored; authoring it as an ability would be a defect."
+}

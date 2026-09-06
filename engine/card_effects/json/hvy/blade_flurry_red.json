@@ -1,0 +1,33 @@
+{
+  "slug": "blade_flurry_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_IS_WEAPON"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        },
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {
+              "type": "ATTACK_IS_WEAPON"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target weapon attack gets +2{p}. Your next weapon attack this turn gets +2{p}.'\n\nNo printed keywords, so nothing is left to the card DB.\n\nClause 1: ATTACK_REACTION + target.filter ATTACK_IS_WEAPON. The release note ('you can only play this if there is a weapon attack to target') is the targeting restriction, so it lives in target.filter - checked at play/declare time by play._legality_check against state.combat - not in ability-level conditions (checked at resolution). ATTACK_IS_WEAPON reads combat.from_weapon (condition_types.py:198-199); same role as ironsong_response_blue's target filter, which is the shipped precedent for 'Target <kind> attack' reactions. MODIFY_ATTACK has no target parameter - it acts on state.combat (effect_types.py:4059-4094), which in the reaction step IS the targeted weapon attack; it appends to combat.power_mods so the +2 survives later recalculations.\n\nClause 2: MODIFY_NEXT_ATTACK queues one-shot on the controller (effect_types.py:4511-4537) and is consumed by the first attack whose specs all pass - engine.py:1175-1236 compiles each filter spec against the incoming attack; ATTACK_IS_WEAPON ignores its card argument and reads combat.from_weapon, which is set for the attack being consumed. Scope defaults to TURN, matching 'this turn'."
+}

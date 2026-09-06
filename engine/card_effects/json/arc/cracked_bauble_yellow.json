@@ -1,0 +1,5 @@
+{
+  "slug": "cracked_bauble_yellow",
+  "abilities": [],
+  "_comment": "'(A player may add any number of Cracked Baubles to their card-pool in sealed deck or booster draft formats.)' Generic Resource.\n\nThe entire printed text is parenthesised deck-construction REMINDER TEXT for limited formats - a rule about building your card-pool, not an in-game ability. No keywords, no primitives (triage list is empty), nothing the engine does at game time: the card is pitch fodder like any other card, which is engine-generic. Correct implementation is the empty-abilities stub. If draft-format support ever needs 'any number of copies in sealed/booster draft', that is a deck-construction rule in draft/, not card behaviour."
+}

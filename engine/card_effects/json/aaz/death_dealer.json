@@ -1,0 +1,32 @@
+{
+  "slug": "death_dealer",
+  "activation_cost": 1,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "conditions": [
+        {"type": "NOT", "inner_type": "CARD_IN_ZONE", "zone": "arsenal", "count_gte": 1}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Put an arrow card from your hand face up into your arsenal?",
+          "effects": [
+            {"type": "LOOK_AT", "zone": "HAND", "player": "SELF",
+             "filter": {"subtype": "Arrow"}, "into": "arrows"},
+            {"type": "SELECT_FROM_REF", "ref": "arrows", "mode": "ANY",
+             "min": 1, "max": 1, "into": "picked"},
+            {"type": "MOVE_REF", "ref": "picked", "to_zone": "arsenal", "player": "SELF"},
+            {"type": "FLIP_REF", "ref": "picked", "face_up": true},
+            {"type": "CONDITIONAL_EFFECT",
+             "when": [{"type": "REF_EXISTS", "ref": "picked"}],
+             "then": [{"type": "DRAW", "amount": 1}]}
+          ]
+        },
+        {"type": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Once per Turn Action** - {r}: If you have no cards in your arsenal, you may put an arrow card from your hand face up into your arsenal. If you do, draw a card. **Go again**' - Ranger Weapon - Bow (2H).\n\nCOST/ONCE: the {r} is the card-level activation_cost and Once per Turn is per_turn: 1 (play.py:1522 reads activation_cost for ACTIVATE_CARD; authoring the {r} as a PAY_RESOURCES cost would double-charge per IMPLEMENTATION_GUIDE). Weapon zones ARE activation sources (play.py:262-265) and a 2H weapon dedups to one object (play.py:269-271), so the ACTIVATE ability is offered once.\n\nARSENAL-EMPTY GATE: NOT CARD_IN_ZONE(zone arsenal, count_gte 1) per the .triage/death_dealer.json note. CARD_IN_ZONE with no threshold defaults to 'at least one matching card' (condition_types.py:994), so the NOT form is 'zero cards in arsenal'. NOT's flattened inner_type compiles the sibling params (condition_types.py:2228+). Ability conditions gate the ACTIVATE offer itself (play.py docstring: offered only when ability conditions pass), so a full arsenal never offers the {r} spend.\n\nTHE PUT, via the ref family rather than PUT_INTO_ARSENAL: that handler's HAND branch prompts over the WHOLE hand with no filter (effect_types.py:2297-2306), so it would put a non-arrow card - observably more than printed. Instead: LOOK_AT zone HAND player SELF with filter {subtype: Arrow} stores the arrows as a list (filter always scans the whole zone; effect_types.py:3394-3408); SELECT_FROM_REF min 1 max 1 makes the controller pick exactly one (STOP is only offered once min is met, effect_types.py:3576-3587; an empty pool skips the prompt and stores []); MOVE_REF to_zone 'arsenal' routes through canonical put_object, the same primitive PUT_INTO_ARSENAL uses; FLIP_REF face_up true sets is_public on the moved card, which is what arsenal visibility reads ('face up').\n\n'IF YOU DO, DRAW': SELECT_FROM_REF stores 'picked' even when nothing was chosen ([]), and REF_EXISTS returns len > 0 for lists (condition_types.py:2212-2218), so the CONDITIONAL_EFFECT (handler at effect_types.py:3697, aliases IF) draws only when an arrow actually moved. Declining the MAY runs none of the block, so no draw either - the triage note's 'whole sentence is one MAY block' holds.\n\nGO AGAIN placement: it is its own printed sentence of the activation, not inside the 'if you do', so it is a sibling GO_AGAIN effect AFTER the MAY - declining the put still goes again. This is the craterhoof shape (GO_AGAIN's non-attack-layer path, CR 8.3.5a).\n\nRESIDUAL DEFECT, NOT FIXABLE FROM .drafts/: printed_keywords carries GoAgain, and engine.py:529 seeds combat.keywords from list(attack_card.keywords) - for a weapon attack the attack card IS the bow - so the DB keyword pays go again on EVERY Death Dealer attack (engine.py:721), not just after the activation. loader.conditional_keywords() strips a printed keyword only for a SOURCE_IS_ATTACK-gated grant, which this is not (it is an activation payoff), so JSON cannot take the unconditional one away. The GO_AGAIN authored above remains correct once the DB keyword is removed or the keyword-trigger builder learns this pattern; until then the card is strictly stronger than printed on its own attacks."
+}

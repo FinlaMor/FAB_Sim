@@ -1,0 +1,27 @@
+{
+  "slug": "dominia",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "REVEAL_TOP_DECK", "amount": 1, "into": "revealed"},
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "REF_PITCH_IS", "ref": "revealed", "pitch": 1}
+          ],
+          "then": [
+            {"type": "LOOK_AT", "zone": "HAND", "player": "OPPONENT", "amount": "ALL", "into": "their_hand"},
+            {"type": "SELECT_FROM_REF", "ref": "their_hand", "mode": "ANY", "min": 1, "max": 1, "into": "chosen"},
+            {"type": "BANISH_REF", "ref": "chosen", "from_zone": "hand"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Whenever Dominia attacks a hero, reveal the top card of your deck. If it's a red card, look at their hand and banish a card from it.' Draconic Illusionist - Dragon Ally.\n\nTRIGGER: TRIGGERED + ON_ATTACK + ability-level conditions [ATTACK_TARGET_IS_HERO] (condition_types.py:1960-1977 - combat.attack_target is set only for permanent/ally targets, so a hero attack leaves it None and the condition passes). Ability-level conditions are checked at resolution; ON_ATTACK fires at attack declaration, which is when 'whenever Dominia attacks a hero' is true.\n\nREVEAL: REVEAL_TOP_DECK amount 1 into 'revealed' (effect_types.py:2229-2256 reads amount/into; stores the revealed card(s) as a list plus '<into>_owner').\n\nRED TEST: REF_PITCH_IS ref 'revealed' pitch 1 (condition_types.py:1979-2009 - red = pitch 1; REVEAL_TOP_DECK always stores a list, and this condition unwraps a one-element list, so 'reveal the top card, if it's red' works; empty deck stores [] which fails len==1 -> correctly False).\n\nDEVIATION FROM THE TRIAGE LIST, deliberate: it named MAY, but the printed text has no 'may' - 'If it's a red card, look at their hand and banish a card from it' is mandatory once the reveal is red. So the whole consequence is one CONDITIONAL_EFFECT with when/then (effect_types.py:3697+; note 'conditions' on the effect would have been popped as an effect-level gate and skipped the branch), not MAY.\n\nLOOK + BANISH: LOOK_AT zone HAND player OPPONENT amount ALL into 'their_hand' (effect_types.py:3356-3415 reads zone/player/amount/into; HAND is a supported zone; OPPONENT is correct because Dominia attacked the opposing hero). SELECT_FROM_REF mode ANY min 1 max 1 into 'chosen' (effect_types.py:3540-3591 reads ref/mode/min/max/into; pool is the raw ref contents, which is right here - any card may be banished, no filter needed; empty hand leaves chosen=[] harmlessly). BANISH_REF ref 'chosen' from_zone 'hand' (effect_types.py:3726-3752 reads ref/from_zone; from_zone MUST be named because LOOK_AT peeks without moving, and banish() only removes from the origin when told which zone - effect_keywords.py:173-176 resolves 'hand' via getattr(player, origin_zone)).\n\nFIDELITY NOTE: 'their hand' means the attacked hero's hand; the DSL expresses zones relative to SELF/OPPONENT only, so in a multiplayer context this would look at the controller's opponent rather than the attack target. In this engine's 1v1 model those are the same player."
+}

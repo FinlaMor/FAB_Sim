@@ -1,0 +1,23 @@
+{
+  "slug": "glidewell_fins",
+  "activation_cost": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [{"type": "DESTROY_SELF"}],
+      "effects": [
+        {"type": "LOOK_AT", "zone": "HAND", "player": "SELF",
+         "filter": {"subtype": "Arrow"}, "into": "arrows"},
+        {"type": "SELECT_FROM_REF", "ref": "arrows", "mode": "ANY",
+         "min": 0, "max": 1, "into": "chosen"},
+        {"type": "MOVE_REF", "ref": "chosen", "to_zone": "arsenal", "player": "SELF"},
+        {"type": "FLIP_REF", "ref": "chosen", "face_up": true},
+        {"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 1,
+         "conditions": [{"type": "REF_EXISTS", "ref": "chosen"}],
+         "filter": [{"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Arrow"]}]},
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - {r}, destroy this: Put an arrow from your hand face-up into your arsenal. It gets +1{p} this turn. **Go again**' (Ranger Equipment - Arms). Battleworn is in printed_keywords and fires from the card DB keywords field - deliberately not authored.\n\nACTIVATION SHAPE per the gauntlet_of_might draft precedent (same 'Action - destroy this' equipment skeleton): card-level activation_cost 1 carries the {r} (never also PAY_RESOURCES - double-charge); 'destroy this' is the ability-level DESTROY_SELF cost, paid before ON_ACTIVATE dispatch. ACTIVATE timing (action phase + action point) matches the printed '**Action** -'; _add_hero_dsl_activations offers it from the arms zone (play.py:262-265).\n\nGO AGAIN authored as GAIN keyword GO_AGAIN: GoAgain is NOT in printed_keywords, so this is an ability-granted keyword, not a printed one; _grant_go_again pays +1 AP directly outside combat.\n\nRELEASE NOTE ('may activate even with no arrow in hand'): LOOK_AT with a filter stores a possibly-empty list; SELECT_FROM_REF min 0 offers STOP immediately and stores [] on an empty pool; MOVE_REF/FLIP_REF no-op on an empty ref. GAIN GO_AGAIN is unconditional, so the action point is still gained - exactly the note's ruling.\n\n+1{p} CLAUSE: MODIFY_NEXT_ATTACK queued only when an arrow was actually chosen (effect-level REF_EXISTS gate evaluated in-order at execution, interpreter.py:149-159), filtered to Arrow attacks, expires end of turn = printed 'this turn'. KNOWN IMPRECISION: the queue binds to the NEXT arrow attack, not to the specific card put into the arsenal - if another arrow attacks first this turn it takes the buff instead. No ref-bound attack-mod primitive exists; flagged rather than guessed around.\n\nSET FOLDER AT ADOPTION: HighSeas -> json/highseas/."
+}

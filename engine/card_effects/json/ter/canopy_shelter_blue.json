@@ -1,0 +1,13 @@
+{
+  "slug": "canopy_shelter_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "might", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'When this defends, create a Might token.'\n\nTRIGGER: 'When this defends' is event-based, so TRIGGERED + ON_DEFEND (trigger_types.py maps it to the engine 'defend' event). The listener dispatches to the defending CARD ITSELF (engine._dsl_defend_listener), so no source-scoping condition is needed - same verified shape as the .drafts/battlefront_bastion_* cards. Per those drafts' legwork: play.py appends all co-declared defenders to combat.defending_cards before emitting one defend event per card, which is irrelevant here since no 'alone' or count condition applies.\n\nEFFECT: CREATE_TOKEN reads token (slug) / count|amount / player / destination (effect_types.py:1942-2013); amount 1 is also the default but authored explicitly. The Might token definition already exists at json/tokens/might.json (confirmed), so no token authoring is owed.\n\nNo printed keywords, so no conditional-keyword machinery applies."
+}

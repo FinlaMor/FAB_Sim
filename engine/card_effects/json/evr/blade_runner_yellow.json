@@ -1,0 +1,29 @@
+{
+  "slug": "blade_runner_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          { "type": "ATTACK_IS_WEAPON" },
+          {
+            "type": "NOT",
+            "inner_type": "ATTACK_SUBTYPE_IN",
+            "subtypes": ["TwoHanded"]
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            { "type": "ATTACK_IS_WEAPON" }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target 1H weapon attack gains **go again**. / Your next weapon attack this turn gains +2{p}.'\n\nDEVIATION FROM TRIAGE - clause 1 is deliberately NOT authored as a GO_AGAIN effect; read the chain before reversing this.\n\nThe card DB flattens clause 1's sentence onto the card's own keyword list: slug_index carries keywords ['GoAgain'] on blade_runner_yellow (verified directly). The engine pays that printed keyword when the reaction resolves as a NON-ATTACK CARD LAYER: engine.py:2407-2431 grants +1 action point whenever a resolving non-attack card layer has card.has_go_again (card.py:382-383 normalises 'GoAgain' to 'go again'), and an Attack Reaction played from hand IS such a layer (play.py:1162-1170, layer_type='card', is_attack False). JSON cannot suppress it: loader.conditional_keywords() (loader.py:255-296) strips a printed keyword only for an ability gated on SOURCE_IS_ATTACK whose direct effects grant it - inapplicable here twice over (the grant targets ANOTHER object, the Luminaris case that docstring explicitly excludes; and gating anything on SOURCE_IS_ATTACK would be unreachable for an AR card, which is never combat.attack_card) - and even the strip that does exist only cleans combat.keywords seeding for ATTACK cards (_recalculate_attack_power, engine.py:1897-1900); the layer channel at engine.py:2408 reads raw card.keywords and never consults conditional_keywords. So the Arakni-style dummy-grant trick (used in .drafts/arakni_5lp3d_7hru_7h3_cr4x.json) cannot reach this payout path.\n\nConsequence: authoring GO_AGAIN (which writes state.combat.keywords, effect_types.py:4854-4861, paid at chain-link resolution engine.py:721-723) on top of the live DB keyword would grant TWO action points per play where the printed card grants ONE - the exact 'keyword-reimplemented / strictly better than printed' defect class flagged on codex_of_frailty, swift_pickup, lead_with_heart, overswing, plow_through and others in .review/. This draft therefore relies on the DB keyword for the AP and authors no second grant. Net observable behaviour: exactly +1 AP whenever Blade Runner resolves - which, because the target.filter below gates play legality to 'current attack is a 1H weapon attack' (play.py:416-431), is precisely every state where the real card would grant go again.\n\nResidual deltas from using the DB channel instead of an authored grant, all accepted and none fixable in JSON: (1) the AP pays at reaction-layer resolution rather than chain-link resolution - they differ only if the targeted attack is negated/removed before the resolution step, where real rules would deny the AP this engine already paid; (2) release note 1's 'a card with go again can not gain another instance' case - if the target attack ALREADY has go again, the real card adds nothing but the DB channel still pays +1 (over-grant confined to that case; gating an authored GO_AGAIN on NOT ATTACK_HAS_KEYWORD would fix it while double-granting in the common case, a worse trade); (3) nothing reading combat.keywords sees a Go Again marker. IF ADOPTERS STRIP GoAgain FROM THE SLUG_INDEX ENTRY (the correct DB fix for this flattening), ADD {\"type\": \"GO_AGAIN\"} to this ability's effects list - the sentence then needs the authored grant, and everything else here already supports it.\n\nTarget filter ('1H weapon attack'): ATTACK_IS_WEAPON (combat.from_weapon, stamped engine.py:527) AND NOT ATTACK_SUBTYPE_IN ['TwoHanded'] - two-handed weapons carry the 'TwoHanded' subtype while one-handed weapons do not (condition_types.py:296-298 comment; verified in slug_index: dawnblade subtypes ['TwoHanded','Sword']). The NOT uses the documented flattened inner_type form (condition_types.py:2147-2166), which shares this dict's 'subtypes' key with the inner condition. Filters are evaluated at play/announce time against the current attack.\n\nClause 2 is MODIFY_NEXT_ATTACK amount 2 filtered to weapon attacks (handler effect_types.py:4511-4537 reads mod/amount/filter/scope). Release note 3 ('the target weapon attack does not gain the +{p} effect') holds by construction: the queue is consumed by _apply_turn_attack_effects when an attack is CREATED (engine.py:542), before any reaction step, so it can never land on the attack being targeted - only on the next qualifying weapon attack that turn."
+}

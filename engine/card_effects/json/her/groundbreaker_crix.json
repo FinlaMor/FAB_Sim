@@ -1,0 +1,34 @@
+{
+  "slug": "groundbreaker_crix",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "ATTACK_CONTROLLED_BY_YOU"},
+        {"type": "ATTACK_TARGET_IS_HERO"},
+        {"type": "CONTROLS_TOKEN_TYPE", "token": "seismic_surge", "player": "OPPONENT"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"},
+        {"type": "TARGET_HERO_CLASS_IN", "classes": ["Guardian"]}
+      ],
+      "effects": [
+        {
+          "type": "CLASH",
+          "opponent": "DEFENDING_HERO",
+          "on_winner": [
+            {"action": "create_token", "who": "WINNER", "token": "seismic_surge", "number": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your attacks get +1{p} while attacking a hero who controls a Seismic Surge token. / Whenever you attack a Guardian hero, clash with them. The winner creates a Seismic Surge token.' (Guardian Hero - Pit-Fighter, Promos).\n\nCLASH AND PROTECT NOT AUTHORED: both are in printed_keywords and fire from the card DB keywords field; re-authoring either would be a defect.\n\nSTATIC (+1{p}): the documented hero-aura shape - WHILE_STATIC re-evaluated on every RECALC_ATTACK_POWER dispatch, which the engine sends to the attack card, BOTH heroes and in-play permanents/weapons (_dsl_recalc_listener, engine.py:1720-1740); MODIFY_ATTACK takes its recalc branch there and applies transiently in the stage-8 static window, so repeated recalculations never stack (effect_types.py:4134-4144). Three conditions, each load-bearing:\n- ATTACK_CONTROLLED_BY_YOU: the recalc reaches both heroes, so without it the +1 would leak onto the OPPONENT'S attack whenever they control a Surge - 'YOUR attacks'.\n- ATTACK_TARGET_IS_HERO: 'while attacking a HERO' - false when a permanent/ally is attacked (combat.attack_target set only then).\n- CONTROLS_TOKEN_TYPE {token: seismic_surge, player: OPPONENT}: reads 'token' plus 'player' (condition_types.py:1725-1793); OPPONENT resolves relative to this hero's controller, i.e. the defender during Crix's own attack. Seismic Surge is an AURA token routed to controller.auras (effect_keywords.py:377-379), and auras is a SubZoneView over permanents (state.py:869), so the handler's permanents scan finds it.\nRelease note 2 (retroactive gain/loss when control of a token changes) falls out of per-recalc re-evaluation; note 3 (a damage-step gain marks the bonus active but does not recalculate) is engine recalc timing, nothing to author.\n\nTRIGGER DEVIATES FROM THE TRIAGE LIST, deliberately and with source verification: it named TRIGGERED ON_ATTACK, but _dsl_attacking_listener dispatches ON_ATTACK to combat.attack_card's slug ONLY (engine.py:1524-1529) - a hero is never the attack card, so an ON_ATTACK ability authored on this hero JSON could never fire. Used ON_PLAY_ACTIVATE_ATTACK instead: _dsl_play_activate_attack_listener listens on the SAME underlying 'attacking' event and fans out to every card in the ATTACKER'S permanent zones INCLUDING hero_zone (engine.py:1531-1558, _dsl_permanent_zones at :1452-1459), so the hero hears each of its controller's attacks exactly once. The two conditions carry the printed narrowing: ATTACK_TARGET_IS_HERO ('attack a hero') and TARGET_HERO_CLASS_IN ['Guardian'], which reads the DEFENDING hero's classes AND talents via combat.attacker_id (condition_types.py:1517-1542). Disclosed corner case: an attack action countered before reaching the chain still emits 'attacking' (listener comment, engine.py:1538-1543), so the clash can fire where paper might not.\n\nCLASH: opponent DEFENDING_HERO is REQUIRED, not decoration - the handler's default 'ATTACKING_HERO' resolves the clash opponent to combat.attacker_id (effect_types.py:3045-3048), which for a hero-source ability IS the controller: omitting it would clash Crix with himself. on_winner spec {action: create_token, who: WINNER, token: seismic_surge} implements 'the winner creates a Seismic Surge token' under the winner's control; a tied clash has no winner and creates nothing (CR 8.5.45). json/tokens/seismic_surge.json already exists, so no missing-token definition.\n\nSET FOLDER AT ADOPTION: Promos -> json/promo/."
+}

@@ -1,0 +1,44 @@
+{
+  "slug": "bridge_of_damnation_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_EACH_TURN",
+      "effects": [
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "CARD_IN_ZONE", "zone": "banished", "subtypes": ["Zombie"]}
+          ],
+          "then": [
+            {
+              "type": "MAY",
+              "prompt": "Put a Zombie from your banished zone into your graveyard to keep Bridge of Damnation?",
+              "effects": [
+                {
+                  "type": "MOVE_MATCHING",
+                  "to_zone": "graveyard",
+                  "target": {
+                    "controller": "SELF",
+                    "zone": "BANISHED",
+                    "amount": 1,
+                    "filter": [
+                      {"type": "SUBTYPE_IN", "subtypes": ["Zombie"]}
+                    ]
+                  }
+                }
+              ],
+              "else": [
+                {"type": "DESTROY_SELF"}
+              ]
+            }
+          ],
+          "else": [
+            {"type": "DESTROY_SELF"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Go again** / At the start of each turn, destroy this unless you put a zombie from your banished zone into your graveyard.'\n\nGoAgain is an UNCONDITIONAL printed keyword here (printed_keywords; the text gates nothing on it) - it fires from the card DB keywords field and is deliberately NOT authored; authoring it again would be a defect.\n\nTRIGGER: START_OF_EACH_TURN maps to START_OF_ANY_TURN (trigger_types.py:19), which engine.py:1475-1481 dispatches to BOTH players' zones on every turn, and _dsl_permanent_zones includes player.auras (engine.py:1456) - so this Aura hears the event on each player's turn, which is what 'each turn' means. The choice belongs to the aura's controller: ask_yes_no/_ask_player resolve cid via _controller_id(card).\n\nUNLESS SHAPE: 'destroy this unless you put a zombie ...' is one CONDITIONAL wrapping a MAY with an else block, not two effects with inverted conditions (there is nothing to invert against - DSL_REFERENCE 'unless'). The outer CONDITIONAL is load-bearing, not decoration: gated on CARD_IN_ZONE{zone banished, subtypes [Zombie]} it distinguishes the two printed cases. With no Zombie in the banished zone there is nothing to put, so the else destroys this - if the gate were instead hung on the MAY itself, the loader would pop it into an effect-level gate that skips the WHOLE MAY including its else (effect_types.py:3794-3798), and the aura would survive a turn it should not. With a Zombie present, MAY offers the move; declining runs its else destroy. MOVE_MATCHING takes the canonical object target spec (effect_types.py:3593-3612): zone BANISHED resolves through _object_zone_cards, the SUBTYPE_IN filter is evaluated per candidate card, amount 1 prompts the controller to choose which Zombie (_ask_player), and put_object routes it to the graveyard. DESTROY_SELF with no filters hits the bare branch that calls canonical destroy() on the source card from whatever zone it sits in (effect_types.py:2494-2498)."
+}

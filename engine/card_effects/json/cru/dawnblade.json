@@ -1,0 +1,50 @@
+{
+  "slug": "dawnblade",
+  "activation_cost": 1,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {"type": "PUT_COUNTER", "counter_type": "hits_this_turn", "amount": 1},
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "COUNTER_EQ", "counter_type": "hits_this_turn", "min": 2}
+          ],
+          "then": [
+            {"type": "PUT_COUNTER", "counter_type": "power", "amount": 1}
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "REMOVE_COUNTERS",
+          "counter_type": "hits_this_turn",
+          "amount": {"type": "COUNT_COUNTERS", "counter": "hits_this_turn"}
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "BEGINNING_OF_END_PHASE",
+      "conditions": [
+        {"type": "IS_ACTIVE_PLAYER"},
+        {"type": "NOT", "inner_type": "COUNTER_GTE", "counter_type": "hits_this_turn", "min": 1}
+      ],
+      "effects": [
+        {
+          "type": "REMOVE_COUNTERS",
+          "counter_type": "power",
+          "amount": {"type": "COUNT_COUNTERS", "counter": "power"}
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Once per Turn Action** - {r}: **Attack** / The second time this hits each turn, put a +1{p} counter on it. / At the beginning of your end phase, if this hasn't hit this turn, remove all +1{p} counters from it.'\n\nATTACK HALF: no ATTACK ability declared - the engine offers the weapon attack from the CARD-LEVEL activation_cost/per_turn fields (DSL_REFERENCE table; play._add_weapon_attacks), the shipped hunters_klaive shape (hnt/hunters_klaive.json: card-level activation_cost 2, per_turn 1, triggered abilities only). sledge_of_anvilheim declares an ACTIVATE/ATTACK node, but its activation_cost sits INSIDE the ability object where the loader never reads it (loader reads raw.get('activation_cost') at card level only) - it works via the printed-text heuristic, not via that field, so I did not copy the placement.\n\nHIT TRACKER: one ON_HIT ability whose effects run in order - increment 'hits_this_turn' FIRST, then CONDITIONAL tests the post-increment count, so ordering between two separate triggers can never bite. COUNTER_EQ min 2 (condition_types.py:998-1030, threshold read from min/amount) makes it EXACTLY the second hit: a bare COUNTER_GTE would add another +1{p} on the third and every later hit, which the printed 'the second time' excludes. ON_HIT is dispatched to combat.attack_card (engine.py:1408-1411), which for a weapon attack IS the weapon itself (weapons attack as themselves), and the 'hit' event fires only when net_damage > 0 (engine.py:2116-2142) - a fully blocked attack is not a hit and does not tick the tracker.\n\n+1{p} COUNTER KIND IS 'power' (lowercase): that is the kind _recalculate_attack_power feeds from (engine.py:1939 adds card.counters['power'] into attack power). Kinds are case-sensitive dict keys; '+1{p}' would match nothing.\n\nEND-PHASE CLEANUP: BEGINNING_OF_END_PHASE dispatches to BOTH players' permanents at EVERY end phase (engine.py:1495-1503), unlike END_OF_TURN which is turn-player-scoped - so IS_ACTIVE_PLAYER (condition_types.py:811-821, value defaults True) is what confines this to 'YOUR end phase'; without it the counters would also be stripped at the opponent's end phase. 'Hasn't hit this turn' = tracker == 0, written NOT COUNTER_GTE min 1 (the NOT handler passes flattened params through to the inner compiler, condition_types.py:2220-2239).\n\nTRACKER RESET: START_OF_TURN clears hits_this_turn (turn-player-scoped dispatch, weapon zones included, engine.py:1461-1466), so counts cannot leak across turns; the reset runs at my turn start, AFTER the previous end-phase check and BEFORE this turn's hits accumulate. Off-turn edge: if an off-turn granted attack ever hits, the tracker holds that count through the opponent's end phase (IS_ACTIVE_PLAYER correctly skips cleanup there - printed text says 'your end phase'), and my START_OF_TURN resets it before my own turn's hits are counted.\n\nREMOVE ALL: REMOVE_COUNTERS resolves expression amounts via _resolve_amount (effect_types.py:5032-5050); COUNT_COUNTERS (effect_types.py:310-327) counts this slug's tallies of the named kind, so both removals take ALL counters of their kind. Removing kind 'power' wholesale also removes counters from other origins (e.g. Sharpen) - correct per print, which says 'all +1{p} counters' regardless of source."
+}

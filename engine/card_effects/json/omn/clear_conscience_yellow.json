@@ -1,0 +1,19 @@
+{
+  "slug": "clear_conscience_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "PUT_HAND_CARD_BOTTOM", "player": "SELF", "optional": false, "amount": 1},
+        {"type": "CREATE_TOKEN", "token": "ponder", "amount": 1, "player": "SELF"},
+        {"type": "PUT_HAND_CARD_BOTTOM", "player": "OPPONENT", "optional": false, "amount": 1},
+        {"type": "CREATE_TOKEN", "token": "ponder", "amount": 1, "player": "OPPONENT"}
+      ]
+    }
+  ],
+  "_comment": "'When this hits a hero, each hero puts a card from their hand on the bottom of their deck and creates a Ponder token.' Identical printed text to .drafts/clear_conscience_red.json - same shape, slug differs only.\n\nTrigger: TRIGGERED + ON_HIT gated by ATTACK_TARGET_IS_HERO. An Action - Attack's own ON_HIT is dispatched to the attack card itself, so the trigger rides directly on the card; the gate is mandatory because the generic 'hit' event also fires when the attack damaged an ally/Spectra aura instead of a hero.\n\n'Each hero': PUT_HAND_CARD_BOTTOM handles ONE player per effect (its handler resolves a single hand, effect_types.py:1557-1616), so this is a SELF pair followed by an OPPONENT pair - put-then-token for me, then put-then-token for them - matching the release-note ordering ('beginning with you then moving clockwise') under the two-player reading.\n\nRelease note 2 ('heroes will still create a Ponder token even if they do not put a card'): the token is a separate unconditional CREATE_TOKEN, and the put's handler early-returns on an empty hand without touching later effects. The puts are authored MANDATORY ('puts', not 'may') as JSON boolean false - this handler tests truthiness of the raw value (params.get(\"optional\", True)), so the DSL_REFERENCE string \"FALSE\" would still offer DECLINE and make a mandatory put optional.\n\nCREATE_TOKEN reads token/count|amount/player|controller (effect_types.py:1942+); 'ponder' routes to the auras zone via template subtypes or the AURA_TOKENS fallback (token_meta.py:55); json/tokens/ponder.json exists (END_OF_TURN destroy-self + draw).\n\nFragment appears in printed_keywords: it fires from the card DB keywords field via build_keyword_triggers and is deliberately NOT authored here - authoring it again would be a defect."
+}

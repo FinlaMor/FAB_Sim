@@ -1,0 +1,19 @@
+{
+  "slug": "evo_data_mine_yellow",
+  "activation_cost": 0,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "BANISH_FROM_UNDER_SELF"}
+      ],
+      "effects": [
+        {"type": "DRAW", "amount": 1},
+        {"type": "PUT_HAND_CARD_TOP", "optional": false}
+      ]
+    }
+  ],
+  "_comment": "'If you have a base head equipped, transform it into this, then equip this.' / 'Once per Turn Instant - Destroy a card under this: Draw a card, then put a card from your hand on top of your deck.' / '**Blade Break**'. Mechanologist Action Equipment - Evo Head (Bright Lights).\n\nBlade Break is a printed keyword (printed_keywords) firing from the card DB keywords field - deliberately NOT authored.\n\nCLAUSE 1 (transform-over-base) NOT AUTHORED - inexpressible today, deliberately left off rather than authored dead. The triage list said TRANSFORM, but reading the handler shows it does not fit: the DSL TRANSFORM effect's _do_transform (effect_types.py:1048-1068) ALWAYS creates a NEW TOKEN named by 'to' and puts the sources under it - authoring to=evo_data_mine_yellow would mint a duplicate token copy of this card in the permanents zone, not equip the played card into the head slot. Same finding as sibling drafts evo_charging_rods_yellow (clause left off) and evo_heartdrive_blue (clause authored with GAP 1 flagged); I follow the charging_rods reading because a phantom token copy is a wrong board state, not a partial one.\n\nCLAUSE 2 implemented with one disclosed deviation: INSTANT ability_type, shape copied from shipped evo/evo_engine_room_yellow.json ('Once per Turn Instant - Banish a card from under this: ...'). per_turn 1 and activation_cost 0 sit at CARD level because that is where they are read (loader.py:153-154 -> CardDef; applied to the runtime card at card.py:519-530) - the shipped sibling carries them inside the ability object, where the loader merely parks them in unread ab_params. Cost is BANISH_FROM_UNDER_SELF (cost_types.py:459-487), the only under-self consumption cost that exists. DEVIATION: the printed cost DESTROYS the part (-> graveyard, where recovery effects reach it); the expressible cost BANISHES it (-> banished zone). Its can_pay requires card.cards_underneath, so it fails closed - both halves stay dormant until clause 1 becomes expressible, and the cost can never fire wrongly.\n\nPayoff is literal: DRAW 1, then PUT_HAND_CARD_TOP (effect_types.py:1557-1604, reads player/to/optional/amount). 'then put a card from your hand on top of your deck' is mandatory wording, so optional:false - a JSON BOOLEAN, deliberately: this handler does params.get('optional', True) with no string normalisation, so the corpus-conventional string 'FALSE' would be truthy and leave a DECLINE option on a mandatory effect.\n\nRelease notes: this card does NOT have the base subtype and can NOT itself be transformed into another evo. When the generic fix lands, clause 1 wants sources [{\"zone\": \"head\", \"from\": \"Base\"}] (the TRANSFORM matcher tests subtype membership, effect_types.py:3911-3915), and nothing here should grant this card Base.",
+  "generic_fix": "Clause 1 needs a generic effect that equips the source card into its slot zone while putting the displaced equipment underneath it (equip-with-subcards); clause 2 wants a DESTROY_FROM_UNDER_SELF cost mirroring BANISH_FROM_UNDER_SELF."
+}

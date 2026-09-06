@@ -1,0 +1,21 @@
+{
+  "slug": "core_reaction_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_ACTION_PHASE",
+      "conditions": [
+        {"type": "IS_ACTIVE_PLAYER"}
+      ],
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 4,
+          "target": "ANY"
+        }
+      ]
+    }
+  ],
+  "_comment": "'At the beginning of your action phase, destroy this and deal 4 arcane damage to any target.' Lightning Wizard Instant - Aura.\n\nTIMING: START_OF_ACTION_PHASE (CR 4.3.1), not START_OF_TURN - the documented mapping for this exact wording; the corpus review files list the START_OF_TURN authoring as a recurring wrong-timing defect. Shape copied from shipped pen/by_the_book_blue.json (same trigger, same self-destruct) and .drafts/blessing_of_deliverance_* (aura in the auras zone): the trigger is dispatched to the ACTIVE player's permanent zones including auras, so it fires on the controller's own action phase; IS_ACTIVE_PLAYER is belt-and-braces on top of that dispatch behaviour, matching by_the_book_blue. Ability-level conditions are checked at resolution.\n\nORDER: effects run sequentially - DESTROY_SELF first ('destroy this AND deal'), then the damage; release note 2 ('no priority between any of the effects generated') matches plain in-order resolution with no stack entries between them. The ability resolves fully even though the source left play mid-resolution (proven by blessing_of_deliverance's destroy-then-reveal).\n\n'destroy this' = DESTROY_SELF (handler effect_types.py:2470 shares the DESTROY_PERMANENT branch, target defaults 'self', canonical destroy resolves the aura out of the auras zone).\n\nAPPROXIMATION on 'any target': release note 1 rules the triggered effect is TARGETED - the target must be declared when the triggered layer is ADDED TO THE STACK. Triggered-layer target declaration is an open engine item (docs/cr_audit_2026-07.md), so the DSL cannot declare a target at stack time here. Instead DEAL_ARCANE target ANY routes to _deal_arcane_to_objects (effect_types.py:988-1040), which asks the controller to pick from both heroes plus all allies AT RESOLUTION and deals 4 arcane to the pick via canonical deal_damage. With nothing able to respond inside one trigger resolution the observable difference is narrow, but the choice point is timed differently than ruled. The pool is heroes+allies only - permanents/auras are not damageable targets in this engine, which matches what arcane damage can legally hit in practice.\n\nRelease note 3 (a 'next card you play' arcane buff must not carry across turns to this trigger) needs no authoring: MODIFY_NEXT_ATTACK-style turn-scoped mods expire at end of turn, and nothing here reads them.\n\nNo printed keywords."
+}

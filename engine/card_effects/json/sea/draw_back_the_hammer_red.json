@@ -1,0 +1,40 @@
+{
+  "slug": "draw_back_the_hammer_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 4,
+          "filter": [
+            {"type": "ATTACK_CLASS_IN", "classes": ["Mechanologist"]}
+          ]
+        },
+        {
+          "type": "MAY",
+          "prompt": "Untap a gun you control?",
+          "conditions": [
+            {"type": "CONTROLS_SUBTYPE", "subtype": "Gun"}
+          ],
+          "effects": [
+            {
+              "type": "TAP_TARGET",
+              "target": {
+                "zone": "ARENA",
+                "amount": 1,
+                "record_as": "hammer_gun",
+                "filter": [
+                  {"type": "CARD_IS_TYPE", "subtypes": ["Gun"]}
+                ]
+              }
+            },
+            {"type": "TAP_REF", "ref": "hammer_gun", "untap": true}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next Mechanologist attack this turn gets +4{p}. You may {u} a gun you control. Go again' Mechanologist Action.\n\nGO AGAIN NOT AUTHORED: unconditional printed keyword in printed_keywords - the engine applies it from the card DB; re-authoring would be a defect (and loader.conditional_keywords() only strips SOURCE_IS_ATTACK-gated grants, none needed here).\n\nPUMP: MODIFY_NEXT_ATTACK reads mod/amount/filter/scope (effect_types.py:4592-4618) and queues a one-shot entry on the controller's dsl_queued_attack_mods, consumed by the first matching attack this turn, unused entries expiring at end of turn = 'this turn'. Filter ATTACK_CLASS_IN reads 'classes' and matches the attack card's classes AND talents via _card_traits (condition_types.py:204-216); Mechanologist is a class.\n\nUNTAP CLAUSE - composed, with one wart: no single DSL effect untaps a chosen object (TAP/TAP_TARGET hard-code tap direction; TAP_REF has untap:true but only reads a ref; RELOAD is the unrelated arsenal mechanic and itself a known no-op). So the clause is TAP with a dict object target - handler at effect_types.py:3641-3682 compiles it via _compile_object_target (:675-804): zone ARENA is player.permanents.cards, which CONTAINS items (state.py:867-868 - items is a SubZoneView over permanents), filter CARD_IS_TYPE 'subtypes': ['Gun'] matches types-or-subtypes normalised (:1309-1325), amount 1 asks which gun, record_as stores the choice in the ability's ref scope (push_refs per run_ability, interpreter.py:28-35). TAP_REF then untaps the recorded ref. Net effect correct in every case: tapped gun -> tap succeeds then ref-untap clears it; untapped gun -> tap cancels silently (effect_keywords.tap returns a canceled event, never raises, :3006-3009) and ref-untap is a no-op; decline or no gun -> nothing. WARTS flagged for review: (1) a spurious TapEvent is emitted for a tapped gun en route, visible to replacement effects; (2) TAP_REF sets .tapped directly instead of routing through canonical untap() (effect_keywords.py:3037), so an UntapEvent is never emitted.\n\nMAY GATE: CONTROLS_SUBTYPE Gun on the MAY's conditions is honoured here because this is an ordinary PLAY ability - the loader pops effect-level conditions (loader.py:87) and run_ability checks them per effect (interpreter.py:149-156), so the prompt is not offered when you control no gun. (Inside an INJECT_TRIGGER this would NOT hold - see dice_up_blue for that workaround.)"
+}

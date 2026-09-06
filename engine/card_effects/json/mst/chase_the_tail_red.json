@@ -1,0 +1,23 @@
+{
+  "slug": "chase_the_tail_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "LAST_CHAIN_ATTACK", "name": "Crouching Tiger"}
+      ],
+      "effects": [
+        {"type": "GO_AGAIN"},
+        {"type": "MODIFY_NEXT_ATTACK",
+         "mod": "add",
+         "amount": 3,
+         "scope": "CHAIN",
+         "filter": [
+           {"type": "ATTACK_NAME_IN", "name": "Crouching Tiger"}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "'**Combo** - When this attacks, if Crouching Tiger was the last attack this combat chain, this gets go again and the next Crouching Tiger you play this combat chain gets +3{p}.'\n\nTIMING: the release note ('triggers when it resolves on the stack and becomes an attacking card'; condition 'checked on the resolution of the trigger, during the attack step') is exactly TRIGGERED+ON_ATTACK: _dsl_attacking_listener dispatches ON_ATTACK to combat.attack_card - this card, once it IS the attack (engine.py:1524-1529) - and ability conditions evaluate at that resolution. An Action - Attack card is deliberately NOT an ATTACK_REACTION (DSL_REFERENCE warning; that ability type never fires on one).\n\nTHE GATE IS LAST_CHAIN_ATTACK, never COMBO: COMBO is a different, older condition reading a 'names' LIST via combo_check - authored with 'name' it would gate on an empty list and never fire (condition_types.py:719-725; DSL_REFERENCE names this trap explicitly). LAST_CHAIN_ATTACK reads chain_links[-1], which during this attack IS the previous link (links append after damage resolves), and matches 'Crouching Tiger' against the slug with any colour suffix stripped plus the resolved name, so it spans every crouching_tiger printing. With no previous link every form is false, as printed.\n\n'THIS GETS GO AGAIN': GO_AGAIN routes through _grant_go_again (effect_types.py:4943-4963 -> :423-458); combat exists during the attack step, so per CR 8.3.5b the keyword lands on state.combat dedup-guarded per 8.3.5c, and the engine pays the action point at the Resolution Step. Not GAIN ACTION_POINTS - the combat path is the printed rule for an attack's own go again. printed_keywords carries only Combo, so there is no unconditional DB GoAgain to strip and no conditional-keyword machinery needed.\n\n'THE NEXT CROUCHING TIGER YOU PLAY THIS COMBAT CHAIN GETS +3{p}': MODIFY_NEXT_ATTACK queues a one-shot on player.dsl_queued_attack_mods, consumed by the first later attack matching 'filter' (engine._apply_turn_attack_effects); ATTACK_NAME_IN reads 'name' and asks about combat.attack_card at consumption time with colour suffixes stripped (condition_types.py:218-232). scope:'CHAIN' is loaded - it expires when the chain closes rather than at end of turn (handler comment, effect_types.py:4599-4602), which is what 'this combat chain' says; the default TURN scope would let the +3 leak to a Crouching Tiger in a LATER chain of the same turn."
+}

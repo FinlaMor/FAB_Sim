@@ -1,0 +1,51 @@
+{
+ "slug": "locked_and_loaded_blue",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "effects": [
+    {
+     "type": "MODIFY_NEXT_ATTACK",
+     "mod": "add",
+     "amount": 1,
+     "filter": [
+      {
+       "type": "ATTACK_CLASS_IN",
+       "classes": [
+        "Mechanologist"
+       ]
+      },
+      {
+       "type": "ATTACK_TYPE_IN",
+       "types": [
+        "Action"
+       ]
+      },
+      {
+       "type": "ATTACK_SUBTYPE_IN",
+       "subtypes": [
+        "Attack"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "CONDITIONAL_EFFECT",
+     "when": [
+      {
+       "type": "FLAG_SET",
+       "flag": "boosted_this_turn"
+      }
+     ],
+     "then": [
+      {
+       "type": "OPT",
+       "amount": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "_comment": "GoAgain and Opt are in printed_keywords; GoAgain is unconditional (fires from card DB), Opt here is a conditional effect (opt 1 if boosted), not the Opt keyword. MODIFY_NEXT_ATTACK filter uses ATTACK_CLASS_IN for Mechanologist (class/talent), ATTACK_TYPE_IN Action, ATTACK_SUBTYPE_IN Attack to match 'Mechanologist attack action card'. FLAG_SET flag='boosted_this_turn' matches the marker appended by boost() in ability_keywords.py. OPT amount=1 implements 'opt 1'."
+}

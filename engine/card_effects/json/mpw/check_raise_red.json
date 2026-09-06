@@ -1,0 +1,19 @@
+{
+  "slug": "check_raise_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 4,
+          "filter": [
+            {"type": "ATTACK_HAS_KEYWORD", "keyword": "wager"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Red printing of check_raise_blue; identical text with +4{p} instead of +2{p}. Copies the adopted .drafts/check_raise_blue.json shape verbatim: MODIFY_NEXT_ATTACK add 4, filter [ATTACK_HAS_KEYWORD wager], one-shot queue on the controller consumed by the first Wager-keyword attack they declare this turn (combat.keywords holds the attack's printed keywords at queue-consumption time, engine.py:529 vs 542). Handler re-verified this session: effect_types.py:4592-4618 reads mod/amount/filter/scope; scope defaults to TURN and unused entries expire end of turn, matching 'this turn'. ATTACK_HAS_KEYWORD (condition_types.py:1881-1891) normalises separators and reads combat.keywords.\n\nGo again is a printed DB keyword (printed_keywords carries GoAgain) - deliberately NOT authored; re-authoring a printed keyword is a defect.\n\nSame KNOWN APPROXIMATION as the blue/yellow siblings: an attack that wagers only via ANOTHER card's WAGER effect (no Wager keyword printed on the attack itself) does not match the filter; no DSL condition queries combat.wagers directly (.triage/dealers_grip.json names the same missing 'check-attack-has-wager' primitive)."
+}

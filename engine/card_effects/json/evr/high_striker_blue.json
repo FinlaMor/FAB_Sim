@@ -1,0 +1,28 @@
+{
+  "slug": "high_striker_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "player": "SELF",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "ATTACK_CONTROLLED_BY_YOU"},
+              {"type": "NOT", "inner_type": "FLAG_SET", "flag": "high_striker_copper_spent"}
+            ],
+            "effects": [
+              {"type": "CREATE_TOKEN", "token": "copper", "amount": 2},
+              {"type": "SET_FLAG", "flag": "high_striker_copper_spent", "scope": "CURRENT"}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next time an attack you control hits this turn, create 2 Copper tokens.' + printed **Go again**. Generic Action (Everfest).\n\nPRINTED GO AGAIN NOT AUTHORED: unconditional trailing keyword line (printed_keywords carries GoAgain); fires from the card DB keywords field - re-authoring it would be a defect. Not the conditional-keyword case either: no 'if X, this gets go again' clause exists.\n\nDELIVERY: INJECT_TRIGGER scope=TURN player=SELF with the inner trigger NESTED under 'trigger' (required shape - a top-level conditions key would be popped by the loader as an effect-level gate evaluated once at registration, when there may be no attack). The hook lives on the controller's turn_attack_hooks and is re-applied to EVERY attack while they are active (engine._apply_turn_attack_effects, engine.py:1243-1281, compiles inner conditions/effects per attack with c = the attack card); injected ON_HIT entries are fired and consumed at the hit listener (engine.py:1412-1423) - a live delivery path, unlike injected ON_ATTACK/ON_DEFEND which nothing consumes.\n\nSINGLE-SHOT GATE ('the NEXT time'): TURN hooks are never consumed (engine.py:1238-1241 - they expire only at end of turn), so the NOT FLAG_SET / SET_FLAG pair inside the trigger makes only the FIRST qualifying hit pay out; later hits see the flag and do nothing. Flag and hook share a lifetime (both die with the turn), so no cross-turn leakage. Known minor deviation: two High Strikers played in one turn share the flag, so the two payouts split across the first two hits (2+2) where paper pays both on the first hit (4+0) - total over the turn is identical.\n\nRELEASE NOTE 1 ('affects all attacks including attack action cards, ally attacks, and weapon attacks'): the hook attaches to every attack of the controller's turn regardless of origin. ATTACK_CONTROLLED_BY_YOU (triage list) is kept as intent documentation - in the current wiring it is trivially true (the hit listener passes c = combat.attack_card and the condition compares that card's controller against itself) but it can never wrongly block.\n\nRELEASE NOTE 2 ('only affects the next attack that hits; a miss does not use up the effect'): the whole gate lives inside an ON_HIT trigger - a missed attack never fires it, leaving both hook and flag untouched for a later hit.\n\nCREATE_TOKEN reads token/count|amount/player/destination (effect_types.py:1942-2001, read this session); player defaults SELF = controller. GAP, flagged for adoption: json/tokens/copper.json DOES NOT EXIST. The copper template exists in the card DB (types [Token], subtypes [Item], so create_token routes it to the items zone) and creation will work, but the token's own activated ability ('{r}{r}{r}{r}, destroy this: Draw a card. Go again') has no JSON definition - author json/tokens/copper.json (ACTIVATE, activation_cost 4, DESTROY_SELF cost, DRAW 1; Go again from DB keywords) when this draft is adopted.",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

@@ -1,0 +1,15 @@
+{
+  "slug": "index_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "SELF", "amount": 3, "into": "seen"},
+        {"type": "SELECT_FROM_REF", "ref": "seen", "mode": "ANY", "min": 1, "max": 1, "into": "top_pick", "rest_into": "rest"},
+        {"type": "PUT_REF_TOP", "ref": "top_pick"},
+        {"type": "PUT_REF_BOTTOM", "ref": "rest"}
+      ]
+    }
+  ],
+  "_comment": "'Look at the top 3 cards of your deck. Put 1 card from among them on top of your deck, and the rest on the bottom of your deck in any order.' Wizard Action (batch set label ArcaneRising -> shipped Arcane Rising cards live in json/arc/; pick the folder from setIdentifiers at adoption).\n\nPLAY resolves when the card is played; being an Action costing an action point is engine-side, and per release note 3 Index has no go again - nothing else to author.\n\nLOOK_AT (effect_types.py:3356-3415, read this session): 'player' DEFAULTS TO OPPONENT, so SELF is passed explicitly - omitting it would look at the opponent's deck (the exact defect class the handler comment records). amount 3 stores a LIST under the ref; source[:3] takes fewer when the deck is shorter, which is release note 2 ('you would look at as many as you can'). An empty deck stores an empty list and every later step no-ops without error.\n\nSELECT_FROM_REF mode ANY min 1 max 1 (effect_types.py:3540-3591): the STOP option is offered only once len(chosen) >= min, so whenever any card was seen the pick of exactly one is MANDATORY - release note 1 ('You must select one card to put on the top of your deck'). rest_into captures the complement for the bottom half.\n\nPUT_REF_TOP / PUT_REF_BOTTOM (effect_types.py:3614-3639): thin aliases over MOVE_REF's deck path; player defaults to OWNER, i.e. the chooser's own deck. top_pick is a single card; rest is a list laid down in stored order.\n\nGAP - CLAUSE NOT FULLY EXPRESSIBLE: 'the rest on the bottom of your deck IN ANY ORDER'. PUT_REF_BOTTOM iterates the stored list in fixed order; the only ordering primitive, REORDER_REF, orders cards back on top of the deck, not the bottom. The rest therefore return to the bottom in their original deck order rather than an order the player chooses. Flagged rather than approximated with something that only looks interactive."
+}

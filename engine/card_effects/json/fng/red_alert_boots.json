@@ -1,0 +1,26 @@
+{
+  "slug": "red_alert_boots",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "conditions": [
+        {
+          "type": "IS_DEFENDING_CARD"
+        },
+        {
+          "type": "PLAYED_THIS_CHAIN_LINK",
+          "card_type": "AttackReaction"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'If an attack reaction has been played or activated this chain link, this gets +1{d}. Blade Break' -- Blade Break is a printed keyword and fires from the card DB, deliberately not authored.\n\nTHE WINDOW IS A CHAIN LINK, not a turn: a turn holds several links and a per-turn record would keep the bonus alive for the rest of the combat. combat.link_plays is the per-link record (CR 7.0.3e records a play against the ACTIVE chain link). IS_DEFENDING_CARD is what scopes the bonus to the moment this equipment actually defends -- an ungated RECALC_DEFENSE static would move the defending TOTAL whoever was defending."
+}

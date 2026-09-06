@@ -1,0 +1,17 @@
+{
+  "slug": "aurora_shooting_star",
+  "activation_cost": 2,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {"type": "EVENT_THIS_TURN", "event": "play", "qualifier": "lightning"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "embodiment_of_lightning", "token_type": "Embodiment of Lightning"}
+      ]
+    }
+  ],
+  "_comment": "Hero activated ability, offered by play._add_hero_dsl_activations: INSTANT = any priority window ('Once per Turn Instant'), card-level activation_cost 2 = {r}{r}, per_turn 1 = Once per Turn. 'Activate this only if you've played a Lightning card this turn' is the ability-level condition EVENT_THIS_TURN(event play, qualifier lightning) - play.py records every talent/subtype/class/type of the played card as a turn-event marker, and Lightning lives in talents/types (see the hand-rolled played_lightning check at play.py ~1066 reading the same fields), so the folded qualifier matches. Conditions are checked when the activation is offered (play.py gates on ability.conditions), so an unmet 'only if' blocks the activation rather than fizzling it. CREATE_TOKEN uses the existing json/tokens/embodiment_of_lightning.json definition; default destination is permanents, same shape as shipped briar.json and astravolt_elemental_red.json. 'Essence of Lightning' is in printed_keywords - it fires from the card DB keywords field and is deliberately NOT authored here."
+}

@@ -1,0 +1,26 @@
+{
+ "slug": "long_shot_yellow",
+ "abilities": [
+  {
+   "ability_type": "WHILE_STATIC",
+   "conditions": [
+    {
+     "type": "SOURCE_IS_ATTACK"
+    },
+    {
+     "type": "COUNTER_GTE",
+     "counter": "aim",
+     "amount": 1
+    }
+   ],
+   "effects": [
+    {
+     "type": "MODIFY_ATTACK",
+     "mod": "add",
+     "amount": 2
+    }
+   ]
+  }
+ ],
+ "_comment": "Binary COUNTER_GTE amount 1 satisfies the release note that multiple aim counters give only one +2. Shape copied from shipped sedation_shot_blue / infecting_shot_blue / murkmire_grapnel_red."
+}

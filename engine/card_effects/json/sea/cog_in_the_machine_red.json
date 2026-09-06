@@ -1,0 +1,31 @@
+{
+  "slug": "cog_in_the_machine_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "golden_cog", "amount": 2},
+        {
+          "type": "MAY",
+          "prompt": "Tap a cog you control?",
+          "conditions": [
+            {"type": "CARD_IN_ZONE", "zone": "permanents", "card_name": "cog", "count_gte": 1}
+          ],
+          "effects": [
+            {
+              "type": "TAP",
+              "target": {
+                "controller": "SELF",
+                "zone": "ARENA",
+                "name": "Cog",
+                "amount": 1
+              }
+            },
+            {"type": "PUT_SELF_BOTTOM_DECK"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Create 2 Golden Cog tokens. / You may {t} a cog you control. If you do, put this on the bottom of its owner's deck.'\n\nONE PLAY ability, both paragraphs in resolution order - release note 2 says there is no priority between creating the tokens, choosing to tap and bottoming the card, i.e. all three are parts of a single resolution, not separate layers.\n\nCreate half: CREATE_TOKEN reads token/count|amount (effect_types.py:1947-1952); amount 2. The golden_cog token definition EXISTS (json/tokens/golden_cog.json) and its card-DB template is types ['Token'] subtypes ['Item'], so created tokens route into player.permanents (the items SubZoneView) with name 'Golden Cog' (effect_keywords.create_token ~295-399).\n\nTap half - DEVIATION FROM TRIAGE on two primitives. (1) The triage list named CONTROLS_SUBTYPE for gating, but no card in the DB carries a 'Cog' subtype (CardDB scan: golden_cog's subtypes are ['Item']; zero hits for a cog subtype anywhere), and CONTROLS_SUBTYPE reads only card.subtypes (condition_types.py:1873) - it would be permanently false and the whole second clause silently dead. Replaced with CARD_IN_ZONE over zone 'permanents' (where items/tokens actually live - state.py:867-871 makes items/auras/allies/tokens SubZoneViews of permanents) with card_name 'cog': the matcher flattens and substring-matches name OR slug (:975-976), so 'Golden Cog', 'Copper Cog', 'Master Cog' all count as 'a cog you control'. (2) For the tap itself, TAP (effect_types.py:3641, alias TAP_TARGET) takes the canonical object-target dict; the spec's own 'name' key does the same flattened substring match over the ARENA pool (_compile_object_target, effect_types.py:769-775), so {controller SELF, zone ARENA, name Cog, amount 1} asks the controller which cog to tap and goes through effect_keywords.tap (TapEvent emitted, CR 8.5.55) rather than TAP_REF's bare .tapped write. Release note 1 holds: the tokens created by effect 1 are already in permanents when effect 2 compiles its pool, so tapping one of the freshly created cogs is expressible without extra plumbing.\n\nBottom half: PUT_SELF_BOTTOM_DECK (effect_types.py:1618) moves THIS card to its controller's deck, position None = bottom. 'Its owner's deck' is authored as controller's deck - they differ only under control-change effects, which cannot apply to a card resolving off the stack.\n\nRelease note 3 (empty deck zone) needs no authoring: put_object appends, so the card becomes the only card in the deck."
+}

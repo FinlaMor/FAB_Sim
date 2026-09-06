@@ -1,0 +1,17 @@
+{
+  "slug": "dunebreaker_cenipai_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEATH",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token_type": "Ash"
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Phantasm** / When Dunebreaker Cenipai is destroyed, create an Ash token. / **Go again**' Draconic Illusionist Action - Attack.\n\nPRINTED KEYWORDS NOT AUTHORED: GoAgain and Phantasm are both in printed_keywords and fire from the card DB keywords field (Phantasm via ability_keywords.phantasm_check/phantasm_destroy, CR 8.3.13); re-authoring either would be a defect.\n\nSHAPE copied from the SHIPPED upr/embermaw_cenipai_yellow.json - same Cenipai family, same 'When <Cenipai> is destroyed, create an Ash token' text, whose spelling provably compiles: TRIGGERED ON_DEATH + CREATE_TOKEN token_type 'Ash'. The handler reads token/token_name/token_type/token_slug interchangeably (effect_types.py:1947-1948) and create_token slugifies the display name to 'ash'; json/tokens/ash.json exists, so resolution will not raise MissingCardImplementation.\n\nKNOWN DEVIATION FROM RELEASE NOTE 1, disclosed: the note restricts the trigger to destruction WHILE IN THE ARENA - not as a defending card, not on the stack, not in arsenal. ON_DEATH is dispatched by engine._dsl_destroyed_listener (engine.py:1578-1588) for EVERY canonical destroy(), including phantasm_destroy's destruction of a DEFENDING card (ability_keywords.py:412-415 routes through _ek_destroy) - precisely the case the note excludes - and equally for a destruction while on the stack or in arsenal. Not expressible: no DSL condition reads the destroyed card's ORIGIN zone. The DestroyEvent payload carries target/destroy_source/source_player_id/canceled only (effect_keywords.py:688-693), and by condition-evaluation time the card sits in the graveyard on every path, so zone-testing conditions cannot separate the cases. destroy() even computes 'was_arena' internally (effect_keywords.py:705) but does not expose it to the DSL. Drafted bare to match the shipped sibling; if the destroy event ever exposes was_arena, gate this ability on it.\n\nNormal resolution of the attack sends the card to the graveyard WITHOUT destroying it, so the common post-combat path does not fire this - only actual destroy() effects do.",
+  "_source_batch": "_batch3.json"
+}

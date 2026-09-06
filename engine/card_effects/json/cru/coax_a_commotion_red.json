@@ -1,0 +1,36 @@
+{
+  "slug": "coax_a_commotion_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Choose: each hero creates a Quicken token?",
+          "effects": [
+            {"type": "CREATE_TOKEN", "token": "quicken", "amount": 1, "player": "SELF"},
+            {"type": "CREATE_TOKEN", "token": "quicken", "amount": 1, "player": "OPPONENT"}
+          ]
+        },
+        {
+          "type": "MAY",
+          "prompt": "Choose: each hero draws a card?",
+          "effects": [
+            {"type": "DRAW", "amount": 1},
+            {"type": "DRAW", "amount": 1, "player": "OPPONENT"}
+          ]
+        },
+        {
+          "type": "MAY",
+          "prompt": "Choose: each hero gains 1 life?",
+          "effects": [
+            {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1},
+            {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1, "player": "OPPONENT"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits, choose any number: Each hero creates a Quicken token / Each hero draws a card / Each hero gains 1{h}.'\n\nTrigger: TRIGGERED + ON_HIT on the attack card itself (an Action - Attack is not an ATTACK_REACTION). The text says 'When this hits', NOT 'hits a hero', so deliberately NO ATTACK_TARGET_IS_HERO gate - unlike Clear Conscience in this batch.\n\n'Choose any number' DEVIATES FROM THE OBVIOUS READING of the triage list's MAY and from MODAL/CHOOSE: CHOOSE picks exactly ONE option per resolution (effect_types.py:5107-5136 - a single _ask_player, no multi-select, no used-mode tracking), and MODAL chooses at PLAY time while release note 4 says 'You choose the modes after this has hit'. So the expressible form is three independent MAY blocks in printed order, one per mode: each is offered once (a mode cannot be picked twice - release note 5), declining all three is 'choose 0' (release note 6), and accepting runs that mode for both heroes. Known approximation: printed chooses all modes up front then resolves them; here each mode resolves immediately after its yes/no. Release note 7 ('no priority between any of the effects') plus these effects having no internal player choices means the interleaving is outcome-identical in practice.\n\n'Each hero': DRAW reads player via _effect_player_id (OPPONENT -> 3-cid, effect_types.py:807-837); GAIN reads player the same way and LIFE_POINTS routes to effect_gain_life (effect_types.py:4890-4896) - release note 8 confirms the green symbol is life; CREATE_TOKEN handles OPPONENT explicitly (effect_types.py:1971-1972). json/tokens/quicken.json exists."
+}

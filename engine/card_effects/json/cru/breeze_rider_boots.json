@@ -1,0 +1,72 @@
+{
+  "slug": "breeze_rider_boots",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ANY_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "Ninja"
+          ]
+        },
+        {
+          "type": "ATTACK_TYPE_IN",
+          "types": [
+            "Action"
+          ]
+        },
+        {
+          "type": "ATTACK_CONTROLLED_BY_YOU"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Destroy Breeze Rider Boots?",
+          "cost": [
+            {
+              "type": "DESTROY_SELF"
+            }
+          ],
+          "effects": [
+            {
+              "type": "GAIN",
+              "keyword": "GO_AGAIN",
+              "conditions": [
+                {
+                  "type": "ATTACK_HAS_KEYWORD",
+                  "keyword": "combo"
+                },
+                {
+                  "type": "ATTACK_TYPE_IN",
+                  "types": [
+                    "Action"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "GRANT_KEYWORD_TO_PLAYED",
+              "keyword": "GO_AGAIN",
+              "filter": [
+                {
+                  "type": "HAS_KEYWORD",
+                  "keyword": "combo"
+                },
+                {
+                  "type": "CARD_IS_TYPE",
+                  "card_types": [
+                    "Attack"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When a Ninja attack action card you control hits, you may destroy Breeze Rider Boots. If you do, attack action cards with **combo** gain **go again** this turn.'\n\nTRIGGER: ON_HIT is broadcast to the ATTACKER's equipment zones (engine.py:1437-1450, legs included), so the boots see their controller's hits; the three conditions then filter to a Ninja (ATTACK_CLASS_IN reads classes/talents of combat.attack_card) attack ACTION card (ATTACK_TYPE_IN matches types+subtypes, so weapon attacks - types [Weapon] - are excluded) you control (ATTACK_CONTROLLED_BY_YOU compares attack controller to the boots' controller). All three take no payload beyond the lists shown.\n\nMAY + COST: 'you may destroy Breeze Rider Boots. If you do' is one MAY whose cost is DESTROY_SELF (cost_types.py:43-51) - the cost gates the OPTION and is paid only on acceptance (effect_types.py:3838-3855), so declining destroys nothing and grants nothing, which is the printed 'if you do'.\n\nTHE GRANT IS TWO HALVES, because 'attack action cards with combo gain go again this turn' must cover BOTH the attack that just hit and later attacks:\n1. CURRENT ATTACK: GAIN GO_AGAIN with effect-level conditions (MAY compiles sub-effect conditions as gates, effect_types.py:3811-3816) - _grant_go_again during combat puts 'Go Again' straight onto this link's combat (dedup-guarded, CR 8.3.5c), which _resolution_step reads live at engine.py:721 for the payout. Needed because the last power recalc before that read happens inside _resolve_damage (engine.py:2092), BEFORE the hit dispatch - a queued grant alone would miss the very attack that triggered the boots.\n2. REST OF TURN: GRANT_KEYWORD_TO_PLAYED (effect_types.py:4787-4814) queues a turn-scoped grant on player.dsl_play_keyword_grants, cleared in the end-phase cleanup (engine.py:931-932) and unioned into each future attack's combat.keywords when its filter matches (engine.py:1917-1930). Filter uses HAS_KEYWORD (reads the CARD's own keywords - not ATTACK_HAS_KEYWORD, which reads the current combat only and would be wrong as a filter for future attacks) plus CARD_IS_TYPE Attack (matches types+subtypes; weapons/allies lack the Attack subtype).\n\nPRINTED KEYWORDS: Battleworn is engine-implemented from the DB keywords field - deliberately NOT authored here. The DB's GoAgain on an EQUIPMENT card is database flattening of this sentence (the loader's own Luminaris example): it belongs to other cards, and it is inert anyway since equipment is never combat.attack_card and never resolves as a layer - so NO SOURCE_IS_ATTACK conditional-keyword stripping is authored (that machinery is only for 'THIS gains go again').\n\nON_HIT means 'when THIS hits' -- it is dispatched to the attack card itself. This card's text is 'when a <class> attack action card YOU CONTROL hits', which is the broadcast, and the engine has a separate trigger for it (ON_ANY_HIT, split out precisely so the two cannot be confused). On ON_HIT this equipment never heard another card's hit and the whole ability was dead. See tests/test_on_hit_is_not_broadcast.py."
+}

@@ -1,0 +1,49 @@
+{
+ "slug": "ironhide_gauntlet",
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_DEFEND",
+   "effects": [
+    {
+     "type": "MAY",
+     "prompt": "Pay {r} to gain +2{d} and destroy when the combat chain closes?",
+     "cost": [
+      {
+       "type": "PAY_RESOURCES",
+       "amount": 1
+      }
+     ],
+     "effects": [
+      {
+       "type": "MODIFY_DEFENSE",
+       "amount": 2,
+       "mod": "add"
+      },
+      {
+       "type": "SET_FLAG",
+       "flag": "ironhide_gauntlet_boosted",
+       "scope": "CURRENT"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "ability_type": "DELAYED_TRIGGERED",
+   "trigger": "ON_COMBAT_CLOSE",
+   "conditions": [
+    {
+     "type": "FLAG_SET",
+     "flag": "ironhide_gauntlet_boosted"
+    }
+   ],
+   "effects": [
+    {
+     "type": "DESTROY_SELF"
+    }
+   ]
+  }
+ ],
+ "_comment": "Release notes: no blade break/battleworn; defend-without-pay legal; ability goes on chain. KNOWN ENGINE GAP: ON_COMBAT_CLOSE only dispatches to attack_card, not defending equipment â€” Ability 2 will not fire until listener is broadened."
+}

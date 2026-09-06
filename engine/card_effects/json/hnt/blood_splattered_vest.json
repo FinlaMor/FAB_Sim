@@ -1,0 +1,34 @@
+{
+  "slug": "blood_splattered_vest",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_IS_WEAPON"},
+        {"type": "WEAPON_SUBTYPE_IN", "values": ["Dagger"]},
+        {"type": "ATTACK_CONTROLLED_BY_YOU"}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Gain {r} and put a stain counter on Blood Splattered Vest?",
+          "effects": [
+            {"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 1},
+            {"type": "PUT_COUNTER", "counter_type": "stain", "amount": 1}
+          ]
+        },
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "COUNTER_GTE", "counter_type": "stain", "min": 3}
+          ],
+          "then": [
+            {"type": "DESTROY_SELF"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Whenever a dagger you control hits, you may gain {r} and put a stain counter on this. Then if there are 3 or more stain counters on this, destroy it.'\n\nDELIVERY: TRIGGERED + ON_HIT on the chest equipment works because engine._dsl_hit_listener broadcasts ON_HIT to every zone in _dsl_permanent_zones(attacker) - including chest - so the vest hears each hit by its controller's attacks; dispatch() no-ops for cards without a matching ability. Conditions narrow it to exactly 'a dagger you control': ATTACK_IS_WEAPON (combat.from_weapon), WEAPON_SUBTYPE_IN values=[Dagger] (handler reads `values` AND `subtypes`; verified both spellings), ATTACK_CONTROLLED_BY_YOU. Covers hits via effects too (Flick Knives/Bite fire ON_HIT on the dagger per their handlers), matching the release note.\n\nMAY packages gain+counter as ONE optional unit - declining runs neither, accepting runs both, which is the release note's 'To do the optional effect, you need to do both!'. The destroy check is a SIBLING CONDITIONAL after the MAY, not inside it: the note says the 3-counter destroy happens 'regardless of your choice'. COUNTER_GTE reads card.counters['stain'], which effect_put_counter maintains at ability_keywords.py:1660; PUT_COUNTER with no target lands on the source (the vest). DESTROY_SELF as an effect routes through canonical destroy(), which resolves the chest zone.\n\nBlade Break appears in printed_keywords, so it comes from the card DB keywords field and is deliberately NOT authored here."
+}

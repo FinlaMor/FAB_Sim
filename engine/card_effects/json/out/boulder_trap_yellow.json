@@ -1,0 +1,24 @@
+{
+  "slug": "boulder_trap_yellow",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "conditions": [
+        {"type": "ATTACK_POWER_GT_BASE"}
+      ],
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter": "-1d",
+          "amount": 1,
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "EQUIPMENT",
+            "amount": 1
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends an attack with {p} greater than its base, put a -1{d} counter on an equipment the attacking hero controls.' Ability shape copied from shipped out/inertia_trap_red.json, which prints the identical sentence: DEFENSE_REACTION + ability-level conditions [ATTACK_POWER_GT_BASE], NO authored 'trigger' key - rainbow_goo_trap_red carries trigger ON_DEFEND but the .review/den_of_the_spider_red.json finding established that key is dead data for DEFENSE_REACTION (the type maps to ON_PLAY; interpreter reads ability.trigger only for the TRIGGERED family). Timing matches the release note: the power is checked when this resolves and becomes a defending card, and ability-level conditions are checked at resolution (IMPLEMENTATION_GUIDE), i.e. exactly at defend time for a trap played in the defend step. Effect shape copied verbatim from shipped fab/art_of_the_dragon_scale_red.json, which implements the same clause ('put a -1{d} counter on an equipment they control'): PUT_COUNTER with counter kind '-1d' (a member of DEFENSE_COUNTER_KINDS, so it routes through _apply_defense_counter and actually reduces {d} - effect_put_counter alone would be bookkeeping) and target dict {controller OPPONENT, zone EQUIPMENT, amount 1}; from the defender's seat the attacking hero IS the opponent. The target compiler asks the controller to choose among the opponent's equipment and is mandatory (no MAY wrapper) per release note 2; if the opponent controls no equipment the pool is empty and nothing happens (CR: no legal target). Release note 3 (counter may land on any equipment regardless of printed {d}, floor at 0) is handler behaviour of _apply_defense_counter. PUT_COUNTER records the chosen object under ref 'countered'; nothing here needs it."
+}

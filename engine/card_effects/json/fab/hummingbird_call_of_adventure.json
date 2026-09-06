@@ -1,0 +1,29 @@
+{
+  "slug": "hummingbird_call_of_adventure",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {"type": "CHOOSE", "amount": 1, "options": [
+          {"name": "Each hero creates a Quicken token.",
+           "effects": [
+             {"type": "CREATE_TOKEN", "token": "quicken", "amount": 1, "player": "SELF"},
+             {"type": "CREATE_TOKEN", "token": "quicken", "amount": 1, "player": "OPPONENT"}
+           ]},
+          {"name": "Each hero draws a card.",
+           "effects": [
+             {"type": "DRAW", "amount": 1, "player": "SELF"},
+             {"type": "DRAW", "amount": 1, "player": "OPPONENT"}
+           ]},
+          {"name": "Each hero gains 1{h}.",
+           "effects": [
+             {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1, "player": "SELF"},
+             {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1, "player": "OPPONENT"}
+           ]}
+        ]}
+      ]
+    }
+  ],
+  "_comment": "'At the start of your turn, choose 1; - Each hero creates a Quicken token. - Each hero draws a card. - Each hero gains 1{h}.' Bard Weapon - Lute (2H) (Promos, FAB094).\n\nTRIGGER REACHES THE WEAPON: engine._dsl_start_of_turn_listener (engine.py:1461-1466, read this session) dispatches START_OF_TURN to the ACTIVE player's _dsl_permanent_zones, which explicitly includes player.weapon1/weapon2 (engine.py:1452-1459) - a two-handed lute sits there, so the ability fires on its controller's turn only and 'your turn' needs no IS_ACTIVE_PLAYER gate. STATIC_TRIGGERED per its doc ('always watching; fires each time the condition is met'); the interpreter runs it identically to TRIGGERED.\n\nCHOOSE reads amount + options (effect_types.py:5107-5136); options may be named blocks {name, effects} - the labels are what the player picks between at resolution time. One chosen option's effects run in order.\n\n'EACH HERO' is the documented two-effect shape (DSL_REFERENCE Draw/Discard: 'each hero draws a card = a SELF draw + an OPPONENT draw'), ordered SELF first then OPPONENT for all three options:\n- CREATE_TOKEN reads token/count|amount/player (effect_types.py:1942-1957); player OPPONENT resolves to the opposing hero (handler maps OPPONENT/DEFENDING/DEFENDER/TARGET_HERO to 3-cid). 'quicken' is the real token slug - json/tokens/quicken.json exists, so no token definition is authored here.\n- DRAW reads amount/player (effect_types.py:1222-1249), resolved via _effect_player_id which maps OPPONENT relative to the controller (effect_types.py:826-827).\n- GAIN reads asset/amount/player (effect_types.py:4869-4896); LIFE_POINTS is the CR 1.13.1 spelling for {h}.\n\nNO ATTACK AUTHORED: the printed text has no attack clause and the DB entry has power null with no activation cost, so play._add_weapon_attacks offers nothing - correct for this lute, whose entire text is the start-of-turn ability. printed_keywords is empty."
+}

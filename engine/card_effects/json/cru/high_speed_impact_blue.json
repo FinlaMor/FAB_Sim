@@ -1,0 +1,19 @@
+{
+  "slug": "high_speed_impact_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "GRANT_NEXT_ATTACK_KEYWORD",
+          "keyword": "Dominate",
+          "filter": [{"type": "ATTACK_WAS_BOOSTED"}],
+          "scope": "CHAIN"
+        }
+      ]
+    }
+  ],
+  "_comment": "'If High Speed Impact hits, the next attack you boost this combat chain gains **dominate**.' + printed **Boost**. Mechanologist Action - Attack (CrucibleOfWar).\n\nBOOST NOT AUTHORED: printed keyword (card DB keywords ['Boost', 'Dominate'], verified this session), fires from the card DB keywords field via ability_keywords.boost (CR 8.3.9); re-authoring it would be a defect.\n\nDOMINATE IN printed_keywords IS A CARD-DATA DEFECT, flagged for review: the word belongs to the GRANTED text ('the next attack ... gains dominate'), not to HSI itself, but the DB carries it as a printed keyword, so the engine applies Dominate to HSI's OWN attacks unconditionally (defend-step blocker limit) - behaviour the printed text does not give. Nothing expressible in JSON fixes a printed keyword: loader.conditional_keywords() strips one only from an ability gated on SOURCE_IS_ATTACK granting it via GAIN to THIS card, and here the grant targets a DIFFERENT future attack, so that shape does not fit. Authored nothing for it deliberately; the JSON below is correct once the DB keyword list is corrected to ['Boost'].\n\nTRIGGER: TRIGGERED + ON_HIT, UNGATED - the text says 'hits', not 'hits a hero', so deliberately no ATTACK_TARGET_IS_HERO gate. HSI hits during its OWN attack, so the grant lands on a LATER attack of the same chain.\n\nDELIVERY DEVIATES FROM THE BATCH TRIAGE LIST, deliberately: the list named INJECT_TRIGGER scope=CHAIN with an inner ON_ATTACK trigger gated by ATTACK_WAS_BOOSTED granting DOMINATE. That delivery is dead in this engine - combat.injected_triggers is consumed at the hit listener and the damage-dealt listener only; nothing consumes an injected ON_ATTACK, so the hook would sit unfired forever. An inner ON_HIT variant would fire at hit time - AFTER the defend step - where a dominate grant does nothing.\n\nWORKING COMPOSITION: GRANT_NEXT_ATTACK_KEYWORD (effect_types.py:4816-4840, read this session: reads keyword/filter/scope) queues {'mod': 'grant_keyword'} on the controller's dsl_queued_attack_mods; consumed one-shot by engine._apply_turn_attack_effects (engine.py:1199-1211, read this session) on the first attack whose filter matches - state.combat.grant_keyword('Dominate') at attack DECLARATION, before the defend step, which is when dominate matters. A non-boosted attack leaves the entry queued (not consumed), which is exactly 'the NEXT attack you boost'; boost() stamps was_boosted on the attack card when the boost cost is paid, before the queue is consulted. Filter ATTACK_WAS_BOOSTED (condition_types.py:1175-1192) reads combat.attack_card.was_boosted. Scope CHAIN is what makes 'this combat chain' hold: chain-scoped entries are stripped at chain close (engine.py:797-802, read this session) instead of surviving into a later chain of the same turn.\n\nSame shape as the sibling printings .drafts/high_speed_impact_red.json and the reviewed combustible_courier family (identical sentence frame with +3{p} instead of dominate).",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

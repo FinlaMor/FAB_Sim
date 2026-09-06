@@ -1,0 +1,17 @@
+{
+  "slug": "concuss_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"},
+        {"type": "ATTACK_POWER_GT_BASE"}
+      ],
+      "effects": [
+        {"type": "DISCARD", "player": "DEFENDING", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'When this hits a hero, if this has {p} greater than its base, they discard a card.' Guardian Action - Attack, so TRIGGERED + ON_HIT (an Action - Attack is never an ATTACK_REACTION). Blue printing of the same card already drafted as .drafts/concuss_red.json - identical text, slug differs only; shape re-verified against the handlers this session.\n\nRELEASE NOTE 1 ('does not trigger if you hit anything other than a hero, i.e. an ally') = ability-level ATTACK_TARGET_IS_HERO gate - false when combat.attack_target is set (permanent/ally target), true for hero attacks (condition_types.py:1960-1977).\n\nRELEASE NOTE 2 ('{p} of Concuss is checked on the resolution of the trigger, not when Concuss hits a hero') = ability-level conditions, which the interpreter evaluates at RESOLUTION before effects run; ATTACK_POWER_GT_BASE (condition_types.py:499-509) compares live combat.attack_power against base_attack_power recorded at attack declaration, so pumps applied between hit and resolution are seen, exactly as ruled. It reads no parameters.\n\nRELEASE NOTE 3 ('if they have two or more cards in their hand, they choose which card to discard') = DISCARD's default non-random path: effect_discard asks THE DISCARDING PLAYER which card ('they' = the defender). Handler (effect_types.py:1251-1286) READS amount/player/random/matches; 'they' maps through player DEFENDING -> opponent of the controller. An empty or one-card hand degrades safely (discards what exists / nothing).\n\nNo gaps; every clause expressible."
+}

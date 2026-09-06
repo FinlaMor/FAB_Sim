@@ -1,0 +1,12 @@
+{
+  "slug": "aether_hail_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "DEAL_ARCANE", "amount": 2, "target": "ANY"}
+      ]
+    }
+  ],
+  "_comment": "'Deal 2 arcane damage to any target.' target:\"ANY\" routes DEAL_ARCANE through _deal_arcane_to_objects (effect_types.py), which offers the controller a pick from both heroes plus every ally in play, then deals via the canonical deal_damage. Two approximations inherent to that helper, not to this draft: 'none' is always offered (so the deal is optional, where printed targeting is mandatory when a legal target exists), and max_targets defaults to 1 (correct here — one target). No other clauses."
+}

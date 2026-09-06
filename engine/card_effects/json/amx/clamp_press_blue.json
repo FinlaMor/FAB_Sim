@@ -1,0 +1,40 @@
+{
+  "slug": "clamp_press_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {"type": "PUT_COUNTER", "counter_type": "steam", "amount": 2}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "CONDITIONAL",
+          "when": [{"type": "COUNTER_GTE", "counter_type": "steam", "min": 1}],
+          "then": [
+            {"type": "CHOOSE", "amount": 1, "options": [
+              [{"type": "REMOVE_COUNTERS", "counter_type": "steam", "amount": 1}],
+              [{"type": "DESTROY_SELF"}]
+            ]}
+          ],
+          "else": [{"type": "DESTROY_SELF"}]
+        }
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Wrench"]},
+        {"type": "ATTACK_CONTROLLED_BY_YOU"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "Clause 'This enters the arena with 2 steam counters': ON_ENTER_PLAY fires from Zone.add for items (state.py:309); PUT_COUNTER defaults its target to the source card, which is what we want. Clause 'At the start of your turn, destroy this unless you remove a steam counter': START_OF_TURN reaches only the turn player's cards (trigger_types.py note), matching 'your turn'. The CONDITIONAL/COUNTER_GTE guard exists because CHOOSE offers both options unconditionally - without it, a counterless Clamp Press could pick 'remove' as a no-op and survive for free. DEVIATION from the triage list: it named CONTROLS_SUBTYPE for the pump, but that condition (a) scans only player.permanents, which does not include the items zone, and (b) gates on OWNING a wrench rather than tying the bonus to the attacking wrench - it would have pumped every attack once any wrench was in play. Used ATTACK_SUBTYPE_IN ['Wrench'] + ATTACK_CONTROLLED_BY_YOU against the current attack instead: engine._dsl_recalc_listener dispatches RECALC_ATTACK_POWER to p.items, so this WHILE_STATIC re-evaluates on every power recalculation and its MODIFY_ATTACK lands in the stage-8 window (no accumulation). ATTACK_SUBTYPE_IN reads 'subtypes' and checks combat.attack_card types+subtypes; 'Wrench' is a real DB subtype on wrench weapons and Wrench-subtype attacks, all of which are 'wrenches you control' when on your side. Crank itself is a printed keyword (DB keywords field) - not authored."
+}

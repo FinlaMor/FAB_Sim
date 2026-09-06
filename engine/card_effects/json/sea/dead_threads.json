@@ -1,0 +1,19 @@
+{
+  "slug": "dead_threads",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "TAP_SELF"}
+      ],
+      "conditions": [
+        {"type": "EVENT_THIS_TURN", "event": "graveyard", "qualifier": "ally"}
+      ],
+      "effects": [
+        {"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - {t}: Gain {r}. Activate this only if an ally has been put into your graveyard this turn. / **Blade Break**' - Necromancer Equipment - Chest.\n\nBLADE BREAK NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field (ability_keywords.blade_break) - deliberately NOT authored here; re-authoring a printed keyword is a defect.\n\nACTIVATED ABILITY: '**Instant** -' marks an activated ability with instant timing, so ability_type INSTANT (usable at any priority window; offered to chest equipment by play._add_hero_dsl_activations, whose source zones include head/chest/arms/legs - play.py:238-265). The {t} is the non-resource cost TAP_SELF (cost_types.py:320-326: payable iff untapped, pay taps the card), which also gates the offer (play.py:311-313 checks cost check_fn before listing the action). There is NO resource cost, so the card-level activation_cost is explicitly 0 - DSL-authoritative, overriding the loader's printed-text heuristic so the '{r}' inside 'Gain {r}' cannot be misparsed as an activation price.\n\nGATE 'only if an ally has been put into your graveyard this turn': EVENT_THIS_TURN event graveyard qualifier ally (condition_types.py:1070-1112; reads event/qualifier/count/player/exact - defaults SELF, count 1, >=). Zone.add records a did_this_turn:graveyard:<qualifier> marker for every card entering a graveyard, with the card's slug, types AND subtypes as qualifiers (state.py:264-277), so an Ally card entering YOUR graveyard records ':ally'; markers persist for the whole turn. The release note's 'e.g. from the arena, destroyed from the top of your deck, etc' holds because Zone.add is the single choke point every graveyard path funnels through. The same condition doubles as the offer-time gate (play.py:307-309 evaluates ability conditions before offering the action), which is exactly the printed 'Activate this only if ...'.\n\nEFFECT: GAIN asset RESOURCE_POINTS amount 1 (effect_types.py:4869-4889 -> effect_gain_resources); defaults to the controller."
+}

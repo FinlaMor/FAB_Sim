@@ -1,0 +1,32 @@
+{
+  "slug": "deadly_display_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_IS_WEAPON"}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3},
+        {
+          "type": "INJECT_TRIGGER",
+          "conditions": [
+            {"type": "EVENT_THIS_TURN", "event": "sharpen"}
+          ],
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "ATTACK_TARGET_IS_HERO"}
+            ],
+            "effects": [
+              {"type": "CREATE_TOKEN", "token": "flurry", "amount": 1}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target weapon attack gets +3{p}. If the weapon has been sharpened this turn, the attack gets \"When this hits a hero, create a Flurry token.\"' Warrior Attack Reaction. Red printing of .drafts/deadly_display_blue.json (+1 there) and .drafts/deadly_display_yellow.json (+2 there); +3 here per this printing's text. Shape copied from those siblings and re-verified against handlers this session.\n\nSHAPE: one ATTACK_REACTION with target.filter ATTACK_IS_WEAPON - that condition reads combat.from_weapon and takes no params (condition_types.py:198-199), so it cannot miss the way a subtype spelling can. MODIFY_ATTACK add 3 is the +3{p}, applied to the current attack during the reaction window.\n\nGATE PLACEMENT: the sharpened test sits as effect-level 'conditions' on the INJECT_TRIGGER itself. The loader pops that key into EffectDef.conditions, gating whether the effect runs at all - evaluated once when the reaction resolves, which is exactly when 'has been sharpened this turn' must be tested per the release note. It must NOT go inside the nested trigger dict: inner conditions there are per-hit filters evaluated at hit time (effect_types.py:2103-2119 documents both readings).\n\nSHARPEN EVENT: SHARPEN records the 'sharpen' turn event through _record_turn_event at the moment the sharpen effect is applied (effect_types.py:5214) - independent of whether the +1{p} counters still exist later, which is precisely release note 1's definition ('still considered sharpened even if the +1{p} counters no longer exist').\n\nKNOWN IMPRECISION (bounded): the recorded qualifier is the sharpened weapon's slug and no condition can pin the gate to THE targeted weapon - the CR 1.8.5 declared target is never stored as a ref. Omitting the qualifier means a DIFFERENT weapon sharpened earlier this turn also enables the Flurry clause. Over-match, never under-match; exact whenever only one weapon is in play; fixing it needs target-as-ref plumbing, not JSON.\n\nADOPTION BLOCKER, DISCLOSED LOUDLY: json/tokens/flurry.json DOES NOT EXIST (full tokens-dir census this session). create_token calls require_card(token_slug) (effect_keywords.py:267-276), so until that token definition is authored this card raises MissingCardImplementation mid-game when the injected trigger fires. Authoring work outside .drafts/, not a DSL gap - identical blocker already disclosed on both sibling drafts."
+}

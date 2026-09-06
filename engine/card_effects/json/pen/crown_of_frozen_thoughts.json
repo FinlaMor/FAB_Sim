@@ -1,0 +1,16 @@
+{
+  "slug": "crown_of_frozen_thoughts",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "FREEZE",
+          "target": {"controller": "OPPONENT", "zone": "HERO"}
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends, **freeze** the attacking hero until the start of their next turn.' + printed **Blade Break**. Ice Equipment - Head.\n\nTRIGGER: release note 1 settles WHEN this is checked - it triggers when Crown becomes a defending card - so an event TRIGGERED ON_DEFEND, not a static. play.py emits one 'defend' event per defending card at declaration (play.py:1374-1376, carrying the card), and _dsl_defend_listener dispatches ON_DEFEND to that defending card itself (engine.py:1640-1646), so no source-scoping condition is needed: the ability only ever hears Crown's own defends.\n\nEFFECT: FREEZE reads either a ref or the canonical object-target dict (effect_types.py:3149-3178); the dict keys are controller/zone(s)/name/ref/record_as/amount/filter (effect_types.py:635-709). {\"controller\": \"OPPONENT\", \"zone\": \"HERO\"} resolves through _object_zone_cards' HERO branch -> [player.hero] (effect_types.py:485-486). From Crown's perspective OPPONENT is the attacking player, so this is 'the attacking hero' - and release note 2 (defending against an ALLY makes the ally's controller the attacking hero) freezes the same object either way, because the target derives from Crown's controller's opponent rather than from what attacked.\n\nDURATION: the DSL FREEZE effect exposes no duration parameter; the freeze primitive's default (effect_keywords.py:2513-2526) unfreezes at START_OF_TURN of the FROZEN CARD'S controller - i.e. the start of the attacking hero's next turn, exactly the printed duration. Note this is NOT the CR 8.5.34b no-duration default (which would be the FREEZER'S next turn); the engine primitive keys on the victim's controller, which happens to be what this card prints. No duration had to be expressed.\n\nPRINTED KEYWORDS NOT AUTHORED: Blade Break is engine-side from the DB keywords field (ability_keywords.blade_break). 'Freeze' in printed_keywords is inert as a DB tag (same reading as .drafts/cold_snap_yellow.json); the actual freezing is the effect above, so the SOURCE_IS_ATTACK conditional-keyword shape does not apply.\n\nENGINE CAVEAT FOR REVIEW: __frozen__ gates playing/activating cards (play.py:370-384 _legality_check). A HERO is never played or activated, so unless/until the engine models whatever a frozen hero concretely does, freezing the hero here is bookkeeping plus the FreezeEvent - the JSON is right, but a behavioural test should assert on the counter/event, not on a gameplay difference."
+}

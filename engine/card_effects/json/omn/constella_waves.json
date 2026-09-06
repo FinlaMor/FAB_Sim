@@ -1,0 +1,18 @@
+{
+  "slug": "constella_waves",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "TAP_SELF"},
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "AMP", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - {t} your hero, destroy this: **Amp 1**'\n\nABILITY TYPE: 'Instant -' before the colon is an activated ability with instant timing, so INSTANT (maps to ON_ACTIVATE, trigger_types.py:115) - NOT a PLAY ability; the card is equipment and is never played. play._add_hero_dsl_activations scans the equipment slots including arms (play.py:259-265) and offers INSTANT at any priority window. Shape precedent: .drafts/compass_of_sunken_depths.json (same 'Instant - {t}:' sentence family on arms-slot equipment).\n\nCOSTS, not effects: both '{t}' and 'destroy this' sit before the colon, so both are ability-level cost entries paid before the effects run. TAP_SELF (cost_types.py:320-326) is payable only while untapped and taps; DESTROY_SELF cost (cost_types.py:43-51) destroys through canonical destroy(), which resolves the arms slot. can_pay of DESTROY_SELF is always true, so the pair is gated by the tap alone.\n\n'{t} YOUR HERO' vs TAP_SELF: TAP_SELF taps the ACTIVATING CARD, which for equipment is this arms piece rather than the hero - a letter-level deviation from the printed wording. It is the corpus-wide spelling for equipment {t} (compass_of_sunken_depths), and no engine reader distinguishes hero.tapped for gameplay: arena_cards (state.py:962-967) includes the arms slot, so the end-phase untap (engine.py:880-882) refreshes it every turn and the tap is a once-per-turn gate either way. Flagged for review rather than silently chosen.\n\nAMP reads amount (effect_types.py:1894-1899) and routes to effect_amp -> canonical amp(). Shipped AMP-in-JSON precedents: omn/arc_ramp_red.json ('Amp 3...'), ros/exploding_aether_blue.json, lgs/volzar_the_lightning_rod.json - the printed Amp text does not double-fire for DSL-defined cards.\n\nactivation_cost 0 at CARD level: the ability costs no {r}; {t} is a non-resource cost carried by the ability's cost array, and the explicit 0 stops the loader's printed-text heuristic from inventing one (assembly_module_blue precedent).",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

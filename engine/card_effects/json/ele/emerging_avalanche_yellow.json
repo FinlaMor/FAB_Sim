@@ -1,0 +1,37 @@
+{
+  "slug": "emerging_avalanche_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "conditions": [
+        {"type": "FLAG_SET", "flag": "fused_emerging_avalanche_yellow"}
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "frostbite",
+          "amount": 1,
+          "player": "TARGET_HERO"
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_ACTION_PHASE",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Ice Fusion** / **Go again** / When Emerging Avalanche enters the arena, if it was **fused**, create a Frostbite token under target hero control. / At the beginning of your action phase, destroy Emerging Avalanche then the next attack action card you play this turn gains +2{p}.' Elemental Guardian Action - Aura (TalesOfAria).\n\nPRINTED KEYWORDS NOT AUTHORED: Fusion and GoAgain are both in printed_keywords and both fire engine-side from the card DB keywords field - '<X> Fusion' as an optional additional cost at PLAY time (triggers/triggers.py maps '<X> fusion' -> ability_keywords.fusion) and go again from the keywords field. Re-authoring either would be a defect; nothing here gates a printed keyword, so no SOURCE_IS_ATTACK conditional-keyword machinery applies.\n\nFUSED GATE DEVIATES FROM THE TRIAGE LIST, deliberately - it named PITCHED_FOR_THIS, which is WRONG here and fails in exactly the state the clause cares about: engine fusion() (ability_keywords.py:582-607, read directly) is a REVEAL from hand that never pitches and never stamps pitched_for_this, so PITCHED_FOR_THIS would be false whenever the card WAS fused. The live idiom, verified in source: fusion() writes the marker 'fused_<card.slug>' into the controller's current_turn_effects (ability_keywords.py:604-606), and FLAG_SET tests exactly that set for the source controller (condition_types.py:1032-1037). Flag name is per-printing because fusion() keys it on card.slug - hence fused_emerging_avalanche_yellow. Timing holds: fusion resolves as a play cost before arena entry, and ability-level conditions are checked at resolution (interpreter.py:54-58), so by ON_ENTER_PLAY the flag is set or permanently absent; entering the arena by any non-play route leaves it unset, matching 'if it was fused'.\n\nETB TRIGGER: TRIGGERED ON_ENTER_PLAY, dispatched from Zone.add on real arena entry from a non-arena zone.\n\nTOKEN: CREATE_TOKEN reads token/count|amount/player/destination (effect_types.py:1942-2013); amount 1 explicit. 'Under target hero control' authored player TARGET_HERO - the handler maps TARGET_HERO/OPPONENT/DEFENDING identically to the opposing hero. KNOWN FIDELITY GAP: the printed 'target hero' can be EITHER hero (including your own), and no DSL targeting machinery targets heroes, so the own-hero choice is not expressible; the opposing hero is the only sensible line in practice, accepted as an approximation. DEPENDENCY: the frostbite template EXISTS in the card DB (slug_index.json has a frostbite entry) but json/tokens/frostbite.json does NOT (globbed every json/tokens path) - per the guide every created token needs a JSON definition, and adoption without one raises MissingCardImplementation naming 'frostbite'. It cannot be authored from .drafts/; its text per release note 2 is an Elemental Aura with 'Cards and activated abilities you control cost an additional {r}.'\n\nUPKEEP CLAUSE: START_OF_ACTION_PHASE is CR 4.3.1 'beginning of your action phase' (NOT start of turn) and is dispatched to the active player's permanent zones INCLUDING auras (engine.py:1452-1459, 1514-1522), so this aura hears it. Effects run in order: DESTROY_SELF first (release note 1: mandatory, not optional - plain DESTROY_SELF, no optional wrapper; destroy() resolves the zone itself, effect_types.py:2470-2498), THEN MODIFY_NEXT_ATTACK +2 - the pump survives its source's destruction because the mod queues on the CONTROLLER's dsl_queued_attack_mods (effect_types.py:4592-4618), not on the card. Filter ATTACK_TYPE_IN ['Action'] + ATTACK_SUBTYPE_IN ['Attack'] is the DSL_REFERENCE spelling for 'attack action card' (excludes weapon attacks); consumed by the first qualifying attack played this turn, unused mods expire end of turn.\n\nNo known gaps beyond the stated token-definition dependency and the target-hero approximation."
+}

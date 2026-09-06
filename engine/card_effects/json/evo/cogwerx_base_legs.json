@@ -1,0 +1,42 @@
+{
+  "slug": "cogwerx_base_legs",
+  "activation_cost": 1,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_EQUIP",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter_type": "steam",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {
+          "type": "FLAG_SET",
+          "flag": "boosted_this_turn"
+        }
+      ],
+      "cost": [
+        {
+          "type": "REMOVE_COUNTERS",
+          "counter_type": "steam",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "asset": "ACTION_POINTS",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this is equipped, put a steam counter on it. / Once per Turn Instant - {r}, remove a steam counter from this: Gain 1 action point. Activate this ability only if you've boosted this turn.'\n\nDirect sibling of the adopted evo/cogwerx_base_arms.json and the drafted cogwerx_base_chest.json - identical skeleton, only the payoff differs (GAIN ACTION_POINTS 1 vs the arms' MODIFY_NEXT_ATTACK / chest's RESOURCE_POINTS 2).\n\nPLACEMENT DEVIATION FROM THE ADOPTED SIBLING: activation_cost/per_turn are authored at CARD level here, not inside the INSTANT ability. compile_card reads them from the top-level dict only (loader.py:153-154) - an ability-level copy lands unread in ab_params (_compile_ability, loader.py:119-141) - and card.py:519-528 stamps the card-level values onto the runtime card, where play.py:1513-1522 charges the {r} and play.py:304 enforces the once-per-turn allowance at offer time. arms.json carries them ability-level, which is inert there; do not copy that placement.\n\nBoost gate: FLAG_SET reads raw membership of 'boosted_this_turn' in the controller's current_turn_effects (condition_types.py:1032-1037), and ability_keywords.boost appends exactly that marker once per PAID boost, unconditionally (line 514) - so the release note's 'the banished card does not have to be a Mechanologist' holds: any paid boost sets it.\n\nGAIN asset ACTION_POINTS routes through effect_keywords.gain (effect_types.py:4897-4900). PUT_COUNTER with no target puts the counter on the source card, which is 'on it'.\n\nKNOWN WRINKLE (inherited from the siblings' shape): the REMOVE_COUNTERS cost decrements only the player-level counter dict keyed (slug, zone, kind) (cost_types.py:556-572) while effect_put_counter also writes card.counters. With one steam counter and per_turn 1 this never misbehaves (can_pay sums the player-level dict, so a second activation is unpayable and once-per-turn blocks it anyway), but any future card-level COUNTER_GTE read on this equipment would over-count after activation."
+}

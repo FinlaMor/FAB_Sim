@@ -1,0 +1,21 @@
+{
+  "slug": "core_reaction_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "START_OF_ACTION_PHASE",
+      "conditions": [
+        {"type": "IS_ACTIVE_PLAYER"}
+      ],
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 2,
+          "target": "ANY"
+        }
+      ]
+    }
+  ],
+  "_comment": "'At the beginning of your action phase, destroy this and deal 2 arcane damage to any target.' Lightning Wizard Instant - Aura.\n\nTIMING: START_OF_ACTION_PHASE (CR 4.3.1), not START_OF_TURN - the start phase happens earlier. Shipped pen/by_the_book_blue.json uses exactly this trigger for exactly this wording. The engine dispatches START_OF_ACTION_PHASE to the ACTIVE player's permanent zones INCLUDING player.auras (engine.py:1514-1522, _dsl_permanent_zones at :1452), so this Aura fires on its controller's own action phase; IS_ACTIVE_PLAYER is belt-and-braces on top of that, matching by_the_book_blue.\n\nABILITY TYPE: STATIC_TRIGGERED per the batch triage ('at the beginning of...' = always watching, fires each time the condition is met). The interpreter dispatches TRIGGERED and STATIC_TRIGGERED through the same branch (interpreter.py:171), so this compiles identically to the TRIGGERED spelling the red printing's draft used.\n\nORDER: DESTROY_SELF first ('destroy this AND deal'), then the damage, as one sequential list - release note 2 ('no priority between any of the effects generated') is plain in-order resolution with nothing between them. The ability resolves fully even though the source left play mid-resolution.\n\n'destroy this' = DESTROY_SELF (effect_types.py:2470 shares the DESTROY_PERMANENT branch, target defaults 'self', canonical destroy resolves the aura out of the auras zone).\n\nAPPROXIMATION on 'any target': release note 1 rules the triggered effect is TARGETED - the target must be declared when the triggered layer is ADDED TO THE STACK. Triggered-layer target declaration is an open engine item (docs/cr_audit_2026-07.md), so the DSL cannot declare a target at stack time here. Instead DEAL_ARCANE target ANY routes to _deal_arcane_to_objects (effect_types.py:988+), which asks the controller to pick from both heroes plus allies AT RESOLUTION and deals 2 arcane to the pick via canonical deal_damage. An ability-level target.filter would not help: DEAL_ARCANE chooses its victim from its own 'target' string (_damage_target_player / _deal_arcane_to_objects) and never consults an ability target declaration. With nothing able to respond inside one trigger resolution the observable difference is narrow, but the choice point is timed differently than the release note describes."
+}

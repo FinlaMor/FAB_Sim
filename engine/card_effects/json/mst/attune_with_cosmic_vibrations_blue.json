@@ -1,0 +1,33 @@
+{
+  "slug": "attune_with_cosmic_vibrations_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "OPPONENT", "amount": 1, "into": "revealed"},
+        {"type": "CONDITIONAL",
+         "when": [{"type": "REF_PITCH_IS", "ref": "revealed", "pitch": 3}],
+         "then": [
+           {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}
+         ]}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "OPPONENT", "amount": 1, "into": "revealed"},
+        {"type": "CONDITIONAL",
+         "when": [{"type": "REF_PITCH_IS", "ref": "revealed", "pitch": 3}],
+         "then": [
+           {"type": "MODIFY_DEFENSE_VALUE", "amount": 3}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "Two deviations from the triage list, both forced by the handlers. (1) REVEAL_TOP_DECK hard-codes the controller's OWN deck (effect_types.py REVEAL_TOP_DECK: pid = _controller_id(card), no player param read) - Attune reveals the opposing hero's deck in both cases ('their' = the hero attacked / whose attack is defended; always the opponent in 1v1), so the reveal is LOOK_AT(player OPPONENT, DECK_TOP) into a ref. Fidelity gap, flagged: LOOK_AT peeks and never sets is_public, so this models the reveal informationally (the ref test works) rather than as a public-flag write. Empty opposing deck stores None and REF_PITCH_IS answers False, which matches the release note that no reveal means no +3/+3. (2) The defend half uses MODIFY_DEFENSE_VALUE, not triage's MODIFY_DEFENSE: the damage-step recalc resets each defender to base before re-applying mods, so a per-card bump written at defend time is wiped before damage, while defense_mods survive the recalc - the same reason shipped evo/infuse_alloy_yellow implements Galvanize's defend-time +2{d} as MODIFY_DEFENSE_VALUE. This card is a declared defender whenever its ON_DEFEND fires, so +3 to the defending total == this gets +3{d} for the link. The halves are also deliberately SPLIT rather than each granting both bonuses: while defending, MODIFY_ATTACK would add +3 to the INCOMING attack (+3{p} is inert on a defending card); while attacking, any defense mod lands on the defender's total (+3{d} is inert on an attacking card). Authoring both halves on both triggers would buff the wrong object. Release notes' atomicity (no priority inside the triggered effect) is ordinary trigger resolution - nothing extra to author."
+}

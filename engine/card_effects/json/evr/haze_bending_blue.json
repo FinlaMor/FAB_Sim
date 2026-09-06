@@ -1,0 +1,14 @@
+{
+  "slug": "haze_bending_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_DEATH",
+      "once_per_turn": "haze_bending",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "Spectral Shield", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Once per turn, when this or an Illusionist non-token aura you control is destroyed, create a Spectral Shield token.' + printed **Spectra**. Illusionist Action - Aura (ArmoryDeckLegendsPrism).\n\nSPECTRA NOT AUTHORED: printed keyword (printed_keywords), fires from the card DB keywords field (ability_keywords.spectra_destroy) - re-authoring it would be a defect.\n\nGAP - ONLY THE SELF-HALF IS AUTHORED, disclosed: the printed subject is 'this OR AN ILLUSIONIST NON-TOKEN AURA YOU CONTROL', but _dsl_destroyed_listener (engine.py:1578-1588) dispatches ON_DEATH ONLY to the dying card's own slug - Haze Bending's definition is never consulted when some OTHER aura dies, so that half cannot fire no matter how it is conditioned (ability conditions also evaluate against the source card, not the event payload). Identical gap recorded on .drafts/diadem_of_dreamstate.json and .triage/celestial_kimono.json; modelling the full sentence needs an engine broadcast of destroy events to the destroyed card's controller's arena objects (the ON_DRAW listener at engine.py:1590-1602 is the existing broadcast precedent). No self-half conditions are authored: the dying card is always this Haze Bending, which is an Illusionist non-token aura by definition, so Illusionist/aura/non-token/you-control tests could only false-veto.\n\nRELEASE NOTE 2 holds structurally: ON_DEATH is emitted only from effect_keywords.destroy()'s 'destroyed' event, so a card cleared from the combat chain or removed by a rule/effect other than destroy never fires this.\n\nRELEASE NOTE 3 ('no trigger if not in the arena when destroyed') DISCLOSED, NOT GATED - same known deviation as the dunebreaker_cenipai family: ON_DEATH fires for EVERY canonical destroy(), including destruction while on the stack or in arsenal. Not expressible in JSON: the destroy event payload carries no origin-zone field, and by condition-evaluation time the card is already in the graveyard on every path.\n\nONCE PER TURN: the ability-level once_per_turn key - loader puts unrecognised ability keys into AbilityDef.params and interpreter._run_ability consumes it PAST all other gates (interpreter.py:69-85), so a destruction whose gate failed does not burn the turn's single use.\n\nTOKEN: CREATE_TOKEN reads token/token_name/token_type interchangeably (effect_types.py:1947-1948) and create_token slugifies the display name, so 'Spectral Shield' -> spectral_shield; json/tokens/spectral_shield.json already exists, so resolution will not raise MissingCardImplementation mid-game. Destination is omitted, so the token routes by its template subtypes (an aura token enters the auras zone)."
+}

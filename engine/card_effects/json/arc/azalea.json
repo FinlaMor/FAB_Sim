@@ -1,0 +1,28 @@
+{
+  "slug": "azalea",
+  "activation_cost": 0,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {"type": "CONDITIONAL",
+         "when": [{"type": "CARD_IN_ZONE", "zone": "arsenal", "count_gte": 1}],
+         "then": [
+           {"type": "PUT_ARSENAL_BOTTOM", "player": "SELF"},
+           {"type": "PUT_INTO_ARSENAL", "from": "DECK_TOP", "face_up": true},
+           {"type": "CONDITIONAL",
+            "when": [{"type": "REF_IS_TYPE", "ref": "arsenaled", "types": ["Arrow"]}],
+            "then": [
+              {"type": "GRANT_KEYWORD_TO_PLAYED", "keyword": "Dominate",
+               "filter": [
+                 {"type": "CARD_IS_TYPE", "card_type": "Arrow"},
+                 {"type": "PLAYED_FROM_ARSENAL"}
+               ]}
+            ]}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "'Once per Turn Action - 0' = ACTIVATE with card-level activation_cost 0 / per_turn 1; the engine charges the action point for an action-speed activation and 'Go again' refunds it at resolution from the DB keywords field (engine.py: card.has_go_again on layer resolution) - so NO explicit GAIN ACTION_POINTS here or it would double-grant. Printed Dominate likewise fires from the DB field and is not authored. 'If you do' is a CONDITIONAL gated on CARD_IN_ZONE(arsenal >= 1) wrapping the whole sequence: within one resolution nothing can empty the arsenal between the test and PUT_ARSENAL_BOTTOM, and PUT_ARSENAL_BOTTOM only no-ops on an empty arsenal, so testing before is equivalent to testing success. PUT_ARSENAL_BOTTOM passes player SELF explicitly - the handler DEFAULTS TO OPPONENT (that default sank sunkwater_exoshell's 'your arsenal' clause). PUT_INTO_ARSENAL(from DECK_TOP, face_up true) reports what moved as ref 'arsenaled' and leaves it unset when the deck is empty or the arsenal was full, so the arrow test (REF_IS_TYPE on 'arsenaled') correctly grants nothing in those cases. KNOWN APPROXIMATION, same one blessed in .triage/azalea.json: the grant is GRANT_KEYWORD_TO_PLAYED filtered to arrows played from arsenal this turn, not to the specific arsenaled card object - a second arrow played from arsenal later the same turn would also get dominate; per-object turn-scoped keyword grants do not exist in the DSL."
+}

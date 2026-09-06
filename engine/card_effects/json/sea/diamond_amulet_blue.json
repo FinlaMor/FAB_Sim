@@ -1,0 +1,18 @@
+{
+  "slug": "diamond_amulet_blue",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "conditions": [
+        {"type": "IS_ACTIVE_PLAYER"}
+      ],
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "GAIN", "asset": "ACTION_POINTS", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - Destroy this: gain 1 action point.' + '**Legend of the Watery Grave**'\n\nSHAPE: INSTANT maps to ON_ACTIVATE (trigger_types.ABILITY_TYPE_TO_EVENT); play._add_hero_dsl_activations scans player.items among its sources (play.py:262-265) and offers INSTANT abilities at any priority window, checking ability conditions BEFORE offering (play.py:306-309) and DSL costs before applying (play.py:311-313). DESTROY_SELF is a real cost type (cost_types.py:43-51, pays through canonical destroy(), which resolves the items zone). GAIN asset ACTION_POINTS routes through effect_keywords.gain (effect_types.py:4897-4900), not the combat-keyword path, so it works outside combat.\n\nRELEASE NOTE MODELLING: 'You cannot gain action points during your opponent's turns' is authored as IS_ACTIVE_PLAYER on the ability, so the activation is not OFFERED off-turn at all. The letter of the note arguably permits activating off-turn with a nullified gain (destroy still happens, no AP); that variant is expressible (CONDITIONAL when IS_ACTIVE_PLAYER around the GAIN, cost unconditional) but was deliberately not used: it offers agents a strictly-null action that destroys their own item for nothing. Flagging the choice for review - flipping to the letter-of-the-note form is a one-line change.\n\nNOT AUTHORED: Legendary and WateryGrave are printed keywords carried on the card DB keywords field ('Legend of the Watery Grave' is the legendary watermark line); re-authoring them would be a defect. They grant no behaviour to implement here."
+}

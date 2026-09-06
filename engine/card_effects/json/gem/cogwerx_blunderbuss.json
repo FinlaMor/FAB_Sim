@@ -1,0 +1,36 @@
+{
+  "slug": "cogwerx_blunderbuss",
+  "activation_cost": 2,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {
+          "type": "ATTACK"
+        }
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {
+          "type": "TAP_PERMANENT",
+          "subtype": "Cog"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GRANT_NEXT_ATTACK_KEYWORD",
+          "keyword": "GO_AGAIN",
+          "filter": [
+            {
+              "type": "ATTACK_NAME_IN",
+              "name": "Cogwerx Blunderbuss"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Action - {r}{r}, {t}: Attack / Instant - {t} a cog you control: This card's next attack this turn gets go again.' Every type/param below was read out of its handler, not assumed.\n\nCLAUSE 1 ('{r}{r}, {t}: Attack'): card-level activation_cost 2 - loader.py:153-154 reads the field DSL-authoritatively. play._add_weapon_attacks (play.py:86-122) offers the attack itself for any weapon with printed power + an activation cost, charging the resource cost and gating on untapped/exhausted + per-turn remaining; the apply path (play.py:1765-1785) charges 1 AP and sets weapon_exhausted. So the printed {t} and {r}{r} must NOT also be authored as ability costs - the proxy path returns early (play.py:1248-1262) before ability costs would be paid, so a TAP_SELF there would be dead weight at best. The ACTIVATE ability carrying ATTACK is declarative (shipped precedent cru/sledge_of_anvilheim.json shape); it cannot double-fire: play._add_hero_dsl_activations skips ATTACK-effect abilities (effect_types.py:5139-5149 comment, play.py:279).\n\nCLAUSE 2: INSTANT + TAP_PERMANENT {subtype Cog} - cost_types.py:328-363 scans the controller's player.permanents (where items/cogs live, state.py:867-868) matching 'cog' case-insensitively against subtypes AND types, asks which to tap, and can_pay blocks activation when none is untapped.\n\n'THIS CARD'S next attack': GRANT_NEXT_ATTACK_KEYWORD (effect_types.py:4816-4840) reads keyword/filter/scope, normalises GO_AGAIN to 'Go Again', and queues a one-shot entry on dsl_queued_attack_mods. DEVIATION FROM TRIAGE, which named the grant bare: unfiltered, the go again would land on your next attack of ANY source. The filter makes 'this card's' hold - consumption (engine.py:1175-1211) compiles each spec and evaluates it against the incoming attack; ATTACK_NAME_IN (condition_types.py:218-232) reads 'name', strips the colour suffix, and matches combat.attack_card, which for a weapon attack IS this weapon. A non-matching attack leaves the entry queued for the next one; unused entries expire end of turn (scope TURN default).\n\nRELEASE NOTES: (1)+(2) 'applies to the next attack after the ability resolves, not the current attack' falls out - the queue is consulted when attacks are declared, never retroactively on live combat. (3) activating on the opponent's turn still queues the grant but it expires end of that turn unused - same TURN scope. (4) multiple attacks per turn: NOT fully expressible in JSON - play.py gates ALL weapon attacks behind player.weapon_exhausted (set on every weapon attack, play.py:1781; reset only at start of turn, engine.py:294), so the engine offers at most one weapon attack per turn regardless of resources/taps. Lifting that is an engine change, not a card-JSON one; the JSON imposes no extra per_turn limit of its own."
+}

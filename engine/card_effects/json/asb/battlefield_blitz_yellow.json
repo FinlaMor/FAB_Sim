@@ -1,0 +1,24 @@
+{
+  "slug": "battlefield_blitz_yellow",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "charge"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ],
+  "_comment": "'If you've charged this turn, Battlefield Blitz gains go again.'\n\nGoAgain appears in printed_keywords, so the conditional-keyword shape is MANDATORY: the engine applies every DB keyword unconditionally, and loader.conditional_keywords() (loader.py:255-296, read directly) suppresses the printed keyword ONLY for an ability whose conditions include SOURCE_IS_ATTACK and whose DIRECT effects grant it via GAIN - both hold here (go_again is in _GRANTABLE_KEYWORDS, loader.py:243-246; the GAIN sits un-nested on the WHILE_STATIC). Without this ability the attack would have go again on every play.\n\nDEVIATION FROM TRIAGE on the condition: triage named CARD_WAS_CHARGED, which asks whether THIS CARD was charged (the was_charged attribute, condition_types.py:1147-1164) - the wrong subject. The text is 'if YOU'VE charged this turn': any charge by the controller counts, e.g. charging a card into the soul for an earlier piece and then attacking with Blitz, where Blitz itself was never charged. charge() records a bare 'charge' marker against the CHARGING player after replacement/cancel checks (effect_keywords.py:2341-2354), and EVENT_THIS_TURN event:'charge' with no qualifier counts exactly those markers for SELF = this card's controller (condition_types.py:1042-1084).\n\nAbility type: no release notes accompany this card, but per the Aggressive Pounce rule an 'if you've <done> X this turn, this gets go again' condition is always checking - a WHILE_STATIC re-evaluated on every RECALC_ATTACK_POWER dispatch (interpreter.py:186-201), not a TRIGGERED ON_ATTACK pump that would freeze the answer at declaration. Recalculations happen at declaration, after reactions, and at the top of _resolve_damage (engine.py:2079), all before chain-link resolution consults combat.keywords for go again, so a charge from anywhere earlier in the turn is live by then. EVENT_THIS_TURN is marker-based (player.current_turn_effects membership), so unlike event-payload conditions (DISCARDED_CARD_POWER_GTE) it does not depend on which event object the recalc dispatch carries.\n\nShape copied verbatim from the sibling drafts .drafts/battlefield_blitz_red.json and .drafts/battlefield_blitz_blue.json, which carry the identical printed text. All types/params verified against handlers: SOURCE_IS_ATTACK (condition_types.py:367-373), EVENT_THIS_TURN (1042-1084), GAIN keyword branch grants into combat.keywords (effect_types.py:4846-4852). No known gaps."
+}

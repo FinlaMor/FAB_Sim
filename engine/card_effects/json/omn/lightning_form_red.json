@@ -1,0 +1,17 @@
+{
+ "slug": "lightning_form_red",
+ "abilities": [
+  {
+   "ability_type": "TRIGGERED",
+   "trigger": "ON_HIT",
+   "effects": [
+    {
+     "type": "CREATE_TOKEN",
+     "token": "embodiment_of_lightning",
+     "amount": 1
+    }
+   ]
+  }
+ ],
+ "_comment": "Simple ON_HIT trigger creating an Embodiment of Lightning token. No printed keywords, no conditional logic. Token definition exists at json/tokens/embodiment_of_lightning.json."
+}

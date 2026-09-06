@@ -1,0 +1,91 @@
+{
+  "slug": "boom_grenade_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "target": "self",
+          "counter_type": "steam",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "COUNTER_GTE",
+              "counter_type": "steam",
+              "min": 1
+            }
+          ],
+          "then": [
+            {
+              "type": "MAY",
+              "prompt": "Remove a steam counter from Boom Grenade? (If not, it is destroyed.)",
+              "effects": [
+                {
+                  "type": "REMOVE_COUNTERS",
+                  "counter_type": "steam",
+                  "amount": 1
+                }
+              ],
+              "else": [
+                {
+                  "type": "DESTROY_SELF"
+                }
+              ]
+            }
+          ],
+          "else": [
+            {
+              "type": "DESTROY_SELF"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ANY_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_CLASS_IN",
+          "classes": [
+            "Mechanologist"
+          ]
+        },
+        {
+          "type": "ATTACK_TYPE_IN",
+          "types": [
+            "Action"
+          ]
+        },
+        {
+          "type": "ATTACK_CONTROLLED_BY_YOU"
+        },
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_SELF"
+        },
+        {
+          "type": "DEAL_GENERIC",
+          "amount": 2,
+          "target": "THEM"
+        }
+      ]
+    }
+  ],
+  "_comment": "Printed Crank is a card-DB keyword (ability_keywords.crank) - deliberately NOT authored. Clauses 1-2 copy the shipped .drafts/assembly_module_blue.json / arc/teklo_core_blue.json skeleton verbatim: entry counter as TRIGGERED ON_ENTER_PLAY + PUT_COUNTER; upkeep as CONDITIONAL(COUNTER_GTE steam min 1) wrapping MAY so declining the removal destroys the item (MAY else = DESTROY_SELF) and a zero-counter state also destroys it via CONDITIONAL's else. The gate sits on CONDITIONAL's 'when', NOT ability-level conditions or MAY-level conditions - either would skip the destroy along with the removal. START_OF_TURN reaches only the turn player's permanents/items, which is exactly 'At the start of YOUR turn'. Clause 3: engine._dsl_hit_listener broadcasts ON_HIT to every zone in _dsl_permanent_zones(attacker) INCLUDING player.items, so an item hears its controller's hits (Aether Crackers precedent in that listener's own comment). ATTACK_TARGET_IS_HERO is mandatory: 'hit' fires for ANY damaged target, and multiple .review findings flag hero-less ON_HIT triggers as over-firing against allies/permanents. ATTACK_CLASS_IN reads classes/talents (_card_traits); ATTACK_TYPE_IN checks types AND subtypes, so ['Action'] excludes weapon attacks (a weapon attack's attack_card is the weapon, types=['Weapon']). Release note 2: DEAL_GENERIC passes THIS card to effect_deal_damage as the source, so Boom Grenade is the damage source, not the attack. Release note 3: DESTROY_SELF precedes DEAL_GENERIC within one ability execution; both are closures over the same card object, so destroying first does not stop the damage - the trigger still deals it. 'them' = the hit hero = opponent of the controller in 1v1 (_damage_target_player maps THEM -> 3-cid).\n\nON_HIT means 'when THIS hits' -- it is dispatched to the attack card itself. This card's text is 'when a <class> attack action card YOU CONTROL hits', which is the broadcast, and the engine has a separate trigger for it (ON_ANY_HIT, split out precisely so the two cannot be confused). On ON_HIT this equipment never heard another card's hit and the whole ability was dead. See tests/test_on_hit_is_not_broadcast.py."
+}

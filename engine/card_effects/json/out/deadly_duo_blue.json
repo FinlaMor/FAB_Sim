@@ -1,0 +1,22 @@
+{
+  "slug": "deadly_duo_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "scope": "CHAIN",
+          "filter": [
+            {"type": "ATTACK_BASE_POWER_LTE", "amount": 2},
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits, the next attack action card with 2 or less base {p} you play this combat chain gains +2{p}.' + printed Go again. Blue printing of .drafts/deadly_duo_red.json (identical printed text incl. +2{p}); shape re-verified against the handlers this session rather than copied blind.\n\nGO AGAIN NOT AUTHORED: GoAgain is in printed_keywords and on THIS card that is correct as-is - the printed go again is an unconditional line of the text (not an 'if X, this gets go again' rider), so it fires from the card DB keywords field; re-authoring it would be a defect and no SOURCE_IS_ATTACK conditional-keyword machinery applies.\n\nTRIGGER: TRIGGERED + ON_HIT, UNGATED - the text says 'hits', not 'hits a hero', so there is deliberately no ATTACK_TARGET_IS_HERO gate (same reading as the shipped combustible_courier family). Deadly Duo hits during its OWN attack, so the buff lands on a LATER attack of the same chain.\n\nPUMP: MODIFY_NEXT_ATTACK reads mod/amount/filter/scope (effect_types.py:4592-4618) and queues a one-shot entry on the controller's dsl_queued_attack_mods, consumed by the first attack whose filter matches (engine.py:1175-1236); a played attack that fails the filter leaves the entry queued. scope CHAIN is what makes 'this combat chain' hold: chain-scoped entries are dropped at chain close (engine.py:794-802) instead of surviving into a later chain of the same turn.\n\nFILTER copied from the SHIPPED evr/ride_the_tailwind_blue.json, whose printed filter clause is word-for-word identical ('the next attack action card with 2 or less base {p} you play this combat chain'). ATTACK_BASE_POWER_LTE reads 'amount' and tests the base recorded when the attack was declared (combat.base_attack_power, falling back to attack_card.base_power; condition_types.py:511-542), so a pumped attack whose BASE is 2 or less still qualifies and a boosted-to-4 attack does not - exactly 'base {p}'. ATTACK_TYPE_IN reads 'types' and unions the attack card's types AND subtypes (condition_types.py:273-294), so ['Action'] matches attack action cards (types=['Action'], subtypes=['Attack']) and rejects weapon attacks so they do not burn the grant.\n\nNo gaps; every clause expressible."
+}

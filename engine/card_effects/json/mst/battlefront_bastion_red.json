@@ -1,0 +1,16 @@
+{
+  "slug": "battlefront_bastion_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {"type": "DEFENDING_CARD_COUNT", "amount": 1, "comparison": "eq"}
+      ],
+      "effects": [
+        {"type": "PREVENT_DAMAGE", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'When this defends alone, prevent the next 1 damage that would be dealt to you this turn.'\n\nRelease notes settle WHEN: 'When this defends' is event-based, checked at the moment it is added as a defender - so TRIGGERED + ON_DEFEND, which engine._dsl_defend_listener (engine.py:1629-1635) dispatches to the defending card object itself, meaning no source-scoping condition is needed. 'Alone' is DEFENDING_CARD_COUNT amount=1 comparison=eq, evaluated at triggered-layer resolution against combat.defending_cards - matching notes 3/4 (a co-declared defender suppresses the trigger) and note 2 (a defense reaction added AFTER resolution cannot revoke it: the condition was checked once and the prevention shield persists).\n\nAMBIGUITY flagged: note 1's final sentence ('It will trigger regardless if there are already other defending cards on that active chain link') could be read as 'an add-by-effect (Pulsewave Harpoon) triggers even alongside surviving co-defenders'. This draft keeps the printed text's plain reading - alone AT the moment it defends - under which that sentence describes defenders added and since removed earlier in the link. If adopters read the note the other way, loosen/drop the DEFENDING_CARD_COUNT condition; nothing else changes.\n\nPREVENT_DAMAGE verified live: handler (effect_types.py:5152-5215) reads amount, filters damage events to ev.target_player_id == controller, absorbs up to N then consumes (one-shot). One accepted imprecision: ReplacementEffect (effects.py:121-134) has no turn-expiry field, so if the attack is blocked outright the unused shield survives past 'this turn' and could absorb 1 damage on a later turn. Canonical primitive, fails in the player's favour rarely; flagged for reviewers rather than worked around.\n\nNo printed keywords, so no conditional-keyword machinery applies."
+}

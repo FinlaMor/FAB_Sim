@@ -1,0 +1,33 @@
+{
+  "slug": "electrify_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "scope": "TURN",
+          "player": "SELF",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+              {"type": "ATTACK_TARGET_IS_HERO"},
+              {"type": "NOT", "inner_type": "FLAG_SET", "flag": "electrify_spent"}
+            ],
+            "effects": [
+              {"type": "DEAL_GENERIC", "amount": 2},
+              {"type": "SET_FLAG", "flag": "electrify_spent"}
+            ]
+          }
+        },
+        {
+          "type": "DRAW",
+          "amount": 1,
+          "conditions": [{"type": "PLAYED_FROM_ARSENAL"}]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next time an attack action card hits a hero this turn, it deals 2 damage to them. / If Electrify is played from arsenal, draw a card. / **Go again**' Lightning Action (BriarBlitzDeck). Yellow printing of the family already drafted as .drafts/electrify_red.json (3) and .drafts/electrify_blue.json (1); identical shape, amount 2.\n\nGO AGAIN deliberately NOT authored: GoAgain is in printed_keywords and fires from the card DB keywords field; re-authoring a printed keyword is a defect.\n\nCLAUSE 1 VEHICLE - DEVIATION FROM TRIAGE, which listed bare ON_HIT as if the card could listen for it: after resolution this action card sits in the graveyard, and the engine dispatches ON_HIT only to combat.attack_card, the attacker's hero, and the attacker's equipment/permanents (engine.py:1410-1450) - a graveyard card hears nothing. The working vehicle for this exact sentence family is INJECT_TRIGGER scope=TURN (shipped-shape precedent ele/chilling_icevein_yellow; sibling drafts electrify_red/blue). The hook lives on the controller's turn_attack_hooks, re-applied to every attack until end of turn (engine.py:1238-1281), and expires at that turn's end - matching 'this turn'.\n\n'THE NEXT time' needs single-fire: TURN hooks are NEVER consumed after firing, so the inner trigger self-consumes via the NOT FLAG_SET / SET_FLAG pair (per chill_to_the_bone_blue, burn_up__shock_red). Injected triggers fire with card=combat.attack_card (engine.py:1414-1423), so SET_FLAG defaults player SELF = the attacking card's controller - during Electrify's own action phase that is always Electrify's controller, so the flag anchors consistently and every later qualifying hit this turn fails NOT FLAG_SET. KNOWN APPROXIMATION (same as burn_up__shock_red discloses): the flag name is shared across printings, so electrify_red + electrify_yellow played the same turn pay out once between them, where the printed text gives each copy its own 'next time'.\n\n'AN ATTACK ACTION CARD': ATTACK_TYPE_IN ['Action'] (handler condition_types.py:273-294 reads 'types', tests the attack card's types AND subtypes merged) - excludes weapon attacks, which the printed text does too. 'HITS A HERO': ATTACK_TARGET_IS_HERO (parameterless, condition_types.py:1960).\n\n'DEALS 2 DAMAGE TO THEM': DEAL_GENERIC amount 2, DEFAULT target OPPONENT - resolves relative to the ATTACK card's controller (_damage_target_player, effect_types.py:907-931), i.e. the hero that was hit. Release note 1 ('the attack action is the card doing the damage') holds structurally: the injected one-shot runs with c=combat.attack_card, so effect_deal_damage's source is the attack, not Electrify. Release note 2 ('not arcane') is why this is DEAL_GENERIC, not DEAL_ARCANE.\n\nARSENAL CLAUSE: DRAW amount 1 with an effect-level conditions array [PLAYED_FROM_ARSENAL] - the loader pops it into a gate evaluated at resolution (interpreter.py ~149-159); PLAYED_FROM_ARSENAL reads played_from_zone falling back to prev_zone (condition_types.py:789-809). DRAW handler reads amount/player (effect_types.py:1222+), default SELF = Electrify's controller."
+}

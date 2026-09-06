@@ -1,0 +1,37 @@
+{
+  "slug": "kano",
+  "activation_cost": 3,
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "zone": "DECK_TOP",
+          "player": "SELF",
+          "amount": 1,
+          "into": "seen"
+        },
+        {
+          "type": "MAY",
+          "prompt": "Banish this card and play it this turn as an instant?",
+          "conditions": [
+            {"type": "AND", "all": [
+              {"type": "REF_IS_TYPE", "ref": "seen", "types": ["Action"]},
+              {"type": "REF_IS_TYPE", "ref": "seen", "types": ["Attack"], "value": false}
+            ]}
+          ],
+          "effects": [
+            {"type": "BANISH_REF", "ref": "seen", "from_zone": "deck"},
+            {"type": "GRANT_PLAY_FROM_BANISHED", "ref": "seen"},
+            {"type": "GRANT_INSTANT_TIMING", "filter": [
+              {"type": "CARD_IS_TYPE", "card_type": "Action"},
+              {"type": "CARD_IS_ATTACK", "value": false}
+            ]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Wizard Hero - Young (Arcane Rising). '**Instant** - {r}{r}{r}: Look at the top card of your deck. If it's a 'non-attack' action card, you may banish it. If you do, you may play it this turn as though it were an instant.'\n\nACTIVATION: card-level activation_cost 3 sits at CARD level (DSL-authoritative per DSL_REFERENCE; play._add_hero_dsl_activations offers the ability when the card is the hero, INSTANT ability_type gives instant timing, and _cost_check verifies the player has 3 resources). INSTANT ability_type maps to ON_ACTIVATE for activation-based instant abilities (DSL_REFERENCE: 'ability_type INSTANT means an ACTIVATED ability with instant timing'). NOT modelled as PAY_RESOURCES — that would double-charge.\n\nLOOK_AT: zone DECK_TOP, player SELF, amount 1, into 'seen' (effect_types.py:3398-3457). Reads own deck top card and stores it as a ref without moving it. The 'player: SELF' is critical — the handler DEFAULTS TO OPPONENT (effect_types.py:1422), so omitting it would look at the opponent's deck.\n\nNON-ATTACK ACTION CHECK: The AND condition (condition_types.py:1897+) gates the MAY — the option is only offered when the top card is a non-attack action. Two REF_IS_TYPE checks: types:['Action'] (positive match on types+subtypes, condition_types.py:2011-2043) AND NOT types:['Attack'] (value:false inverts the match). A single REF_IS_TYPE with types:['Attack'],value:false would match any non-attack card (Equipment, Instant, etc.) — too broad. The AND ensures it must be an Action type AND not have Attack in subtypes.\n\nThe conditions are on the MAY effect's 'conditions' key, which the loader pops into EffectDef.conditions (loader.py:87-88). The run_ability loop checks them BEFORE the MAY function runs (interpreter.py:150-159), so the prompt is not offered when the top card is not a non-attack action. Crucially, the conditions run AFTER earlier effects in the same ability have resolved (LOOK_AT has already set the 'seen' ref), and the ref context persists for the entire ability execution (push_refs/pop_refs in run_ability).\n\nMAY + BANISH_REF: Following the crowd_control_yellow pattern (same 'you may pay; if you do, ...' structure). BANISH_REF reads ref:'seen' and from_zone:'deck' (effect_types.py:3768-3794). The card was peeked by LOOK_AT without moving it, so its zone is still 'deck'. BANISH_REF passes origin_zone to banish(), which removes it from deck and adds to banished.\n\nGRANT_PLAY_FROM_BANISHED: reads ref:'seen' (effect_types.py:4267-4311). After banish, the ref still holds the same card object (refs store object references, not zone lookups). Appends the card to player.playable_from_banished, which play.py consults when checking if a card can be played from banished zone.\n\nGRANT_INSTANT_TIMING: filter matches non-attack action cards (effect_types.py:4662-4674). Filter uses CARD_IS_TYPE (condition_types.py:1460, reads card_type) + CARD_IS_ATTACK value:false (condition_types.py:1451, reads value). This grants instant timing so the banished card can be played at any time, not just during the action phase. The grant is consumed by the first matching play (play.py:980, _consume_instant_timing_grant).\n\nMINOR SIMPLIFICATION (disclosed): the printed text has two 'may' clauses: 'you may banish it' (choice 1) + 'If you do, you may play it' (choice 2). The JSON collapses both into one MAY. A player who wants to banish but NOT play cannot express that — in practice always suboptimal (banishing without playing wastes a resource for no benefit). A reviewer may prefer nesting a second MAY inside the first effects for strict fidelity.\n\nGRANT_INSTANT_TIMING SCOPE (known limitation): GRANT_INSTANT_TIMING has no scope parameter — the grant sits in player.dsl_instant_timing_grants until consumed or cleared at end of turn (engine.py:937-938). The printed 'this turn' is correct (one turn). If the card is not played as an instant before turn end, the grant expires harmlessly."
+}

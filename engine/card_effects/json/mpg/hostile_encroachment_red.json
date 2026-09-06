@@ -1,0 +1,26 @@
+{
+  "slug": "hostile_encroachment_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "DRAW", "amount": 1, "player": "DEFENDING"}
+      ]
+    },
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_CRUSH",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "DISCARD", "amount": 1, "player": "DEFENDING"}
+      ]
+    }
+  ],
+  "_comment": "'When this attacks a hero, they draw a card. / **Crush** - When this deals 4 or more damage to a hero, they discard a card.' Guardian Action - Attack (MasteryPackGuardian).\n\nCRUSH NOT AUTHORED: Crush is in printed_keywords and fires from the card DB keywords field - crush_check gates the ON_CRUSH dispatch so the engine only delivers the event when the hit dealt 4+ damage; re-authoring the keyword would be a defect. It is unconditional, so no SOURCE_IS_ATTACK conditional-keyword machinery applies.\n\nABILITY 1: TRIGGERED + ON_ATTACK + conditions [ATTACK_TARGET_IS_HERO], copied from shipped hvy/send_packing_yellow.json which carries the identical trigger+gate for 'when this attacks a hero' text (that card's _comment records why the hero gate is real: ON_ATTACK fires on declaration whatever was attacked). Release note 1 ('triggers when it resolves on the stack and becomes an attacking card against a hero') matches when ON_ATTACK is dispatched - the card entering the combat chain as the attacking card.\n\n'THEY draw': DRAW reads amount and player via _effect_player_id (effect_types.py:1222-1249, 807-837); DEFENDING maps to the opposing player of the source's controller. The source here is the attacking card, its controller is the attacker, and ATTACK_TARGET_IS_HERO guarantees the target was a hero - so DEFENDING is exactly 'that hero'.\n\nABILITY 2: STATIC_TRIGGERED + ON_CRUSH + ATTACK_TARGET_IS_HERO + DISCARD 1 player DEFENDING. Shape copied from .drafts/crippling_crush_red.json, whose crush clause differs only in random-vs-chosen and amount, and from shipped wtr/debilitate_red.json / wtr/disable_yellow.json which prove STATIC_TRIGGERED ON_CRUSH compiles and fires. The gate is not decoration: crush_check reads only the damage total, never the target, so without ATTACK_TARGET_IS_HERO the payoff would fire into allies/permanents (the documented defect class in .review/debilitate_red). Chosen discard means DISCARD (reads amount/player/random/matches, effect_types.py:1251-1286), NOT DISCARD_RANDOM; player DEFENDING resolves to the damaged hero as above.\n\nNo gaps; every clause expressible. Adoption note: batch lists set MasteryPackGuardian - file under json/mpg/ at adoption time."
+}

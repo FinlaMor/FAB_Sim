@@ -1,0 +1,40 @@
+{
+  "slug": "draco_fire_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [{"type": "ATTACK_CLASS_IN", "classes": ["Draconic"]}]
+        },
+        {
+          "type": "MODIFY_NEXT_CARD_COST",
+          "amount": 1,
+          "filter": [{"type": "CARD_IS_CLASS", "classes": ["Draconic"]}]
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN_IN_GRAVEYARD",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Banish 2 cards named Draco Fire from your graveyard to gain 1 resource?",
+          "conditions": [
+            {"type": "CARD_IN_ZONE", "zone": "graveyard", "card_name": "Draco Fire", "count_gte": 2}
+          ],
+          "effects": [
+            {"type": "BANISH", "amount": 2, "from_zone": "GRAVEYARD", "player": "SELF", "card_name": "Draco Fire"},
+            {"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next Draconic attack this turn gets +2{p} and costs {r} less to play or activate. / While this is in your graveyard, at the start of your turn, you may banish 2 cards named Draco Fire from your graveyard. If you do, gain {r}.' Draconic Instant.\n\nCLAUSE 1 IS A PLAY ABILITY: an Instant CARD whose effect happens when you play it is PLAY - INSTANT means an activated ability with instant timing and would never fire (DSL_REFERENCE 'INSTANT is not \"the card is an Instant\"').\n\n+2{p}: MODIFY_NEXT_ATTACK reads mod/amount/filter/scope (effect_types.py:4592-4618) and queues a one-shot entry on the CONTROLLER's dsl_queued_attack_mods, consumed by the first later attack whose filter matches (engine.py:1175-1236 compiles each spec against the incoming attack); non-matching attacks leave it queued, unused entries expire end of turn = 'this turn'. Scope left at default TURN. Release note 1 ('will not apply to cards already played or activated before Draco Fire resolves') is the queue's own behaviour - it is consulted only at later play/activation.\n\nDEVIATION FROM TRIAGE, disclosed: triage named ATTACK_HAS_KEYWORD 'draconic', but Draconic is a TALENT, not a keyword - combat.keywords carries printed KEYWORDS only, so that condition would gate on an empty match and never fire. ATTACK_CLASS_IN instead matches the attack card's classes AND talents via _card_traits (condition_types.py:204-216), which is exactly 'a Draconic attack' and covers every form release note 1 lists (weapon attack, attack action card, ally attack) since no Action-type restriction is authored.\n\n'{r} LESS TO PLAY OR ACTIVATE': MODIFY_NEXT_CARD_COST (effect_types.py:4665-4743) queues a one-shot entry on dsl_queued_card_mods with amount/filter raw. Verified both halves of 'or activate': _calculate_resource_cost consults the queue while pricing ANY action incl. ACTIVATE_CARD (play.py:1447-1451), and _pay_costs consumes it for activations as well as plays (the same function branches on PLAY_CARD/ACTIVATE_CARD at play.py:1758-1775 after consuming at :1713-1747), so a Draconic WEAPON's attack activation is discounted too. Filter CARD_IS_CLASS evaluates _card_traits of the card being played/activated (classes+talents+colour, condition_types.py:1286-1307) - the same predicate the attack-side filter uses, so the two one-shots stay in lock-step and land on the SAME first Draconic attack, matching release note 1's single 'next'.\n\nCLAUSE 2: TRIGGERED + START_OF_TURN_IN_GRAVEYARD. That trigger is dispatched ONLY to the active player's graveyard cards at the start phase (engine.py:1482-1486), so it already means all three printed facts - 'while this is in your graveyard', 'at the start of your turn', and whose turn - and no IN_GRAVEYARD/IS_ACTIVE_PLAYER conditions are authored (shipped precedent dyn/blacktek_whisperers.json, whose graven_gloves review note records dropping them for exactly this reason). TRIGGERED and STATIC_TRIGGERED dispatch identically (interpreter.py:171); plain TRIGGERED follows the DSL_REFERENCE default for 'whenever/at' text. Release note 4 ('neither player receives priority during the start phase') is engine-side timing; nothing to author.\n\n'YOU MAY BANISH EXACTLY 2 ... IF YOU DO, GAIN {r}' (release note 3): one MAY whose own conditions are popped by the loader into an effect-level gate, so the prompt is offered ONLY when the graveyard holds >= 2 cards named Draco Fire (CARD_IN_ZONE reads zone/card_name/count_gte, condition_types.py:844-996) - with fewer than 2 the choice cannot be made legally, so nothing happens, exactly as printed. Accepting runs a COMPULSORY BANISH (amount 2, from_zone GRAVEYARD, name-filtered pool - BANISH reads from_zone/player/card_name via its filter keys, effect_types.py:1301-1417) followed by GAIN RESOURCE_POINTS 1 (effect_types.py:4887); declining runs nothing in the block, which is what makes 'if you do' fall out for free. The gate plus compulsory banish inside is what delivers 'exactly 2': accepting always banishes two (pool >= 2 guaranteed by the gate), never one or zero.\n\nNo printed keywords (printed_keywords empty). No gaps; every clause expressible.",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

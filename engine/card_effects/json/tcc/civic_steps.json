@@ -1,0 +1,13 @@
+{
+  "slug": "civic_steps",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "quicken", "amount": 1, "player": "OPPONENT"}
+      ]
+    }
+  ],
+  "_comment": "Temper is a printed keyword -> card DB keywords field, deliberately NOT authored here. Same shape as civic_guide (verified): TRIGGERED ON_DEFEND fires via engine.py _dsl_defend_listener on every defend event, matching the release note ('whenever it defends, not just the first time'). 'Under ANOTHER hero's control' -> CREATE_TOKEN player OPPONENT (binary SELF/OPPONENT param; exact in 1v1, satisfies 'may not choose yourself'). The release note's UPF-wide resolution-time hero choice is not expressible with that param - flagged for a future multiplayer pass. Token definition exists at json/tokens/quicken.json."
+}

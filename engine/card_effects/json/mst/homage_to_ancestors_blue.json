@@ -1,0 +1,19 @@
+{
+  "slug": "homage_to_ancestors_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1},
+        {"type": "CONDITIONAL_EFFECT",
+         "when": [
+           {"type": "EVENT_THIS_TURN", "event": "play", "qualifier": "blue", "count": 2}
+         ],
+         "then": [
+           {"type": "TRANSCEND"}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "'**Legendary** / Gain 1{h} / If you've played another blue card this turn, **transcend**.' Mystic Instant (batch set label EnigmaBlitzDeck).\n\nINSTANT CARD != INSTANT ABILITY: an Instant whose effect happens when you play it is ability_type PLAY - INSTANT maps to ON_ACTIVATE and would never fire (DSL_REFERENCE 'INSTANT is not the card is an Instant').\n\nGAIN 1{h}: handler reads asset/amount (effect_types.py:4869-4926); LIFE_POINTS routes to effect_gain_life; player defaults SELF = controller.\n\n'ANOTHER BLUE CARD' == count 2, exact not approximate: play.apply_action records a did_this_turn:play:<qualifier> marker for EVERY card played, colour included (play.py:1085-1101 - colour from card.color or pitch 3 -> 'blue'), and records it BEFORE the played card's abilities resolve from the stack. So at resolution time Homage's own play has always contributed exactly one 'play:blue' marker, and >=2 markers means at least one OTHER blue card was played this turn. EVENT_THIS_TURN reads event/qualifier/count/player/exact only (condition_types.py:1089-1099) - there is no self-exclusion parameter - so count=2 is the expressible form of 'another'. Markers append once per occurrence, deduped only within one recording call (effect_keywords.py:597-606), so the tally is sound. The test lives in CONDITIONAL_EFFECT's 'when' (effect_types.py:3697-3724 reads when/then/else) - authoring it as 'conditions' would be popped off the effect into an ability-level gate instead of branching.\n\nTRANSCEND (effect_types.py:3858-3870): takes no parameters, operates on THIS card - routed through canonical effect_keywords.transcend so the back face activates and the transcend turn event fires for checker cards.\n\nNOT AUTHORED: Legendary is printed_keywords and fires from the card DB keywords field. Transcend ALSO appears in printed_keywords, but nothing engine-side auto-applies it - grep of engine/card_effects/*.py this session found transcend only as the DSL TRANSCEND effect and its ability_keywords delegate (ability_keywords.py:1102), with no keyword-trigger mapping in triggers/card_keywords - so the conditional TRANSCEND effect here IS the whole behaviour and there is no unconditional DB copy to strip or double-fire.\n\nNo gaps."
+}

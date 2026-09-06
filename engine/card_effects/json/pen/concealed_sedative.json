@@ -1,0 +1,30 @@
+{
+  "slug": "concealed_sedative",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "CARD_IS_FACE_DOWN"},
+        {"type": "ATTACK_POWER_GT_BASE"},
+        {"type": "IS_ACTIVE_PLAYER", "value": false}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Trigger Concealed Sedative? (destroy this, create an Inertia under each opponent's control)",
+          "effects": [
+            {"type": "DESTROY_SELF"},
+            {
+              "type": "CREATE_TOKEN",
+              "token": "inertia",
+              "amount": 1,
+              "player": "OPPONENT"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Cloaked** / While this is equipped face-down, when an attack with {p} greater than its base hits you, destroy this and create an Inertia token under each opponent's control.'\n\nCLOAKED NOT AUTHORED: printed_keywords carries it - it fires from the card DB keywords field (face-down equip); re-authoring would be a defect.\n\nSHAPE copied from sibling draft .drafts/concealed_nerve_gas.json (same Cloaked family), every type re-verified against its handler here: STATIC_TRIGGERED + ON_HIT - interpreter.py:171 dispatches STATIC_TRIGGERED identically to TRIGGERED on the trigger event. Conditions evaluate at resolution against the source card (interpreter._run_ability:55): CARD_IS_FACE_DOWN reads the equipment's face_down/is_public (condition_types.py:1327-1341) = 'equipped face-down'; ATTACK_POWER_GT_BASE compares live combat.attack_power to combat.base_attack_power recorded at attack declaration (condition_types.py:499-509) = '{p} greater than its base' - the same gate shipped inertia_trap_red uses; IS_ACTIVE_PLAYER value:false (condition_types.py:811-821) is the 1v1 'hits you' gate - the controller is not the active player, so they are the one being hit. There is no dedicated attack-target-is-my-controller condition.\n\nRELEASE NOTE 1 (triggering is OPTIONAL; declining leaves the card private) = MAY wrapper (effect_types.py:3788+): declining runs none of the block, so the card is neither destroyed nor made public. The 'make this card public' step itself is not modelled separately - the card is destroyed inside the same block, so no observable state depends on it. RELEASE NOTE 2 (destroy FIRST, then create Inertia) = effect order inside the block, matching the printed sentence. Inertia token def already exists at json/tokens/inertia.json.\n\n'each opponent's control': CREATE_TOKEN player OPPONENT creates under THE opponent - correct in this 1v1 engine (players 1/2 only); multiplayer clockwise distribution is not expressible and not needed here.\n\nEXECUTION-LAYER GAP (same as concealed_nerve_gas) - THE ABILITY CANNOT FIRE AS THE ENGINE STANDS: engine._dsl_hit_listener (engine.py:1391-1450) is the SINGLE ON_HIT dispatch point, and it dispatches only to the attack card, the ATTACKER's hero, and the ATTACKER's permanent/equipment zones. The DEFENDER's chest slot never receives ON_HIT, so this correctly-shaped ability is inert until that listener also broadcasts to the defender's zones (a generic engine change I am not permitted to make). The JSON becomes fully live with zero edits once that pass exists."
+}

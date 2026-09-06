@@ -1,0 +1,89 @@
+{
+  "slug": "backup_protocol_red_red",
+  "activation_cost": 2,
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "effects": [
+        {
+          "type": "PUT_COUNTER",
+          "counter_type": "steam",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_TURN",
+      "effects": [
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {
+              "type": "COUNTER_GTE",
+              "counter_type": "steam",
+              "min": 1
+            }
+          ],
+          "then": [
+            {
+              "type": "MAY",
+              "prompt": "Remove a steam counter from Backup Protocol: RED? (Otherwise it is destroyed.)",
+              "effects": [
+                {
+                  "type": "REMOVE_COUNTERS",
+                  "counter_type": "steam",
+                  "amount": 1
+                }
+              ],
+              "else": [
+                {
+                  "type": "DESTROY_SELF"
+                }
+              ]
+            }
+          ],
+          "else": [
+            {
+              "type": "DESTROY_SELF"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {
+          "type": "DESTROY_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "RETURN_TO_HAND",
+          "target": {
+            "controller": "SELF",
+            "zone": "GRAVEYARD",
+            "amount": 1,
+            "filter": [
+              {
+                "type": "CARD_IS_COLOR",
+                "color": "red"
+              },
+              {
+                "type": "CARD_IS_CLASS",
+                "class": "Mechanologist"
+              },
+              {
+                "type": "CARD_IS_TYPE",
+                "card_type": "Attack"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "The printed **Crank** keyword is engine-side from the card DB keywords field (ability_keywords.crank = CR 8.3.29 'as this enters the arena, you may remove a steam counter from it; if you do, gain an action point') and is deliberately NOT authored here. The sentence below it ('This enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.') is a SEPARATE static ability per CR (the Golden Cog entry lists Crank AND that sentence as two abilities), so it IS authored: (1) entry counter as TRIGGERED ON_ENTER_PLAY + PUT_COUNTER (shipped arc/teklo_core_blue.json pattern; Zone.add dispatches ON_ENTER_PLAY on arena entry, and 'enters with' vs 'immediately after' is observationally equivalent here); effect_put_counter writes the card-level tally that COUNTER_GTE reads, and also the player-level (slug, zone, kind) tally that engine crank() consumes - so cranking the counter off on entry works and the upkeep then correctly finds none. (2) Upkeep: START_OF_TURN reaches only the turn player's items/permanents (engine._dsl_start_of_turn_listener -> _dsl_permanent_zones includes player.items), which is exactly 'your turn'. The gate sits on CONDITIONAL's 'when' - NOT ability-level conditions or MAY-level conditions, either of which would skip the destroy along with the removal. With a counter: MAY offers remove-or-destroy, declining runs MAY's else = DESTROY_SELF. With zero counters (cranked away on entry): the CONDITIONAL else destroys directly, so the item can never survive an upkeep it should not. (3) Instant: the {r}{r} is card-level activation_cost=2 (DSL-authoritative; NOT repeated as a PAY_RESOURCES cost, which would double-charge); 'destroy this' is the ability-level DESTROY_SELF cost - a cost, so it gates legality and _apply_activate pays it before effects run. INSTANT timing gives priority-window activation; play._add_hero_dsl_activations offers item abilities (ACTIVATABLE_ABILITY_TYPES includes INSTANT). Triage suggested SEARCH_GRAVEYARD, but its handler reads only filter_types/slug_contains/name_contains - no colour or class parameter - so it could not express 'red Mechanologist'; instead RETURN_TO_HAND takes a canonical object target over GRAVEYARD (_object_zone_cards supports it) filtered by CARD_IS_COLOR red / CARD_IS_CLASS Mechanologist / CARD_IS_TYPE Attack (checks types AND subtypes, so attack actions match while attack reactions do not). The controller chooses among matches at resolution; no match returns an empty pool and nothing moves (fail to find, matching the release-note edge case). Unlike the BANISH+MOVE_REF route used by the blue/yellow sibling drafts, this path moves the card graveyard -> hand directly with no banished-zone transit."
+}

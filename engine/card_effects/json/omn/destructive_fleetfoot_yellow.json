@@ -1,0 +1,37 @@
+{
+  "slug": "destructive_fleetfoot_yellow",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "ATTACK_HAS_KEYWORD", "keyword": "go_again"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "DESTROY_MATCHING",
+          "target": {
+            "controller": "OPPONENT",
+            "zone": "ARENA",
+            "amount": 1,
+            "filter": [
+              {"type": "CARD_IS_TYPE", "subtypes": ["Aura"]},
+              {"type": "CARD_IS_TYPE", "subtypes": ["Token"]}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Quickstrike** - If this has go again, it gets +1{p}. / When this hits a hero, destroy an aura token they control.' Lightning Runeblade Action - Attack. Replaces an earlier draft of this same slug in this directory; that draft's destroy clause could never fire (see DESTROY below).\n\nQUICKSTRIKE NOT AUTHORED: printed_keywords carries Quickstrike - it fires from the card DB keywords field; re-authoring it would be a defect.\n\n+1{p} RIDER: both release notes say the Quickstrike ability 'generates a continuous effect that is always checking', including go again gained AFTER it becomes attacking - exactly WHILE_STATIC, which the engine re-evaluates on every RECALC_ATTACK_POWER dispatch; its MODIFY_ATTACK lands in the stage-8 static window and applies transiently instead of accumulating (event-type branch, effect_types.py:4134-4144). Shape follows shipped wtr/anothos.json. SOURCE_IS_ATTACK (condition_types.py:381-387: combat.attack_card is c) pins the bonus to THIS attack, so a recalc during the opponent's attack cannot leak +1{p} onto it. ATTACK_HAS_KEYWORD normalises separators, so keyword 'go_again' matches combat.keywords' 'Go Again' (condition_types.py:1881-1891); combat.keywords carries boost-granted Go Again by the time a later recalc runs - the release note's second paragraph. No conditional-keyword machinery needed: the card does not PRINT go again, so loader.conditional_keywords() does not apply.\n\nHIT TRIGGER: TRIGGERED + ON_HIT is dispatched to combat.attack_card (engine._dsl_hit_listener), so it rides on this resolving attack; ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977) is false when the attack was declared at a permanent/ally, covering the printed 'a HERO'.\n\nDESTROY - DEVIATES FROM THE TRIAGE LIST AND FROM THE PRIOR DRAFT. The triage named DESTROY_MATCHING + CARD_SUBTYPE_IN; CARD_SUBTYPE_IN does not exist anywhere under dsl/ (the real condition reading subtypes is CARD_IS_TYPE/SUBTYPE_IN, condition_types.py:1309-1325, testing types UNION subtypes). The prior draft instead used DESTROY_PERMANENT with token:true - but its filter reads getattr(c,'is_token') (effect_types.py:2533) and NOTHING in the engine ever assigns is_token (grep over engine/: reads only), while real tokens are marked by 'Token' in their types (create_token appends it, effect_keywords.py:310-311; state.py:_is_token derives token-ness the same way) - so that filter excluded every actual aura token and destroyed nothing. This draft keeps DESTROY_MATCHING (its object-target filter compiles ordinary conditions with the CANDIDATE as card, effect_types.py:705-708,776-778) and expresses 'aura TOKEN' as two ANDed filters: CARD_IS_TYPE Aura + CARD_IS_TYPE Token. controller OPPONENT resolves to the hit hero's side; zone ARENA pools player.permanents.cards, which INCLUDES aura tokens (player.auras is a SubZoneView over the one permanents zone, state.py:866-872). amount 1 asks the attacker which to destroy when several qualify (_ask_player, effect_types.py:792-797) - release note 'you will choose and destroy'; none qualifying destroys nothing, matching text that names no fallback.\n\nRESIDUAL EDGE: a token created outside create_token (a hand-built Card in a minimal test state, no 'Token' in types) would be missed by the Token filter; every real game path routes through create_token, so the filter is exact in play."
+}

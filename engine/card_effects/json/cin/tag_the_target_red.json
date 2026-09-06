@@ -1,0 +1,20 @@
+{
+  "slug": "tag_the_target_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MARK"
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits a hero, mark them. Go again' -- Go again is printed and UNCONDITIONAL here, so it is deliberately not authored and no conditional_keywords declaration is made: gating it would silently take away a keyword the card really has. MARK targets the opponent by default (ability_keywords.effect_mark), which is the hero this attack hit; ATTACK_TARGET_IS_HERO is what makes 'hits a HERO' real, since an attack can hit a permanent."
+}

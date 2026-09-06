@@ -1,0 +1,12 @@
+{
+  "slug": "healing_balm_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'Gain 2{h}' - Generic Action (Uprising). GAIN handler (effect_types.py:4869-4896) reads asset/amount and routes LIFE_POINTS through effect_gain_life; the handler also accepts the HEALTH/LIFE spellings but LIFE_POINTS is the canonical CR 1.13.1 name per DSL_REFERENCE. No other clauses; no printed keywords."
+}

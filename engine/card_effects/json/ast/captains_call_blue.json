@@ -1,0 +1,40 @@
+{
+  "slug": "captains_call_blue",
+  "abilities": [
+    {
+      "ability_type": "MODAL",
+      "choose": 1,
+      "modes": [
+        {
+          "type": "GRANT_NEXT_CARD",
+          "amount": 0,
+          "filter": [
+            {"type": "CARD_IS_ATTACK", "value": true},
+            {"type": "CARD_IS_TYPE", "card_type": "Action"},
+            {"type": "CARD_COST_LTE", "amount": 0}
+          ],
+          "grant_abilities": [
+            {
+              "ability_type": "TRIGGERED",
+              "trigger": "ON_ATTACK",
+              "effects": [
+                {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+              ]
+            }
+          ]
+        },
+        {
+          "type": "GRANT_NEXT_CARD",
+          "keyword": "Go Again",
+          "amount": 0,
+          "filter": [
+            {"type": "CARD_IS_ATTACK", "value": true},
+            {"type": "CARD_IS_TYPE", "card_type": "Action"},
+            {"type": "CARD_COST_LTE", "amount": 0}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Choose 1: The next attack action card with cost 0 you play this turn gains +2{p} / ... gains go again. Go again.'\n\nPRINTED GO AGAIN IS NOT AUTHORED: printed_keywords carries GoAgain - the card's own unconditional 'Go again' line fires from the card DB keywords field, and re-authoring it as an effect would be a defect (it is also why there are only TWO modes here, not three).\n\nMODE TIMING: release note 1 ('you choose the mode at the time you play Captain's Call') is exactly MODAL choose 1 - modes are selected when the card is put on the stack (CR 1.7.5a). Spelling follows shipped wtr/enlightened_strike_red.json.\n\nWHY THE CARD-PLAY QUEUE, NOT THE ATTACK QUEUE: the text names 'the next attack action card ... you PLAY this turn', and this batch's triage primitives name MODIFY_NEXT_CARD/CARD_COST_LTE/CARD_IS_ATTACK. GRANT_NEXT_CARD queues a one-shot entry on the controller's dsl_queued_card_mods (effect_types.py:4665+), consumed by the first matching PLAYED card (play.py:1713-1747); amount 0 correctly means no cost delta, only the grant (verified precedent: shipped pen/fasting_carcass_blue.json for the go-again half, whose review confirmed end-to-end behaviour).\n\nFILTER PARAMS VERIFIED AGAINST HANDLERS: CARD_IS_ATTACK reads 'value' and checks \"Attack\" in subtypes (condition_types.py:1451+); CARD_IS_TYPE reads 'card_type' against types OR subtypes (1309+); CARD_COST_LTE reads 'amount' (or 'cost') against the played card's own printed cost (1219+). Together they name precisely 'attack action card with cost 0'.\n\nRELEASE NOTE 2 IS THE QUEUE'S OWN BEHAVIOUR: _cost_mod_matches (play.py:625-643) compiles the filter against each card as it is played and non-matching cards leave the entry queued - 'if you play an attack action that doesn't meet that criteria, then one that does, the bonus will still apply to the one applicable'. Unused entries are cleared at end of turn (engine.py:933-934), so 'this turn' holds without extra fields.\n\nMODE A (+2{p}) VIA grant_abilities, NOT on_consume MODIFY_ATTACK: on_consume effects run at PLAY time with no combat necessarily on state, where MODIFY_ATTACK returns early (effect_types.py:4127) and the pump would be lost. Instead the entry grants a TRIGGERED/ON_ATTACK ability to the consuming copy (grant_abilities is an explicitly supported GRANT_NEXT_CARD param, play.py:1739-1742; granted abilities compile via loader._compile_ability and dispatch through the normal path, dsl/__init__.py:41-51). When that card attacks, ON_ATTACK fires to combat.attack_card at attack entry, so MODIFY_ATTACK lands while the combat exists - the same shape DSL_REFERENCE prescribes for attack-action pumps.\n\nNo known gaps; every clause is expressible."
+}

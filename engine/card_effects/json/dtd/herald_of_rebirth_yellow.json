@@ -1,0 +1,35 @@
+{
+  "slug": "herald_of_rebirth_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {"type": "PUT_SELF_IN_ZONE", "zone": "soul"},
+        {
+          "type": "MAY",
+          "prompt": "Put up to 1 card with phantasm from your graveyard on top of your deck?",
+          "conditions": [
+            {"type": "CARD_IN_ZONE", "zone": "graveyard", "keyword": "phantasm"}
+          ],
+          "effects": [
+            {
+              "type": "MOVE_MATCHING",
+              "to_zone": "deck",
+              "position": "top",
+              "target": {
+                "zone": "GRAVEYARD",
+                "controller": "SELF",
+                "amount": 1,
+                "filter": [
+                  {"type": "HAS_KEYWORD", "keyword": "phantasm"}
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits, put it into your hero's soul and put up to 1 card with phantasm from your graveyard on top of your deck. / Phantasm.' Light Illusionist Action - Attack (DuskTillDawn).\n\nPHANTASM NOT AUTHORED: printed keyword firing from the card DB keywords field; re-authoring it would be a defect.\n\nSOUL PLACEMENT (mandatory per release notes 6-7: 'you must still put Herald of Rebirth into your hero's soul. This effect is not optional'): PUT_SELF_IN_ZONE {zone: 'soul'} is the shipped spelling for 'put it into your hero's soul' (dtd/herald_of_ravages_red|blue, bol/rising_solartide_*, apr/herald_of_protection_red - the repo's own guard test_put_self_in_zone requires it). Chain-close interaction verified: the move happens during ON_HIT resolution; at _close_combat_chain the attack reads as relocated (zone != combat_chain, engine.py:2234-2236) so it is not ALSO sent to the graveyard - no duplication.\n\nPHANTASM CLAUSE - DELIBERATE DEVIATION FROM THE TRIAGE LIST, which named SEARCH_GRAVEYARD + PUT_REF_TOP. Verified against source this session, neither works here: SEARCH_GRAVEYARD has NO keyword filter (only filter_types/slug_contains/name_contains, effect_types.py:1841-1846) AND shuffles every deck destination (shuffle defaults true for deck/deck_top, effect_types.py:1854-1856 + 1889-1891), so it can neither find 'a card with phantasm' nor put it ON TOP. The blue/red siblings' triage path LOOK_AT -> SELECT_FROM_REF -> PUT_REF_TOP fails earlier: LOOK_AT's zone map carries only DECK_TOP/ARSENAL/HAND (effect_types.py:3390-3391) - zone GRAVEYARD silently stores an empty list. The expressible form is MOVE_MATCHING (effect_types.py:3593-3612): its target goes through _compile_object_target, whose zone vocabulary DOES include GRAVEYARD (_object_zone_cards, effect_types.py:493-494), takes ordinary condition filters (HAS_KEYWORD normalises 'phantasm' against stored 'Phantasm', condition_types.py:824-842), and put_object position 'top' lands the card on top of its owner's deck - the same delivery PUT_REF_TOP uses.\n\n'UP TO 1': the MAY's conditions are popped by the loader into an effect-level gate (loader pops 'conditions' off any effect; MAY handler documents this at effect_types.py:3794-3795), so the prompt is not even offered unless a phantasm card is in my graveyard (CARD_IN_ZONE zone graveyard keyword phantasm; keyword filter applied at condition_types.py:969-972, default threshold 'at least one' at :994). Declining runs nothing - that is the 'up to'. Accepting then moves exactly 1 chosen card (amount 1 prompts via _ask_player over the filtered pool). Release note 5 ('cannot put itself to the top ... not in the graveyard when it hits') holds by construction: the Herald was the attacking card on the chain, never in a graveyard, and it moves to the soul before the search runs.\n\nYellow printing; red/blue siblings carry identical text."
+}

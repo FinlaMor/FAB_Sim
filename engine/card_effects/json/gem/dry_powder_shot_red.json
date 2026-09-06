@@ -1,0 +1,19 @@
+{
+  "slug": "dry_powder_shot_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PUT_FACEUP_IN_ARSENAL",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "filter": [{"type": "ATTACK_NAME_IN", "names": ["Dry Powder Shot"]}]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this is put face-up into your arsenal, it gets +2{p} this turn.' Ranger Action - Arrow Attack.\n\nA draft of this file already existed in .drafts/ from a prior loop pass (_batch1); every claim in it was re-verified against source this session before keeping it.\n\nTRIGGER: ON_PUT_FACEUP_IN_ARSENAL (trigger_types.py:67) is the trigger for exactly this wording - origin-agnostic, dispatched from Zone.add (state.py:323-328) only when a card is ADDED to the arsenal face-up. RELEASE-NOTE TIMING HOLDS BY CONSTRUCTION: 'does not trigger if it is already in the arsenal and is turned face-up by an effect' - FLIP_REF sets obj.is_public directly (effect_types.py:3508-3535) and never passes through Zone.add, so a flip-in-place cannot fire this trigger.\n\nPUMP: MODIFY_NEXT_ATTACK mod add amount 2 with filter [ATTACK_NAME_IN names ['Dry Powder Shot']] - the documented shape for 'the next <filtered> attack this turn gets +N'. The queue sits on the controller and is consumed by the first matching attack that turn; unused mods expire at end of turn (engine.py:921-922), which IS the printed 'this turn' span. ATTACK_NAME_IN == triage's ATTACK_IS_NAMED (condition_types.py:218-232 reads names/name/card_name and strips the colour suffix from the slug, so the red printing matches its own name).\n\nFIDELITY GAP, minor: the text says IT gets +2{p}, but the DSL queue filters attacks by NAME, not by object identity - if two copies of Dry Powder Shot are played the same turn, the buff lands on whichever attacks first rather than being bound to the copy that entered the arsenal. No condition type matches 'this exact card object' in the filter vocabulary; ATTACK_NAME_IN is the tightest available selector and what the triage pass named.",
+  "_source_batch": "_batch3.json"
+}

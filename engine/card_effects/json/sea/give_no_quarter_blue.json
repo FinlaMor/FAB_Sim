@@ -1,0 +1,20 @@
+{
+  "slug": "give_no_quarter_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_CARD_COST",
+          "amount": 3,
+          "uses": 2,
+          "filter": [
+            {"type": "CARD_IS_TYPE", "card_type": "Ally"},
+            {"type": "HAS_KEYWORD", "keyword": "WateryGrave"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next 2 ally cards with watery grave you play this turn cost {r}{r}{r} less to play.' + printed Go again.\n\nPRINTED GO AGAIN NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field; re-authoring it would double-pay the action point.\n\nONE ENTRY WITH uses:2, not two stacked entries (the triage list named MODIFY_NEXT_CARD_COST twice): the handler's own comment (effect_types.py:4688-4694) blesses exactly this shape for 'the next N <filtered> cards' - each matching play decrements uses (play.py:1719-1725, verified reads mod['uses']) and only the last use removes the entry. amount 3 is subtracted per consuming play (_calculate_resource_cost, play.py:1447-1451), so each of the two allies gets the full {r}{r}{r} off - release note 1 verbatim. Unused entries expire end of turn = 'this turn'.\n\nFILTER VERIFIED AGAINST HANDLERS: _cost_mod_matches (play.py:625-643) compiles each spec and evaluates it against THE CARD BEING PLAYED (fn(card, None, state)), not the ability source. CARD_IS_TYPE unions types+subtypes (condition_types.py:1309-1325); card DB checked this session - watery-grave allies carry types ['Action'], subtypes ['Ally','NonAttack'], so 'Ally' matches via the union. HAS_KEYWORD reads 'keyword'/'keywords' and normalises against c.keywords (condition_types.py:824-842); 'WateryGrave' is authored exactly as the card DB stores it (verified: barnacle_yellow et al. carry keywords ['WateryGrave']).\n\nRELEASE NOTE 2 IS ENGINE-SIDE: increases-before-decreases is CR 5.1.6a cost-pipeline ordering with the max(0, cost) floor at play.py:1464 - nothing to author.\n\nKNOWN APPROXIMATION: the queue is consulted while pricing any play OR activation by this player (play.py:1447), so activating an already-in-play watery-grave ally's ability could consume one of the two uses; printed text scopes to playing ally cards. Bounded by uses:2.\n\nSET FOLDER AT ADOPTION: batch labels this set HighSeas - no obvious folder exists yet among json/<set>/ codes; derive from the card's sets/setIdentifiers per IMPLEMENTATION_GUIDE step 4."
+}

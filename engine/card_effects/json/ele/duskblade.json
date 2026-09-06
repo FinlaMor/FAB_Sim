@@ -1,0 +1,39 @@
+{
+  "slug": "duskblade",
+  "activation_cost": 1,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "AND", "all": [
+          {"type": "EVENT_THIS_TURN", "event": "play", "qualifier": "attack_action"},
+          {"type": "EVENT_THIS_TURN", "event": "play", "qualifier": "non_attack_action"}
+        ]}
+      ],
+      "effects": [
+        {"type": "PUT_COUNTER", "counter_type": "power", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "BEGINNING_OF_END_PHASE",
+      "conditions": [
+        {"type": "IS_ACTIVE_PLAYER"},
+        {"type": "NOT", "inner_type": "AND", "all": [
+          {"type": "EVENT_THIS_TURN", "event": "play", "qualifier": "attack_action"},
+          {"type": "EVENT_THIS_TURN", "event": "play", "qualifier": "non_attack_action"}
+        ]}
+      ],
+      "effects": [
+        {
+          "type": "REMOVE_COUNTERS",
+          "counter_type": "power",
+          "amount": {"type": "COUNT_COUNTERS", "counter": "power"}
+        }
+      ]
+    }
+  ],
+  "_comment": "'Once per Turn Action - {r}: Attack / Whenever you attack with Duskblade, if you've played an attack action card and a non-attack action card this turn, put a +1{p} counter on Duskblade. / At the beginning of your end phase, if you haven't ..., remove all +1{p} counters.' Shape copied from the sibling draft .drafts/dawnblade.json (same +1{p}-counter weapon family).\n\nATTACK HALF: no ATTACK ability declared - the engine offers the weapon attack from the CARD-LEVEL activation_cost/per_turn fields (play._add_weapon_attacks; shipped hnt/hunters_klaive.json precedent), and the triggered abilities satisfy the must-implement-something check.\n\nTRIGGER: ON_ATTACK is dispatched to the ATTACKING CARD's slug with card=combat.attack_card (engine.py:1524-1529); a weapon attacks as itself, so only attacking with Duskblade fires this - and it fires even when the attack is fully blocked, which matches 'whenever you attack'. Ability-level conditions evaluate at resolution, i.e. as the attack enters the chain.\n\nPLAY MARKERS VERIFIED AT THE PRODUCER: play.py:1077-1101 records _record_turn_event(state, player_id, 'play', ...) on every card played, with derived compounds 'attack_action' (is_attack and is_action) and 'non_attack_action' (is_action and not is_attack) recorded verbatim - so both qualifiers here are live, not assumed. Weapon ACTIVATIONS never pass through this path, so attacking with Duskblade itself correctly does not count as 'played an attack action card'.\n\nCOUNTER KIND 'power' (lowercase): that is the kind _recalculate_attack_power feeds from (engine.py:1939 adds card.counters['power'] into attack power), so each counter really is +1{p}; kinds are case-sensitive dict keys. PUT_COUNTER defaults to the source card (effect_types.py:2026-2031), which is Duskblade - correct.\n\nEND-PHASE WIPE: BEGINNING_OF_END_PHASE dispatches to BOTH players' permanent zones INCLUDING weapon1/weapon2 at EITHER hero's end phase (engine.py:1452-1459, 1495-1503), so IS_ACTIVE_PLAYER is REQUIRED to read 'YOUR end phase' (its absence is the documented channel_iceloch_glaze_blue defect class). The event fires at start_of_end_phase BEFORE current_turn_effects is wiped for the turn, so the same-turn play markers are still readable (the loan_shark_yellow review confirms this ordering). NOT(AND(a,b)) compiles: the NOT handler passes its full params dict to the inner compile (condition_types.py:2220-2236) and AND reads 'all' (condition_types.py:1901-1903).\n\nREMOVE ALL: amount expression COUNT_COUNTERS(counter=power) - the dawnblade precedent; REMOVE_COUNTERS (effect_types.py:5032-5050) resolves dict amounts and removes that many 'power' counters from the source.\n\nRELEASE NOTES hold by construction: (1) counters persist across turns until an end phase where the play-condition fails - nothing else removes them; (2) 'you do not have to attack with Duskblade' to prevent removal - BOTH clauses test only play markers, never attack markers, so playing the two actions any time before the end phase preserves the counters whether or not Duskblade attacked."
+}

@@ -1,0 +1,28 @@
+{
+  "slug": "find_center_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "LAST_CHAIN_ATTACK", "name": "Crane Dance"}
+      ],
+      "effects": [
+        {
+          "type": "RESTRICT_DEFENDERS",
+          "cost_lt": {"type": "SUM", "values": [{"type": "COUNT_CHAIN_LINKS"}, 1]}
+        },
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "effects": [
+              {"type": "CREATE_TOKEN", "token": "zen_state"}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Combo** - If Crane Dance was the last attack this combat chain, Find Center can't be defended by cards with {r} cost less than the number of chain links you control, and it gains \"If this hits, create a Zen State token.\"' Ninja Action - Attack (CrucibleOfWar).\n\nSHAPE copied from shipped cru/rushing_river_blue.json - the same family (Ninja Action-Attack, Combo gate, gained hit-trigger): TRIGGERED + ON_ATTACK (an Action - Attack card is NOT an ATTACK_REACTION), both Combo clauses on ONE ability gated by LAST_CHAIN_ATTACK {name: 'Crane Dance'} - name matching spans colour printings (condition_types.py:1634-1669). At ON_ATTACK dispatch chain_links[-1] IS Crane Dance: links are appended only after damage resolves (engine.py:2163, single append site).\n\nDEFENDER CLAUSE: RESTRICT_DEFENDERS passes every param except 'type' verbatim onto combat.defender_restrictions (effect_types.py:4425/4449); the consumer _restriction_blocks honours a bare cost_lt with no other keys (actions.py:923) and blocks any defending card with cost < N. No subtype key authored - the printed text restricts ALL cards by cost, not just attacks.\n\nDEVIATION FROM THE TRIAGE NOTE (which said bare COUNT_CHAIN_LINKS), and the one judgement call in this draft: the threshold is SUM[COUNT_CHAIN_LINKS, 1]. CR 7.2.3a puts the attacking card ONTO the combat chain as a chain link in the Attack Step, before defenders are declared, and CR 7.0.3c makes a link's control follow its active-attack - so during this attack 'the number of chain links you control' counts Crane Dance's closed link PLUS Find Center's own active link. The engine appends ChainLinks only at resolution (engine.py:2163), so bare COUNT_CHAIN_LINKS undercounts by exactly 1 in every state where the Combo gate can pass (it requires >=1 prior link). SUM reads 'values' mixing expression dicts and ints (effect_types.py:57-59); RESTRICT_DEFENDERS resolves dict thresholds once, at restriction creation (effect_types.py:4439-4448), which is during this attack - so the +1 equals the printed count for the whole defend step. In 1v1 every link on your combat chain is yours, so the compensation cannot overcount.\n\nGAINED HIT-TRIGGER: INJECT_TRIGGER scope COMBAT (default) rides this attack once; the nested trigger dict carries trigger_type ON_HIT -> CREATE_TOKEN {token: 'zen_state'} (handler reads 'token', count defaults 1, controller defaults SELF - effect_types.py:1942-1991).\n\nBLOCKER - MISSING TOKEN DEFINITION: json/tokens/zen_state.json DOES NOT EXIST (glob over json/tokens/ empty; zen_state sits pending in triage_queue.json and cru_work_queue.json). create_token routes through require_card, so the first time this hits a hero the game raises MissingCardImplementation and aborts. A Zen State token definition must be authored before adoption; this draft could not create it (drafts touch .drafts/ only).\n\n'Combo' in printed_keywords needs no authoring - it is the clause-introducing capability word DSL_REFERENCE resolves via LAST_CHAIN_ATTACK ('The type is LAST_CHAIN_ATTACK, never COMBO'), exactly as shipped rushing_river_blue does."
+}

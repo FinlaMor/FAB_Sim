@@ -1,0 +1,43 @@
+{
+  "slug": "carve_up_yellow",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_IS_WEAPON"}
+        ]
+      },
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "conditions": [
+              {"type": "ATTACK_TARGET_IS_HERO"}
+            ],
+            "effects": [
+              {
+                "type": "CONDITIONAL",
+                "when": [
+                  {"type": "COUNTER_GTE", "counter_type": "power", "min": 1}
+                ],
+                "then": [
+                  {
+                    "type": "MAY",
+                    "prompt": "Remove a +1{p} counter from this weapon?",
+                    "effects": [
+                      {"type": "REMOVE_COUNTERS", "counter_type": "power", "amount": 1},
+                      {"type": "DESTROY_ARSENAL", "player": "OPPONENT"}
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target weapon attack gets \"When this hits a hero, you may remove a +1{p} counter from this weapon. If you do, destroy a card in their arsenal.\"'\n\nTARGETING: ATTACK_REACTION + target.filter ATTACK_IS_WEAPON (reads combat.from_weapon, condition_types.py:198) - the proven 'Target <X> attack' shape (shipped hp/ironsong_response_blue; agile_engagement family citing wtr/pummel_red).\n\nINJECTION: INJECT_TRIGGER default COMBAT scope = one-shot onto the current attack ('this attack gains: if it hits ...'). The nested trigger dict is REQUIRED because there are inner conditions - a top-level 'conditions' key would be popped as an effect-level gate evaluated once at registration (handler comment, effect_types.py:2104-2109). Inner ON_HIT fires at engine.py:1412-1423, which passes combat.attack_card into both the inner conditions and effects.\n\nWHY THE CARD ARGUMENT IS THE WEAPON (triage note worried default-self was wrong): for a weapon attack, combat.attack_card IS the weapon card itself (engine.py:518-528 - weapons attack as themselves, never played from hand), so REMOVE_COUNTERS with NO target spec removes from the attacking weapon. An explicit {zone: WEAPON} target scan would be LESS precise - it can pick the wrong weapon when two are equipped. Counter kind is 'power' (lowercase): that is the kind SHARPEN stores and _recalculate_attack_power feeds from; kinds are case-sensitive dict keys and '+1{p}' would match nothing.\n\nWHY THE CONDITIONAL WRAPPER: without it the MAY prompt is offered even when the weapon has no counter; accepting would remove nothing (effect_remove_counter floors at 0) and STILL destroy an arsenal card - more than printed. COUNTER_GTE on CONDITIONAL's 'when' is evaluated against the same card argument (the weapon), so the offer exists only when a counter is there to remove. CONDITIONAL reads when/then explicitly (effect_types.py:3697-3724), which survives the INJECT_TRIGGER direct-compile path where no loader pass pops keys. 'If you do' is MAY's decline-runs-nothing semantics.\n\n'THEIR arsenal': DESTROY_ARSENAL resolves OPPONENT from the weapon's controller (= the attacker), i.e. the defending hero.\n\nKNOWN HANDLER APPROXIMATION (flagged, not fixable in JSON): release note says with multiple cards in the arsenal YOU CHOOSE which to destroy, but DESTROY_ARSENAL destroys EVERY card in the arsenal (effect_types.py:3006-3007 loops all). Exact whenever the arsenal holds one card (the common case); over-destroys beyond that. Needs a count/choose parameter on DESTROY_ARSENAL to be exact.\n\nRelease note about Drawn to the Blade ('removing a counter will not cause threshold conditionals to stop applying') needs no authoring: DSL conditions are re-evaluated fresh at each check, so nothing here could retroactively un-apply anything."
+}

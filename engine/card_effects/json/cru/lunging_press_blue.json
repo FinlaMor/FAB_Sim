@@ -1,0 +1,29 @@
+{
+ "slug": "lunging_press_blue",
+ "abilities": [
+  {
+   "ability_type": "ATTACK_REACTION",
+   "target": {
+    "filter": [
+     {
+      "type": "ATTACK_TYPE_IN",
+      "types": [
+       "Action"
+      ]
+     },
+     {
+      "type": "ATTACK_IS_NOT_WEAPON"
+     }
+    ]
+   },
+   "effects": [
+    {
+     "type": "MODIFY_ATTACK",
+     "mod": "add",
+     "amount": 1
+    }
+   ]
+  }
+ ],
+ "_comment": "Release note confirms weapon attacks cannot be targeted. ATTACK_TYPE_IN ['Action'] + ATTACK_IS_NOT_WEAPON together restrict to attack action cards only (weapons attack as themselves, not as action cards). MODIFY_ATTACK on the targeted attack adds +1{p} for the current chain link."
+}

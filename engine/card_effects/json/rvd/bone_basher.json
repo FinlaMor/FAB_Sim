@@ -1,0 +1,14 @@
+{
+  "slug": "bone_basher",
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "activation_cost": 2,
+      "effects": [
+        { "type": "ATTACK" }
+      ]
+    }
+  ],
+  "_comment": "'Once per Turn Action - {r}{r}: Attack' on a 2H Club weapon. Shape copied from .drafts/ball_breaker.json, whose printed text is word-for-word identical ('Once per Turn Action - {r}{r}: Attack', same ClassicBattles set), which in turn copies shipped cru/sledge_of_anvilheim.json (ACTIVATE + activation_cost + ATTACK).\n\nThe ability is DECLARATIVE: the engine already offers the weapon's attack itself via play._add_weapon_attacks from printed power + parsed activation cost, and enforces once-per-turn via has_per_turn_limit/weapon_exhausted. The ATTACK effect mainly declares the ability (satisfies the must-implement-something check) and builds the attack proxy for any context that invokes it directly; play._add_hero_dsl_activations deliberately skips ATTACK-effect abilities so it never double-fires (effect_types.py:5139-5149). activation_cost sits on the ABILITY (sledge_of_anvilheim spelling) and per_turn: 1 at card level per DSL_REFERENCE; the resource cost is NOT also modelled as a PAY_RESOURCES cost, which would double-charge.\n\nBlade Break is not on this card - printed_keywords is empty - so there is nothing else to author."
+}

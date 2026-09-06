@@ -1,0 +1,44 @@
+{
+  "slug": "cold_snap_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "PAY_OR_ELSE",
+          "player": "OPPONENT",
+          "resources": 3,
+          "on_failure": [
+            {
+              "type": "FREEZE",
+              "target": {
+                "controller": "OPPONENT",
+                "zones": ["ARSENAL", "ARENA"],
+                "amount": 1,
+                "filter": [
+                  {
+                    "type": "OR",
+                    "any": [
+                      {"type": "SELF_IN_ZONE", "zone": "arsenal"},
+                      {"type": "CARD_IS_TYPE", "card_types": ["Ally"]}
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {"type": "PLAYED_FROM_ARSENAL"}
+      ],
+      "effects": [
+        {"type": "DRAW", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Target hero may pay {r}{r}{r}. If they don't, freeze a card in their arsenal or an ally they control until the start of your next turn. / If Cold Snap is played from arsenal, draw a card.' + printed Go again. Red printing - identical shape to the already-drafted .drafts/cold_snap_blue.json, resources 3 per the red cost.\n\nPRINTED KEYWORDS NOT AUTHORED: GoAgain is in printed_keywords - it fires from the card DB keywords field, and re-authoring a printed keyword is a defect. The DB 'Freeze' tag is inert by itself; the actual freezing is the effect below, per the triage list.\n\nCLAUSE 1: PAY_OR_ELSE (effect_types.py:3207-3257) reads player/resources/on_failure - all three verified in the handler. player OPPONENT asks the TARGET hero (2-player equivalence; no separate hero-target declaration authored). The handler offers pay/decline FIRST and runs on_failure only on decline or inability to afford, so release note 2's ordering ('the target hero chooses if they are paying first; you do not choose what you are freezing until they choose not to pay') falls out of the machinery, as does note 1: the payer is asked regardless of board state, and declining with nothing freezable freezes nothing.\n\nFREEZE POOL: object-target spec (effect_types.py:675-804) with zones ARSENAL + ARENA. There is no ALLIES entry in the object-target zone vocabulary (_OBJECT_TARGET_ZONES, effect_types.py:418) - ARENA maps to player.permanents (effect_types.py:463-464), which holds allies AND items/auras/tokens as SubZoneViews (state.py:867-871) - so the OR filter narrows the pool to exactly the printed targets: a card still in their arsenal (SELF_IN_ZONE reads the candidate's own zone attribute, condition_types.py:1544-1560) OR an Ally (CARD_IS_TYPE tests types UNION subtypes, condition_types.py:1309-1325). amount 1 makes the CONTROLLER choose one via the standard prompt (_ask_player at effect_types.py:795).\n\nGAP - DURATION: 'until the start of your next turn' is NOT expressible. The DSL FREEZE effect (effect_types.py:3149-3178) reads only ref/target and calls effect_keywords.freeze() without any until/duration parameter, which defaults to CR 8.5.34b: unfreeze at the start of the FROZEN CARD'S CONTROLLER'S next turn. For a card frozen in the OPPONENT's arsenal/ally row that thaws one player-turn EARLIER than printed (their next turn start, instead of surviving their whole turn and thawing when MINE starts). Needs a duration param on DSL FREEZE (forwarded to freeze()'s until_condition) to fix generically; drafted with the default rather than inventing a flag-based thaw.\n\nCLAUSE 2: second PLAY ability gated by PLAYED_FROM_ARSENAL (condition_types.py:789-809 - prefers play.py's explicit played_from_zone stamp, falls back to prev_zone) drawing 1; DRAW reads amount/player (effect_types.py:1222-1249)."
+}

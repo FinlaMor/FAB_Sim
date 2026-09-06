@@ -1,0 +1,33 @@
+{
+  "slug": "herald_of_rebirth_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {"type": "PUT_SELF_IN_ZONE", "zone": "soul"},
+        {
+          "type": "MAY",
+          "prompt": "Put a card with phantasm from your graveyard on top of your deck?",
+          "conditions": [
+            {"type": "CARD_IN_ZONE", "zone": "graveyard", "keywords": ["Phantasm"]}
+          ],
+          "effects": [
+            {
+              "type": "MOVE_MATCHING",
+              "to_zone": "deck",
+              "position": "top",
+              "target": {
+                "controller": "SELF",
+                "zone": "GRAVEYARD",
+                "amount": 1,
+                "filter": [{"type": "HAS_KEYWORD", "keyword": "Phantasm"}]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits, put it into your hero's soul and put up to 1 card with **phantasm** from your graveyard on top of your deck.' + printed **Phantasm**. Light Illusionist Action - Attack (DuskTillDawn). Shape copied from the sibling drafts herald_of_rebirth_yellow/blue in this directory; the yellow shape is the newer of the two and is followed here.\n\nPHANTASM NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field; re-authoring it would be a defect.\n\nSOUL PLACEMENT: TRIGGERED ON_HIT -> PUT_SELF_IN_ZONE zone soul (handler effect_types.py:1618-1639 reads zone; soul is the default for this spelling and is stated explicitly). Mandatory per official_release_notes 6-7 - it runs even if you decline the second half, so it sits OUTSIDE the MAY as an unconditional effect in the list. Release notes 1-3 (chain link stays open, Phantasm stops functioning as a triggered ability, last-known-information go again) are engine-side consequences of the mid-chain zone move, not authorable here.\n\nDEVIATION FROM THIS BATCH'S TRIAGE LIST (LOOK_AT + SELECT_FROM_REF + PUT_REF_TOP), verified before deviating: LOOK_AT's zone map covers only DECK_TOP/ARSENAL/HAND (effect_types.py:3390-3392, read this session) - a GRAVEYARD scan falls through to z=None and stores an EMPTY ref silently, the exact looks-implemented-does-wrong failure. SELECT_FROM_REF would then choose from nothing. MOVE_MATCHING (effect_types.py:3593-3612) is the working composition: its object-target compiler pools _object_zone_cards(SELF, GRAVEYARD) = player.graveyard.cards (:493-494), evaluates the filter with each CANDIDATE as the card argument (:776-778), asks which card via _ask_player when several match, and forwards position 'top' to put_object. HAS_KEYWORD reads 'keyword' with normalised matching, so 'Phantasm' finds the stored keyword - and matches only cards that HAVE the keyword, which is release note 4 ('does not include cards that only reference phantasm'). Release note 5 (cannot put itself on top) holds by construction: the pool is the graveyard and Herald is on the combat chain/soul when it hits.\n\n'UP TO 1': the MAY supplies the optionality - its conditions list gates the OFFER (loader pops them into EffectDef.conditions), so the prompt appears only when a Phantasm card is actually in the graveyard (CARD_IN_ZONE reads 'keywords', condition_types.py:899), and declining runs nothing. Accepting moves exactly one chosen card."
+}

@@ -1,0 +1,20 @@
+{
+  "slug": "barnacle_yellow",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {
+          "type": "TAP_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "ATTACK"
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Action** - {t}: **Attack**' on a Pirate Necromancer Ally, plus the printed Watery Grave keyword. Shape copied from gem/pile_driver.json (ACTIVATE + TAP_SELF cost + ATTACK effect). activation_cost 0 sits at CARD level because that is where the loader reads it (loader.py:153 -> CardDef.activation_cost); AbilityDef has no such field, so an ability-level activation_cost is silently dropped - an earlier draft of this file put it inside the ability where nothing read it. TAP_SELF reads no params, is payable only untapped, and taps the source (cost_types.py:298-304). ATTACK builds the attack-proxy StackEntry (effect_types.py:5037-5058). Who offers the attack: play._add_hero_dsl_activations SKIPS any ability whose effect is ATTACK for every source including allies (play.py:279-283), and _add_weapon_attacks scans only the weapon zones - the ally attack is offered engine-side by the actions.py ATTACK_ALLY path (actions.py:742-784), whose functional-text regex matches this card's '**Action** - {t}: **Attack**' wording and which exhausts via allies_exhausted and charges _ally_attack_resource_cost (0 here - no {r} in the text). So this ability's job is to DECLARE the '{t}: Attack' activation (satisfies the must-implement-something check and provides the proxy if invoked directly), exactly as the ATTACK docstring describes for weapons; it does not double-offer with the engine path. Watery Grave is a printed keyword carried in the card DB (printed_keywords) - deliberately not authored here."
+}

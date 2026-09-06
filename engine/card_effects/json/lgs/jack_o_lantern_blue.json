@@ -1,0 +1,35 @@
+{
+ "slug": "jack_o_lantern_blue",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "effects": [
+    {
+     "type": "BANISH",
+     "from_zone": "TOP_DECK",
+     "player": "SELF",
+     "amount": 1,
+     "record_as": "banished"
+    },
+    {
+     "type": "CONDITIONAL_EFFECT",
+     "when": [
+      {
+       "type": "REF_PITCH_IS",
+       "ref": "banished",
+       "pitch": 3
+      }
+     ],
+     "then": [
+      {
+       "type": "CREATE_TOKEN",
+       "token": "runechant",
+       "amount": 1
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "_comment": "PLAY ability: banish top card of deck, if blue (pitch 3) create Runechant. BANISH from TOP_DECK banishes the top card of the controller's deck and stores it in ref 'banished'. CONDITIONAL_EFFECT checks REF_PITCH_IS with pitch 3 (blue) on the banished card; if true, creates a Runechant token. GoAgain in printed_keywords fires from card DB keywords field - deliberately NOT authored. Pitch 3 confirmed from card data (blue printing). The token slug 'runechant' must exist in json/tokens/ for this to work at runtime."
+}

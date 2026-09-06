@@ -1,0 +1,38 @@
+{
+  "slug": "corrupted_crown",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Banish a card from your hand to give Corrupted Crown +1{d}?",
+          "conditions": [
+            {"type": "CARD_IN_ZONE", "zone": "hand", "count_gte": 1}
+          ],
+          "effects": [
+            {"type": "BANISH", "from_zone": "HAND", "amount": 1},
+            {
+              "type": "SET_FLAG",
+              "flag": "corrupted_crown_d_up",
+              "conditions": [{"type": "REF_EXISTS", "ref": "banished"}]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "conditions": [
+        {"type": "IS_DEFENDING_CARD"},
+        {"type": "FLAG_SET", "flag": "corrupted_crown_d_up"}
+      ],
+      "effects": [
+        {"type": "MODIFY_DEFENSE", "mod": "add", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'**Blade Break**' is in printed_keywords: it fires from the card DB keywords field and is deliberately NOT authored (re-authoring a printed keyword is a defect).\n\n'When this defends' = TRIGGERED ON_DEFEND; the dispatch reaches equipment in the slots (shipped head-equipment precedent hnt/mask_of_deceit.json).\n\n'You may banish a card from your hand. If you do, this gets +1{d}' is one MAY block - declining runs nothing, so 'if you do' needs no plumbing. The MAY's conditions gate whether the prompt is offered at all: with an empty hand there is nothing to banish and no prompt, which matches the printed optionality (CARD_IN_ZONE reads zone/count_gte, condition_types.py:844-903). BANISH from_zone HAND amount 1 lets me choose which card (effect_types.py:1397-1412) and records ref 'banished' ONLY when a card actually moved (_record_banished early-returns on empty, effect_types.py:840-856), so the SET_FLAG sub-effect carries its own REF_EXISTS gate on that ref - the flag is set if and only if the banish happened.\n\nDEVIATION FROM A NAIVE READING OF THE TRIAGE PRIMITIVES, disclosed: 'MODIFY_DEFENSE' was listed flat, but a one-shot per-card bump written at defend time is WIPED before damage - engine._recalculate_total_defense resets every declared defender to base first and reruns immediately pre-damage, so only a static re-applied at each recalc survives into the total. The shipped defence statics document this verbatim (pen/basalt_boots.json, pen/blackstone_greaves.json, mpg/testament_of_valahai.json): WHILE_STATIC naming trigger RECALC_DEFENSE + IS_DEFENDING_CARD + MODIFY_DEFENSE moves the DEFENDING CARD's own {d}. Hence the two-ability shape: the trigger records the choice as a flag; the static applies +1{d} at each recalc while the flag is set.\n\nKNOWN INFIDELITY: SET_FLAG scope is turn-long (player.current_turn_effects, effect_types.py:2093-2100; FLAG_SET reads the same store, condition_types.py:1032-1037), so if the crown defends a SECOND time later the same turn, the +1{d} applies without a fresh banish. Per-defense precision would need chain-link-scoped memory the DSL does not have; Blade Break usually removes the crown after a large defense anyway, so the window is narrow. Flag name is card-specific to avoid colliding with other defence flags on the same player."
+}

@@ -1,0 +1,34 @@
+{
+  "slug": "astral_assault_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Destroy a Lightning Flow you control?",
+          "conditions": [
+            {
+              "type": "CARD_IN_ZONE",
+              "zone": "permanents",
+              "card_name": "Lightning Flow"
+            }
+          ],
+          "effects": [
+            {
+              "type": "DESTROY_PERMANENT",
+              "asset": "Lightning Flow"
+            },
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "Release notes: triggers when it becomes an attacking card on the combat chain -> ON_ATTACK on the attack card itself; the pump is TRIGGERED + ON_ATTACK + MODIFY_ATTACK per DSL_REFERENCE (power_mods survive recalc). 'A Lightning Flow' is matched by NAME, not subtype: the Flow token's only subtype is 'Aura', and CONTROLS_SUBTYPE cannot match by name, so the MAY gate is CARD_IN_ZONE over the controller's permanents with card_name 'Lightning Flow' and the destroy is DESTROY_PERMANENT with its 'asset' (name/slug) filter. Declining the MAY runs neither effect, which is the documented 'if you do' idiom; the gate means the prompt is only offered when a Flow is actually there to destroy."
+}

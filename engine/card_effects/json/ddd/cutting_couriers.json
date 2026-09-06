@@ -1,0 +1,24 @@
+{
+  "slug": "cutting_couriers",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Sword"]},
+        {"type": "ATTACKER_CONTROLLED_BY_YOU"}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Destroy Cutting Couriers? If you do, this attack gets go again.",
+          "effects": [
+            {"type": "DESTROY_SELF"},
+            {"type": "GO_AGAIN"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When your sword attack hits, you may destroy this. If you do, the attack gets go again.' Warrior Equipment - Legs.\n\nDELIVERY: TRIGGERED + ON_HIT on the equipment itself. The engine broadcasts ON_HIT to the ATTACKER's permanent zones INCLUDING player.legs (engine.py:1437-1459, _dsl_permanent_zones), so the legs slot hears its controller's own attacks - no delivery-side scoping needed. The two conditions ARE the printed gate ('YOUR SWORD attack'), evaluated at resolution while state.combat is live: ATTACK_SUBTYPE_IN reads 'subtypes' and unions the attack card's types AND subtypes (condition_types.py:296-316), so a Sword weapon attack matches; ATTACKER_CONTROLLED_BY_YOU (condition_types.py:389-396) compares combat.attack_card.controller to the equipment's controller.\n\nMAY = the printed 'you may destroy this. If you do, ...': declining runs NOTHING in the block - no destroy, no go again (handler effect_types.py:3788-3856 reads prompt/effects; sub-effects run only on accept). Release note ('if you cannot destroy, the rest is not generated') is satisfied structurally: the destroy COST-style can_pay is not involved here, and while the equipment is in play destroying it is always possible, so the option is always offered.\n\nORDER inside the block follows the sentence: DESTROY_SELF (effect_types.py:2470 shares the DESTROY_PERMANENT branch; canonical destroy() resolves the equipment-slot zone) THEN GO_AGAIN. Destroying first cannot strand the grant: _grant_go_again (effect_types.py:423-458) needs only state.combat in the combat path, not the card's zone. During ON_HIT combat exists, so CR 8.3.5b applies - 'Go Again' lands on state.combat.keywords (dedup-guarded per 8.3.5c) and the engine pays the action point at the Resolution Step. That IS 'the attack gets go again': the point arrives because this attack carried the keyword.\n\nPRINTED KEYWORD DELIBERATELY NOT AUTHORED AND NOT STRIPPED: GoAgain appears in printed_keywords, but it is the DB flattening the bolded words inside the triggered sentence - the card itself never has go again under any reading (the ATTACK does). loader.conditional_keywords (loader.py:255-296) strips a printed keyword only from an ability gated on SOURCE_IS_ATTACK granting it to ITSELF; this grant targets the attack, which is exactly the Luminaris case that docstring says must NOT strip. Residual exposure is nil in practice: a GoAgain keyword sitting on legs equipment is inert (equipment is never played and never becomes combat.attack_card).\n\nNo gaps; every clause expressible."
+}

@@ -1,0 +1,26 @@
+{
+  "slug": "emissary_of_tides_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "PUT_HAND_CARD_BOTTOM",
+          "player": "SELF",
+          "optional": "TRUE",
+          "amount": 1
+        },
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2,
+          "conditions": [
+            {"type": "REF_EXISTS", "ref": "bottomed_from_hand"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, you may put a card from your hand on the bottom of your deck. If you do, this gets +2{p}.' Generic Action - Attack (PartTheMistveil).\n\nTRIGGER: TRIGGERED ON_ATTACK - the 'attacking' listener dispatches ON_ATTACK to combat.attack_card (engine.py:1524-1529), which is this card when it attacks; this is the documented pattern for an Action - Attack card, not ATTACK_REACTION.\n\nDELIBERATE DEVIATION FROM THE TRIAGE LIST: it proposed PUT_HAND_CARD_BOTTOM with 'conditional_effect' carrying the +2{p}, but conditional_effect is documented in DSL_REFERENCE and read by NO handler anywhere in dsl/ (grepped the whole directory) - authoring it would compile clean and silently do nothing, exactly the failure class this corpus keeps shipping. The linkage the card needs already exists another way: PUT_HAND_CARD_BOTTOM records the ref 'bottomed_from_hand' when a card actually moves (effect_types.py:1610-1615) and returns WITHOUT setting it when the player declines or their hand is empty (early returns at effect_types.py:1601-1605). The payoff MODIFY_ATTACK therefore carries an EFFECT-LEVEL conditions gate [REF_EXISTS bottomed_from_hand]: _compile_effect pops it out of the effect dict (loader.py:86-90) and the effects loop enforces it per-effect (interpreter.py:149-159), so the +2 lands only when the bottom-deck half was taken. Refs are ability-scoped - push_refs/pop_refs wrap every ability execution (interpreter.py:22-36, context.py:74-105) - so no value from an earlier ability can leak in and pump a declined attack.\n\nPUT_HAND_CARD_BOTTOM handler reads player/to/optional/amount/position (effect_types.py:1557-1616): player SELF and amount 1 explicit defaults; optional 'TRUE' as a string per the pitfalls note (truthy either way in this handler - its mandatory form wants boolean false, irrelevant here); bottom is the default destination. The controller chooses WHICH card via _ask_player over hand slugs, matching 'put a card from your hand'.\n\nPAYOFF: MODIFY_ATTACK reads mod/amount (effect_types.py:4123-4158), appends to combat.power_mods AND bumps live power, so the +2 survives every recalculation through the defend and damage steps.\n\nRelease note 1 (no priority until the entire triggered effect, including the +2{p}, completes) is engine sequencing of one resolving ability - both effects run inside a single run_ability call, nothing to author.\n\nNo known gaps."
+}

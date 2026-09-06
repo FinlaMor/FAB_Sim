@@ -1,0 +1,20 @@
+{
+  "slug": "first_tenet_of_chi_wind_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GRANT_NEXT_CARD",
+          "keyword": "Go Again",
+          "amount": 0,
+          "filter": [
+            {"type": "CARD_IS_COLOR", "color": "blue"},
+            {"type": "CARD_IS_TYPE", "card_type": "Action"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next blue action card you play this turn gets go again.' + printed Go again.\n\nPRINTED GO AGAIN IS NOT AUTHORED: printed_keywords carries GoAgain - the card's own unconditional 'Go again' line pays +1 action point when this resolves as a non-attack card layer (engine.py:2420-2444; card.has_go_again at card.py:382-383 normalises the camelCase 'GoAgain', so the payout fires). Deliberately NOT copied from shipped pen/fasting_carcass_blue.json, whose printed text is IDENTICAL word for word but which also authors a bare {\"type\": \"GO_AGAIN\"} effect: _grant_go_again (effect_types.py:423-458) outside combat adds +1 AP unconditionally with no dedup against that layer payout, so the shipped file yields 2 AP per play - exactly the 'keyword-reimplemented / 2 action points instead of 1' defect class recorded in .review/draw_swords_red.json, .review/high_roller_yellow.json ('omit it') and .review/cut_from_the_same_cloth_red.json. This draft omits it: net behaviour is exactly one action point, as printed.\n\nTHE GRANT: GRANT_NEXT_CARD (alias of MODIFY_NEXT_CARD_COST, effect_types.py:4665-4743) queues a ONE-SHOT entry on player.dsl_queued_card_mods, consumed by the first matching PLAYED card (play.py:1713-1747), which appends 'Go Again' to that card's keywords (:1726-1729); the layer-resolution payout then reads it off the played card (engine.py:2420-2444). The attack-only queue (GRANT_NEXT_ATTACK) could never fire here - a blue action card may never attack (the handler's own comment names this case, play.py:1709-1712). Unused entries are cleared at end of turn (engine.py:933-934) = 'this turn'.\n\namount IS AUTHORED AS 0, DELIBERATELY: the compile-side default is 1 (effect_types.py:4681) and _calculate_resource_cost SUBTRACTS the stored amount from the next matching card's cost (play.py:1447-1451) - omitting it would silently add an unprinted {r} discount.\n\nFILTER PARAMS VERIFIED AGAINST HANDLERS: CARD_IS_COLOR reads 'color'/'colour' and derives blue from pitch value 3 when card.color is unset (condition_types.py:1460+); CARD_IS_TYPE reads 'card_type' against types UNION subtypes (condition_types.py:1309-1325). Shape matches the review-verified core clause of fasting_carcass_blue (.review/fasting_carcass_blue.json: 'verified correct ... amount 0 correctly means no cost delta, only the keyword grant')."
+}

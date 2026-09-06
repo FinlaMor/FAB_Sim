@@ -1,0 +1,32 @@
+{
+  "slug": "desires_of_flesh_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {
+          "type": "LOOK_AT",
+          "zone": "DECK_TOP",
+          "player": "OPPONENT",
+          "amount": 1,
+          "into": "top_card"
+        },
+        {"type": "BANISH_REF", "ref": "top_card", "from_zone": "deck"},
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "REF_IS_TYPE", "ref": "top_card", "types": ["Attack"]}
+          ],
+          "then": [
+            {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits a hero, banish the top card of their deck. Whenever this banishes an attack action card, gain 1{h}.' Assassin Action - Attack. Stealth is in printed_keywords, so it fires from the card DB - not authored here.\n\nSHAPE: TRIGGERED ON_HIT is dispatched to the attack card, which this card IS when played as an attack; ability-level conditions gate it per-hit. ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977) implements release note 2 exactly: no trigger when the attack hits an ally or permanent (combat.attack_target set only for non-hero targets).\n\nBANISH: LOOK_AT peeks without moving (zone DECK_TOP / player OPPONENT / amount 1 / into - handler at effect_types.py:3356-3415 reads all four keys; a single card is stored unwrapped, or None if the deck is empty), then BANISH_REF moves the referenced card with from_zone 'deck' - the origin MUST be passed because LOOK_AT leaves the card in place and banish() only removes from the origin when told which one (effect_types.py:3726-3752; lowercase 'deck' is the spelling the BANISH effect itself passes to _ek_banish). face_down omitted -> False -> face-up add, matching release note 1; banish() routes to card.owner's banished zone (effect_keywords.py:152,171-180), also release note 1. Empty deck edge: ref is None -> BANISH_REF returns -> REF_IS_TYPE false -> no life; fails closed.\n\n'WHENEVER THIS BANISHES' AS INLINE RIDER, deliberate: the gain sits in the same resolution immediately after this card's own BANISH_REF, gated by REF_IS_TYPE(ref 'top_card', types ['Attack']) - types are matched against the card's types UNION subtypes (condition_types.py:2034-2042), and 'Attack' is the subtype only attack action cards carry, so the test is precise ('Action' in the list would wrongly match non-attack actions under the ANY-match). This models release note 3 by construction: the life can only come from THIS resolution's banish, never from another card's banish effect. Scope note: if a future printing gave Desires of Flesh a SECOND way to banish, the rider would need a real trigger rather than this inline form - today this hit-banish is its only banish, so inline is exact.\n\nGAIN asset LIFE_POINTS amount 1 -> effect_gain_life for the controller (handler effect_types.py:4869-4896 reads asset/amount/player, SELF default = 'you gain')."
+}

@@ -1,0 +1,31 @@
+{
+  "slug": "emerging_avalanche_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "conditions": [
+        {"type": "FLAG_SET", "flag": "fused_emerging_avalanche_red"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "frostbite", "player": "OPPONENT"}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_ACTION_PHASE",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Ice Fusion** / **Go again** / When Emerging Avalanche enters the arena, if it was **fused**, create a Frostbite token under target hero control. / At the beginning of your action phase, destroy Emerging Avalanche then the next attack action card you play this turn gains +3{p}.' Elemental Guardian Action - Aura.\n\nNOT AUTHORED: Ice Fusion and Go again are printed keywords (printed_keywords) firing from the card DB keywords field (triggers.py maps '<X> Fusion'; fusion() is ability_keywords.py:582-607) - re-authoring either would be a defect.\n\n'IF IT WAS FUSED' - DELIBERATE DEVIATION FROM TRIAGE (it named PITCHED_FOR_THIS): that condition is wrong here and fails in the exact state the clause cares about. PITCHED_FOR_THIS reads card.pitched_for_this, stamped ONLY by play._pitch_for_cost on cards pitched to pay the resource cost (play.py:1613-1614). The engine's fusion() is a REVEAL from hand - it never pitches and never touches pitched_for_this (ability_keywords.py:582-607); instead it writes the marker 'fused_<card.slug>' into the controller's current_turn_effects (ability_keywords.py:604-606), and FLAG_SET tests exactly that set for the source's controller (condition_types.py:1032-1037). So PITCHED_FOR_THIS would be FALSE whenever the card WAS fused. Flag name is per-printing because fusion() keys it on card.slug - hence fused_emerging_avalanche_red. Timing holds: fusion fires as an optional additional cost at PLAY time while ability-level conditions are checked at RESOLUTION, so by the ETB trigger the flag is already set or permanently absent; entering the arena by any non-play route leaves it unset, matching 'if it was fused'. Same idiom as .drafts/blizzard_bolt_blue.json and shipped ele/chilling_icevein_yellow.json.\n\nTOKEN: CREATE_TOKEN reads token/count|amount/player/destination (effect_types.py:1942-2013); count defaults 1. player OPPONENT resolves to the opposing hero (handler maps OPPONENT/DEFENDING/TARGET_HERO identically, effect_types.py:1971-1972) - approximation for 'under target hero control': printed lets the controller choose a hero, which in 1v1 is always the opponent; no DSL target declaration exists for heroes on a triggered layer.\n\nHARD DEPENDENCY - TOKEN DEFINITION MISSING: json/tokens/frostbite.json does NOT exist anywhere under json/ (globbed json/tokens/). create_token's first statement is require_card(token_slug) (effect_keywords.py:276), so the FIRST fused resolution raises MissingCardImplementation until the Frostbite token definition is authored alongside adoption (release note 2 gives its text: an Elemental Aura with 'Cards and activated abilities you control cost an additional {r}'). I cannot author it from .drafts/ - nothing outside .drafts/ may be modified.\n\nUPKEEP: START_OF_ACTION_PHASE, not START_OF_TURN - 'at the beginning of your ACTION PHASE' is CR 4.3.1 wording (trigger_types.py:58); dispatched to the ACTIVE player's permanent zones incl. played auras (engine.py:1456, 2405), so it fires on the controller's action phase only. Release note 1: destruction MANDATORY - plain DESTROY_SELF effect, not optional. Effects run in order per the printed sentence ('destroy ... then ...'); destroying first cannot unqueue the pump because MODIFY_NEXT_ATTACK lives on the CONTROLLER's dsl_queued_attack_mods, consumed one-shot by the first matching attack that turn, unused entries expiring end of turn. Filter [ATTACK_TYPE_IN Action]: text has NO class restriction (unlike Embolden/Draw a Crowd), and ATTACK_TYPE_IN checks types AND subtypes of the attack card so ['Action'] excludes weapon attacks (a weapon attack's attack_card is the weapon, types=[Weapon]).\n\nNo other known gaps."
+}

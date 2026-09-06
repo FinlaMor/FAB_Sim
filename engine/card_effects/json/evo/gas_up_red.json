@@ -1,0 +1,35 @@
+{
+  "slug": "gas_up_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 4,
+          "filter": [
+            {"type": "ATTACK_WAS_BOOSTED"}
+          ]
+        },
+        {
+          "type": "MAY",
+          "prompt": "Put a Hyper Driver from your banished zone into the arena?",
+          "effects": [
+            {
+              "type": "MOVE_MATCHING",
+              "to_zone": "permanents",
+              "target": {
+                "controller": "SELF",
+                "zone": "BANISHED",
+                "name": "Hyper Driver",
+                "amount": 1
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next attack you boost this turn gets +4{p}. / You may put a Hyper Driver from your banished zone into the arena. / Go again' Mechanologist Action (BrightLights). Red printing: +4{p} where blue carries +2{p} (.triage/gas_up_blue.json) and yellow +3{p}.\n\nGO AGAIN NOT AUTHORED: printed_keywords carries GoAgain and the printed text gates nothing on it - it fires unconditionally from the card DB keywords field; re-authoring it would be a defect. (It is not a conditional 'if X, this gets go again' grant, so loader.conditional_keywords() does not apply.)\n\nPUMP: MODIFY_NEXT_ATTACK reads mod/amount/filter/scope (effect_types.py:4592-4618, read this session); scope omitted = TURN default, which is the printed 'this turn'. The entry queues one-shot on the controller's dsl_queued_attack_mods; consumption (engine.py:1175-1236, read this session) compiles the filter against each incoming attack, applies to the FIRST match and consumes it ('consumed - not re-added to remaining', :1198), while a non-matching attack leaves it queued. ATTACK_WAS_BOOSTED (condition_types.py:1175-1192, read this session) reads combat.attack_card.was_boosted, which boost() sets when the boost cost is paid - before the attack enters the chain and the queue is consulted. So an unboosted attack never spends it, and a double-boosted attack (Twin Drive) spends it once: exactly release note 1, 'applies once and only to the next attack you boost'.\n\nHYPER DRIVER CLAUSE: MAY (effect_types.py:3788+, read this session) supplies release note 2's optionality - declining runs nothing in the block. MOVE_MATCHING (effect_types.py:3593-3612) takes the canonical object target: zone BANISHED is a legal source (_OBJECT_TARGET_ZONES :418-420; _object_zone_cards serves player.banished directly :493-494), name matching flattens 'Hyper Driver'/hyper_driver to the same token (:769-775), amount 1 asks which copy if several are banished. to_zone 'permanents' resolves via Player.zone_by_name (state.py:1029) through put_object - the spelling shipped metex_red.json uses for 'into the arena', and destination_player_id defaults to obj.owner.\n\nKNOWN WART (same as .drafts/coalescence_mirage_red.json / cadaverous_contraband_*): the MAY prompt is offered even with no Hyper Driver in the banished zone; accepting then finds an empty pool and nothing moves. Gating the offer needs a condition meaning 'your banished zone contains a card named X'; CARD_IN_ZONE's filters are cost-shaped only, so none exists. Left ungated - fails closed rather than fabricating a gate."
+}

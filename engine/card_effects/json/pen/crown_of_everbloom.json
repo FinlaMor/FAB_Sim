@@ -1,0 +1,25 @@
+{
+  "slug": "crown_of_everbloom",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "PUT_ARSENAL_BOTTOM", "player": "SELF"},
+        {
+          "type": "CONDITIONAL",
+          "when": [
+            {"type": "REF_EXISTS", "ref": "bottomed"}
+          ],
+          "then": [
+            {"type": "DRAW", "amount": 1},
+            {"type": "CREATE_TOKEN", "token": "spellbane_aegis", "count": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'**Instant** - Destroy this: Put a card from your arsenal on the bottom of your deck. If you do, draw a card and create a Spellbane Aegis token.'\n\nCOST: DESTROY_SELF as the ability-level cost (cost_types.py:43), the same shape as Blacktek Whisperers' destroy-to-activate. INSTANT ability_type gives instant timing, which covers the release note 'can be activated while it is defending'.\n\nPUT_ARSENAL_BOTTOM needs the explicit player:SELF -- the handler DEFAULTS TO OPPONENT (effect_types.py:2334, the three Disable printings were its first users), so omitting the key would bottom the opponent's arsenal card.\n\n'IF YOU DO': PUT_ARSENAL_BOTTOM does NOT read conditional_effect; instead it records what actually moved under the ref 'bottomed' (effect_types.py:2376) and the payoff is a CONDITIONAL gated on REF_EXISTS over that ref -- shape copied verbatim from shipped mpg/sunkwater_exoshell.json, whose comment explains why gating on 'arsenal non-empty' is the wrong question. With an empty arsenal nothing moves, the ref stays unset, and neither the draw nor the token happens -- matching the release note ('If you put an arsenal card on the bottom of your deck this way, you WILL draw ... and create ...').\n\nGAP (adoption blocker): json/tokens/spellbane_aegis.json DOES NOT EXIST. create_token calls require_card(token_slug) at runtime (effect_keywords.py:276), so the CREATE_TOKEN above raises MissingCardImplementation until a token definition is authored there. The card-DB template exists (card_data/slug_index.json has slug spellbane_aegis) and carries the printed keywords (Spellvoid 1 per the release note); the JSON side likely only needs a stub with abilities: [] unless the token has functional text of its own. I could not author it from .drafts/.\n\nPrinted ArcaneBarrier keyword is deliberately NOT re-authored: it fires from the card DB keywords field. The release note that paying the cost forfeits Arcane Barrier falls out naturally -- the crown is destroyed as the cost, so it is no longer around to prevent."
+}

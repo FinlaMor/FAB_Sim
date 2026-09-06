@@ -1,0 +1,22 @@
+{
+  "slug": "burgeoning_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "PLAYED_FROM_ARSENAL"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'If this was played from arsenal, it gains +1{p}.' Pump shape per DSL_REFERENCE: TRIGGERED + ON_ATTACK + MODIFY_ATTACK (an Action - Attack card is not an ATTACK_REACTION). PLAYED_FROM_ARSENAL reads card.played_from_zone - stamped by play.py at the moment of play - falling back to prev_zone from Zone.add; the handler's own note says the two agree on the arsenal -> combat chain move, so the gate is true exactly when this copy was played from arsenal. Ability-level conditions are checked at resolution (interpreter._run_ability), which is after the stamp exists. A hand play leaves the gate false, matching the release note ('You may still play Burgeoning from your hand. It would not gain the +1{p}.'). No printed keywords, so no conditional-keyword machinery is involved."
+}

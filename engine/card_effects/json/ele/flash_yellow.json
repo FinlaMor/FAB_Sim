@@ -1,0 +1,20 @@
+{
+  "slug": "flash_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GRANT_NEXT_CARD",
+          "keyword": "Go Again",
+          "amount": 0,
+          "filter": [
+            {"type": "CARD_IS_TYPE", "card_type": "Action"},
+            {"type": "CARD_COST_GTE", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next action card you play this turn with cost 1 or greater gets go again.' Lightning Action (BriarBlitzDeck).\n\nPRINTED GO AGAIN NOT AUTHORED: the trailing 'Go again' is an unconditional keyword line carried in printed_keywords - it fires from the card DB keywords field. Re-authoring it (e.g. as an explicit GO_AGAIN effect, as fasting_carcass_yellow once did per .review) grants a second action point on every play.\n\nSHAPE: GRANT_NEXT_CARD (alias of MODIFY_NEXT_CARD_COST, effect_types.py:4665-4743) queues a ONE-SHOT entry on player.dsl_queued_card_mods, consumed by the first matching PLAYED card (play.py:1713-1747 appends the keyword verbatim to that card's keywords; unused entries expire end of turn = 'this turn'). Spelling copied from shipped pen/fasting_carcass_blue.json, the reviewed precedent for exactly this wording ('keyword': 'Go Again', amount 0).\n\nAMOUNT 0 IS DELIBERATE: compile-side default is 1 and _calculate_resource_cost SUBTRACTS the stored amount from the next matching card's cost (play.py:1447-1451) - omitting it would add an unprinted {r} discount alongside the go again.\n\nFILTER PARAMS VERIFIED: _cost_mod_matches (play.py:625-643) ANDs the specs against the card being played; CARD_IS_TYPE reads 'card_type' and unions types+subtypes ('Action' is a type, condition_types.py:1309-1325); CARD_COST_GTE reads 'amount' against the played card's own cost (condition_types.py:1219-1255). Together they name precisely 'action card with cost 1 or greater'. Flash cannot consume its own grant: the queue is written when Flash's layer RESOLVES (play.py:1187-1205), after its own announce-time cost calculation has passed."
+}

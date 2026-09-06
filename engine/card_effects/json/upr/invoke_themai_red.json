@@ -1,0 +1,27 @@
+{
+ "slug": "invoke_themai_red",
+ "abilities": [
+  {
+   "ability_type": "PLAY",
+   "target": {
+    "filter": [
+     {
+      "type": "CONTROLS_TOKEN_TYPE",
+      "token": "ash",
+      "amount": 1
+     }
+    ]
+   },
+   "effects": [
+    {
+     "type": "TRANSFORM",
+     "from": "ash",
+     "to": "themai",
+     "amount": 1,
+     "up_to": false
+    }
+   ]
+  }
+ ],
+ "_comment": "Draconic Illusionist Action - Invocation (Uprising). 'Transform target ash you control into Themai. Go again'.\n\nGO AGAIN NOT AUTHORED: unconditional printed keyword (GoAgain in printed_keywords), fires from the card DB keywords field. Re-authoring it as a DSL effect is a defect per the implementation guide.\n\nTRANSFORM (effect_types.py:3914-4019): reads 'from' (source token/subtype to consume), 'to' (resulting token slug), 'amount', 'up_to'. FROM 'ash' matches permanents via _norm_amt against slug/name/subtypes. TO 'themai' creates the dragon ally via create_token('themai'). AMOUNT 1 (one ash consumed). UP_TO false: the card says 'target ash' (mandatory target, not 'up to'), per CR 8.5.36d if no ash exists the play does nothing at resolution.\n\nTARGET FILTER for CR 1.8.5 legality: CONTROLS_TOKEN_TYPE token ash amount 1 checks whether the source card's controller controls >=1 ash in their permanents/equipment/weapon slots (condition_types.py:1725-1793). This gates playability: with no ash in play, the card cannot be played at all, matching the printed 'target ash you control'.\n\nNEEDS A TOKEN DEFINITION: themai.json must exist in json/tokens/ before this card can resolve in-game. create_token will raise MissingCardImplementation at resolution until the token file is promoted."
+}

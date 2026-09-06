@@ -1,0 +1,18 @@
+{
+  "slug": "heart_throb",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_PERMANENT", "target": "self"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "vigor", "count": 1},
+        {"type": "CREATE_TOKEN", "token": "vigor", "count": 1, "player": "OPPONENT"},
+        {"type": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'Action - Destroy this: Each hero creates a Vigor token. Go again' -- ACTIVATE (action-speed equipment activation, offered by play._add_hero_dsl_activations) with the destroy as an ability COST, not an effect, so it can gate legality; cost shape copied from shipped wtr/barkbone_strapping and pen/boltn_boots. activation_cost 0 explicit (scabskin_leathers precedent): the only printed cost is destroying this.\n\n'Each hero creates a Vigor token, including yourself' (release note): two CREATE_TOKEN effects, one SELF (the handler default) and one player OPPONENT -- the handler resolves OPPONENT to 3-cid, valid outside combat. Two-player modelling of 'all heroes left in the game'; json/tokens/vigor.json already exists.\n\nGO AGAIN: authored as the GO_AGAIN effect type, which routes through _grant_go_again and handles the CR 8.3.5a/b split (equipment activation is a non-attack layer, so it pays its controller an action point directly). The PRINTED GoAgain keyword is inert here -- triggers/triggers.py build_keyword_triggers passes 'go again' through with no trigger, and has_go_again is only consulted for cards played onto the chain (engine.py resolution / actions.py), never for equipment activations -- so authoring the effect does not double-grant; _grant_go_again additionally guards CR 8.3.5c no-two-go-againss if a combat happens to be open."
+}

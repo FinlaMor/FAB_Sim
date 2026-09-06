@@ -1,0 +1,25 @@
+{
+  "slug": "firewall_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "REVEAL_TOP_DECK", "amount": 1, "into": "revealed"},
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "REF_IS_TYPE", "ref": "revealed", "types": ["Evo"]}
+          ],
+          "then": [
+            {"type": "PUT_REF_TOP", "ref": "revealed"}
+          ],
+          "else": [
+            {"type": "PUT_REF_BOTTOM", "ref": "revealed"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends, reveal the top card of your deck. If it's an Evo, put it on top of your deck. Otherwise, put it on the bottom.' Mechanologist Block (batch label BrightLights - derive the json/<set>/ folder from setIdentifiers at adoption). Overwrites an earlier draft of this same file whose shape was identical; every node re-verified against its handler this session.\n\nTRIGGER: TRIGGERED + ON_DEFEND - trigger_types.py:9 maps it, and engine._setup_dsl_listeners wires ON_DEFEND to the cards that declared as defenders, so it fires on this card's own defence.\n\nREVEAL: REVEAL_TOP_DECK (effect_types.py:2229-2256) reads amount/into only; it peeks WITHOUT moving, marks the top card is_public (a real public reveal), hard-codes the CONTROLLER's own deck (= 'your deck'), and stores the revealed card(s) as a LIST under ref 'revealed'. Without 'into' nothing is stored and both branches would have nothing to test or move.\n\nBRANCH: CONDITIONAL_EFFECT reads when/then/else (effect_types.py:3697-3724); the test goes under 'when', NOT 'conditions' - the loader pops the latter as an effect-level gate and the else branch would be unreachable.\n\nEVO TEST: REF_IS_TYPE (condition_types.py:2011-2043) reads 'types'/'card_types' (or singular spellings), unions the ref card's types AND subtypes ('Evo' is a SUBTYPE on Evo cards), and unwraps a one-element list - which is what REVEAL_TOP_DECK always stores for amount 1. Empty deck stores [], which fails the unwrap and answers False -> else branch -> PUT_REF_BOTTOM moves nothing. Fails closed, no crash.\n\nPUT BACK: PUT_REF_TOP/PUT_REF_BOTTOM (effect_types.py:3614-3639) read 'ref' and default player OWNER - the revealed card's owner is Firewall's controller, so the default is correct. 'Put it on top' is effectively a no-op move (the reveal never moved the card off the top); authored anyway so both printed branches are explicit."
+}

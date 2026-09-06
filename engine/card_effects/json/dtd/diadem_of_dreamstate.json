@@ -1,0 +1,24 @@
+{
+  "slug": "diadem_of_dreamstate",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEATH",
+      "once_per_turn": "diadem_ponder",
+      "conditions": [
+        {"type": "NOT", "inner_type": "CARD_IS_TYPE", "subtypes": ["Token"]}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Pay {r} to create a Ponder token?",
+          "cost": [{"type": "PAY_RESOURCES", "amount": 1}],
+          "effects": [
+            {"type": "CREATE_TOKEN", "token": "ponder", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Once per turn, when this or a non-token permanent you control with ward is destroyed, you may pay {r}. If you do, create a Ponder token.' + printed **Ward 2**.\n\nWard 2 NOT AUTHORED: Ward is in printed_keywords and fires from the card DB keywords field - authoring it again would be a defect. 'Ward 2' is numbered; whether the magnitude survives depends on the DB/TOKEN_KEYWORDS machinery - confirm at adoption if the number ever matters mechanically.\n\nGAP, disclosed: the printed trigger subject is 'this OR A NON-TOKEN PERMANENT YOU CONTROL WITH WARD'. _dsl_destroyed_listener (engine.py:1578-1588, registered on 'destroy' at engine.py:1778) dispatches ON_DEATH ONLY to the dying card's own slug - the Diadem's definition is never consulted when some OTHER permanent dies, so the other-permanents half cannot fire no matter how it is conditioned. Only the self-half is authored here; conditions testing the destroyed card's ward/token-ness/controller would be dead code, evaluated only on the Diadem's own death. Modelling the full sentence needs an engine broadcast of destroy events to the destroyed card's controller's arena objects (the ON_DRAW listener at engine.py:1590-1602 is the existing broadcast precedent).\n\nSelf-branch conditions: NOT CARD_IS_TYPE(Token) is kept - tokens carry 'Token' in types (create_token appends it), so it faithfully excludes a hypothetical token copy. HAS_KEYWORD(Ward) is deliberately OMITTED from the self-branch: in a self-dispatch the dying card is always this Diadem, which prints ward by definition, so the condition could only false-veto (e.g. if the DB stores the keyword as 'Ward 2', which normalised matching does not reduce to 'Ward') while adding zero fidelity.\n\nOnce per turn: the ability-level once_per_turn key - loader._compile_ability puts unrecognised keys into AbilityDef.params (loader.py:119-125) and interpreter._run_ability consumes it PAST all other gates (interpreter.py:69-85), so a turn whose conditions failed does not burn the use. Declining the MAY still burns it, which matches the printed timing ('Once per turn, when ... is destroyed, you may pay'). This supersedes the triage note's SET_FLAG/FLAG_SET shape, which would need a flag nothing resets.\n\n'You may pay {r}. If you do,' = ONE MAY block whose cost gates the option: the MAY handler reads cost/costs through compile_cost (effect_types.py:3825-3836), pays only when accepted, and runs the sub-effects only then - declining runs none of the block, so 'if you do' needs no plumbing. PAY_RESOURCES is a real COST type reading 'amount' (cost_types.py:691-699); its can_pay makes the prompt unavailable at 0 resources, matching CR (cannot choose to pay what you do not have).\n\nCREATE_TOKEN reads token/count|amount/player|controller (effect_types.py:1942-2013); json/tokens/ponder.json exists. Triage named STATIC_TRIGGERED; TRIGGERED is dispatch-equivalent (interpreter.dispatch_event treats TRIGGERED/STATIC_TRIGGERED/DELAYED_TRIGGERED identically, interpreter.py:171-180) and is the spelling shipped death-triggers use (evr/phantasmal_haze_red.json)."
+}

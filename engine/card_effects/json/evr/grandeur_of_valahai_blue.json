@@ -1,0 +1,13 @@
+{
+  "slug": "grandeur_of_valahai_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_PITCH",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "seismic_surge"}
+      ]
+    }
+  ],
+  "_comment": "'When you pitch Grandeur of Valahai, create a Seismic Surge token.'\n\nSHAPE copied verbatim from shipped cru/arknight_shard_blue.json - word-for-word the same template ('When you pitch X, create a Y token'), which also documents why there is no condition: ON_PITCH dispatches against this card's own definition, so 'this is pitched' needs no gate. ON_PITCH is a real trigger (trigger_types.py:40) with eight corpus precedents.\n\nCREATE_TOKEN (effect_types.py:1942-2013) reads 'token'; defaults count=1 / controller SELF / default destination are all correct here - the aura-token zone routing derives from the token template's subtypes. json/tokens/seismic_surge.json ALREADY EXISTS and implements the token's whole printed text (STATIC_TRIGGERED START_OF_ACTION_PHASE: DESTROY_SELF then MODIFY_NEXT_CARD_COST filtered to Guardian cards), so nothing of the release note 1 aura text is authored here; release note 3's timing ('the trigger resolves before the card it was pitched for') is generic engine trigger timing, not card behaviour; release note 2 (no defense property) is card-DB data, not an ability.\n\nLegendary is in printed_keywords and fires from the card DB keywords field - re-authoring it would be a defect.\n\nSET FOLDER AT ADOPTION: Everfest -> json/evr/ (EVR000)."
+}

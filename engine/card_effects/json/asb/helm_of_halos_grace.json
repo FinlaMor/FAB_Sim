@@ -1,0 +1,39 @@
+{
+  "slug": "helm_of_halos_grace",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Charge your hero's soul?",
+          "cost": [
+            {
+              "type": "CHARGE",
+              "amount": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "CONDITIONAL_EFFECT",
+              "when": [
+                {
+                  "type": "CHARGED_THIS_WAY",
+                  "color": "yellow"
+                }
+              ],
+              "then": [
+                {
+                  "type": "DRAW",
+                  "amount": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends, you may charge your hero's soul. If a yellow card is charged this way, draw a card. Blade Break' -- Blade Break is printed and fires from the card DB, deliberately not authored.\n\nTHE CHARGE IS A MAY WITH A COST, not an ability-level `additional_cost`. interpreter._run_ability pays additional_costs on EVERY dispatch and returns early once they cannot be paid, before conditions and before effects -- fine for a PLAY ability, which is dispatched once, and wrong for a trigger that fires on every defence (tests/test_costs_are_not_repaid.py). A MAY asks, and pays only when the player accepts, once per trigger.\n\n'IF A YELLOW CARD IS CHARGED THIS WAY' is CHARGED_THIS_WAY, which reads what the cost just charged rather than the soul as a whole -- a soul that already held a yellow card would otherwise satisfy the gate every time."
+}

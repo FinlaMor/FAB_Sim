@@ -1,0 +1,21 @@
+{
+  "slug": "cosmic_suture_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "PREVENT_DAMAGE", "amount": 4},
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "EVENT_THIS_TURN", "event": "graveyard", "qualifier": "instant"}
+          ],
+          "then": [
+            {"type": "DEAL_ARCANE", "amount": 1, "target": "TARGET_HERO"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Prevent the next 4 damage that would be dealt to you this turn. Starfall - If an instant card has been put into your graveyard this turn, deal 1 arcane damage to target hero.' Lightning Wizard Instant.\n\nSHAPE: one PLAY ability - an Instant CARD whose effect happens when you play it is PLAY, not the INSTANT activated-ability type (INSTANT maps to ON_ACTIVATE and would never fire). Effects in printed order; release note 3 ('no priority between any of the effects') = plain sequential list.\n\nPREVENT_DAMAGE amount 4 (effect_types.py:5254): registers a CR 6.4.10 PREVENTION replacement on the controller absorbing up to 4 damage to their hero. No damage_type filter - the text prevents ANY damage, and the handler only narrows when told. STARFALL keyword NOT AUTHORED: it is a clause marker, not an engine keyword - nothing consumes it (same call as .drafts/constella_contemplation_yellow.json, which carries the identical clause); CONDITIONAL_EFFECT + EVENT_THIS_TURN event graveyard qualifier instant carries the whole meaning, and the marker is recorded in Zone.add from card.types on EVERY graveyard path, so 'an instant card has been put into your graveyard this turn' matches by card type. Unmet test runs the empty else, i.e. nothing - correct for a Starfall clause whose damage only happens on the 'if'.\n\nGAP 1 (release note 1): the shield should survive partial use across separate events ('1 arcane, then 2 arcane, then 1 arcane'). The engine's non-shielding prevention marks itself consumed after ONE application even if it absorbed only part of that event (effects.py ReplacementEffect.apply sets consumed=True unconditionally for PREVENTION), so leftover shield value is lost after the first damage event. Engine-level; no JSON parameter influences it.\n\nGAP 2 ('this turn'): PREVENT_DAMAGE reads only amount/damage_type/source_class - there is no expiry parameter, and EffectManager never clears replacement_effects at end of turn (its cleanup functions touch continuous_effects only), so an unused shield persists into later turns instead of expiring. Engine-level.\n\nGAP 3 (release note 2): 'you must target any hero when playing Cosmic Suture regardless of whether...' requires declaring a hero target at PLAY time, but the DSL has no play-time hero-target machinery an effect can read - DEAL_ARCANE picks its victim from its own 'target' string (_damage_target_player, effect_types.py:907-931), and an ability-level target.filter would only compile into a resolution-time gate the damage effect never consults. Used the recognised spelling TARGET_HERO, which hits the opposing hero at resolution - in this 1v1 engine the meaningful choice; targeting your own hero with the Starfall bolt is not expressible."
+}

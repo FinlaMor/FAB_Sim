@@ -1,0 +1,21 @@
+{
+  "slug": "aether_arc_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1,
+          "target": "OPPONENT"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token": "ponder",
+          "count": {"type": "LAST_DAMAGE_DEALT"}
+        }
+      ]
+    }
+  ],
+  "_comment": "Clause 2 ('Create a Ponder token for each hero dealt damage this way') has no heroes-damaged-by-this-effect counter; modeled as CREATE_TOKEN count = LAST_DAMAGE_DEALT, which reads state._last_damage_dealt published by the canonical deal_damage primitive once damage lands past prevention/replacement (effect_keywords.py ~517; effect_deal_arcane routes through it). Exact in 1v1 whenever the damage lands (1 damage -> 1 Ponder; prevented -> 0). Two known edges: (1) if the arcane damage is FULLY prevented/canceled, _last_damage_dealt retains the value of the last unrelated damage effect earlier this turn, so a spurious Ponder could be created; (2) 'each opposing hero' is authored as the single OPPONENT target DEAL_ARCANE supports - a multiplayer game would undercount, but the sim is 1v1. ponder token definition already exists (json/tokens/ponder.json); CREATE_TOKEN spelling copied from codex_of_inertia_yellow."
+}

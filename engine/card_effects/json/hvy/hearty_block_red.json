@@ -1,0 +1,16 @@
+{
+  "slug": "hearty_block_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "conditions": [
+        {"type": "CONTROLS_TOKEN_TYPE", "token": "vigor"}
+      ],
+      "effects": [
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'When this defends, if you control a Vigor token, gain 1{h}.' Guardian/Warrior Block.\n\n'When this defends' = TRIGGERED ON_DEFEND: the trigger name is mapped in trigger_types.py (lines 9/41) and engine._dsl_defend_listener dispatches to the actual defending card object, so this card's own ability fires whenever it is a declared defender.\n\nTIMING matches official_release_notes 1 exactly: ability-level 'conditions' are checked at RESOLUTION (IMPLEMENTATION_GUIDE pitfalls; interpreter gates the ability when it fires), not at defend-declaration - so a Vigor token gained between defending and resolution still counts, and one lost does too. Release note 2 (Amnesia making name-matching fail) is inherent: CONTROLS_TOKEN_TYPE matches by slug/display name, and with names lost it finds nothing.\n\nCONTROLS_TOKEN_TYPE (condition_types.py:1725-1793) reads 'token' as a slug ('token_type' display name also accepted); 'vigor' is the real token slug (json/tokens/vigor.json exists in the DB). It scans permanents plus head/chest/arms/legs/weapon1/weapon2, which covers where create_token routes Vigor tokens.\n\ngain 1{h} = GAIN asset LIFE_POINTS amount 1 - spelling proven by shipped wtr/sigil_of_solace_red.json.\n\nRelease notes 3-4 ('Block cards can not be played', no arsenal defends) are engine rules for the Block card type, not card behaviour - there is deliberately NO PLAY ability here, only the triggered text."
+}

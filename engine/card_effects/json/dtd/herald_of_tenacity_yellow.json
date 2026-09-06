@@ -1,0 +1,13 @@
+{
+  "slug": "herald_of_tenacity_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {"type": "PUT_SELF_IN_ZONE", "zone": "soul"}
+      ]
+    }
+  ],
+  "_comment": "'When this hits, put it into your hero's soul.' + printed **Dominate** / **Phantasm**. Light Illusionist Action - Attack (DuskTillDawn).\n\nPRINTED KEYWORDS NOT AUTHORED: Dominate and Phantasm are in printed_keywords and fire from the card DB keywords field; re-authoring either would be a defect.\n\nSOUL PLACEMENT: TRIGGERED ON_HIT -> PUT_SELF_IN_ZONE zone 'soul'. Handler read this session (effect_types.py:1618-1639): takes zone/to_zone/destination (default 'soul' for this spelling) and routes through canonical put_object, so the mid-chain move emits proper events. ON_HIT is a mapped trigger (trigger_types.py:6) and the engine dispatches it to combat.attack_card - which IS this card while it attacks. Mandatory per official_release_notes 4 ('you must put it into your hero's soul ... not optional') - hence a bare effect, outside any MAY.\n\nDEVIATION FROM THE TRIAGE LIST, deliberate and verified: it named PUT_SELF_IN_ZONE (correct) but pairing it with a bare ON_HIT primitive; the ability_type must be TRIGGERED for interpreter.dispatch_event to honour the trigger (interpreter.py:171-180). Shape copied from the sibling .drafts/herald_of_tenacity_blue.json (same printing family, same clause), which follows the reviewed .draft-review/_batch1.json herald_of_erudition_yellow.\n\nRelease notes 1-3 (combat chain does not close when the attack leaves for the soul; Phantasm ceasing to function as a triggered ability once there; last-known-information go again still paying the action point at chain-link resolution) are engine-side consequences of the mid-chain zone move, not authorable in JSON.\n\nNo gaps."
+}

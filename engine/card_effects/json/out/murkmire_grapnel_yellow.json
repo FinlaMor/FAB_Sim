@@ -29,7 +29,7 @@
       "effects": [
         {
           "type": "MAKE_NEXT_DAMAGE_UNPREVENTABLE",
-          "source_slug": "murkmire_grapnel_red"
+          "source_slug": "murkmire_grapnel_yellow"
         }
       ]
     }

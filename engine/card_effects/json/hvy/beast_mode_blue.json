@@ -1,0 +1,16 @@
+{
+  "slug": "beast_mode_blue",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "EVENT_THIS_TURN", "event": "intimidate"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 2}
+      ]
+    }
+  ],
+  "_comment": "'If you've intimidated this turn, this gets +2{p}.'\n\nSHAPE: WHILE_STATIC + SOURCE_IS_ATTACK + MODIFY_ATTACK, copied from shipped bvo/barraging_brawnhide_blue ('while ... it has +1{p}'). This deliberately diverges from the sibling drafts beast_mode_red/yellow (TRIGGERED + ON_ATTACK) and from the triage list: the aggressive_pounce draft-review flagged one-shot-at-declaration as dropped-nuance for this exact wording family, and the release note here ('not functional when this card is not attacking on the combat chain') describes a continuous property scoped to attacking. It holds structurally: RECALC_ATTACK_POWER is dispatched only to the current attack card (engine._recalculate_attack_power -> emit at engine.py:1980), so defending / discarded / banished / revealed-for-clash states never receive it; SOURCE_IS_ATTACK double-gates. Recalc runs at attack declaration AND again before damage (engine.py:2079), so an intimidation that resolves mid-chain is still picked up - closer to 'always checking' than a single ON_ATTACK evaluation.\n\nKNOWN-DEAD GATE, disclosed loudly: EVENT_THIS_TURN(intimidate) reads markers written by effect_keywords._record_turn_event, and NOTHING records an 'intimidate' marker - intimidate() (effect_keywords.py ~1252-1306) emits EventType.INTIMIDATE without calling _record_turn_event (census of call sites: banish/create/damage/draw/pitch/roll/charge/transcend/play). So as the engine stands this condition compiles but is false in every state: it fails closed (+2{p} never applies, never wrongly grants), but the printed behaviour is not achieved. The JSON becomes fully correct with ZERO edits the moment intimidate() records a generic marker (_record_turn_event(state, source_player_id, 'intimidate') alongside the existing emit - a one-line generic engine addition). That is why the gate uses the documented reader instead of a private flag: FLAG_SET 'INTIMIDATED_THIS_TURN' would be a flag nothing sets, the exact dead-flag class that got beast_mode_blue quarantined before. When the producer lands, record against source_player_id (EVENT_THIS_TURN defaults player to SELF = this card's controller = the intimidator) and unconditionally - CR 8.5.10a resolves intimidation even when no card was banished, matching the release note 'You do not have to banish a card to intimidate a player'; any intimidate source counts because the marker is player-scoped for the whole turn.\n\nprinted_keywords is empty, so there is no conditional-keyword problem (no loader.conditional_keywords() shape needed)."
+}

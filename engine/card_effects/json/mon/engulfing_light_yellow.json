@@ -1,0 +1,26 @@
+{
+  "slug": "engulfing_light_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "additional_cost": [
+        {"type": "CHARGE", "amount": 1, "optional": true}
+      ],
+      "effects": [
+        {
+          "type": "INJECT_TRIGGER",
+          "conditions": [
+            {"type": "EVENT_THIS_TURN", "event": "charge"}
+          ],
+          "trigger": {
+            "trigger_type": "ON_HIT",
+            "effects": [
+              {"type": "PUT_SELF_IN_ZONE", "zone": "soul"}
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'As an additional cost to play Engulfing Light, you may **charge** your hero's soul. If you've charged this turn, Engulfing Light gains \"If this hits, put it into your hero's soul.\"' Light Warrior Action - Attack.\n\nSHAPE COPIED FROM .drafts/bolt_of_courage_red/_yellow/_blue.json - identical printed text except the gained clause's effect (put into soul vs draw a card); those siblings document this composition against the handlers.\n\nCOST: optional CHARGE additional cost on the PLAY ability. The boolean true is deliberate: the handler bool()s the raw value (cost_types.py:280), so any non-empty string - including \"FALSE\" - would read as optional; mandatory costs omit the key entirely. With optional set, can_pay returns True unconditionally so the cost NEVER blocks the play (that is the printed 'you may'), and pay asks WHICH hand card to charge via ask_optional, then routes through canonical effect_keywords.charge (CR 8.5.29). Charge appears in printed_keywords but triggers.py maps the keyword to 'pass - card-specific', so the DB keyword carries no cost wiring and this additional_cost is the whole implementation: no double-charge.\n\nDEVIATION FROM TRIAGE on the gate: it named CARD_WAS_CHARGED, which tests the was_charged attribute ON THIS CARD (condition_types.py:1175-1192). charge() marks the hand card that goes into the soul, never Engulfing Light itself - wrong subject. Release note 1 is explicit that ANY charge this turn counts ('does not need to be the card to have charged'). EVENT_THIS_TURN event=charge reads the bare did_this_turn:charge marker charge() records against the charging player; player defaults to SELF = this card's controller.\n\nGATE TIMING: the conditions sit on the INJECT_TRIGGER effect itself, where the loader pops them into an effect-level gate evaluated ONCE, when Engulfing Light resolves. That is the right moment: the additional cost is paid before the ability's effects run (interpreter.py:48-52), so a charge made FOR THIS card already satisfies 'you've charged this turn'; declining leaves no marker and no inject.\n\nGAINED CLAUSE: INJECT_TRIGGER in nested-dict form with default COMBAT scope (one-shot onto the current attack) - nesting is REQUIRED so inner content survives the loader's conditions-pop and is evaluated per-hit. The inner trigger has NO conditions beyond ON_HIT and NO MAY wrapper: release note 5 says once charged, soul placement is NOT optional ('it must go in your hero's soul'). PUT_SELF_IN_ZONE (effect_types.py:1618-1639, read) moves THIS card via canonical put_object to its controller's zone; zone is lowercased by the handler and defaults to 'soul' anyway, spelled explicitly here. Injected triggers fire with card=combat.attack_card = Engulfing Light itself, so 'this' is the attack and the destination hero is its controller's.\n\nRELEASE NOTES 2-4 (chain link remains on the chain when the attack enters the soul; the attack can no longer gain go again; Last Known Information still grants the action point) are chain-close/resolution engine behaviour - nothing in JSON expresses or needs to express them. Flagged for adoption testing: PUT_SELF_IN_ZONE removes the attack card from combat mid-resolution, so verify the close step tolerates the attack card leaving before chain-link resolution completes.\n\nOn adoption, pick the json/<set>/ folder from the card's setIdentifiers (batch label says BoltynSilverAgeDeck), not from the batch."
+}

@@ -1,0 +1,17 @@
+{
+  "slug": "blade_dance",
+  "abilities": [
+    {
+      "ability_type": "STATIC_TRIGGERED",
+      "trigger": "ON_PLAY_ACTIVATE_ATTACK",
+      "conditions": [
+        { "type": "ATTACK_IS_WEAPON" }
+      ],
+      "effects": [
+        { "type": "DESTROY_SELF" },
+        { "type": "GAIN", "keyword": "GO_AGAIN" }
+      ]
+    }
+  ],
+  "_comment": "'When you activate a weapon attack, destroy this and the attack gets **go again**.'\n\nShape copied from shipped tokens/quicken.json, whose printed text is identical ('When you activate a weapon attack, destroy Quicken and the attack gains go again'): STATIC_TRIGGERED + ON_PLAY_ACTIVATE_ATTACK -> DESTROY_SELF + GAIN keyword GO_AGAIN. The ATTACK_IS_WEAPON condition is the one addition: engine._dsl_play_activate_attack_listener (engine.py:1531-1558) dispatches the trigger for BOTH attack action cards and weapon activations, and Blade Dance means weapon attacks only.\n\nRelease note 1 ('only the triggering attack will have go again'): satisfied by construction. The listener fires on 'attacking', i.e. with combat already live, and GAIN keyword writes state.combat.grant_keyword('Go Again') (effect_types.py:4846-4852) - CombatState keywords are per-chain-link, so later attacks that weapon makes are untouched. 'When YOU activate' needs no condition either: the dispatch reaches only the ATTACKER's permanent zones.\n\nPrinted_keywords lists GoAgain, but the conditional-keyword shape (SOURCE_IS_ATTACK + GAIN) does NOT apply: that machinery is for a card whose printed keyword applies to ITSELF under a gate. Here the go again belongs to THE ATTACK - the aura never attacks, so SOURCE_IS_ATTACK would make the ability unreachable. This is exactly the Luminaris case loader.conditional_keywords() documents as 'the printed keyword belongs to some other card ... just the DB flattening the sentence'; shipped quicken.json authors no conditional-keyword wrapper either. A GoAgain keyword sitting on an aura that cannot attack is inert.\n\nGAP (release note 2): 'attack with a weapon some other way (e.g. Beckon Steel or And Again) would not meet the trigger condition'. The engine emits 'attacking' for ANY attack including effect-created ones (engine.py:564-578), and the DSL has no condition distinguishing an ACTIVATED attack from an effect-created one, so this draft over-fires for weapon attacks created by effects. Closing it needs an activation-origin marker on CombatState plus a condition over it - generic engine work, so not attempted here."
+}

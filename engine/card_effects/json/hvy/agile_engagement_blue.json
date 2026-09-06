@@ -1,0 +1,22 @@
+{
+  "slug": "agile_engagement_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {"type": "ATTACK_CLASS_IN", "classes": ["Warrior"]}
+        ]
+      },
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1},
+        {
+          "type": "CONDITIONAL",
+          "when": [{"type": "CONTROLS_ATTACK_ACTION", "player": "OPPONENT"}],
+          "then": [{"type": "CREATE_TOKEN", "token": "agility"}]
+        }
+      ]
+    }
+  ],
+  "_comment": "Clause 1 ('Target Warrior attack gets +1{p}'): ATTACK_REACTION + target.filter ATTACK_CLASS_IN ['Warrior'] + MODIFY_ATTACK add, spelling copied from shipped wtr/pummel_red. ATTACK_CLASS_IN reads the 'classes' key (condition_types.py ~204) and matches the live attack's classes/talents via _card_traits, which is what 'Warrior attack' means.\n\nClause 2 ('If it's defended by an attack action card, create an Agility token') IS expressible - an earlier draft of this file declared it a gap, but that missed CONTROLS_ATTACK_ACTION. Verified end to end: condition_types.py ~384 reads the 'player' key ('OPPONENT' flips the pid to the defender) and calls controlled_attack_action_cards (ability_keywords.py ~113), which returns exactly the attack ACTION cards (types Action + subtype Attack, _is_attack_action_card ~107) the defender controls in combat - i.e. the cards they are defending with. At ATTACK_REACTION resolution the defend step has already run, so combat.defending_cards is populated. CONDITIONAL reads 'when'/'then' (effect_types.py ~3633); CREATE_TOKEN reads 'token' (effect_types.py ~1890); json/tokens/agility.json already exists.\n\nResidual timing approximation, stated rather than hidden: the printed condition is continuous until the chain closes, but this evaluates it once, when the reaction resolves. A defending card added LATER in the same reaction step (a defense reaction putting a second block on the chain after this resolved) is not seen. Blocks declared in the normal defend step - the overwhelming case - are seen. Do NOT 'fix' this by switching to INJECT_TRIGGER with an inner ON_DEFEND: combat.injected_triggers is consumed at exactly two sites (engine.py ~1414 hit listener, ~1753 damage listener) and both keep only event_type == 'ON_HIT' TriggerDefs, so an injected ON_DEFEND would sit in the list forever."
+}

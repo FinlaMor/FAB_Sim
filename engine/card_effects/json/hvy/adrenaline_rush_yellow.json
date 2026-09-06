@@ -1,0 +1,15 @@
+{
+  "slug": "adrenaline_rush_yellow",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "conditions": [
+        {"type": "HEALTH_LT_OPP"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}
+      ]
+    }
+  ],
+  "_comment": "Shape copied from flying_kick_yellow (PLAY + conditions + MODIFY_ATTACK on its own attack). HEALTH_LT_OPP is controller-perspective (controller.life < opponent.life, condition_types.py), which matches 'if you have less {h} than an opposing hero'. Note: the engine compares against the single opposing player (players[3 - pid]); 'an opposing hero' is multiplayer wording, so this is exact only in 1v1."
+}

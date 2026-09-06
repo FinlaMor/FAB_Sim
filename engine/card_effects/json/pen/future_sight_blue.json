@@ -1,0 +1,12 @@
+{
+  "slug": "future_sight_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "sigil_of_fate", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Create a Sigil of Fate token.' Wizard Instant (Compendium of Rathe).\n\nSHAPE: PLAY ability (an Instant CARD whose effect happens when played is PLAY, not INSTANT - INSTANT means an activated ability with instant timing). CREATE_TOKEN handler reads token/count/player/destination/counters (effect_types.py:1942-2013); 'token' takes a slug, count defaults to 1 but is authored explicitly. No destination key: the sigil is an Aura-subtype template, so it routes to the controller's auras on creation like other aura tokens. Player defaults to SELF.\n\nBLOCKER AT ADOPTION - json/tokens/sigil_of_fate.json DOES NOT EXIST anywhere in the corpus (searched). The card DB has the template (Wizard Token - Aura, keywords [Opt]), but create_token calls require_card on the slug, which raises MissingCardImplementation at RESOLUTION time and aborts the game when this resolves. The identical defect is already recorded on the red printing (.draft-review/future_sight_red.json, finding 'missing-token-json'). The token definition must be authored alongside this draft at adoption; it could not be written here because drafts are confined to .drafts/."
+}

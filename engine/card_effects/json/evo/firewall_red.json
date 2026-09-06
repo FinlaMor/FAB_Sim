@@ -1,0 +1,25 @@
+{
+  "slug": "firewall_red",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "REVEAL_TOP_DECK", "amount": 1, "into": "revealed"},
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "REF_IS_TYPE", "ref": "revealed", "types": ["Evo"]}
+          ],
+          "then": [
+            {"type": "PUT_REF_TOP", "ref": "revealed"}
+          ],
+          "else": [
+            {"type": "PUT_REF_BOTTOM", "ref": "revealed"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this defends, reveal the top card of your deck. If it's an Evo, put it on top of your deck. Otherwise, put it on the bottom.' Mechanologist Block (BrightLights).\n\nTRIGGER: TRIGGERED + ON_DEFEND, the spelling shipped defending equipment uses (evo/torque_tuned_red.json carries two ON_DEFEND abilities; sea/helmsmans_peak, hvy/apex_bonebreaker et al.). ON_DEFEND is wired in engine._setup_dsl_listeners and reaches the cards that declared as defenders, so 'when this defends' fires on this card's own defence.\n\nSHAPE copied from .drafts/bone_vizier.json, whose printed text is the same reveal-then-branch sentence ('reveal the top card of your deck. If ..., put it on top of your deck. Otherwise, put it on the bottom.') with only the test differing.\n\nREVEAL: REVEAL_TOP_DECK (effect_types.py:2229-2256, read this session) reads amount/into, marks the top card is_public (a real public reveal), and stores it as a LIST under ref 'revealed'. It hard-codes the CONTROLLER's own deck (:2243-2244), which is 'your deck'. Without 'into' the handler stores nothing and both branches would have nothing to test or move - the failure mode recorded for berserk_yellow in .review.\n\nBRANCH: CONDITIONAL_EFFECT reads when/then/else (effect_types.py:3697+); 'when', NOT 'conditions' - the loader pops the latter as an effect-level gate and would skip the else branch entirely. The test is REF_IS_TYPE (condition_types.py:2011-2043, read this session): it reads 'types'/'card_types' (or the singular spellings), unions the ref card's types AND subtypes, and unwraps a one-element list - which is what REVEAL_TOP_DECK always stores for amount 1.\n\n'EVO' IS A SUBTYPE: Evo cards carry subtypes ['Evo', ...] in card data (evo/evo_work_queue.json entries), and the shipped corpus already filters on it - evo/heavy_artillery_red.json counts Evos via COUNT_PERMANENT subtype 'Evo', evo/demolition_protocol_red.json via an object-target filter, evo/war_machine_red.json via token_type 'Evo'. REF_IS_TYPE's types+subtypes union therefore matches 'it's an Evo' exactly.\n\nPLACEMENT: PUT_REF_TOP / PUT_REF_BOTTOM (effect_types.py:3614-3639, read this session) read 'ref' and default player OWNER - the revealed card's owner is Firewall's controller, so the default is correct and needs no override.\n\nEdge cases fail closed: an empty deck stores [], REF_IS_TYPE finds no target and answers False, and PUT_REF_BOTTOM returns early on an empty ref - no crash, no move. PUT_REF_TOP on a card still sitting on top of the deck is the printed no-op ('put it on top'); the reveal never moved it."
+}

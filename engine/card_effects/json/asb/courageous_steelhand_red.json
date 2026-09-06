@@ -1,0 +1,15 @@
+{
+  "slug": "courageous_steelhand_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "conditions": [
+        {"type": "EVENT_THIS_TURN", "event": "charge"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}
+      ]
+    }
+  ],
+  "_comment": "'If you've **charged** this turn, target attack gains +3{p}.' Light Warrior Attack Reaction. Red printing = +3 (the release note's '+1/2/3{p}' spans the printings); shape mirrors the sibling .drafts/courageous_steelhand_blue.json (+1) / courageous_steelhand_yellow.json (+2), whose reasoning was verified against the handlers.\n\nCharge gate re-checked here, not copied blind: charge() records via _record_turn_event(state, pid, \"charge\", ...) (effect_keywords.py:2368); the EVENT_THIS_TURN handler (condition_types.py:1070-1112) treats 'charge' as one of its documented events, matches the bare marker for this card's controller (player defaults SELF), count defaults >=1 so multiple charges still give exactly +3 ('Additional times charged have no effect').\n\nPLACEMENT OF THE GATE IS THE RELEASE NOTES, NOT A STYLE CHOICE: ability-level conditions are checked at RESOLUTION, while play legality evaluates only target filters at announce - so the card is legally playable without having charged ('You can play this card even if you have not charged') and simply does nothing on resolution; charging later in the turn cannot retroactively satisfy it ('It would not have any target or effect even if you charge later in the turn').\n\nNo target block: the text restricts nothing about WHICH attack, and an unrestricted ATTACK_REACTION targets the current attack implicitly (rapid_reflex_yellow precedent). MODIFY_ATTACK (effect_types.py:4123) reads mod and amount only and modifies state.combat's current attack; its one-shot path records on combat.power_mods so the buff survives later recalculations.\n\nNo printed keywords; nothing else to author."
+}

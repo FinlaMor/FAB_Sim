@@ -1,0 +1,34 @@
+{
+  "slug": "clip_flexor",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Add an attack reaction card from your hand to the chain link as a defending card?",
+          "conditions": [
+            {"type": "CARD_IN_ZONE", "zone": "hand", "filter_types": ["attackreaction"], "count_gte": 1}
+          ],
+          "effects": [
+            {
+              "type": "ADD_DEFEND",
+              "target": {
+                "controller": "SELF",
+                "zone": "HAND",
+                "amount": 1,
+                "filter": [
+                  {"type": "CARD_IS_TYPE", "subtypes": ["Attack Reaction"]}
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Defense Reaction - Destroy this: You may add an attack reaction card from your hand to the active chain link as a defending card.'\n\nShape copied from two adopted cards: blacktek_whisperers (dyn/) proves \"Destroy this:\" as an ability-level DESTROY_SELF cost (cost_types.py:43 - written for exactly this wording), and quickdodge_flexors (hnt/) proves DEFENSE_REACTION + ADD_DEFEND on equipment. The destroy is a COST, so it happens even if the optional half is declined - matching the printed colon.\n\nADD_DEFEND takes the canonical object-target dict (effect_types.py:2727-2740): zone HAND pools player.hand.cards (_object_zone_cards, effect_types.py:493-494), and the controller picks which card. Filter CARD_IS_TYPE normalises both sides (_norm strips non-alphanumerics), so 'Attack Reaction' matches the DB spelling types=['AttackReaction'] (verified: razor_reflex_yellow).\n\nThe MAY carries its own conditions (CARD_IN_ZONE over hand) so the prompt is only offered when an attack reaction is actually in hand. NOTE the raw-lowercase matcher there (condition_types.py:944-947 compares stored strings verbatim, no normalisation), hence the exact token 'attackreaction'; inside the target filter CARD_IS_TYPE normalises, so the spaced spelling is fine there.\n\nRelease-note behaviour ('if you cannot add ... this effect will do nothing and the card will stay in hand', e.g. under Dominate/Overpower) rests on add_defend honouring AddDefendEvent cancellation (effect_keywords.py:4039-4055, CR 8.5.32a): a canceled defend leaves the card unmoved. That assumes dominate/overpower-style prevention is registered as a replacement on AddDefendEvent - engine-side assumption, not something the JSON controls.\n\nNo activation_cost: the printed text has no {r}; the loader's text heuristic yields none and the engine treats it as 0."
+}

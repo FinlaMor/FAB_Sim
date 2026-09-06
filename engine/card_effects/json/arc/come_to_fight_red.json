@@ -1,0 +1,20 @@
+{
+  "slug": "come_to_fight_red",
+  "abilities": [
+    {
+      "ability_type": "ACTION",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 3,
+          "filter": [
+            {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next attack action card you play this turn gains +3{p}. **Go again**'\n\nGO AGAIN NOT AUTHORED: it is in printed_keywords as an UNCONDITIONAL line of the text, so it fires from the card DB keywords field - re-authoring it would be a defect. (No conditional-keyword machinery needed: that is only for a PRINTED keyword gated on a condition, via SOURCE_IS_ATTACK.)\n\nSHAPE COPIED FROM SHIPPED wtr/nimblism_red.json - same sentence family ('the next attack ... you play this turn gains +N{p}' + go again), which proves the spelling compiles and fires: ability_type ACTION with MODIFY_NEXT_ATTACK mod add amount 3.\n\nFILTER NAMES 'ATTACK ACTION CARD' precisely: ATTACK_TYPE_IN reads 'types' and tests the attack card's types AND subtypes merged (condition_types.py:273-294); ATTACK_SUBTYPE_IN reads 'subtypes' (:296-302). An attack action card is types=['Action'], subtypes=['Attack']; a weapon attack is types=['Weapon'] and fails the Action test, so the buff cannot land on a weapon attack - matching the printed 'attack action card'.\n\n'THE NEXT ... THIS TURN': MODIFY_NEXT_ATTACK queues a one-shot entry on the controller's dsl_queued_attack_mods (handler at effect_types.py:4592-4618), consumed by the first later attack whose filter matches; an attack played that fails the filter leaves the entry queued, and unused entries expire end of turn - exactly 'this turn'.\n\nNo gaps; every clause expressible."
+}

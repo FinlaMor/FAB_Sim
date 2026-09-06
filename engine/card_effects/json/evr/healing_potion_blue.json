@@ -1,0 +1,17 @@
+{
+  "slug": "healing_potion_blue",
+  "activation_cost": 0,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 2},
+        {"type": "GO_AGAIN"}
+      ]
+    }
+  ],
+  "_comment": "'**Action** - Destroy this: Gain 2{h}. **Go again**' Generic Action - Item (Everfest).\n\nACTIVATION SHAPE: ability_type ACTIVATE with the destroy as an ability-level COST, not an effect - 'Destroy this' sits before the colon, and a cost can gate the activation while an effect cannot. Items are offered activations by play._add_hero_dsl_activations (player.items is among its source zones, play.py:262-265); ACTIVATE timing is action phase + action point + empty stack (play.py:284), which is the printed '**Action** -'. play._apply_activate checks then pays the ability's own costs before dispatching ON_ACTIVATE (play.py:1288-1315). Shape copied from .drafts/heart_throb.json ('Action - Destroy this: ... Go again', same skeleton) and .drafts/gauntlet_of_might.json; DESTROY_SELF cost exists at cost_types.py:43-51 and routes canonical destroy(), which resolves the item zone itself.\n\nactivation_cost 0 pinned explicitly (heart_throb / scabskin_leathers precedent): the text carries no {r}, and the pin stops the loader's printed-text fallback from misreading anything as an activation price.\n\nGAIN asset LIFE_POINTS amount 2 - the handler accepts LIFE_POINTS for 'gain N{h}' (effect_types.py:4890-4896).\n\nGO AGAIN authored as the GO_AGAIN effect type: it routes through _grant_go_again (effect_types.py:4943-4963), whose non-combat branch pays the controller +1 action point directly (CR 8.3.5a) - exactly what an item activation is. The PRINTED GoAgain keyword is inert here: has_go_again is consulted only for cards resolving as a card-layer chain link / combat keywords, never for equipment/item activations, so authoring the grant does NOT double-pay (same reasoning recorded in .drafts/heart_throb.json and .drafts/gauntlet_of_might.json).\n\nRELEASE NOTE ('You cannot defend with Healing Potion as it has no defense value'): needs no authoring - items carry no defense value in this engine, and nothing here grants or restricts defense.\n\nSET FOLDER AT ADOPTION: Everfest -> json/evr/."
+}

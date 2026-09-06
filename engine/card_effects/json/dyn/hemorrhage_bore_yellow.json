@@ -1,0 +1,19 @@
+{
+  "slug": "hemorrhage_bore_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"},
+        {"type": "COUNTER_GTE", "counter_type": "aim", "min": 1}
+      ],
+      "effects": [
+        {"type": "LOOK_AT", "zone": "ARSENAL", "player": "OPPONENT", "amount": "ALL", "into": "their_arsenal"},
+        {"type": "SELECT_FROM_REF", "ref": "their_arsenal", "mode": "ANY", "min": 1, "max": 1, "into": "to_destroy"},
+        {"type": "DESTROY_REF", "ref": "to_destroy"}
+      ]
+    }
+  ],
+  "_comment": "'If Hemorrhage Bore has an aim counter, it has \"When this hits a hero, destroy a card in their arsenal.\"' Ranger Action - Arrow Attack (Dynasty). Yellow printing - identical printed text to .drafts/hemorrhage_bore_blue.json / .drafts/hemorrhage_bore_red.json, which this file copies; every handler claim below was re-verified against source this session.\n\nDEVIATION FROM THE TRIAGE LIST, deliberate: triage named DESTROY_ARSENAL, but its handler destroys EVERY card in the arsenal (effect_types.py:2994-3008 loops all of player.arsenal.cards) with no choice - wrong for 'destroy A card', and it contradicts official_release_notes 1 ('if the hero hit has two or more cards in their arsenal, you choose which one'). Instead the destroy-one-with-choice behaviour is composed from verified primitives: LOOK_AT zone ARSENAL player OPPONENT amount ALL stores the whole arsenal as a list (zone map includes ARSENAL, effect_types.py:3390); SELECT_FROM_REF mode ANY min 1 max 1 asks the controller to pick exactly one at RESOLUTION time (release note 1's timing), degrades to a no-op when the arsenal is empty (empty pool -> loop never runs -> chosen=[]), and with min 1 the choice is mandatory whenever a card exists; DESTROY_REF destroys the picked card(s) via canonical destroy() (effect_types.py:3417-3428).\n\nCONDITIONS are ability-level, AND-gated in run_ability (interpreter.py:54-55) before any effect runs:\n- COUNTER_GTE reads counter_type (or counter/type) and min (or amount) (condition_types.py:998-1030) and tests THIS card's own counters tally - the ability source IS Hemorrhage Bore, so 'Hemorrhage Bore has an aim counter' is exactly card.counters['aim'] >= 1. The card-level tally is authoritative because it travels with the card through arsenal -> combat chain (the handler's own comment names precisely this staleness case for the player-level fallback dict). Spelling 'aim' matches shipped azl/sedation_shot_blue.json, azl/infecting_shot_blue.json, dyn/blessing_of_focus_*.json.\n- ATTACK_TARGET_IS_HERO (condition_types.py:1960) gates 'hits a hero' - false when the attack was declared at a permanent or ally.\n\nConditions gate at resolution, so the trigger queues on every hit and fizzles harmlessly without an aim counter; consequently multiple aim counters still yield ONE instance per hit (official_release_notes 2) by construction - no extra authoring needed.\n\nNo printed keywords. Yellow printing; siblings differ only in colour."
+}

@@ -7,7 +7,7 @@
       "conditions": [
         {
           "type": "FLAG_SET",
-          "flag": "fused_snow_under_yellow"
+          "flag": "fused_snow_under_blue"
         },
         {
           "type": "ATTACK_TARGET_IS_HERO"

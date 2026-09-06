@@ -1,0 +1,12 @@
+{
+  "slug": "cosmic_flare_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {"type": "GAIN", "asset": "RESOURCE_POINTS", "amount": 3}
+      ]
+    }
+  ],
+  "_comment": "'Gain {r}{r}{r}' on a Lightning Instant. ability_type PLAY, not INSTANT - per DSL_REFERENCE, INSTANT means an ACTIVATED ability with instant timing, while an Instant CARD whose effect happens when you play it is PLAY. GAIN handler verified (effect_types.py:4869-4889): reads asset/amount, RESOURCE_POINTS routes through effect_gain_resources; player defaults SELF. No printed keywords, no additional costs, nothing left to the card DB."
+}

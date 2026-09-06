@@ -1,0 +1,24 @@
+{
+  "slug": "evo_zoom_call_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_EQUIP",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Banish a card from your hand to draw a card?",
+          "conditions": [
+            {"type": "CARD_IN_ZONE", "zone": "hand", "count_gte": 1}
+          ],
+          "effects": [
+            {"type": "BANISH", "from_zone": "HAND", "amount": 1},
+            {"type": "DRAW", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'If you have a base head equipped, transform it into this, then equip this.' / 'When this is equipped, you may banish a card from you[r] hand. If you do, draw a card.' Mechanologist Instant Equipment - Evo Head (Bright Lights).\n\nTRANSFORM CLAUSE NOT AUTHORED - inexpressible today, deliberately left off rather than authored dead. The triage list said TRANSFORM + CONTROLS_SUBTYPE, but the DSL TRANSFORM effect's _do_transform (effect_types.py:1048-1068) ALWAYS creates a NEW TOKEN named by 'to' and puts the sources under it - authoring to=evo_zoom_call_yellow would mint a duplicate token copy of this card in the permanents zone, not equip the played card into the head slot; and CONTROLS_SUBTYPE (condition_types.py:1849-1879) scans player.permanents.cards only, never the equipped head. Same finding as sibling drafts evo_charging_rods_yellow / evo_heartdrive_blue.\n\nEQUIP TRIGGER implemented: TRIGGERED + ON_EQUIP (trigger_types.py:84 maps it; dispatched to each equipped card at engine.py:1613-1618), shape copied from shipped evo/evo_zip_line_yellow.json. 'You may X. If you do, Y' is ONE MAY block (effect_types.py:3788): declining runs nothing in the block, so the conditional draw needs no separate plumbing. The inner BANISH (effect_types.py:1301-1417) reads from_zone HAND and prompts for which card; it is left MANDATORY inside the block because the MAY already carries the choice - an inner optional would double-prompt. The MAY's conditions gate whether the option is offered at all (the loader pops them to EffectDef.conditions): CARD_IN_ZONE hand count_gte 1 (condition_types.py:844, reads zone/count_gte) keeps the prompt away on an empty hand, which matters because an accepted-but-empty banish would still draw. Residual window: if the hand empties between trigger queuing and resolution the draw can fire without a banish - no tighter expressible form today.\n\nRelease notes: this card does NOT have the base subtype and can NOT itself be transformed into another evo. When the generic fix lands, clause 1 wants sources [{\"zone\": \"head\", \"from\": \"Base\"}] (subtype membership test, effect_types.py:3911-3915).",
+  "generic_fix": "Transform clause needs a generic effect that equips the source card into its slot zone while putting the displaced equipment underneath it (equip-with-subcards)."
+}

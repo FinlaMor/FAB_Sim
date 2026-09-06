@@ -1,0 +1,21 @@
+{
+  "slug": "chane",
+  "activation_cost": 0,
+  "per_turn": 1,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "soul_shackle", "amount": 1},
+        {"type": "GRANT_NEXT_CARD",
+         "amount": 0,
+         "keywords": ["Go Again"],
+         "filter": [
+           {"type": "CLASS_IN", "classes": ["Runeblade", "Shadow"]},
+           {"type": "CARD_IS_TYPE", "subtypes": ["Action"]}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "'**Once per Turn Action** - Create a Soul Shackle token: Your next Runeblade or Shadow action this turn gains go again.'\n\nSHAPE: hero ACTIVATE ('Once per Turn Action' = action-speed, 1 AP, offered by play._add_hero_dsl_activations in the action phase with AP and the card-level per_turn limit; play.py:238-339). activation_cost 0 - the printed ability is free.\n\nCREATE_TOKEN reads token/count/player/destination (effect_types.py:1942-2013); defaults give SELF control and subtype-based zone routing from the card-DB template.\n\n'THE NEXT RUNEBLADE OR SHADOW ACTION THIS TURN GAINS GO AGAIN' is GRANT_NEXT_CARD, the play-time one-shot queue (player.dsl_queued_card_mods): consumed in play._pay_costs (play.py:1703-1747), which appends 'Go Again' to the PLAYED card's keywords; the filter specs are evaluated against the card being played (_cost_mod_matches, play.py:625-643). CLASS_IN asks about that card's classes AND talents (condition_types.py:1286-1307 - Runeblade is a class, Shadow a talent, one any-match list covers both); CARD_IS_TYPE checks types+subtypes, and 'Action' is a type. 'This turn' holds because unused entries expire in the end-of-turn cleanup (engine.py:933-934).\n\namount IS AUTHORED AS 0, DELIBERATELY: the compile-side default is 1 (effect_types.py:4681) and _calculate_resource_cost SUBTRACTS the stored amount from the next matching card's cost (play.py:1447-1451). Omitting it would silently make Chane's next Runeblade/Shadow action cost {r} less - a second, unprinted ability.\n\nPRINTED GOAGAIN - FLAGGED, NOT RESOLVED: printed_keywords carries GoAgain. In functionalText the trailing 'Go again' sits INSIDE the same bold span as the grant clause ('gains **go again. Go again**'), so it reads like a parsing artifact of the granted keyword rather than a standalone keyword line - but if the DB really prints it, the engine applies every printed keyword unconditionally and loader.conditional_keywords() cannot express this gate: it strips a printed keyword only from an ability whose conditions include SOURCE_IS_ATTACK granting the keyword to the attacking card itself, and Chane grants go again to a FUTURE ACTION, never to an attack of his own. Authoring that SOURCE_IS_ATTACK shape anyway would be semantically wrong, so it was left out. As modelled the printed keyword is inert today (no code path pays a hero an action point for a carried keyword - heroes never resolve as actions), but a reviewer should decide whether the DB keyword belongs there at all.\n\nPREREQUISITE: create_token calls require_card(token_slug) (effect_keywords.py:266-276) and no json/tokens/soul_shackle.json exists, so activation raises MissingCardImplementation mid-game until the token definition is adopted. A minimal stub (.drafts/soul_shackle.json) is filed alongside this draft; at adoption it belongs in json/tokens/."
+}

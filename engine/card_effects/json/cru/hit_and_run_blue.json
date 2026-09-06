@@ -1,0 +1,26 @@
+{
+  "slug": "hit_and_run_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GRANT_NEXT_ATTACK_KEYWORD",
+          "keyword": "GO_AGAIN",
+          "filter": [{"type": "ATTACK_IS_WEAPON"}]
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "EVENT_THIS_TURN", "event": "attack", "qualifier": "weapon"}
+          ],
+          "then": [
+            {"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 1}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next weapon attack this turn gains **go again**. / If you have attacked with a weapon this turn, your next attack this turn gains +1{p}.' + printed **Go again**. Warrior Action (batch set label ClassicBattlesRhinarDorinthea - derive the json/<set>/ folder from setIdentifiers at adoption, not from the label).\n\nSHAPE COPIED FROM .drafts/hit_and_run_red.json (the CrucibleOfWar red printing of the same card, +3{p}); only the slug and the amount differ. Every load-bearing claim re-verified against source this session rather than trusted from the sibling.\n\nPRINTED GO AGAIN NOT AUTHORED: the trailing 'Go again' is this card's own unconditional keyword line (printed_keywords carries GoAgain) and fires from the card DB keywords field; re-authoring it would double-grant. It is also not the conditional-keyword case - clause 1 grants go again to a DIFFERENT object (a future attack), so no SOURCE_IS_ATTACK / conditional_keywords() shape applies.\n\nCLAUSE 1: GRANT_NEXT_ATTACK_KEYWORD (effect_types.py:4816+, read this session: reads keyword/filter/scope) queues a one-shot {'mod': 'grant_keyword'} on dsl_queued_attack_mods; 'GO_AGAIN' is normalised to 'Go Again'. Consumed by engine._apply_turn_attack_effects (engine.py:1199-1211) on the first attack whose filter matches - a non-weapon attack leaves the entry queued, which is exactly 'your NEXT weapon attack'. Filter ATTACK_IS_WEAPON (condition_types.py:198-199) reads combat.from_weapon, set for weapon attacks at declaration when the queue is consulted. Scope defaults to TURN; unused entries expire end of turn = 'this turn'.\n\nCLAUSE 2: the gate is checked WHEN HIT AND RUN RESOLVES, which CONDITIONAL_EFFECT (effect_types.py:3697-3724, read this session: aliases CONDITIONAL/IF, reads when/then/else - authoring 'conditions' would be silently unread and run then unconditionally) gives: EVENT_THIS_TURN with event 'attack', qualifier 'weapon'. Producer verified live: engine.py:571 records _record_turn_event(attacker_id, 'attack', 'weapon'|'nonweapon', ...) per attack, writing marker did_this_turn:attack:weapon; the condition builds the identical marker string (condition_types.py:1070-1112) against the CONTROLLER's current_turn_effects. So a weapon attack earlier this turn passes; one later this turn does not - matching the printed 'if you HAVE attacked with a weapon this turn'.\n\nCLAUSE 2 PUMP: MODIFY_NEXT_ATTACK (effect_types.py:4592-4618, reads mod/amount/filter/scope) queues +1 on dsl_queued_attack_mods, consumed by the FIRST attack of any kind (no filter) - 'your next attack this turn gains +1{p}', unfiltered as printed.\n\nNo other clauses; nothing else to author.",
+  "_note": "Draft only - compiled and reviewed before adoption."
+}

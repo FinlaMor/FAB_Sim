@@ -1,0 +1,29 @@
+{
+  "slug": "embolden_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ENTER_PLAY",
+      "conditions": [
+        {"type": "CONTROLS_SUBTYPE", "subtype": "Aura", "another": true}
+      ],
+      "effects": [
+        {"type": "DRAW", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "START_OF_ACTION_PHASE",
+      "effects": [
+        {"type": "DESTROY_SELF"},
+        {"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 4,
+         "filter": [
+           {"type": "ATTACK_CLASS_IN", "classes": ["Guardian"]},
+           {"type": "ATTACK_TYPE_IN", "types": ["Action"]},
+           {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Attack"]}
+         ]}
+      ]
+    }
+  ],
+  "_comment": "GO AGAIN NOT AUTHORED: it is in printed_keywords and fires from the card DB keywords field - re-authoring it would be a defect.\n\nENTRY TRIGGER: ON_ENTER_PLAY is dispatched from Zone.add when a card enters the arena from a non-arena zone (state.py:293-310), slug-keyed, so Embolden hears its own entry. At dispatch time Embolden is ALREADY in player.permanents (Zone.add appends before dispatching), so 'another' (exclude_self) on CONTROLS_SUBTYPE is required - without it the aura counts itself and draws every time.\n\n'ANOTHER NON-TOKEN AURA': CONTROLS_SUBTYPE (condition_types.py:1849-1879) scans ONLY player.permanents with subtype/class filters and exclude_self/count. The non-token half rides on engine zone routing rather than an explicit filter: a PLAYED aura enters player.permanents (engine.py:2402-2405), while aura TOKENS enter controller.auras (effect_keywords.py:377-379) - a zone CONTROLS_SUBTYPE never looks at. So 'aura in permanents, excluding self' == 'another non-token aura' under current routing. If token-aura routing ever changes, this condition needs an explicit token exclusion it does not today have.\n\nACTION-PHASE TRIGGER: START_OF_ACTION_PHASE is dispatched to every card in _dsl_permanent_zones of the ACTIVE player only (engine.py:1514-1522), which includes player.permanents - so 'your action phase' needs no extra active-player condition.\n\nDESTROY IS MANDATORY (release note 1): plain DESTROY_SELF effect, no optional wrapper. destroy() resolves the card's actual zone itself (effect_types.py:2494-2498).\n\n'+4 P' FILTER (release note 2): MODIFY_NEXT_ATTACK queues on the CONTROLLER's dsl_queued_attack_mods (effect_types.py:4604-4617), not on the source, so destroying Embolden first does not kill the buff; unused mods expire at end of turn, which is the printed 'this turn'. The filter is evaluated later against each attack: ATTACK_CLASS_IN Guardian AND ATTACK_TYPE_IN Action AND ATTACK_SUBTYPE_IN Attack. The Action-type term is what excludes weapon attacks - a weapon attack's card is the weapon object, whose type is Weapon, not Action (condition_types.py:281-293); the Attack-subtype and Guardian-class terms exclude non-Guardian attacks and non-attack actions respectively."
+}

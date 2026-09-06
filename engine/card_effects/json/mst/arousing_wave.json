@@ -1,0 +1,16 @@
+{
+  "slug": "arousing_wave",
+  "activation_cost": 1,
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {"type": "CREATE_TOKEN", "token": "fang_strike", "destination": "hand"}
+      ]
+    }
+  ],
+  "_comment": "\"Attack Reaction - {r}, destroy this: Create a Fang Strike in your hand.\" Battleworn is a printed keyword - it fires from the card DB keywords field and is deliberately NOT authored here.\n\nThe {r} is modeled as card-level activation_cost (DSL-authoritative), which play.py's shared cost gate charges on ACTIVATE_CARD actions; authoring it additionally as a PAY_RESOURCES cost would double-charge (IMPLEMENTATION_GUIDE warning). The destroy-this half is the ability-level cost DESTROY_SELF, the exact pattern of Blacktek Whisperers' attack reaction (cost_types.py ~43, always payable, destroys via canonical destroy).\n\nCREATE_TOKEN with destination \"hand\" resolves through getattr(controller, \"hand\") in effect_keywords.create_token (~372-376); same spelling as the adopted marlynn_treasure_hunter Goldfin-Harpoon-in-hand activation. The fang_strike token definition exists at json/fab/fang_strike.json.\n\nTiming note, not a gap: play.py offers ATTACK_REACTION activations only to the ATTACKER during the combat reaction step (play.py ~286-289, citing CR 8.1.2a). That matches this card's use - Nuu destroys it during her own attack's reaction step - so no engine change is needed; flagged only so a reviewer knows defender-side use would not be offered."
+}

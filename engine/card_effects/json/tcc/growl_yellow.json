@@ -1,0 +1,21 @@
+{
+  "slug": "growl_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "scope": "CHAIN",
+          "filter": [
+            {"type": "ATTACK_NAME_IN", "name": "Crouching Tiger"}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, the next Crouching Tiger you play this combat chain gets +1{p}. Go again.' Ninja Action - Attack.\n\nGO AGAIN NOT AUTHORED: GoAgain is in printed_keywords as an UNCONDITIONAL line of the text, so it fires from the card DB keywords field - re-authoring it would be a defect. It is also not the conditional-keyword case: nothing gates it, so no SOURCE_IS_ATTACK machinery applies.\n\nTRIGGER: TRIGGERED + ON_ATTACK - _dsl_attacking_listener dispatches ON_ATTACK to combat.attack_card once this card IS the attack (engine.py:1524-1529, read this session). An Action - Attack card is deliberately NOT an ATTACK_REACTION (DSL_REFERENCE warning: that ability type never fires on one).\n\nPUMP CLAUSE: MODIFY_NEXT_ATTACK (effect_types.py:4592-4618, read this session) READS mod/amount/filter/scope and queues a one-shot entry on the CONTROLLER's dsl_queued_attack_mods; consumption (engine.py:1175-1236) compiles the filter specs against each incoming attack and applies+consumes on FIRST match, so a non-Crouching-Tiger attack leaves the entry queued - exact 'the NEXT Crouching Tiger you play' semantics. scope CHAIN is what makes 'this combat chain' hold rather than 'this turn': chain-scoped entries are dropped at chain close (engine.py:788-802, read this session) instead of surviving into a later chain of the same turn.\n\nFILTER: ATTACK_NAME_IN reads name/names/card_name (condition_types.py:218-232, read this session), strips the colour suffix from the attack's slug and matches slug or resolved name against combat.attack_card - so it spans every crouching_tiger printing, and a played Crouching Tiger (an Action - Attack) IS combat.attack_card, which is what makes 'you play this combat chain' hold.\n\nSHAPE copied from .drafts/chase_the_tail_red.json, whose second clause is word-for-word identical apart from the amount (+3{p} there, +1{p} here); every handler claim above re-verified against source this session rather than inherited.\n\nNo gaps; every clause expressible."
+}

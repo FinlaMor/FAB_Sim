@@ -1,0 +1,28 @@
+{
+  "slug": "hms_marlin_yellow",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {"type": "ATTACK_TARGET_IS_HERO"}
+      ],
+      "effects": [
+        {"type": "LOOK_AT", "zone": "DECK_TOP", "player": "OPPONENT", "amount": 1, "into": "top"},
+        {"type": "DESTROY_REF", "ref": "top"}
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "CARD_IN_ZONE", "zones": ["pitch"], "color": "blue", "count_gte": 2}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1},
+        {"type": "GAIN", "keyword": "OVERPOWER"}
+      ]
+    }
+  ],
+  "_comment": "'When this hits a hero, destroy the top card of their deck. / **High Tide** - If there are 2 or more blue cards in your pitch zone, this gets +1{p} and **overpower**.' Pirate Action - Attack (HighSeas).\n\nCLAUSE 1 (mill on hit): TRIGGERED + ON_HIT rides the attack card; ATTACK_TARGET_IS_HERO (condition_types.py:1960-1977, no params needed) is false when the attack was declared at a permanent or ally, which is the printed 'hits a hero'. Ability-level conditions are checked at resolution - release note 1's 'destroy ... when the triggered effect resolves'. The mill composes from the ref family exactly as the batch triage note prescribes: LOOK_AT zone DECK_TOP player OPPONENT amount 1 stores the top card WITHOUT moving it (effect_types.py:3356-3415, reads zone/player/amount/into), DESTROY_REF destroys it via canonical destroy() (effect_types.py:3417-3428). Empty deck degrades safely: LOOK_AT stores None and DESTROY_REF returns early. Shape proven by .drafts/head_stone.json ('Instant - Destroy this: Destroy the top card of your deck') and the scrub_the_deck_blue wording.\n\nRELEASE NOTES 2-3 NOT MODELED (engine-side semantics, not expressible per-card in JSON): destroying the top card of the deck must not trigger other cards' 'when this is destroyed' effects unless their condition says so, and must not satisfy 'you destroyed an object you control' conditions since deck cards are not controlled. DESTROY_REF goes through canonical destroy(), which emits its normal events; whether those listeners fire for a deck card is decided engine-side. Same disclosure recorded on head_stone.\n\nCLAUSE 2 (High Tide): release note 4 says the pitch zone is checked CONSTANTLY, not just at attack - an always-checking property, so WHILE_STATIC re-evaluated on every RECALC_ATTACK_POWER dispatch (recalc runs at declaration AND before damage, so a pitch zone that fills after the attack is made still yields the bonus during damage calculation). CARD_IN_ZONE (condition_types.py:844-996) reads zones (list), color (red/yellow/blue via pitch value) and count_gte; player defaults to SELF = the controller's own pitch zone. SOURCE_IS_ATTACK confines the pump to HMS Marlin's own attack. Spelling follows shipped pen/savage_claw.json and .drafts/hammer_of_havenhold.json (pitch-zone static family).\n\nOVERPOWER IS CONDITIONAL, SO THE MANDATED CONDITIONAL-KEYWORD SHAPE IS USED: printed_keywords carries Overpower, and the engine applies every DB keyword unconditionally. loader.conditional_keywords() (loader.py:255-296, read this session) strips the printed copy ONLY when an ability whose conditions include SOURCE_IS_ATTACK grants it via an UN-NESTED GAIN whose keyword is grantable - this WHILE_STATIC is that ability, so outside High Tide the card has no overpower and inside it GAIN routes canonical_keyword('OVERPOWER') onto state.combat.keywords (effect_types.py:4927-4941), where the defend step enforces it. Same machinery as .drafts/bull_bar_red.json and the hms_barracuda_yellow triage note.\n\nHIGHTIDE PRINTED KEYWORD DELIBERATELY NOT AUTHORED: it is inert in the engine - ability_keywords.check_high_tide (CR 8.4.18 helper, line 1152) has ZERO call sites and no trigger is built from the DB keyword - so the authored static above is the card's only High Tide implementation and there is no double-fire. Re-verifying that absence is why this draft does not treat HighTide like GoAgain/Dominate."
+}

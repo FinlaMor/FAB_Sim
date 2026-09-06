@@ -1,0 +1,13 @@
+{
+  "slug": "civic_peak",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {"type": "DRAW", "amount": 1, "player": "OPPONENT"}
+      ]
+    }
+  ],
+  "_comment": "'Whenever this defends, another target hero draws a card.' Shape copied from sibling drafts civic_steps.json / civic_guide.json (same Civic cycle, same release-note pattern): TRIGGERED ON_DEFEND fires on every defend event, matching the release note ('whenever it defends, not just the first time'). 'Another target hero' -> DRAW player OPPONENT (_effect_player_id resolves OPPONENT to the other player, satisfying 'you may not target yourself'); the release note's UPF-wide resolution-time hero choice (left/right) is not expressible with the binary SELF/OPPONENT param - flagged for a future multiplayer pass, same gap as civic_steps. Temper is a printed keyword -> card DB keywords field, deliberately NOT authored here."
+}

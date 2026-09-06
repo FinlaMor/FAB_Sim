@@ -1,0 +1,26 @@
+{
+  "slug": "blade_cuff",
+  "activation_cost": 2,
+  "abilities": [
+    {
+      "ability_type": "ACTIVATE",
+      "cost": [
+        {"type": "DESTROY_SELF"}
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACKS_THIS_TURN",
+          "mod": "add",
+          "amount": 1,
+          "scope": "TURN",
+          "player": "SELF",
+          "filter": [
+            {"type": "ATTACK_SUBTYPE_IN", "subtypes": ["Dagger"]}
+          ]
+        },
+        {"type": "GAIN", "asset": "ACTION_POINTS", "amount": 1}
+      ]
+    }
+  ],
+  "_comment": "'Action - {r}{r}, destroy Blade Cuff: Your daggers gain +1{p} this turn. Go again'\n\nPrinted BladeBreak and GoAgain come from the card DB keywords field (verified: blade_cuff keywords = ['BladeBreak', 'GoAgain']) - deliberately NOT authored. The DB GoAgain is inert for equipment: the engine consumes printed go again only for 'card' stack layers on resolution (engine.py:2407) and the meld path (engine.py:2309), never for activated layers, so there is no double-grant with the action point granted below.\n\nactivation_cost: 2 is card-level and DSL-authoritative for the {r}{r}; per DSL_REFERENCE it is NOT also modelled as a PAY_RESOURCES cost. Verified the cost pipeline reads only CARD-level activation_cost (loader.py:153, play.py:1522) - an ability-level copy would land in unread ab_params.\n\n'Destroy Blade Cuff' is the ability cost, not an effect (a cost can block the play): DESTROY_SELF per the shipped dyn/blacktek_whisperers.json precedent. play._apply_activate pays costs before dispatching ON_ACTIVATE, and the effects still resolve against the destroyed card object (controller id preserved), which is exactly how Blacktek Whisperers works.\n\n'Your daggers gain +1{p} this turn' is MODIFY_ATTACKS_THIS_TURN scope TURN player SELF filtered to Dagger-subtype attacks; verified the handler reads amount/mod/scope/player/filter (effect_types.py:2149-2175), that the hook lands on the controller's turn_attack_hooks and is re-applied to every matching attack that turn (engine.py:1243-1259), and that daggers carry 'Dagger' in subtypes in the card DB (weapons attack as themselves, so combat.attack_card is the dagger).\n\nDEVIATION FROM TRIAGE, flagged: triage named primitive 'GO_AGAIN', but both spellings of that idea are combat-scoped - the GO_AGAIN effect grants state.combat.keywords (effect_types.py:4854-4861) and GAIN keyword does the same (effect_types.py:4846-4852) - and this activation resolves OUTSIDE combat, where state.combat is None, so either would silently do nothing (shock_frock's GAIN-keyword go again has this same latent gap). Authored instead as GAIN asset ACTION_POINTS amount 1, which routes through effect_keywords.gain (effect_types.py:4816-4819) and grants the action point that go again means (CR 8.3.5). Minor approximation: CR 8.5.7b restricts go-again AP to the turn player; GAIN ACTION_POINTS does not check, but ACTIVATE timing confines activation to your own action phase, so controller == active player in every reachable state."
+}

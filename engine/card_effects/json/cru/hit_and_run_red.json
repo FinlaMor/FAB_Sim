@@ -1,0 +1,25 @@
+{
+  "slug": "hit_and_run_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GRANT_NEXT_ATTACK_KEYWORD",
+          "keyword": "GO_AGAIN",
+          "filter": [{"type": "ATTACK_IS_WEAPON"}]
+        },
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {"type": "EVENT_THIS_TURN", "event": "attack", "qualifier": "weapon"}
+          ],
+          "then": [
+            {"type": "MODIFY_NEXT_ATTACK", "mod": "add", "amount": 3}
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Your next weapon attack this turn gains **go again**. / If you have attacked with a weapon this turn, your next attack this turn gains +3{p}.' + printed **Go again**. Warrior Action (CrucibleOfWar).\n\nPRINTED GO AGAIN NOT AUTHORED: the trailing 'Go again' is this card's own unconditional keyword line (printed_keywords carries GoAgain) and fires from the card DB keywords field; re-authoring it would double-grant. It is also not the conditional-keyword case - the first sentence grants go again to a DIFFERENT object (a future attack), so no SOURCE_IS_ATTACK / conditional_keywords() shape applies.\n\nABILITY TYPE PLAY: maps to ON_PLAY exactly as ACTION does (trigger_types.py:108-110, read this session); shipped sibling wtr/nimblism_red.json uses ACTION for the same sentence family - equivalent dispatch (interpreter.py:204-208).\n\nCLAUSE 1: GRANT_NEXT_ATTACK_KEYWORD (effect_types.py:4816-4840, read this session: reads keyword/filter/scope) queues a one-shot {'mod': 'grant_keyword'} on dsl_queued_attack_mods; 'GO_AGAIN' is normalised to 'Go Again' (line 4824). Consumption verified at engine.py:1199-1211: the first attack whose filter matches gets combat.grant_keyword('Go Again') at attack DECLARATION - before the defend step, so the action point pays out at resolution per CR 8.3.5b. A non-weapon attack leaves the entry queued, which is exactly 'your NEXT weapon attack'; unused entries expire end of turn (engine.py:921-922) = 'this turn'. Filter ATTACK_IS_WEAPON (condition_types.py:198-199) takes no params and reads combat.from_weapon, set for weapon attacks before the queue is consulted. Filter spelling precedent: .drafts/blessing_of_steel_yellow.json ('your next weapon attack').\n\nCLAUSE 2: the gate is checked WHEN HIT AND RUN RESOLVES, which CONDITIONAL_EFFECT (effect_types.py:3697-3724, aliases IF/CONDITIONAL_EFFECT; reads 'when'/'then'/'else' - authoring 'conditions' would be silently unread and run then unconditionally) gives: EVENT_THIS_TURN with event 'attack', qualifier 'weapon'. Producer verified end to end this session: engine.py:570-576 records one _record_turn_event(attacker_id, 'attack', 'weapon'|'nonweapon', ...) PER attack, and the condition builds the identical marker string against the CONTROLLER's current_turn_effects (condition_types.py:1070-1112). So a weapon attack earlier this turn passes; one later this turn does not. Gate spelling shared with shipped evr/in_the_swing_blue.json and cru/push_forward_yellow.json ('if you've attacked with a weapon this turn') and sibling draft dual_threat_yellow.json. The two clauses are independent effects of one resolution, hence CONDITIONAL_EFFECT inside one PLAY ability rather than ability-level conditions (which would gate clause 1 too). 'then': MODIFY_NEXT_ATTACK add 3 (handler effect_types.py:4592-4618, read this session: mod/amount/filter/scope) queues a one-shot power entry consumed by the first matching attack - no filter authored, so literally the next attack this turn; unused entries expire end of turn.\n\nTIMING DISCLOSURE: no official_release_notes accompanied this batch. The resolution-time reading follows dual_threat_yellow, whose release note states the identical conditional ('Whether you've attacked with a weapon this turn is checked when Dual Threat resolves'); if a ruling ever pins Hit and Run's check to the next attack instead, move the EVENT_THIS_TURN spec into MODIFY_NEXT_ATTACK's filter - the queue evaluates filter specs per incoming attack (engine.py:1181-1184), so that shape expresses the other reading with no new types."
+}
