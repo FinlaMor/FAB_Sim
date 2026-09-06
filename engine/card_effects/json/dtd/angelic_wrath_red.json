@@ -2,21 +2,19 @@
   "slug": "angelic_wrath_red",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
-      "target": {
-        "filter": [
-          {
-            "type": "ATTACK_TYPE_IN",
-            "types": [
-              "Action"
-            ]
-          },
-          {
-            "type": "ATTACK_NAME_IN",
-            "name_contains": "Herald"
-          }
-        ]
-      },
+      "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "ATTACK_TYPE_IN",
+          "types": [
+            "Action"
+          ]
+        },
+        {
+          "type": "ATTACK_NAME_IN",
+          "name_contains": "Herald"
+        }
+      ],
       "effects": [
         {
           "type": "MODIFY_ATTACK",

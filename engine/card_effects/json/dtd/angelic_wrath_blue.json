@@ -2,21 +2,19 @@
   "slug": "angelic_wrath_blue",
   "abilities": [
     {
-      "ability_type": "ATTACK_REACTION",
-      "target": {
-        "filter": [
-          {
-            "type": "ATTACK_TYPE_IN",
-            "types": [
-              "Action"
-            ]
-          },
-          {
-            "type": "ATTACK_NAME_IN",
-            "name_contains": "Herald"
-          }
-        ]
-      },
+      "ability_type": "PLAY",
+      "conditions": [
+        {
+          "type": "ATTACK_TYPE_IN",
+          "types": [
+            "Action"
+          ]
+        },
+        {
+          "type": "ATTACK_NAME_IN",
+          "name_contains": "Herald"
+        }
+      ],
       "effects": [
         {
           "type": "MODIFY_ATTACK",
@@ -26,5 +24,5 @@
       ]
     }
   ],
-  "_comment": "'Target attack action card with Herald in its name gets +2{p}'\n\n'WITH HERALD IN ITS NAME' IS A SUBSTRING, not a name. ATTACK_NAME_IN compared whole names (with the colour suffix stripped, so one entry covers all three printings) and no card is called 'Herald', so an exact comparison is false in every state -- silently, because a targeting filter that matches nothing looks like a card with no legal target. It now takes `name_contains` as a separate key, kept apart from `name` so a card naming one specific attack cannot accidentally match a family. 40 cards in the corpus use this templating.\n\nThe ATTACK_TYPE_IN Action half is the 'attack action CARD' restriction: without it the reaction could target a weapon attack whose name happened to contain Herald."
+  "_comment": "'Target attack action card with Herald in its name gets +2{p}' -- the card's TYPE is Instant, and its ability is what happens when it is PLAYED -- so the ability_type is PLAY. Authored as ATTACK_REACTION first and then as INSTANT, and tests/test_ability_type_sweep.py rejected both: ATTACK_REACTION on a card that is not one never fires, and the INSTANT ability_type is for a card whose TEXT carries an 'Instant - ...' activated ability, which this one does not. Either way the card looks implemented and does nothing.\n\n'WITH HERALD IN ITS NAME' IS A SUBSTRING, not a name. ATTACK_NAME_IN compared whole names (colour suffix stripped, so one entry covers all three printings) and no card is called 'Herald', so an exact comparison is false in every state -- silently, because a filter that matches nothing looks like a board with no legal target. `name_contains` is a separate key so a card naming ONE specific attack cannot start matching a family; 40 cards in the corpus use this templating.\n\nThe conditions gate the ability rather than targeting, because an Instant resolves while the attack is already on the chain: the 'target attack action card' it can reach IS the active attack. ATTACK_TYPE_IN Action keeps a weapon attack whose name contains Herald out."
 }
