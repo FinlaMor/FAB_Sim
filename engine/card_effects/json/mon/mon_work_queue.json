@@ -84,7 +84,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Destroy Aether Ironweave: Gain {r}{r}. Activate this ability only if you have played an attack action card and a 'non-attack' action card this turn. **Go again**\n\n**Battleworn**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arc_light_sentinel_yellow",
@@ -131,7 +131,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 1 arcane damage to target hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arcanic_crackle_red",
@@ -152,7 +152,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 1 arcane damage to target hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arcanic_crackle_yellow",
@@ -173,7 +173,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 1 arcane damage to target hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "battlefield_blitz_blue",
@@ -387,7 +387,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Blinding Beam cost {r} less to play if it targets a Shadow Card.\n\nTarget attacking or defending attack action card gets -2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blood_drop_brocade",
@@ -429,7 +429,7 @@
     ],
     "specializations": [],
     "functional_text": "**Opt 1**, then banish the top card of your deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blood_tribute_red",
@@ -450,7 +450,7 @@
     ],
     "specializations": [],
     "functional_text": "**Opt 3**, then banish the top card of your deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blood_tribute_yellow",
@@ -745,7 +745,7 @@
     ],
     "specializations": [],
     "functional_text": "If Brandish hits, your next weapon attack this turn gains +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "brandish_red",
@@ -768,7 +768,7 @@
     ],
     "specializations": [],
     "functional_text": "If Brandish hits, your next weapon attack this turn gains +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "brandish_yellow",
@@ -791,7 +791,7 @@
     ],
     "specializations": [],
     "functional_text": "If Brandish hits, your next weapon attack this turn gains +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "captains_call_blue",
@@ -1067,7 +1067,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Convulsions from the Bellows of Hell, banish 3 random cards from your graveyard.\n\nIf a card with 6 or more {p} is banished this way, the next attack action card you play this turn gains +3{p} and **dominate**.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "convulsions_from_the_bellows_of_hell_yellow",
@@ -1843,7 +1843,7 @@
     ],
     "specializations": [],
     "functional_text": "**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "enigma_chimera_red",
@@ -1866,7 +1866,7 @@
     ],
     "specializations": [],
     "functional_text": "**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "enigma_chimera_yellow",
@@ -2002,7 +2002,7 @@
     ],
     "specializations": [],
     "functional_text": "You may look at the defending hero's hand.\n\nIf Frontline Scout is played from arsenal, it gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "frontline_scout_red",
@@ -2025,7 +2025,7 @@
     ],
     "specializations": [],
     "functional_text": "You may look at the defending hero's hand.\n\nIf Frontline Scout is played from arsenal, it gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "frontline_scout_yellow",
@@ -2048,7 +2048,7 @@
     ],
     "specializations": [],
     "functional_text": "You may look at the defending hero's hand.\n\nIf Frontline Scout is played from arsenal, it gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "galaxxi_black",
@@ -2337,7 +2337,7 @@
     ],
     "specializations": [],
     "functional_text": "**Legendary**\n\nAt the beginning of each end phase, if a hero has 2 or more cards with yellow color strips in their pitch zone, they gain +1{i} until end of turn.\n\n**Action** - Discard 2 cards with yellow color strips: Destroy Great Library of Solana. Any hero may activate this ability. **Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "guardian_of_the_shadowrealm_red",
@@ -2498,7 +2498,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, put it into your soul and create a Spectral Shield token.\n\n**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "herald_of_protection_red",
@@ -2521,7 +2521,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, put it into your soul and create a Spectral Shield token.\n\n**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "herald_of_protection_yellow",
@@ -2544,7 +2544,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, put it into your soul and create a Spectral Shield token.\n\n**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "herald_of_ravages_blue",
@@ -2567,7 +2567,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, put it into your hero's soul and deal 1 arcane damage to target hero.\n\n**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "herald_of_ravages_red",
@@ -2590,7 +2590,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, put it into your hero's soul and deal 1 arcane damage to target hero.\n\n**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "herald_of_ravages_yellow",
@@ -2613,7 +2613,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, put it into your hero's soul and deal 1 arcane damage to target hero.\n\n**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "herald_of_rebirth_blue",
@@ -2777,7 +2777,7 @@
     ],
     "specializations": [],
     "functional_text": "Attack action cards get -1{p} while defending this.\n\nWhen this hits, put it into your soul.\n\n**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "herald_of_triumph_red",
@@ -2823,7 +2823,7 @@
     ],
     "specializations": [],
     "functional_text": "Attack action cards get -1{p} while defending this.\n\nWhen this hits, put it into your soul.\n\n**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hexagore_the_death_hydra",
@@ -3030,7 +3030,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Illuminate hits, put it into your hero's soul.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "illuminate_red",
@@ -3051,7 +3051,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Illuminate hits, put it into your hero's soul.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "illuminate_yellow",
@@ -3072,7 +3072,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Illuminate hits, put it into your hero's soul.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "impenetrable_belief_blue",
@@ -3177,7 +3177,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you play Invigorating Light, if there are no cards in your hero's soul, put it into your hero's soul when the combat chain closes.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "invigorating_light_red",
@@ -3198,7 +3198,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you play Invigorating Light, if there are no cards in your hero's soul, put it into your hero's soul when the combat chain closes.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "invigorating_light_yellow",
@@ -3219,7 +3219,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you play Invigorating Light, if there are no cards in your hero's soul, put it into your hero's soul when the combat chain closes.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "iris_of_reality",
@@ -3393,7 +3393,7 @@
       "Boltyn"
     ],
     "functional_text": "**Boltyn Specialization**\n\nUntil end of turn, weapons you control gain +1{p} and \"If this hits, reveal the top card of your deck. If it's a Light card, put it into your hero's soul and gain 1{h}, otherwise put it on the bottom of your deck.\"\n\nIf you've **charged** this turn, you may attack an additional time with each weapon you control.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "luminaris",
@@ -3417,7 +3417,7 @@
     ],
     "specializations": [],
     "functional_text": "During your action phase, Illusionist auras you control are weapons with 1 base {p} and \"**Once per Turn Action** - 0: **Attack**\"\n\nIf there is a yellow card in your pitch zone, your Illusionist attacks get **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "lunartide_plunderer_blue",
@@ -3541,7 +3541,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Put target attack action card with cost 2 or less from your graveyard on top of your deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "memorial_ground_yellow",
@@ -3629,7 +3629,7 @@
     ],
     "specializations": [],
     "functional_text": "The next attack action card with 3 or less base {p} you play this turn gains +3{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "minnowism_yellow",
@@ -3675,7 +3675,7 @@
     ],
     "specializations": [],
     "functional_text": "You may play Mutated Mass from your banished zone.\n\nMutated Mass's {p} and {d} is equal to twice the number of cards in your pitch zone with different costs.\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "nourishing_emptiness_red",
@@ -3745,7 +3745,7 @@
     ],
     "specializations": [],
     "functional_text": "While Out Muscle isn't defended by a card with equal or greater {p}, it has **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "out_muscle_red",
@@ -3768,7 +3768,7 @@
     ],
     "specializations": [],
     "functional_text": "While Out Muscle isn't defended by a card with equal or greater {p}, it has **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "out_muscle_yellow",
@@ -3791,7 +3791,7 @@
     ],
     "specializations": [],
     "functional_text": "While Out Muscle isn't defended by a card with equal or greater {p}, it has **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "overload_blue",
@@ -3815,7 +3815,7 @@
     ],
     "specializations": [],
     "functional_text": "**Dominate**\n\nIf Overload hits, it gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "overload_red",
@@ -3839,7 +3839,7 @@
     ],
     "specializations": [],
     "functional_text": "**Dominate**\n\nIf Overload hits, it gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "overload_yellow",
@@ -3863,7 +3863,7 @@
     ],
     "specializations": [],
     "functional_text": "**Dominate**\n\nIf Overload hits, it gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "parable_of_humility_yellow",
@@ -3909,7 +3909,7 @@
     ],
     "specializations": [],
     "functional_text": "Look at the defending hero's hand and choose a card. They put it on the bottom of their deck then draw a card.\n\n**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "phantasmal_footsteps",
@@ -3954,7 +3954,7 @@
     ],
     "specializations": [],
     "functional_text": "The next attack action card you play this turn is Illusionist in addition to its other class types, and gains +3{p} and **phantasm**.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "phantasmify_red",
@@ -4002,7 +4002,7 @@
     ],
     "specializations": [],
     "functional_text": "The next attack action card you play this turn is Illusionist in addition to its other class types, and gains +4{p} and **phantasm**.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "piercing_shadow_vise_blue",
@@ -4117,7 +4117,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +3{p} and \"If this weapon is defended by an attack action card, it gains +1{p} until end of turn.\"\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "plow_through_yellow",
@@ -4249,7 +4249,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Once per Turn Instant** - {r}{r}, banish a card from Prism's soul: Create a Spectral Shield token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "prismatic_shield_blue",
@@ -4482,7 +4482,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Attacks you control have +1{p} while attacking a Shadow hero this turn.\n\nIf you have less {h} than an opposing Shadow hero, put Ray of Hope into your hero's soul.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "raydn_duskbane",
@@ -4504,7 +4504,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - 0: **Attack**\n\nIf you've **charged** this turn, Raydn gains +3{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rift_bind_blue",
@@ -4527,7 +4527,7 @@
     ],
     "specializations": [],
     "functional_text": "You may play Rift Bind from your banished zone. If you do, it gains +X{p}, where X is the number of 'non-attack' action cards you have played this turn.\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rift_bind_red",
@@ -4550,7 +4550,7 @@
     ],
     "specializations": [],
     "functional_text": "You may play Rift Bind from your banished zone. If you do, it gains +X{p}, where X is the number of 'non-attack' action cards you have played this turn.\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rift_bind_yellow",
@@ -4573,7 +4573,7 @@
     ],
     "specializations": [],
     "functional_text": "You may play Rift Bind from your banished zone. If you do, it gains +X{p}, where X is the number of 'non-attack' action cards you have played this turn.\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rifted_torment_blue",
@@ -4792,7 +4792,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Rising Solartide hits, put it into your hero's soul.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rising_solartide_red",
@@ -4813,7 +4813,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Rising Solartide hits, put it into your hero's soul.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rising_solartide_yellow",
@@ -4834,7 +4834,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Rising Solartide hits, put it into your hero's soul.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rouse_the_ancients_blue",
@@ -4926,7 +4926,7 @@
     ],
     "specializations": [],
     "functional_text": "If you have attacked with a weapon this turn, your next attack this turn gains +3{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "seeds_of_agony_blue",
@@ -5252,7 +5252,7 @@
     ],
     "specializations": [],
     "functional_text": "Draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, search your deck for a card with **blood debt**, banish it, then shuffle your deck.\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "shadow_of_ursur_blue",
@@ -5276,7 +5276,7 @@
     ],
     "specializations": [],
     "functional_text": "You may play Shadow of Ursur from your banished zone.\n\nAs an additional cost to play Shadow of Ursur, you may banish a card with blood debt from your hand. If you do, Shadow of Ursur gains **go again**.\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "shadow_puppetry_red",
@@ -5341,7 +5341,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "smash_with_big_tree_yellow",
@@ -5362,7 +5362,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sonata_arcanix_red",
@@ -5502,7 +5502,7 @@
     ],
     "specializations": [],
     "functional_text": "**Phantasm**\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spears_of_surreality_red",
@@ -5664,7 +5664,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Stony Woottonhog is defended by less than 2 non-equipment cards, it has +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "stony_woottonhog_red",
@@ -5685,7 +5685,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Stony Woottonhog is defended by less than 2 non-equipment cards, it has +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "stony_woottonhog_yellow",
@@ -5706,7 +5706,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Stony Woottonhog is defended by less than 2 non-equipment cards, it has +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "stubby_hammerers",
@@ -5993,7 +5993,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If a card has been put into your banished zone this turn, Tremor of íArathael gains +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tremor_of_iarathael_red",
@@ -6014,7 +6014,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If a card has been put into your banished zone this turn, Tremor of íArathael gains +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tremor_of_iarathael_yellow",
@@ -6035,7 +6035,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If a card has been put into your banished zone this turn, Tremor of íArathael gains +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "unhallowed_rites_blue",
@@ -6329,7 +6329,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 2 arcane damage to target hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vexing_malice_red",
@@ -6350,7 +6350,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 2 arcane damage to target hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vexing_malice_yellow",
@@ -6371,7 +6371,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 2 arcane damage to target hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "void_wraith_blue",
@@ -6602,7 +6602,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Writhing Beast Hulk, banish 3 random cards from your graveyard.\n\nIf a card with 6 or more {p} is banished this way, Writhing Beast Hulk gains **dominate**.\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "writhing_beast_hulk_red",
@@ -6626,7 +6626,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Writhing Beast Hulk, banish 3 random cards from your graveyard.\n\nIf a card with 6 or more {p} is banished this way, Writhing Beast Hulk gains **dominate**.\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "writhing_beast_hulk_yellow",
@@ -6650,7 +6650,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Writhing Beast Hulk, banish 3 random cards from your graveyard.\n\nIf a card with 6 or more {p} is banished this way, Writhing Beast Hulk gains **dominate**.\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "yinti_yanti_blue",
@@ -6671,7 +6671,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Yinti Yanti is attacking and you control an aura, it has +1{p}.\n\nWhile Yinti Yanti is defending and you control an aura, it has +1{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "yinti_yanti_red",
@@ -6692,7 +6692,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Yinti Yanti is attacking and you control an aura, it has +1{p}.\n\nWhile Yinti Yanti is defending and you control an aura, it has +1{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "yinti_yanti_yellow",
@@ -6713,7 +6713,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Yinti Yanti is attacking and you control an aura, it has +1{p}.\n\nWhile Yinti Yanti is defending and you control an aura, it has +1{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "zealous_belting_blue",
@@ -6872,6 +6872,25 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - 0: **Attack**\n\nWhile Ursur is attacking a hero with 1 or more cards in their soul, the attack has **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "cracked_bauble_yellow",
+    "name": "Cracked Bauble",
+    "type_text": "Generic Resource",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "*(A player may add any number of Cracked Baubles to their card-pool in sealed deck or booster draft formats.)*",
     "status": "pending"
   }
 ]

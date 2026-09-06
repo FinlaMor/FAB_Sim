@@ -1,0 +1,16 @@
+{
+  "slug": "titans_fist",
+  "_comment": "\"Once per Turn Action - {r}{r}{r}: Attack / If there is a card with cost 3 or greater in your pitch zone, Titan's Fist has +1{p}.\" SOURCE_IS_ATTACK matters here even though the clause says 'Titan's Fist HAS +1{p}' rather than 'its attacks get': the weapon sits equipped for the whole game, so an ungated MODIFY_ATTACK would pump every attack its controller makes, not just this weapon's. Unlike the keyword cards the gate has no effect on printed keywords -- this card has none -- so it is here purely to scope the pump. Activation cost is left to the printed-text parse, which reads {r}{r}{r} as 3. Corpus: 2981 attacks, previously all skipped as unimplemented.",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "CARD_IN_ZONE", "zone": "pitch", "player": "SELF", "cost_gte": 3, "count_gte": 1}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "slug": "obsidian_fire_vein",
+  "_comment": "\"Once per Turn Action - {r}: Attack. If you've played a Draconic card this chain link, this attack gets +1{p} and go again.\" The gate is PLAYED_THIS_CHAIN_LINK, not EVENT_THIS_TURN: a turn holds several chain links, so reading the turn would fire the clause on a later attack because a Draconic card was played during an earlier link. The engine had no link-scoped record at all before this -- combat.link_plays is filled at announce (CR 5.1.2a, 7.0.3e) and lives on the CombatState, which is created per attack, so the window matches CR 7.0.3d exactly: the link starts when the attack becomes the active chain link, and there is no active chain link during the Layer or Resolution Step, so cards played in those windows correctly belong to no link. SOURCE_IS_ATTACK does double duty as on the other conditional weapons: it scopes both effects to this weapon's own attack (the weapon sits equipped all game), and it is what loader.conditional_keywords reads to STRIP the printed GoAgain -- the card DB lists it unconditionally because it flattens the sentence, and without the strip the weapon would have go again permanently. The weapon itself is not 'played', it is activated, so its own activation is never recorded as a Draconic card play and cannot satisfy its own condition. Activation cost is left to the printed-text parse, which reads {r} as 1. Corpus: 11122 attacks -- the single largest unimplemented attacker.",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "PLAYED_THIS_CHAIN_LINK", "talent": "Draconic", "player": "SELF"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1},
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ]
+}

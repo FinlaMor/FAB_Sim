@@ -2025,6 +2025,68 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             return False
         return _cfp
 
+    if ctype in ("PLAYED_THIS_CHAIN_LINK", "PLAYED_CARD_THIS_CHAIN_LINK"):
+        # "If you've played a Draconic card this chain link" (Obsidian Fire
+        # Vein), "if you've played an instant card this chain link" (Flittering
+        # Charge). Distinct from EVENT_THIS_TURN, which is a whole turn and so
+        # spans several chain links -- reading the turn where the card says the
+        # link makes the clause fire when it should not.
+        #
+        # CR 7.0.3d gives the window: a chain link starts when it becomes the
+        # ACTIVE chain link and ends when it is not, and there is no active
+        # chain link during the Layer or Resolution Step. combat.link_plays is
+        # filled at announce (CR 5.1.2a, 7.0.3e) and lives on the CombatState,
+        # which is created per attack, so the window falls out of the data
+        # rather than needing to be re-derived here.
+        #
+        #   {"type":"PLAYED_THIS_CHAIN_LINK","talent":"Draconic"}
+        #   {"type":"PLAYED_THIS_CHAIN_LINK","card_type":"Instant"}
+        wants_talent = [_norm(v) for v in _as_list(
+            params, "talent", "talents", "card_class", "class", "classes") if v]
+        wants_type = [_norm(v) for v in _as_list(
+            params, "card_type", "type", "types", "subtype", "subtypes",
+            "filter_types") if v]
+        want_name = params.get("card_name") or params.get("name")
+        who = str(params.get("player", "SELF")).upper()
+        try:
+            amount = int(params.get("amount", params.get("count_gte", 1)))
+        except (TypeError, ValueError):
+            amount = 1
+
+        def _played_link(c, e, s_, _tal=wants_talent, _ty=wants_type,
+                         _nm=want_name, _who=who, _n=amount):
+            from engine.card_effects.ability_keywords import _controller_id
+            combat = getattr(s_, "combat", None)
+            plays = list(getattr(combat, "link_plays", None) or []) if combat else []
+            if not plays:
+                return False
+            cid = _controller_id(c)
+            want_pid = cid if _who in ("SELF", "YOU", "") else (3 - cid)
+            count = 0
+            for rec in plays:
+                if _who != "ANY" and rec.get("player") not in (None, want_pid):
+                    continue
+                if _nm and _norm(str(rec.get("slug") or "")) != _norm(str(_nm)):
+                    continue
+                if _tal:
+                    have = {_norm(x) for x in (rec.get("talents") or [])}
+                    have |= {_norm(x) for x in (rec.get("classes") or [])}
+                    if not (have & set(_tal)):
+                        continue
+                if _ty:
+                    # Types AND subtypes together: "Instant" is a type while
+                    # "Attack" is a subtype, and a card naming either means the
+                    # same thing by it.
+                    have = {_norm(x) for x in (rec.get("types") or [])}
+                    have |= {_norm(x) for x in (rec.get("subtypes") or [])}
+                    if not (have & set(_ty)):
+                        continue
+                count += 1
+                if count >= _n:
+                    return True
+            return False
+        return _played_link
+
     if ctype in ("CONTROLS_CHAIN_LINKS", "CHAIN_LINKS_CONTROLLED_GTE"):
         # "control N or more chain links you control", optionally restricted to
         # links whose ATTACK matches a variable `attribute` — a talent, class,

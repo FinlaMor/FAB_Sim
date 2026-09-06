@@ -159,6 +159,25 @@ def slug_of(run):
 #: separate "we disagree" from "this could never have been checked".
 UNRECONSTRUCTABLE = (
     ("booed", "crowd state appears only in the chat log"),
+    # Charge is an ACTION taken earlier in the turn, not a board state, so it
+    # leaves no trace a spectator can read -- the same shape as the crowd state.
+    # raydn_duskbane is 0{p} printed and +3 when charged, and Boltyn decks charge
+    # most turns, so it reads 90/539 with every disagreement ours=0 theirs=3:
+    # one direction, always exactly the bonus. The card itself is correct
+    # (charged -> 3, not charged -> 0 in a built state); the feed simply does not
+    # say whether a charge happened.
+    ("charged", "whether a charge happened this turn is action history, not "
+                "board state, so it is absent from the spectator feed"),
+    # Same class: what was PLAYED earlier on this chain link is action history.
+    # build_state reconstructs the board, not the sequence of plays, so
+    # combat.link_plays is empty on a replayed state and the clause reads false.
+    # obsidian_fire_vein is 745/747 and flittering_charge_red 514/516 -- but the
+    # agreement is carried by the NEGATIVE branch (the first state of an attack
+    # is sampled, before instants are played in response), and both of the
+    # misses are ours-low, i.e. exactly the positive branch. The behavioural
+    # tests exercise that branch through the real on_play event.
+    ("this chain link", "what was played earlier on this chain link is action "
+                        "history; a replayed board carries no play sequence"),
     ("cheered", "crowd state appears only in the chat log"),
     ("from arsenal", "arsenal is face-down to spectators (94% CardBack)"),
     # Attacks the choice explains are reported as "not judgeable" rather than

@@ -1,0 +1,17 @@
+{
+  "slug": "raydn_duskbane",
+  "activation_cost": 0,
+  "_comment": "\"Once per Turn Action - 0: Attack / If you've charged this turn, Raydn gains +3{p}.\" THE ACTIVATION COST IS AUTHORED HERE, unlike every other weapon in this batch, and it is the whole reason the card was unplayable: engine/card.py parses an activation cost by counting {r} symbols and only accepts a count > 0, so a printed cost of '0' leaves activation_cost None -- and play._add_weapon_attacks requires `activation_cost is not None` before it will offer a weapon attack at all. Raydn could never attack. `activation_cost` is read TOP-LEVEL by the loader (loader.compile_card reads raw['activation_cost']), not from an ability, so it belongs here rather than inside the WHILE_STATIC; a declaration nested in an ability is silently unread. Charge is recorded as a turn event by the canonical keyword function (effect_keywords records 'charge' with the charged card's slug/types/classes/talents), so EVENT_THIS_TURN reads it without new engine state. SOURCE_IS_ATTACK scopes the +3 to this weapon's own attacks -- the weapon is equipped all game and an ungated pump would apply to everything its controller attacks with. Corpus: 6140 attacks, previously all skipped as unimplemented.",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "EVENT_THIS_TURN", "event": "charge"}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 3}
+      ]
+    }
+  ]
+}

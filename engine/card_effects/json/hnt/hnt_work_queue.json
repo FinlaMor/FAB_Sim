@@ -242,7 +242,7 @@
     ],
     "specializations": [],
     "functional_text": "Your attacks with **stealth** that are attacking a **marked** hero get +1{p} and \"When this hits, this gets **go again**.\"\n\nAt the beginning of your end phase, if an opponent is **marked**, you become a random Agent of Chaos.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "art_of_the_dragon_blood_red",
@@ -265,7 +265,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if it is Draconic, it gets **go again** and the next 3 Draconic cards you play this turn cost {r} less to play.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "art_of_the_dragon_claw_red",
@@ -328,7 +328,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, if it is Draconic, it gets \"When this hits a hero, put a -1{d} counter on an equipment they control. Then if it has 0{d}, destroy it.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bite_blue",
@@ -351,7 +351,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this attacks a hero, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bite_red",
@@ -374,7 +374,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this attacks a hero, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bite_yellow",
@@ -397,7 +397,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this attacks a hero, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blade_beckoner_boots",
@@ -530,7 +530,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, instead it gets +3{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blood_drop_red",
@@ -680,7 +680,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Defense Reaction** - Destroy this: You may add an action card from your arsenal to the active chain link as a defending card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "burning_blade_dance_red",
@@ -919,7 +919,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next dagger attack this turn gets +3{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cut_from_the_same_cloth_blue",
@@ -1159,7 +1159,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends an attack with {p} greater than its base, **mark** the attacking hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "devotion_never_dies_red",
@@ -1220,7 +1220,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target dagger attack gets +1{p}.\n\nYour next dagger attack this turn gets +3{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "diced_yellow",
@@ -1372,7 +1372,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - {r}{r}{r}, destroy this: Target Draconic attack gets **go again**. If it's a weapon or ally attack, you may attack with it an additional time this turn. This ability costs {r} less to activate for each Draconic chain link you control.\n\n**Battleworn**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "drop_of_dragon_blood_red",
@@ -1604,7 +1604,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, your next Draconic attack this combat chain gets +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fire_tenet_strike_first_red",
@@ -1627,7 +1627,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, your next Draconic attack this combat chain gets +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fire_tenet_strike_first_yellow",
@@ -1650,7 +1650,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, your next Draconic attack this combat chain gets +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "flurry_stance_red",
@@ -1695,7 +1695,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks a **marked** hero, create a Fealty token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "for_the_emperor_red",
@@ -1716,7 +1716,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks a **marked** hero, create a Fealty token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "for_the_realm_red",
@@ -1737,7 +1737,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks a **marked** hero, create a Fealty token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "grow_claws_blue",
@@ -1760,7 +1760,7 @@
     ],
     "specializations": [],
     "functional_text": "If a Draconic attack was the last attack this combat chain, this gets +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "grow_claws_red",
@@ -1783,7 +1783,7 @@
     ],
     "specializations": [],
     "functional_text": "If a Draconic attack was the last attack this combat chain, this gets +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "grow_claws_yellow",
@@ -1806,7 +1806,7 @@
     ],
     "specializations": [],
     "functional_text": "If a Draconic attack was the last attack this combat chain, this gets +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "grow_wings_blue",
@@ -1829,7 +1829,7 @@
     ],
     "specializations": [],
     "functional_text": "If a Draconic attack was the last attack this combat chain, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "grow_wings_red",
@@ -1852,7 +1852,7 @@
     ],
     "specializations": [],
     "functional_text": "If a Draconic attack was the last attack this combat chain, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "grow_wings_yellow",
@@ -1875,7 +1875,7 @@
     ],
     "specializations": [],
     "functional_text": "If a Draconic attack was the last attack this combat chain, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hand_of_vengeance",
@@ -1921,7 +1921,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: Your next attack this turn that targets Arakni costs {r} less to play or activate.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hot_on_their_heels_red",
@@ -1945,7 +1945,7 @@
     ],
     "specializations": [],
     "functional_text": "If you control 2 or more Draconic chain links, this gets **go again** and \"When this hits a hero, **mark** them.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hunt_a_killer_blue",
@@ -2085,7 +2085,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends and the attacking hero has played or activated an attack reaction this chain link, they lose 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hunters_klaive",
@@ -2237,7 +2237,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target dagger attack gets +3{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "incision_yellow",
@@ -2257,7 +2257,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target dagger attack gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "jagged_edge_red",
@@ -2346,7 +2346,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next dagger attack this turn gets +2{p}.\n\nWhenever you attack a **marked** hero this turn, the attack gets **go again**.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "knife_through_butter_red",
@@ -2483,7 +2483,7 @@
     ],
     "specializations": [],
     "functional_text": "When an opponent plays or activates an attack reaction, you may add this to the active chain link as a defending card.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "leap_frog_leggings",
@@ -2507,7 +2507,7 @@
     ],
     "specializations": [],
     "functional_text": "When an opponent plays or activates an attack reaction, you may add this to the active chain link as a defending card.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "leap_frog_slime_skin",
@@ -2531,7 +2531,7 @@
     ],
     "specializations": [],
     "functional_text": "When an opponent plays or activates an attack reaction, you may add this to the active chain link as a defending card.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "leap_frog_vocal_sac",
@@ -2555,7 +2555,7 @@
     ],
     "specializations": [],
     "functional_text": "When an opponent plays or activates an attack reaction, you may add this to the active chain link as a defending card.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "long_whisker_loyalty_red",
@@ -2639,7 +2639,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a **marked** hero, they banish a card from their hand.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mark_of_the_black_widow_red",
@@ -2685,7 +2685,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a **marked** hero, they banish a card from their hand.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mark_of_the_funnel_web_blue",
@@ -2803,7 +2803,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, **mark** them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mark_the_prey_red",
@@ -2827,7 +2827,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, **mark** them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mark_the_prey_yellow",
@@ -2851,7 +2851,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, **mark** them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mark_with_magma_red",
@@ -2875,7 +2875,7 @@
     ],
     "specializations": [],
     "functional_text": "If you control 2 or more Draconic chain links, this gets **go again** and \"When this hits a hero, **mark** them.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mask_of_deceit",
@@ -2924,7 +2924,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: Prevent the next 1 arcane damage that would be dealt to you this turn. If you've **boosted** this turn, instead prevent the next 2.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "nip_at_the_heels_blue",
@@ -3014,7 +3014,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}: **Attack**. If you've played a Draconic card this chain link, this attack gets +1{p} and **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "orb_weaver_spinneret_blue",
@@ -3199,7 +3199,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may **retrieve** a dagger from your graveyard.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pick_up_the_point_red",
@@ -3249,7 +3249,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may **retrieve** a dagger from your graveyard.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pledge_fealty_red",
@@ -3268,7 +3268,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create a Fealty token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "plunge_the_prospect_blue",
@@ -3406,7 +3406,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next dagger attack this turn gets +2{p}.\n\nUntil end of turn, your attacks get +1{p} while attacking a **marked** hero.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "poisoned_blade_blue",
@@ -3430,7 +3430,7 @@
     ],
     "specializations": [],
     "functional_text": "Whenever a dagger you own hits a hero this combat chain, they lose 1{h}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "poisoned_blade_red",
@@ -3454,7 +3454,7 @@
     ],
     "specializations": [],
     "functional_text": "Whenever a dagger you own hits a hero this combat chain, they lose 1{h}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "poisoned_blade_yellow",
@@ -3478,7 +3478,7 @@
     ],
     "specializations": [],
     "functional_text": "Whenever a dagger you own hits a hero this combat chain, they lose 1{h}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "power_stance_blue",
@@ -3636,7 +3636,7 @@
     ],
     "specializations": [],
     "functional_text": "**Mark** target opposing hero.\n\nThe next time you attack a **marked** hero this turn, the attack gets +2{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pursue_to_the_edge_of_oblivion_red",
@@ -3659,7 +3659,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits a hero, **mark** them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pursue_to_the_pits_of_despair_red",
@@ -3682,7 +3682,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits a hero, **mark** them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "put_in_context_blue",
@@ -3765,7 +3765,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\n**Instant** - Discard this: **Mark** target opposing hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "reapers_call_red",
@@ -3789,7 +3789,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\n**Instant** - Discard this: **Mark** target opposing hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "reapers_call_yellow",
@@ -3813,7 +3813,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\n**Instant** - Discard this: **Mark** target opposing hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "red_alert_boots",
@@ -4030,7 +4030,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, you may banish a card with 1{p} from each hero's graveyard. If you do, this gets +1{p}, then repeat this process.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "savor_bloodshed_red",
@@ -4255,7 +4255,7 @@
     ],
     "specializations": [],
     "functional_text": "Target dagger attack gets +2{p}. If you control 2 or more Draconic chain links, it gets \"When this hits a hero, **mark** them.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sharpened_senses_yellow",
@@ -4359,7 +4359,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks a hero, if it is Draconic, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "silver_talons_yellow",
@@ -5235,7 +5235,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next dagger attack this turn gets +2{p} and \"When this hits, you may attack with it an additional time this turn.\"\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "twist_and_turn_red",
@@ -5424,7 +5424,7 @@
     ],
     "specializations": [],
     "functional_text": "**Attack Reaction** - Destroy this: **Mark** target Arakni.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "war_cry_of_bellona_yellow",
@@ -5466,7 +5466,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next angel attack this turn gets +4{p}.\n\n**Go again**\n\n**Instant** - Discard this, banish X cards from your soul: Turn X target cards in a banished zone face-down.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "whittle_from_bone_blue",
@@ -5580,7 +5580,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: The next card you play this turn is Draconic. At the beginning of your end phase, if you haven't created a Fealty token or played a Dragonic card this turn, destroy this.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "graphene_chelicera",
@@ -5649,6 +5649,264 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nDefense reaction cards can't be played this chain link.",
+    "status": "done"
+  },
+  {
+    "slug": "arakni",
+    "name": "Arakni",
+    "type_text": "Assassin Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever you play a card with **contract**, you may look at the top card of target opponent's deck. You may put it on the bottom.",
     "status": "pending"
+  },
+  {
+    "slug": "arakni_huntsman",
+    "name": "Arakni, Huntsman",
+    "type_text": "Assassin Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever you play a card with **contract**, you may look at the top card of target opponent's deck. You may put it on the bottom.",
+    "status": "pending"
+  },
+  {
+    "slug": "arakni_solitary_confinement",
+    "name": "Arakni, Solitary Confinement",
+    "type_text": "Assassin Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 19,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your first attack with **stealth** each turn has **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "blaze_headlong_red",
+    "name": "Blaze Headlong",
+    "type_text": "Draconic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you've played another red card this turn, this gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "cinderskin_devotion_red",
+    "name": "Cinderskin Devotion",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "command_and_conquer_red",
+    "name": "Command and Conquer",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Defense reaction cards can't be played this chain link. When this hits a hero, destroy all cards in their arsenal.",
+    "status": "done"
+  },
+  {
+    "slug": "cracked_bauble_yellow",
+    "name": "Cracked Bauble",
+    "type_text": "Generic Resource",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "*(A player may add any number of Cracked Baubles to their card-pool in sealed deck or booster draft formats.)*",
+    "status": "pending"
+  },
+  {
+    "slug": "dust_runner_outlaw_red",
+    "name": "Dust Runner Outlaw",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "lava_vein_loyalty_red",
+    "name": "Lava Vein Loyalty",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "razor_reflex_red",
+    "name": "Razor Reflex",
+    "type_text": "Generic Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Choose 1;\n- Target dagger or sword weapon attack gets +3{p}.\n- Target attack action card with cost 1 or less gets +3{p} and \"When this hits, it gets **go again**.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "razors_edge_red",
+    "name": "Razor's Edge",
+    "type_text": "Assassin Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Assassin"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card with **stealth** gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "ronin_renegade_red",
+    "name": "Ronin Renegade",
+    "type_text": "Draconic Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "done"
   }
 ]

@@ -1,0 +1,16 @@
+{
+  "slug": "harmonized_kodachi",
+  "_comment": "\"Once per Turn Action - {r}: Attack / If you have a card in your pitch zone with cost 0, this card's attacks get go again.\" Same shape as searing_emberblade, and the SOURCE_IS_ATTACK gate is load-bearing for the same reason: the card DB lists GoAgain unconditionally (it flattens the sentence), the engine treats every printed keyword as unconditional, and loader.conditional_keywords strips the printed copy ONLY for a static gated on SOURCE_IS_ATTACK. Without the gate the weapon would have go again permanently -- a free permanent buff. SOURCE_IS_ATTACK also reads 'THIS card's attacks' correctly: the weapon is the attacking card. The activation cost is NOT authored -- engine/card.py parses 'TYPE - COST:' and counts {r}, giving activation_cost 1 and a per-turn limit already, and a DSL declaration would only restate it. `cost: 0` is an EXACT cost match, which CARD_IN_ZONE reads through cost_gte/cost_lte both defaulting to it; 0 is a real cost in this game (Head Jab, Phoenix Flame) so the zero must not be treated as absent. Corpus: 4854 attacks, previously all skipped as unimplemented.",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "CARD_IN_ZONE", "zone": "pitch", "player": "SELF", "cost": 0, "count_gte": 1}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ]
+}

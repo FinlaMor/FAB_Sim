@@ -110,7 +110,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Barraging Brawnhide is defended by less than 2 non-equipment cards, it has +1{p}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "barraging_brawnhide_yellow",
@@ -131,7 +131,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Barraging Brawnhide is defended by less than 2 non-equipment cards, it has +1{p}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "blessing_of_deliverance_blue",
@@ -360,7 +360,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on an equipment they control.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "buckling_blow_yellow",
@@ -383,7 +383,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on an equipment they control.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "cartilage_crush_blue",
@@ -727,7 +727,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Demolition Crew, reveal a card in your hand with cost 2 or greater.\n\n**Dominate**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "demolition_crew_red",
@@ -773,7 +773,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Demolition Crew, reveal a card in your hand with cost 2 or greater.\n\n**Dominate**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "disable_blue",
@@ -1118,7 +1118,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Flock of the Feather Walkers, reveal a card in your hand with cost 1 or less.\n\nWhen you attack with Flock of the Feather Walkers, create a Quicken token.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "flock_of_the_feather_walkers_red",
@@ -1160,7 +1160,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play Flock of the Feather Walkers, reveal a card in your hand with cost 1 or less.\n\nWhen you attack with Flock of the Feather Walkers, create a Quicken token.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "fluster_fist_blue",
@@ -1183,7 +1183,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Open the Center was the last attack this combat chain, Fluster Fist gains +1{p} for each attack that has hit this combat chain.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "fluster_fist_red",
@@ -1323,7 +1323,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nIf you have a card in your pitch zone with cost 0, this card's attacks get **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "head_jab_blue",
@@ -1869,7 +1869,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, **intimidate**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "pack_hunt_red",
@@ -1892,7 +1892,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, **intimidate**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "pack_hunt_yellow",
@@ -1915,7 +1915,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, **intimidate**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "potion_of_strength_blue",
@@ -2464,7 +2464,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, **intimidate**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "smash_instinct_red",
@@ -2510,7 +2510,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, **intimidate**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "snapdragon_scalers",
@@ -3167,7 +3167,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Rising Knee Thrust was the last attack this combat chain, Blackout Kick gains +3{p}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "blackout_kick_red",
@@ -3190,7 +3190,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Rising Knee Thrust was the last attack this combat chain, Blackout Kick gains +3{p}.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "blackout_kick_yellow",
@@ -3259,7 +3259,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Breakneck Battery, discard a random card.\n\nIf the discarded card has 6 or more {p}, Breakneck Battery gains **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "breakneck_battery_red",
@@ -3305,7 +3305,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Breakneck Battery, discard a random card.\n\nIf the discarded card has 6 or more {p}, Breakneck Battery gains **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "driving_blade_blue",
@@ -3887,7 +3887,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Leg Tap was the last attack this combat chain, Rising Knee Thrust gains +2{p} and **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "rising_knee_thrust_yellow",
@@ -3911,7 +3911,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Leg Tap was the last attack this combat chain, Rising Knee Thrust gains +2{p} and **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "rout_red",
@@ -4066,7 +4066,7 @@
     ],
     "specializations": [],
     "functional_text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card.\n\nIf Scour the Battlescape is played from arsenal, it gains **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "scour_the_battlescape_yellow",
@@ -4089,7 +4089,7 @@
     ],
     "specializations": [],
     "functional_text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card.\n\nIf Scour the Battlescape is played from arsenal, it gains **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "sharpen_steel_blue",
@@ -4135,7 +4135,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next weapon attack this turn gains +3{p}.\n\n**Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "sharpen_steel_yellow",
@@ -4239,7 +4239,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "sink_below_red",
@@ -4277,7 +4277,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "sloggism_blue",
@@ -4367,7 +4367,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, draw a card.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "snatch_red",
@@ -4388,7 +4388,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, draw a card.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "snatch_yellow",
@@ -4625,7 +4625,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Surging Strike was the last attack this combat chain, Whelming Gustwave gains +1{p}, **go again**, and \"If this hits, draw a card.\"",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "whelming_gustwave_red",
@@ -4673,7 +4673,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Surging Strike was the last attack this combat chain, Whelming Gustwave gains +1{p}, **go again**, and \"If this hits, draw a card.\"",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "wounded_bull_blue",
@@ -4959,7 +4959,7 @@
     ],
     "specializations": [],
     "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sigil_of_solace_red",

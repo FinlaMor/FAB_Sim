@@ -1,0 +1,16 @@
+{
+  "slug": "searing_emberblade",
+  "_comment": "\"Once per Turn Action - {r}{r}: Attack / If you control 2 or more Draconic chain links, this card's attacks get go again.\" ONLY the conditional clause is authored. The attack activation is not: engine/card.py parses 'TYPE - COST:' and counts {r} symbols, giving activation_cost 2 and has_per_turn_limit True with no JSON at all, and _apply_dsl_activation_overrides treats a DSL declaration as an OVERRIDE of that parse rather than a requirement -- so declaring it here would restate what the loader already gets right and add a second place to keep in sync. WHILE_STATIC gated on SOURCE_IS_ATTACK is load-bearing, not decoration: the card DB lists GoAgain unconditionally (the DB flattens the sentence), and loader.conditional_keywords reads exactly this shape to STRIP the printed keyword so the gate can take it away. Without the gate the weapon would have go again permanently -- a free permanent buff, which is worse than a dead static. SOURCE_IS_ATTACK is also the right reading of 'THIS card's attacks': the weapon IS the attacking card, unlike Luminaris' 'your Illusionist attacks get go again' where the keyword belongs to some other card. The weapon is itself Draconic, so while it is on the chain it counts as a Draconic chain link toward its own condition (CR 7.0.3a/c) and needs only ONE prior Draconic link. Corpus: 2204 attacks, previously all skipped as unimplemented.",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "SOURCE_IS_ATTACK"},
+        {"type": "CONTROLS_CHAIN_LINKS", "attribute": "Draconic", "amount": 2}
+      ],
+      "effects": [
+        {"type": "GAIN", "keyword": "GO_AGAIN"}
+      ]
+    }
+  ]
+}

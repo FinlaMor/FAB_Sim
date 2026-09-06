@@ -1220,6 +1220,20 @@ class CombatState:
     keywords: list[str]
     base_attack_power: int = 0
     from_weapon: bool = False
+    #: Cards played while THIS chain link was the active one (CR 7.0.3e: "any
+    #: layer that is played/activated/triggered is considered to be
+    #: played/activated/triggered on the active chain link").
+    #:
+    #: Lives on CombatState because a CombatState IS a chain link -- one is
+    #: created per attack at the Attack Step with link_id N+1 -- so the list
+    #: starts and ends with the link, which is exactly the window CR 7.0.3d
+    #: gives "this chain link": it begins when the attack becomes the active
+    #: chain link and there is NO active chain link during the Layer or
+    #: Resolution Step. Cards played in those windows land on no link, which
+    #: falls out of this for free rather than needing a rule.
+    #:
+    #: Each entry: {"slug", "player", "types", "subtypes", "classes", "talents"}.
+    link_plays: list = field(default_factory=list)
     attack_source: Optional[Card] = None
     defending_cards: list[Card] = field(default_factory=list)
     total_defense: int = 0

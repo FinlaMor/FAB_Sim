@@ -1537,6 +1537,34 @@ def _setup_dsl_listeners(state: GameState) -> None:
             for card in list(zone.cards):
                 dispatch(game_state, "START_OF_ACTION_PHASE", card.slug, card=card)
 
+    def _link_play_listener(event, game_state: GameState) -> None:
+        """Record a card play against the ACTIVE chain link (CR 7.0.3e).
+
+        "If you've played a Draconic card this chain link" and "if you've played
+        an instant card this chain link" had nothing to read: the engine tracked
+        plays per TURN only, and a turn holds several chain links.
+
+        Recorded at announce, which is when a card is played (CR 5.1.2a) and the
+        moment 7.0.3e attributes a layer to the active link. No active link means
+        nothing is recorded -- during the Layer Step state.combat does not exist
+        yet, and the CombatState is replaced when the next attack is announced,
+        so a play cannot leak from one link into another.
+        """
+        combat = game_state.combat
+        if combat is None:
+            return
+        card = (getattr(event, "data", None) or {}).get("card")
+        if card is None:
+            return
+        combat.link_plays.append({
+            "slug": getattr(card, "slug", None),
+            "player": getattr(card, "controller", None),
+            "types": list(getattr(card, "types", None) or []),
+            "subtypes": list(getattr(card, "subtypes", None) or []),
+            "classes": list(getattr(card, "classes", None) or []),
+            "talents": list(getattr(card, "talents", None) or []),
+        })
+
     def _dsl_attacking_listener(event, game_state: GameState) -> None:
         combat = game_state.combat
         if not combat or not combat.attack_card:
@@ -1809,6 +1837,7 @@ def _setup_dsl_listeners(state: GameState) -> None:
     state.event_manager.register('transcend', _dsl_transcend_listener)
     state.event_manager.register('token_created', _dsl_token_created_listener)
     state.event_manager.register('on_play', _dsl_card_played_listener)
+    state.event_manager.register('on_play', _link_play_listener)
     state.event_manager.register('start_of_action_phase',
                                  _dsl_start_of_action_phase_listener)
     state.event_manager.register('clash_resolved', _dsl_clash_resolved_listener)

@@ -3829,7 +3829,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**\n\nIf you control 2 or more Draconic chain links, this card's attacks get **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "searing_touch_red",

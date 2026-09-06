@@ -203,7 +203,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play this, you may **charge** your hero's soul.\n\nIf a yellow card is **charged** this way, this gets +1{p}",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "beaming_bravado_yellow",
@@ -226,7 +226,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play this, you may **charge** your hero's soul.\n\nIf a yellow card is **charged** this way, this gets +1{p}",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bolt_of_courage_red",
@@ -382,7 +382,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play this, you may **charge** your hero's soul.\n\nWhen this hits, if a yellow card was **charged** this way, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "lumina_ascension_yellow",
@@ -408,7 +408,7 @@
       "Boltyn"
     ],
     "functional_text": "**Boltyn Specialization**\n\nUntil end of turn, weapons you control gain +1{p} and \"If this hits, reveal the top card of your deck. If it's a Light card, put it into your hero's soul and gain 1{h}, otherwise put it on the bottom of your deck.\"\n\nIf you've **charged** this turn, you may attack an additional time with each weapon you control.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "raydn_duskbane",
@@ -430,7 +430,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - 0: **Attack**\n\nIf you've **charged** this turn, Raydn gains +3{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "resounding_courage_red",
@@ -564,5 +564,68 @@
     "specializations": [],
     "functional_text": "If you've **charged** this turn, Valiant Thrust gains +3{p}.",
     "status": "pending"
+  },
+  {
+    "slug": "quicken",
+    "name": "Quicken",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you play an attack action card or activate a weapon attack, destroy this and the attack gains **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "sink_below_red",
+    "name": "Sink Below",
+    "type_text": "Generic Defense Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card.",
+    "status": "done"
+  },
+  {
+    "slug": "snatch_red",
+    "name": "Snatch",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits, draw a card.",
+    "status": "done"
   }
 ]
