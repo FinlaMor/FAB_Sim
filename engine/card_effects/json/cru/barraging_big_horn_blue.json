@@ -1,0 +1,29 @@
+{
+  "slug": "barraging_big_horn_blue",
+  "cost": {
+    "type": "DISCARD_RANDOM"
+  },
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "DEFENDING_CARD_COUNT",
+          "amount": 2,
+          "comparison": "lt",
+          "equipment": false
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ],
+  "_comment": "'As an additional cost to play this, discard a random card. / While this is defended by less than 2 non-equipment cards, it has go again.'\n\nTHE DISCARD IS A CARD-LEVEL `cost`, which play.py checks for legality and pays ONCE when the card is played. Never an ON_PLAY effect: a cost has to block the play, and modelling it as an effect would let the card be played with an empty hand and then discard nothing. Not an ability-level `additional_cost` either -- interpreter._run_ability pays those on every dispatch, which for the WHILE_STATIC below is every attack-power recalculation (breakneck_battery is the card that lesson came from).\n\n'LESS THAN 2 NON-EQUIPMENT CARDS' is DEFENDING_CARD_COUNT with `equipment: false`, which counts only non-equipment defenders. Equipment defends for free every turn, so counting it would make the gate almost always false and the card almost never have go again.\n\nSOURCE_IS_ATTACK does two jobs: it confines the static to THIS card's own attack, and it is what loader.conditional_keywords reads to strip the printed GoAgain. The card DB lists it unconditionally because it flattens the sentence; without the strip the gate is decoration and the attack always has go again."
+}

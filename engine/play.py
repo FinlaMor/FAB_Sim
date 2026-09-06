@@ -858,12 +858,20 @@ def _reaction_kinds(card=None, ability_type=None) -> list[str]:
     return out
 
 
-def _static_effect_types(card) -> set[str]:
+def _static_effect_types(card, state=None) -> set[str]:
     """Effect types declared by this card's STATIC abilities, from the CardDef.
 
     Read from the definition rather than a Card attribute so a declaration holds
     for any copy, including one that reached its zone before any ability of
     theirs ever ran.
+
+    CONDITIONS ARE HONOURED when a state is available. 13 cards gate the
+    permission to play from the banished zone -- "IF you have played a
+    non-attack action card this turn, you may play this from your banished
+    zone" -- and reading the declaration alone grants it in every state, which
+    is not a smaller version of the card but a free one. A card whose gate
+    cannot be evaluated (no state passed) keeps the old declaration-only
+    reading, so callers that have no game to ask stay unchanged.
     """
     slug = getattr(card, "slug", None)
     if not slug:
@@ -872,10 +880,34 @@ def _static_effect_types(card) -> set[str]:
     card_def = get_card(slug)
     if card_def is None:
         return set()
-    return {(getattr(eff, "effect_type", "") or "").upper()
-            for ability in card_def.abilities
-            if (ability.ability_type or "").upper() == "STATIC"
-            for eff in ability.effects}
+    out: set[str] = set()
+    for ability in card_def.abilities:
+        if (ability.ability_type or "").upper() != "STATIC":
+            continue
+        if state is not None and not _static_conditions_hold(ability, card, state):
+            continue
+        for eff in ability.effects:
+            out.add((getattr(eff, "effect_type", "") or "").upper())
+    return out
+
+
+def _static_conditions_hold(ability, card, state) -> bool:
+    """Every condition on a STATIC ability, evaluated against the live state.
+
+    A condition that raises is treated as NOT holding: a permission that cannot
+    be established must not be granted, and the alternative — swallowing the
+    error into a True — would hand out the free play this exists to prevent.
+    """
+    for cond in getattr(ability, "conditions", None) or []:
+        fn = getattr(cond, "fn", None)
+        if fn is None:
+            continue
+        try:
+            if not fn(card, None, state):
+                return False
+        except Exception:
+            return False
+    return True
 
 
 def _runechant_count(player) -> int:
@@ -907,8 +939,12 @@ def _self_playable_from_banished(card, state=None, player=None) -> bool:
 
     Declared as {"ability_type":"STATIC","effects":[{"type":"PLAYABLE_FROM_BANISHED"}]},
     or as RUNE_GATE, whose permission is conditional on Runechants.
+
+    The STATIC's own conditions are evaluated too, when there is a state to
+    evaluate them against: 13 cards write "IF <something>, you may play this
+    from your banished zone", and the declaration alone grants it always.
     """
-    statics = _static_effect_types(card)
+    statics = _static_effect_types(card, state)
     if "PLAYABLE_FROM_BANISHED" in statics:
         return True
     if "RUNE_GATE" in statics and state is not None and player is not None:

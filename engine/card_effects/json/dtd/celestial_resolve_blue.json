@@ -1,0 +1,33 @@
+{
+  "slug": "celestial_resolve_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE_VALUE",
+          "mod": "add",
+          "amount": 3,
+          "target": {
+            "zone": "DEFENDING",
+            "filter": [
+              {
+                "type": "CARD_IS_TYPE",
+                "card_type": "Action"
+              },
+              {
+                "type": "CARD_IS_TYPE",
+                "subtype": "Attack"
+              },
+              {
+                "type": "CARD_IS_NAMED",
+                "name_contains": "Herald"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target attack action card with Herald in its name gets +3{d}.'\n\n'WITH HERALD IN ITS NAME' IS A SUBSTRING. CARD_IS_NAMED compared whole names (colour suffix stripped, so one entry covers all three printings) and no card is called 'Herald', so the filter matched nothing -- which is indistinguishable from a board with no legal target. `name_contains` is a separate key so a card that names ONE specific card cannot start matching a family that shares a word; ATTACK_NAME_IN gained the same key for the attacking side.\n\nzone DEFENDING is where a {d} buff can land: +3{d} on an attack action card matters when it DEFENDS, and MODIFY_DEFENSE_VALUE moves the defending total. The two CARD_IS_TYPE clauses are the 'attack action card' half -- type Action AND subtype Attack; either alone is a different set, since an Attack Reaction is not an attack action card.\n\nThe target spec deliberately omits `amount: 1`, which is its default. The number is redundant, and a JSON number the printed text does not contain is what stops the colour variants being derived: the copier requires every number in the abilities to appear in the text, because otherwise it cannot establish which occurrence the text's number corresponds to."
+}

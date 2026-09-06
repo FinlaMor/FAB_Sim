@@ -1853,13 +1853,23 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         import re as _re
         wants = {_norm(v) for v in _as_list(params, "names", "name", "card_name")
                  if v}
+        # "an attack action card WITH HERALD IN ITS NAME" -- the per-card twin
+        # of ATTACK_NAME_IN's `name_contains`. No card is called "Herald", so
+        # an exact comparison is false in every state, and a filter that
+        # matches nothing looks exactly like a board with no legal target.
+        # Kept separate from `name` so a card that names ONE specific card
+        # cannot start matching a family that shares a word.
+        contains = {_norm(v) for v in
+                    _as_list(params, "name_contains", "names_contain") if v}
 
-        def _named(c, e, s, _w=wants):
-            if not _w:
+        def _named(c, e, s, _w=wants, _c=contains):
+            if not (_w or _c):
                 return False
             slug = _re.sub(r'_(red|yellow|blue)$', '', getattr(c, 'slug', '') or '')
-            return (_norm(slug) in _w
-                    or _norm(getattr(c, 'name', '') or '') in _w)
+            name = _norm(getattr(c, 'name', '') or '')
+            if _w and (_norm(slug) in _w or name in _w):
+                return True
+            return any(want in name or want in _norm(slug) for want in _c)
         return _named
 
     if ctype in ("PLAYED_FROM_ZONE", "PLAYED_FROM"):

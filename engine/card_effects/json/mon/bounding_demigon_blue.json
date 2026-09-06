@@ -1,0 +1,40 @@
+{
+  "slug": "bounding_demigon_blue",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "conditions": [
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "play",
+          "qualifier": "nonattack"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PLAYABLE_FROM_BANISHED"
+        }
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "PLAYED_FROM_ZONE",
+          "zone": "banished"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'If you have played a non-attack action card this turn, you may play this from your banished zone. IF YOU DO, it gains +1{p}. Blood Debt' -- Blood Debt is printed and fires from the card DB, deliberately not authored.\n\nTHE PERMISSION IS CONDITIONAL AND THE ENGINE WAS NOT ASKING. play._self_playable_from_banished read the STATIC's declared effect types and ignored its conditions, so any card of this shape could be played from banish in every state -- not a smaller version of the card but a free one. 13 cards write the permission this way; the conditions are now evaluated whenever there is a state to evaluate them against.\n\n'IF YOU DO' IS PLAYED_FROM_ZONE, not a flag. The +1{p} belongs to the copy that was actually played out of the banished zone, and this card can also be played normally from hand -- where it must NOT get the bonus."
+}
