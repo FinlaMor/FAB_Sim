@@ -150,7 +150,7 @@ DB_PATH = "C:/Users/Joseph/Desktop/FAB_Coach/fab_games.db"
 import engine.engine as E
 from engine.card import CardDB
 from engine.card_effects.dsl.loader import get_card, load_all_cards
-from engine.state import CombatState, Step
+from engine.state import ChainLink, CombatState, Step
 from tests.conftest import _make_state
 
 load_all_cards()
@@ -358,7 +358,7 @@ def explains_as_choice(side, other, slug, theirs, played_from=None,
         return False
 
 
-def build_state(side, opp, attacker_id=1, with_effects=False):
+def build_state(side, opp, attacker_id=1, with_effects=False, chain_links=None):
     """Reconstruct as much of the attacker's board as the feed exposes.
 
     THE LISTENERS ARE NOT OPTIONAL. A card's WHILE_STATIC abilities fire off
@@ -376,6 +376,33 @@ def build_state(side, opp, attacker_id=1, with_effects=False):
     st.active_player = attacker_id
     st.combat = None
     st.player_agents = {1: _replay_agent, 2: _replay_agent}
+
+    # PRIOR CHAIN LINKS. The spectator feed carries one entry per resolved link
+    # with only {"result", "isDraconic"} -- it never names the card -- so a
+    # named-card Combo cannot be rebuilt from it. `isDraconic` CAN be, and that
+    # is the whole of what "N or more Draconic chain links you control" needs.
+    #
+    # Without this st.chain_links stayed EMPTY, so every such card counted only
+    # the live attack and never reached a threshold of 2. phoenix_flame_red is
+    # itself Draconic and read 104/480 against the corpus, every disagreement
+    # ours=0 theirs=1 -- one short, because the links it was standing on were
+    # not there at all.
+    #
+    # Every link on one combat chain belongs to the attacking player: the
+    # defender never adds links. So attributing them all to `attacker_id` is
+    # exact here, not an approximation.
+    for i, entry in enumerate(chain_links or []):
+        if not isinstance(entry, dict):
+            continue
+        draconic = entry.get("isDraconic")
+        st.chain_links.append(ChainLink(
+            chainlink_id=i + 1, attacker_id=attacker_id, attack_slug="",
+            attack_power=0, net_damage=0, keywords=[], from_weapon=False,
+            # Deliberately only the talent the feed actually carries. Inventing
+            # classes or subtypes here would let unrelated conditions answer
+            # confidently from data that does not exist.
+            talents=(["Draconic"] if str(draconic).lower() in ("1", "true", "yes")
+                     else [])))
 
     for pid, data in ((attacker_id, side), (3 - attacker_id, opp)):
         player = st.players[pid]
@@ -462,7 +489,11 @@ def our_power(st, slug, attacker_id=1, played_from=None):
             if equipped.slug == slug:
                 card = equipped
     power = card.base_power or 0
-    st.combat = CombatState(attacker_id=attacker_id, link_id=1,
+    # link_id is N+1, as CR 7.0.3a numbers it -- not a hardcoded 1. Conditions
+    # that ask about the chain compare the live attack's link id against the
+    # resolved ones, and a fabricated 1 collides with the first resolved link.
+    st.combat = CombatState(attacker_id=attacker_id,
+                            link_id=len(getattr(st, "chain_links", None) or []) + 1,
                             attack_power=power, attack_card=card, keywords=[])
     st.combat.base_attack_power = power
     # Whether this is a WEAPON attack is a property of the attacking object and

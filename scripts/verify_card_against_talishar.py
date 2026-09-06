@@ -903,7 +903,8 @@ def verify(slug, db_path, explain=False, refresh=False, with_effects=False,
                 effect_sources[canonical(slug_)] += 1
             continue
         try:
-            st = build_state(side, other, with_effects=with_effects)
+            st = build_state(side, other, with_effects=with_effects,
+                             chain_links=cc.get("chain_links"))
             ours = our_power(st, slug)
         except Exception:
             continue

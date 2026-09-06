@@ -1,0 +1,19 @@
+{
+  "slug": "phoenix_flame_red",
+  "_comment": "\"If you control 2 or more Draconic chain links, this gets +1{p}. Go again\" -- 0{p} / 0 cost, so the static IS the card. CONTROLS_CHAIN_LINKS with attribute:Draconic counts only links whose attack carried the talent, which each ChainLink stores at creation; the older COUNT_CHAIN_LINKS spelling is a helper for amount expressions, not a condition, and authoring it here would gate on an unresolvable name. WHILE_STATIC rather than an ON_ATTACK trigger because the count is a continuous property of the chain -- CR 6.2.3d -- and it is re-read on every attack-power recalculation, so a link resolving mid-chain is picked up. Deliberately NOT gated on SOURCE_IS_ATTACK: that gate is what loader.conditional_keywords reads to STRIP a printed keyword, and this card's Go again is unconditional, so adding it would silently take the keyword away. Go again is a plain PLAY ability, matching head_jab_red -- the card DB already lists it, and CR 8.3.5b makes the duplicate inert. Corpus: 2406 attacks, previously all skipped as unimplemented.",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "CONTROLS_CHAIN_LINKS", "attribute": "Draconic", "amount": 2}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 1}
+      ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [{"type": "GO_AGAIN"}]
+    }
+  ]
+}

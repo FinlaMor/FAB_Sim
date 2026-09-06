@@ -579,7 +579,7 @@
     ],
     "specializations": [],
     "functional_text": "**Decompose** - When this attacks, you may banish 2 Earth cards and an action card from your graveyard. If you do, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blossoming_decay_yellow",
@@ -602,7 +602,7 @@
     ],
     "specializations": [],
     "functional_text": "**Decompose** - When this attacks, you may banish 2 Earth cards and an action card from your graveyard. If you do, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bruised_leather",
@@ -670,7 +670,7 @@
     ],
     "specializations": [],
     "functional_text": "**Decompose** - When this attacks, you may banish 2 Earth cards and an action card from your graveyard. If you do, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cadaverous_tilling_red",
@@ -1275,7 +1275,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, create an Embodiment of Earth token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "earth_form_yellow",
@@ -2460,7 +2460,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, create a Runechant token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hocus_pocus_yellow",
@@ -3046,7 +3046,7 @@
     ],
     "specializations": [],
     "functional_text": "Deal 2 arcane damage to any target.\n\n**Instant** - Discard this: **Amp 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "photon_splicing_red",
@@ -3136,7 +3136,7 @@
     ],
     "specializations": [],
     "functional_text": "If there are 4 or more Earth cards in your banished zone, this gets +4{p}.\n\n**Decompose** - When this attacks, you may banish 2 Earth cards and an action card from your graveyard. If you do, each hero puts a card from their arsenal on the bottom of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pop_the_bubble_blue",
@@ -3316,7 +3316,7 @@
     ],
     "specializations": [],
     "functional_text": "**Decompose** - You may banish 2 Earth cards and an action card from your graveyard. If you do, this gets +1{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rootbound_carapace_yellow",
@@ -3337,7 +3337,7 @@
     ],
     "specializations": [],
     "functional_text": "**Decompose** - You may banish 2 Earth cards and an action card from your graveyard. If you do, this gets +1{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rotwood_reaper",
@@ -3428,7 +3428,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've played or created an aura this turn, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "runerager_swarm_yellow",
@@ -3451,7 +3451,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've played or created an aura this turn, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sanctuary_of_aria",
@@ -3596,7 +3596,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if you've dealt damage this turn, this gets +1{p} and **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "seeds_of_tomorrow_blue",
@@ -3997,7 +3997,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks or hits, you may destroy an aura you control. If you do, create a Runechant token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "splintering_deadwood_yellow",
@@ -4018,7 +4018,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks or hits, you may destroy an aura you control. If you do, create a Runechant token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "staff_of_verdant_shoots",
@@ -4109,7 +4109,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If there are 4 or more Earth cards in your banished zone, this gets +4{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "strength_of_four_seasons_yellow",
@@ -4130,7 +4130,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If there are 4 or more Earth cards in your banished zone, this gets +4{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "strong_yield_blue",
@@ -4580,7 +4580,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've played or created an aura this turn, this gets **overpower**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vantage_point_red",
@@ -4626,7 +4626,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've played or created an aura this turn, this gets **overpower**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vaporize__shock_yellow",
@@ -4877,7 +4877,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks or defends, if you have less {h} than an opposing hero, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fyendals_fighting_spirit_yellow",
@@ -4898,7 +4898,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks or defends, if you have less {h} than an opposing hero, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "aether_quickening_blue",
@@ -5176,7 +5176,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've dealt arcane damage this turn, this gets \"When this hits a hero, they discard a card.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "consuming_volition_yellow",
@@ -5197,7 +5197,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've dealt arcane damage this turn, this gets \"When this hits a hero, they discard a card.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cracked_bauble_yellow",

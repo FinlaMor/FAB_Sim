@@ -1,0 +1,38 @@
+{
+  "slug": "plow_under_yellow",
+  "_comment": "\"If there are 4 or more Earth cards in your banished zone, this gets +4{p}. Decompose - When this attacks, you may banish 2 Earth cards and an action card from your graveyard. If you do, each hero puts a card from their ARSENAL on the bottom of their deck.\" Deliberately mirrors felling_of_the_crown_red, which is the same two clauses with the same numbers; only the Decompose payoff differs (felling bottoms from HAND, this from ARSENAL, so PUT_ARSENAL_BOTTOM rather than PUT_HAND_CARD_BOTTOM). face_up:true on the banished-zone count because a face-down banished card is not publicly an Earth card, and the count is of what is there face up. The two ability-level CARD_IN_ZONE conditions gate whether the option is OFFERED, so by the time the MAY is accepted the cost is payable and the payoff effects can sit beside the banishes -- the same shape felling uses. card_class 'Earth' matches the Earth talent via _card_traits, and filter_types ['Action'] checks types OR subtypes, so 'an action card' includes attack actions as printed. Corpus: 2000 attacks, previously all skipped as unimplemented.",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zone": "banished", "card_class": "Earth",
+         "count_gte": 4, "face_up": true}
+      ],
+      "effects": [
+        {"type": "MODIFY_ATTACK", "mod": "add", "amount": 4}
+      ]
+    },
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {"type": "CARD_IN_ZONE", "zone": "graveyard", "card_class": "Earth", "count_gte": 2},
+        {"type": "CARD_IN_ZONE", "zone": "graveyard", "filter_types": ["Action"], "count_gte": 1}
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Decompose - banish 2 Earth cards and an action card from your graveyard?",
+          "effects": [
+            {"type": "BANISH", "from_zone": "GRAVEYARD", "player": "SELF", "amount": 2,
+             "filter": [{"type": "CARD_IS_TALENT", "talent": "Earth"}]},
+            {"type": "BANISH", "from_zone": "GRAVEYARD", "player": "SELF", "amount": 1,
+             "filter": [{"type": "CARD_IS_TYPE", "card_type": "Action"}]},
+            {"type": "PUT_ARSENAL_BOTTOM", "player": "SELF"},
+            {"type": "PUT_ARSENAL_BOTTOM", "player": "OPPONENT"}
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -2043,13 +2043,49 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
             cid = _controller_id(c)
             links = [lk for lk in (getattr(s, "chain_links", None) or [])
                      if getattr(lk, "attacker_id", None) == cid]
+
+            # THE ATTACK ON THE CHAIN RIGHT NOW IS A CHAIN LINK TOO. CR 7.0.3a:
+            # an attack added to the combat chain becomes the active-attack of
+            # chain link N+1, and 7.0.3c gives that link the active-attack's own
+            # properties and control. state.chain_links only receives the link
+            # AFTER damage resolves, so counting that list alone misses the live
+            # attack and every threshold reads one low.
+            #
+            # phoenix_flame_red is the proof: it is itself Draconic, so "2 or
+            # more Draconic chain links" needs one PRIOR Draconic link plus
+            # itself. Against the spectator corpus it agreed on 104 of 480
+            # attacks, and all 376 disagreements were ours=0 theirs=1 -- one
+            # short, every time.
+            #
+            # Guarded against double counting: once damage has resolved the
+            # active attack IS in chain_links, under the same chainlink_id,
+            # while state.combat is still set until the chain closes. The guard
+            # matches on id AND slug, not id alone -- a reconstructed board can
+            # number its links from 1 while the harness gives the live attack
+            # link_id 1 too, and on id alone that reads as "already counted"
+            # and silently drops the live attack again.
+            combat = getattr(s, "combat", None)
+            attack_card = getattr(combat, "attack_card", None) if combat else None
+            already = any(
+                getattr(lk, "chainlink_id", None) == getattr(combat, "link_id", None)
+                and getattr(lk, "attack_slug", None) == getattr(attack_card, "slug", None)
+                for lk in links) if attack_card is not None else True
+            if (attack_card is not None
+                    and getattr(combat, "attacker_id", None) == cid
+                    and not already):
+                links = links + [attack_card]
+
             if not _attr:
                 return len(links) >= _n
             count = 0
             for lk in links:
                 attrs = []
+                # A ChainLink stores these captured at creation; the live attack
+                # is a Card and carries the same field names, so one loop reads
+                # both. `keywords` is absent on a Card mid-attack, which is why
+                # getattr defaults rather than indexing.
                 for fld in ("talents", "classes", "subtypes", "keywords"):
-                    attrs += [x.lower() for x in (getattr(lk, fld, None) or [])]
+                    attrs += [str(x).lower() for x in (getattr(lk, fld, None) or [])]
                 if _attr in attrs:
                     count += 1
             return count >= _n

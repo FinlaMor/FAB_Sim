@@ -39,7 +39,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 3 arcane damage to any target.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "aether_dart_yellow",
@@ -102,7 +102,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 4 arcane damage to any target.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "aether_hail_yellow",
@@ -123,7 +123,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 3 arcane damage to any target.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "aether_icevein_blue",
@@ -146,7 +146,7 @@
     ],
     "specializations": [],
     "functional_text": "**Ice Fusion**\n\nDeal 3 arcane damage to any target. If Aether Icevein was **fused** and deals damage to a hero, they discard a card unless they pay {r}{r}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "aether_icevein_red",
@@ -236,7 +236,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create a Frostbite token under target hero's control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arctic_incarceration_red",
@@ -302,7 +302,7 @@
     ],
     "specializations": [],
     "functional_text": "When you attack with Billowing Mirage, **transform** up to 1 ash you control into an Aether Ashwing.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "billowing_mirage_red",
@@ -326,7 +326,7 @@
     ],
     "specializations": [],
     "functional_text": "When you attack with Billowing Mirage, **transform** up to 1 ash you control into an Aether Ashwing.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "billowing_mirage_yellow",
@@ -350,7 +350,7 @@
     ],
     "specializations": [],
     "functional_text": "When you attack with Billowing Mirage, **transform** up to 1 ash you control into an Aether Ashwing.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blaze_headlong_red",
@@ -396,7 +396,7 @@
     ],
     "specializations": [],
     "functional_text": "**Legendary**\n\nWhen you pitch Blood of the Dracai, the next 3 Draconic cards you play this turn cost {r} less.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "brain_freeze_blue",
@@ -488,7 +488,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next attack this combat chain is Draconic in addition to its other card types.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "brand_with_cinderclaw_red",
@@ -511,7 +511,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next attack this combat chain is Draconic in addition to its other card types.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "brand_with_cinderclaw_yellow",
@@ -534,7 +534,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next attack this combat chain is Draconic in addition to its other card types.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "breaking_point_red",
@@ -578,7 +578,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends, you may pay {r}. If you do, it gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "brothers_in_arms_red",
@@ -599,7 +599,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends, you may pay {r}. If you do, it gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "brothers_in_arms_yellow",
@@ -620,7 +620,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends, you may pay {r}. If you do, it gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "burn_away_red",
@@ -643,7 +643,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Burn Away, you may banish a Phoenix Flame from your graveyard. When you do, Burn Away gains +2{p} and **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "burn_them_all_red",
@@ -715,7 +715,7 @@
     ],
     "specializations": [],
     "functional_text": "If you control 2 or more Draconic chain links, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cinderskin_devotion_red",
@@ -738,7 +738,7 @@
     ],
     "specializations": [],
     "functional_text": "If you control 2 or more Draconic chain links, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cinderskin_devotion_yellow",
@@ -761,7 +761,7 @@
     ],
     "specializations": [],
     "functional_text": "If you control 2 or more Draconic chain links, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cold_snap_blue",
@@ -875,7 +875,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - Destroy Conduit of Frostburn: The next card you play this turn with an effect that deals arcane damage gains \"When this deals arcane damage to a hero, destroy a **frozen** card in their arsenal.\"\n\n**Quell 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "coronet_peak",
@@ -898,7 +898,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}{r}{r}: Target hero discards a card unless they pay {r}.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "critical_strike_blue",
@@ -1047,7 +1047,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 3 arcane damage to any target.\n\nPrevent the next X arcane damage that would be dealt to your hero this turn, where X is the damage dealt by Dampen.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "double_strike_red",
@@ -1278,7 +1278,7 @@
     ],
     "specializations": [],
     "functional_text": "When Dustup hits, create an Ash token, then **transform** up to 1 ash you control into an Aether Ashwing.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "dustup_red",
@@ -1301,7 +1301,7 @@
     ],
     "specializations": [],
     "functional_text": "When Dustup hits, create an Ash token, then **transform** up to 1 ash you control into an Aether Ashwing.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "dustup_yellow",
@@ -1324,7 +1324,7 @@
     ],
     "specializations": [],
     "functional_text": "When Dustup hits, create an Ash token, then **transform** up to 1 ash you control into an Aether Ashwing.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "embermaw_cenipai_blue",
@@ -1347,7 +1347,7 @@
     ],
     "specializations": [],
     "functional_text": "**Phantasm**\n\nWhen Embermaw Cenipai is destroyed, create an Ash token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "embermaw_cenipai_red",
@@ -1370,7 +1370,7 @@
     ],
     "specializations": [],
     "functional_text": "**Phantasm**\n\nWhen Embermaw Cenipai is destroyed, create an Ash token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "embermaw_cenipai_yellow",
@@ -1393,7 +1393,7 @@
     ],
     "specializations": [],
     "functional_text": "**Phantasm**\n\nWhen Embermaw Cenipai is destroyed, create an Ash token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "encase_red",
@@ -1547,7 +1547,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "You may start the game with a Phoenix Flame in your graveyard.\n\n**Once per Turn Instant** - {r}{r}{r}: Return a Phoenix Flame from your graveyard to your hand. This ability costs {r} less for each Draconic chain link you control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "flameborn_retribution_red",
@@ -1637,7 +1637,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you attack or defend with Flex, you may pay {r}{r}. If you do, it gains +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "flex_red",
@@ -1658,7 +1658,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you attack or defend with Flex, you may pay {r}{r}. If you do, it gains +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "flex_yellow",
@@ -1679,7 +1679,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you attack or defend with Flex, you may pay {r}{r}. If you do, it gains +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fog_down_yellow",
@@ -1774,7 +1774,7 @@
       "Iyslander"
     ],
     "functional_text": "**Iyslander Specialization**\n\nFrostbites you control have \"At the beginning of your end phase, this deals 1 arcane damage to you.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "frosting_blue",
@@ -1816,7 +1816,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 3 arcane damage to any target.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "frosting_yellow",
@@ -1858,7 +1858,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks or defends, if you have less {h} than an opposing hero, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fyendals_fighting_spirit_red",
@@ -1879,7 +1879,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks or defends, if you have less {h} than an opposing hero, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fyendals_fighting_spirit_yellow",
@@ -1900,7 +1900,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks or defends, if you have less {h} than an opposing hero, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ghostly_touch",
@@ -2098,7 +2098,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 3 arcane damage to any target.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ice_bolt_red",
@@ -2140,7 +2140,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 4 arcane damage to any target.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ice_eternal_blue",
@@ -2261,7 +2261,7 @@
     ],
     "specializations": [],
     "functional_text": "When you attack with Inflame, if you've played another red card this turn, you may return a Phoenix Flame from your graveyard to your hand.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "insidious_chill_blue",
@@ -2308,7 +2308,7 @@
     ],
     "specializations": [],
     "functional_text": "**Transform** target ash you control into Azvolai. **Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "invoke_cromai_red",
@@ -2460,7 +2460,7 @@
     ],
     "specializations": [],
     "functional_text": "**Transform** target ash you control into Nekria. **Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "invoke_ouvia_red",
@@ -2722,7 +2722,7 @@
     ],
     "specializations": [],
     "functional_text": "If you control 2 or more Draconic chain links, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "lava_vein_loyalty_red",
@@ -2745,7 +2745,7 @@
     ],
     "specializations": [],
     "functional_text": "If you control 2 or more Draconic chain links, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "lava_vein_loyalty_yellow",
@@ -2768,7 +2768,7 @@
     ],
     "specializations": [],
     "functional_text": "If you control 2 or more Draconic chain links, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "liquefy_red",
@@ -2812,7 +2812,7 @@
     ],
     "specializations": [],
     "functional_text": "When Mounting Anger hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it gains +1{p} and you may play it this turn.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mounting_anger_red",
@@ -2835,7 +2835,7 @@
     ],
     "specializations": [],
     "functional_text": "When Mounting Anger hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it gains +1{p} and you may play it this turn.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mounting_anger_yellow",
@@ -2858,7 +2858,7 @@
     ],
     "specializations": [],
     "functional_text": "When Mounting Anger hits, you may banish an attack action card from your hand with cost less than the number of Draconic chain links you control. If you do, it gains +1{p} and you may play it this turn.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "oasis_respite_blue",
@@ -2877,7 +2877,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Prevent the next 2 damage that would be dealt to target hero this turn by a source of your choice. If they have less life than each other hero, they may gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "oasis_respite_red",
@@ -2938,7 +2938,7 @@
     ],
     "specializations": [],
     "functional_text": "If you control 2 or more Draconic chain links, this gets +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "phoenix_form_red",
@@ -2961,7 +2961,7 @@
     ],
     "specializations": [],
     "functional_text": "If you control 1 or more Phoenix Flames, Phoenix Form has **go again**. If you control 2 or more, it has +2{p}. If you control 3 or more, it has \"When this hits a hero, draw 3 cards.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "polar_cap_blue",
@@ -3147,7 +3147,7 @@
     ],
     "specializations": [],
     "functional_text": "Create an Ash token, then **transform** up to 3 ash you control into Aether Ashwings.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rake_the_embers_yellow",
@@ -3228,7 +3228,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target attack action card with cost 0 gains +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "read_the_ripples_blue",
@@ -3629,7 +3629,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ronin_renegade_yellow",
@@ -3652,7 +3652,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sand_cover_blue",
@@ -3759,7 +3759,7 @@
     ],
     "specializations": [],
     "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scar_for_a_scar_red",
@@ -3782,7 +3782,7 @@
     ],
     "specializations": [],
     "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scar_for_a_scar_yellow",
@@ -3805,7 +3805,7 @@
     ],
     "specializations": [],
     "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "searing_emberblade",
@@ -4051,7 +4051,7 @@
     ],
     "specializations": [],
     "functional_text": "**Ward 4**\n\nAt the beginning of your action phase, destroy Sigil of Protection.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sigil_of_protection_yellow",
@@ -4075,7 +4075,7 @@
     ],
     "specializations": [],
     "functional_text": "**Ward 3**\n\nAt the beginning of your action phase, destroy Sigil of Protection.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "silent_stilettos",
@@ -4185,7 +4185,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 1 arcane damage to target hero and up to 2 target allies they control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "skittering_sands_blue",
@@ -4372,7 +4372,7 @@
     ],
     "specializations": [],
     "functional_text": "Draconic attacks you control have +1{p} while their base {p} is less than the number of Draconic chain links you control.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "stoke_the_flames_red",
@@ -4578,7 +4578,7 @@
     ],
     "specializations": [],
     "functional_text": "When you attack with Sweeping Blow, create an Ash token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sweeping_blow_red",
@@ -4601,7 +4601,7 @@
     ],
     "specializations": [],
     "functional_text": "When you attack with Sweeping Blow, create an Ash token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sweeping_blow_yellow",
@@ -4624,7 +4624,7 @@
     ],
     "specializations": [],
     "functional_text": "When you attack with Sweeping Blow, create an Ash token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "take_the_tempo_red",
@@ -4734,7 +4734,7 @@
     ],
     "specializations": [],
     "functional_text": "The second attack action card with 2 or less base {p} you play each turn has +1{p} and \"Damage that would be dealt by this can't be prevented.\"\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tome_of_duplicity_blue",
@@ -4797,7 +4797,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard a card. If you do, draw a card.\n\nIf this was played from arsenal, it gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "trade_in_red",
@@ -4820,7 +4820,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard a card. If you do, draw a card.\n\nIf this was played from arsenal, it gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "trade_in_yellow",
@@ -4843,7 +4843,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard a card. If you do, draw a card.\n\nIf this was played from arsenal, it gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "transmogrify_blue",
@@ -5002,7 +5002,7 @@
     ],
     "specializations": [],
     "functional_text": "**Arcane Barrier 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ash",
@@ -5026,7 +5026,7 @@
     ],
     "specializations": [],
     "functional_text": "**Material** - While Ash is under an object, that object has **phantasm**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "azvolai",
@@ -5048,7 +5048,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Whenever Azvolai attacks, you may have him deal 1 arcane damage to up to any 2 targets.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cromai",
@@ -5292,6 +5292,69 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Yendurai enters the arena with an endurance counter on him.\n\nIf Yendurai would be dealt damage, remove an endurance counter from him to prevent 3 of that damage.",
+    "status": "pending"
+  },
+  {
+    "slug": "cracked_bauble_yellow",
+    "name": "Cracked Bauble",
+    "type_text": "Generic Resource",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "*(A player may add any number of Cracked Baubles to their card-pool in sealed deck or booster draft formats.)*",
+    "status": "pending"
+  },
+  {
+    "slug": "frostbite",
+    "name": "Frostbite",
+    "type_text": "Elemental Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Cards and abilities cost you an additional {r} to play or activate.\n\nAt the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.",
+    "status": "done"
+  },
+  {
+    "slug": "iyslander",
+    "name": "Iyslander",
+    "type_text": "Elemental Wizard Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 18,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [
+      "Essence"
+    ],
+    "specializations": [],
+    "functional_text": "**Essence of Ice**\n\nIf it's not your turn, you may play blue 'non-attack' action cards from your arsenal as though they were an instant.\n\nWhenever you play an Ice card during an opponents turn, create a Frostbite token under their control.",
     "status": "pending"
   }
 ]
