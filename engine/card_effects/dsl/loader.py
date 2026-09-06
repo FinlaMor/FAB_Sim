@@ -166,14 +166,74 @@ def compile_card(raw: dict[str, Any]) -> CardDef:
                    conditional_keywords=list(declared))
 
 
+#: Which (root, file-state) the registry currently holds, and the compiled
+#: result for each one seen. See load_all_cards for why this exists.
+_CURRENT_KEY: tuple | None = None
+_LOAD_CACHE: dict[tuple, tuple] = {}
+
+
+def _card_file_state(root: Path) -> tuple:
+    """Cheap identity for "the set of card files under root, as they are now".
+
+    Path + mtime + size for every file load_all_cards would actually read.
+    Stat'ing them costs ~0.1s against ~0.5s to open, parse and compile them,
+    and it is what makes the reload skippable WITHOUT assuming the tree is
+    unchanged -- a card written mid-session still invalidates.
+    """
+    out = []
+    for path in sorted(root.rglob("*.json")):
+        if path.stem.endswith("_work_queue"):
+            continue
+        if any(part.startswith(".") for part in path.relative_to(root).parts):
+            continue
+        try:
+            st = path.stat()
+        except OSError:
+            continue
+        out.append((str(path), st.st_mtime_ns, st.st_size))
+    return (str(root), tuple(out))
+
+
 def load_all_cards(json_dir: Path | None = None) -> int:
     """
     Walk json_dir (defaults to card_effects/json/) and compile all .json files.
     Returns the number of cards loaded.
     Idempotent — calling multiple times re-loads everything.
+
+    RE-LOADING IS THE HOT PATH, not a corner case. 177 test modules call this
+    at import time and tests/conftest.py's autouse `_restore_dsl_registry`
+    calls it twice more per module, because some modules load a SUBSET (a temp
+    dir, one set folder) and would otherwise leave the global registry
+    replaced. That is ~350 full loads per suite run, each one opening, parsing
+    and compiling every card file — and the cost grows with the corpus, so
+    every card added made the suite slower. It was ~4 minutes of a 9m30 run.
+
+    So: the compiled result is cached against the state of the files it was
+    built from. Same root, same files, same mtimes and sizes -> the registry is
+    already correct and nothing is re-read. A card written mid-session changes
+    an mtime and the load happens for real. This is the same defect, in a
+    different place, as the GameStateFactory that was being rebuilt inside a
+    4,953-way parametrize.
     """
-    global _CARDS, _LOADED
+    global _CARDS, _LOADED, _CURRENT_KEY
+    root = json_dir or _json_dir()
+    key = _card_file_state(root) if root.exists() else None
+
+    if key is not None and key == _CURRENT_KEY:
+        # The registry already holds exactly this. Nothing to do.
+        return len(_CARDS)
+    if key is not None and key in _LOAD_CACHE:
+        cards, conditional, errors, duplicates, count = _LOAD_CACHE[key]
+        _CARDS.clear(); _CARDS.update(cards)
+        _CONDITIONAL_KEYWORDS.clear(); _CONDITIONAL_KEYWORDS.update(conditional)
+        LOAD_ERRORS.clear(); LOAD_ERRORS.update(errors)
+        DUPLICATE_SLUGS.clear(); DUPLICATE_SLUGS.update(duplicates)
+        _LOADED = True
+        _CURRENT_KEY = key
+        return count
+
     _LOADED = True
+    _CURRENT_KEY = key
     _CARDS.clear()
     # Derived from _CARDS, so it must not outlive a reload.
     _CONDITIONAL_KEYWORDS.clear()
@@ -181,7 +241,6 @@ def load_all_cards(json_dir: Path | None = None) -> int:
     DUPLICATE_SLUGS.clear()
     seen_paths: dict[str, str] = {}
 
-    root = json_dir or _json_dir()
     if not root.exists():
         logger.debug("DSL json dir not found: %s (no cards loaded)", root)
         return 0
@@ -226,6 +285,15 @@ def load_all_cards(json_dir: Path | None = None) -> int:
             logger.warning("Failed to load %s: %s", path, exc)
 
     logger.debug("DSL loaded %d cards from %s (%d failed)", count, root, len(LOAD_ERRORS))
+    if key is not None:
+        # Bounded: a session that edits cards produces a new key per edit, and
+        # each entry holds a dict of every compiled card. Four is enough for the
+        # alternation the tests actually do (full tree <-> a subset) without the
+        # cache growing for the length of a long authoring session.
+        if len(_LOAD_CACHE) >= 4:
+            _LOAD_CACHE.pop(next(iter(_LOAD_CACHE)))
+        _LOAD_CACHE[key] = (dict(_CARDS), dict(_CONDITIONAL_KEYWORDS),
+                            dict(LOAD_ERRORS), dict(DUPLICATE_SLUGS), count)
     return count
 
 

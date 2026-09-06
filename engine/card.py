@@ -610,14 +610,27 @@ def _apply_dsl_activation_overrides(card: "Card") -> None:
 class CardDB:
     """Wraps slug_index.msgpack for card lookups."""
 
+    #: Parsed index per path. The index is a READ-ONLY lookup table -- nothing
+    #: in the engine, the tests or the scripts writes to `_by_slug`/`_by_name`
+    #: -- so one parse serves every CardDB built from the same file.
+    #:
+    #: 159 test modules construct a CardDB at IMPORT time, and re-reading and
+    #: re-parsing the whole card index each time cost ~0.14s apiece and grew
+    #: with the corpus. Only the parsed data is shared; `_card_cache` stays
+    #: per-instance because it holds Card templates callers may hand out.
+    _INDEX_CACHE: dict[str, dict] = {}
+
     def __init__(self, path: Optional[str] = None):
         path = path or SLUG_INDEX_PATH
-        if path.endswith(".msgpack"):
-            with open(path, "rb") as f:
-                data = msgpack.unpack(f, raw=False)
-        else:
-            with open(path, encoding="utf-8") as f:
-                data = json.load(f)
+        data = CardDB._INDEX_CACHE.get(path)
+        if data is None:
+            if path.endswith(".msgpack"):
+                with open(path, "rb") as f:
+                    data = msgpack.unpack(f, raw=False)
+            else:
+                with open(path, encoding="utf-8") as f:
+                    data = json.load(f)
+            CardDB._INDEX_CACHE[path] = data
         self._by_slug: dict[str, dict] = data.get("by_slug", {})
         self._by_name: dict[str, list[str]] = data.get("by_name", {})
         self._card_cache: dict[str, Card] = {}  # template cache — shared across all games
