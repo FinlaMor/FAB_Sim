@@ -13,12 +13,14 @@
           "token_type": "Ponder",
           "conditions": [
             {
-              "type": "SURGE"
+              "type": "SURGE",
+              "more_than": 5
             }
           ],
           "token": "ponder"
         }
       ]
     }
-  ]
+  ],
+  "_comment": "SURGE READ THE WRONG THING AND THEN DID NOT READ IT. The condition asked the INCOMING event for a `damage` field, but a Surge ability is the card's own resolution -- the event is the play, or None, and never the damage the same ability just dealt (a None event raised AttributeError). On top of that the gate was authored bare, which means amount 1, i.e. 'dealt at least 1 damage' -- true whenever the card resolved at all, so the printed threshold was decoration and the payoff was unconditional. It now reads the amount ACTUALLY dealt (after Amp, prevention and Arcane Barrier, which are exactly what push it past the printed number) and tests strictly GREATER THAN the printed value, which is how all 34 Surge cards are worded."
 }

@@ -234,13 +234,25 @@ def _substitution(entry, src_entry, raw):
     b = _NUM.findall(signature(entry, False))
     if len(a) != len(b):
         return None
-    diffs = [(x, y) for x, y in zip(a, b) if x != y]
+    diffs = {(x, y) for x, y in zip(a, b) if x != y}
+    # A card may print ONE number in several places -- "Deal 2 arcane damage
+    # ... Surge - if this deals more than 2 damage" -- and then every printed
+    # occurrence changes together in the colour variant. That is still one
+    # substitution, so the distinct pairs are what must be unique, not the
+    # positions. Requiring a single POSITION held back the whole Surge family.
     if len(diffs) != 1:
         return None
-    old, new = diffs[0]
+    old, new = diffs.pop()
     abilities = raw.get("abilities") or []
     nums = _numbers_in(abilities)
-    if nums.count(old) != 1:
+    if not nums.count(old):
+        # The number the text changed is not modelled at all, so copying would
+        # silently keep the source's value.
+        return None
+    if nums.count(old) != a.count(old):
+        # The JSON mentions it a different number of times from the printed
+        # text, so which occurrences correspond is not established and
+        # substituting all of them could change something the text did not.
         return None
     text_nums = set(a)
     if any(n not in text_nums for n in nums):
@@ -249,11 +261,17 @@ def _substitution(entry, src_entry, raw):
 
 
 def _apply_substitution(abilities, old, new):
-    """Replace the one occurrence of `old`, as a whole number, in the JSON."""
+    """Replace every whole-number occurrence of `old` in the JSON.
+
+    _substitution has already established that the abilities mention `old`
+    exactly as often as the printed text does, so all of them are the same
+    printed number and change together -- "Deal 2 arcane damage ... Surge - if
+    this deals more than 2 damage" is one number twice, not two numbers.
+    """
     blob = json.dumps(abilities)
     pattern = re.compile(r"(?<![\d.])%s(?![\d.])" % re.escape(old))
     swapped, count = pattern.subn(new, blob)
-    assert count == 1, count
+    assert count >= 1, count
     return json.loads(swapped)
 
 

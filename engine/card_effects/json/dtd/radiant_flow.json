@@ -1,0 +1,25 @@
+{
+  "slug": "radiant_flow",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "BANISH_SELF"
+        },
+        {
+          "type": "BANISH_FROM_SOUL",
+          "amount": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "PREVENT_DAMAGE",
+          "amount": 2
+        }
+      ]
+    }
+  ],
+  "_comment": "'Instant - Banish this and a card from your hero's soul: Prevent the next 2 damage that would be dealt to your hero this turn.'\n\nBANISH IS NOT DESTROY, and there was no banish-this cost until this card needed one. A destroyed card goes to the GRAVEYARD and a banished one does not, so writing DESTROY_SELF here would put the equipment in the wrong zone for every graveyard-recursion card, for Blade Break and Temper, and for anything counting a graveyard -- quietly, because the ability still resolves. Ten cards in the corpus pay this cost.\n\nBOTH halves are costs, not effects: 'banish this AND a card from your soul' must both be payable before the shield exists, and a soul with no cards must not be able to activate it."
+}

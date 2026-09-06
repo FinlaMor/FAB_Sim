@@ -107,6 +107,26 @@ def compile_cost(ctype: str, params: dict[str, Any]) -> tuple[Callable, Callable
             _destroy(state, card, card)
         return can_pay, pay
 
+    if ctype == "BANISH_SELF":
+        # "Banish this and a card from your hero's soul: ..." (the Radiant
+        # equipment cycle, Grimoire of the Haunt, Thaw). Ten cards pay it.
+        #
+        # NOT a spelling of DESTROY_SELF. A destroyed card goes to the
+        # graveyard and a banished one does not, so the two differ for every
+        # graveyard-recursion card, for Blade Break and Temper, and for
+        # anything counting cards in a graveyard. Authoring one as the other
+        # puts the card in the wrong zone -- quietly, since the ability still
+        # resolves.
+        def can_pay(card, event, state):
+            return True
+
+        def pay(card, event, state):
+            from engine.card_effects.ability_keywords import _controller_id
+            from engine.effect_keywords import banish as _banish
+            _banish(state, card, _controller_id(card),
+                    origin_zone=getattr(card, "zone", None))
+        return can_pay, pay
+
     if ctype == "DISCARD_SELF":
         # "Instant - Discard this: …" — the activation cost is discarding this
         # card from hand. Marks the ability as a from-hand instant so the engine

@@ -798,10 +798,42 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         return _combo_contains
 
     if ctype == "SURGE":
-        amount = params.get("amount", 1)
-        def _surge(c, e, s, _amt=amount):
-            from engine.card_effects.ability_keywords import surge_check
-            return surge_check(e, _amt)
+        # CR 8.4.8: "Surge - If this deals N damage, [EFFECTS]". Every one of
+        # the 34 cards that print it writes "if this deals MORE THAN N damage",
+        # so the test is strictly greater than the printed amount.
+        #
+        # IT COULD NOT SEE THE DAMAGE. The old reading asked the INCOMING event
+        # for a `damage` field, and a Surge ability is the card's own
+        # resolution -- the event is the play, or None, and never the damage the
+        # same ability just dealt. Both live Surge cards were authored bare
+        # (amount 1), which on top of that made the gate "dealt at least 1",
+        # true whenever the card resolved at all: the printed threshold was
+        # decoration and the payoff was unconditional. On a None event it
+        # raised AttributeError instead.
+        #
+        # `state._last_damage_dealt` is the amount that was ACTUALLY dealt,
+        # published by effect_keywords.deal_damage after replacements and
+        # prevention -- which is the number the card asks about, since Amp and
+        # Arcane Barrier are exactly what push it above or below the printed
+        # value. The incoming event is still consulted first, for a Surge that
+        # really is reacting to a damage event.
+        threshold = _first_present(params, "more_than", "amount", "damage", default=0)
+
+        def _surge(c, e, s, _t=threshold):
+            try:
+                need = int(_t)
+            except (TypeError, ValueError):
+                need = 0
+            dealt = None
+            data = getattr(e, "data", None)
+            if isinstance(data, dict) and "damage" in data:
+                dealt = data.get("damage")
+            if dealt is None:
+                dealt = getattr(s, "_last_damage_dealt", None)
+            try:
+                return int(dealt or 0) > need
+            except (TypeError, ValueError):
+                return False
         return _surge
 
     if ctype == "RUPTURE":

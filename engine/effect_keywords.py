@@ -501,6 +501,13 @@ def deal_damage(state: GameState, amount: int, damage_type: str, source_player_i
     event = dataclasses.replace(event, **{k: v for k, v in event_dict.items() if k in vars(event)})
 
     if event.amount == 0 or event.canceled:
+        # A damage event that resolved to nothing still ANSWERS "how much did
+        # this deal": zero. Returning without publishing it leaves the previous
+        # card's number readable, and the Surge condition (CR 8.4.8, "if this
+        # deals more than N damage") would then fire on a hit that was entirely
+        # prevented -- invisibly, since a wrongly-triggered payoff looks exactly
+        # like a correctly-triggered one.
+        state._last_damage_dealt = 0
         return event
 
     # CR 8.5.47: consume amp counter for arcane damage (next arcane damage this turn +N)
@@ -516,6 +523,15 @@ def deal_damage(state: GameState, amount: int, damage_type: str, source_player_i
 
     is_hero = any('hero' in t.lower() for t in [t.lower() for t in (damage_target.types or []) + (damage_target.subtypes or [])])
     target_type = 'hero' if is_hero else 'ally'
+
+    # The last actually-dealt amount, published for the LAST_DAMAGE_DEALT
+    # amount expression and for the Surge condition (CR 8.4.8, "if this deals
+    # more than N damage"). Written for EVERY resolved damage event, including
+    # a fully prevented one: leaving it stale on a zero would let the next
+    # card's Surge read the PREVIOUS card's damage and fire on a hit that never
+    # landed — a false positive that is invisible, because the payoff looks
+    # exactly like a Surge that legitimately triggered.
+    state._last_damage_dealt = event.amount
 
     # "if you've dealt arcane damage this turn" and friends. Recorded once the
     # damage is final (past replacements/cancellation), against the DEALING
@@ -537,11 +553,6 @@ def deal_damage(state: GameState, amount: int, damage_type: str, source_player_i
         # The marker above answers "have you dealt arcane damage this turn";
         # this tally answers "how much", which the markers cannot — see
         # Player.damage_dealt_this_turn.
-        # "with cost equal to or less than the DAMAGE DEALT by this card"
-        # (Lesson in Lava). The printed number is not the answer — prevention
-        # and replacement effects can change it — so the last actually-dealt
-        # amount is published for the LAST_DAMAGE_DEALT amount expression.
-        state._last_damage_dealt = event.amount
         _src = state.players.get(event.source_player_id) if event.source_player_id is not None else None
         if _src is not None:
             tally = getattr(_src, "damage_dealt_this_turn", None)

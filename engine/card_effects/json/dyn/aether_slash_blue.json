@@ -1,0 +1,23 @@
+{
+  "slug": "aether_slash_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "PITCHED_FOR_THIS",
+          "card_type": "Action",
+          "not_subtype": "Attack"
+        }
+      ],
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'When Aether Slash attacks, if a non-attack action card was pitched to play it, deal 1 arcane damage to any target.'\n\nPITCHED_FOR_THIS is the cards pitched to pay for THIS card, which play._pitch_for_cost stamps on it -- distinct from the pitch ZONE (which holds everything pitched this turn, so it would still be true on a later attack) and from combat.pitched_for_attack (the weapon-activate path).\n\n'NON-ATTACK ACTION CARD' IS TWO CLAIMS ABOUT ONE CARD: it is an Action and it is not an Attack. `not_subtype` says that; a NOT around the whole condition would say something weaker -- 'no attack was pitched' -- which is wrong the moment both an attack and a non-attack pay for the same card, exactly the state the clause is about."
+}

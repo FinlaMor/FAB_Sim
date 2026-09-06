@@ -9,12 +9,19 @@ across and records it in `_substituted`.
 WHY THAT IS SAFE HERE AND NOT IN GENERAL. Three conditions have to hold before
 a card is derived, and each rules out a distinct way of getting it wrong:
 
-  exactly one number differs      two differences mean two clauses changed and
+  exactly one number differs      counted as DISTINCT pairs, not positions: a
+                                  card may print one number in several places
+                                  ("Deal 2 arcane damage ... Surge - if this
+                                  deals more than 2 damage") and every
+                                  occurrence changes together. Two DIFFERENT
+                                  differences mean two clauses changed and
                                   nothing says which JSON value is which.
-  the old number appears exactly  more than once and the substitution is
-  once in the source's abilities  ambiguous; not at all and the number the text
-                                  changed is not modelled, so the copy would
-                                  silently keep the source's value.
+  the abilities mention it as     if the JSON mentions the number a different
+  often as the printed text       number of times from the text, which
+                                  occurrences correspond is not established;
+                                  not at all and the number the text changed is
+                                  not modelled, so the copy would silently keep
+                                  the source's value.
   every number in the abilities   a JSON number the printed text does not
   also appears in the text        contain is something else -- an internal
                                   amount, a duration, an index -- and its
@@ -121,10 +128,15 @@ def test_the_two_texts_still_differ_in_exactly_that_number(slug):
         "even with numbers blurred")
     a = _NUM.findall(_signature(source, blur=False))
     b = _NUM.findall(_signature(slug, blur=False))
-    diffs = [(x, y) for x, y in zip(a, b) if x != y]
+    # DISTINCT pairs, not positions. A card may print one number in several
+    # places -- "Deal 2 arcane damage ... Surge - if this deals more than 2
+    # damage" -- and every occurrence changes together in the colour variant.
+    # That is still ONE substitution; counting positions rejected the whole
+    # Surge family for differing "twice".
+    diffs = {(x, y) for x, y in zip(a, b) if x != y}
     sub = raw["_substituted"]
-    assert diffs == [(sub["from"], sub["to"])], (
-        slug + " and " + source + " now differ in " + str(diffs)
+    assert diffs == {(sub["from"], sub["to"])}, (
+        slug + " and " + source + " now differ in " + str(sorted(diffs))
         + ", not just the recorded " + str(sub["from"]) + " -> " + str(sub["to"]))
 
 

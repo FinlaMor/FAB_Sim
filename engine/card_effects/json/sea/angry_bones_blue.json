@@ -1,0 +1,58 @@
+{
+  "slug": "angry_bones_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Discard a card or destroy the top card of your deck?",
+          "effects": [
+            {
+              "type": "CHOOSE",
+              "options": [
+                [
+                  {
+                    "type": "DISCARD",
+                    "amount": 1,
+                    "into": "bones_card"
+                  }
+                ],
+                [
+                  {
+                    "type": "LOOK_AT",
+                    "zone": "DECK_TOP",
+                    "player": "SELF",
+                    "amount": 1,
+                    "into": "bones_card"
+                  },
+                  {
+                    "type": "DESTROY_REF",
+                    "ref": "bones_card"
+                  }
+                ]
+              ]
+            },
+            {
+              "type": "CONDITIONAL",
+              "condition": {
+                "type": "REF_HAS_KEYWORD",
+                "ref": "bones_card",
+                "keyword": "watery grave"
+              },
+              "effects": [
+                {
+                  "type": "MODIFY_ATTACK",
+                  "mod": "add",
+                  "amount": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, you may discard a card OR destroy the top card of your deck. If THAT CARD has watery grave, this gets +1{p}.'\n\nThe shape is burly_bones_blue's, which reads the same sentence with a different payoff.\n\nTHE TWO HALVES OF THE CHOICE HAVE TO STORE THE SAME REF, because 'that card' means whichever one the player actually moved -- so the discard records it and the deck branch LOOKs first and destroys what it looked at. Destroying the top card without looking would leave nothing to ask about, and re-reading the graveyard afterwards would find every card put there this turn rather than this one.\n\n'watery grave' is spelled as the printed text does; REF_HAS_KEYWORD normalises, so the card DB's 'WateryGrave' answers."
+}

@@ -1,0 +1,29 @@
+{
+  "slug": "aether_quickening_blue",
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 2,
+          "target": "OPPONENT"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN",
+          "conditions": [
+            {
+              "type": "SURGE",
+              "more_than": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Deal 2 arcane damage to target hero. / Surge - If this deals more than 2 damage, it gets go again.'\n\nSURGE READ THE WRONG THING AND THEN DID NOT READ IT. The condition asked the INCOMING event for a `damage` field, but a Surge ability is the card's own resolution -- the event is the play, or None, and never the damage the same ability just dealt (a None event raised AttributeError). On top of that the gate was authored bare, which means amount 1, i.e. 'dealt at least 1 damage' -- true whenever the card resolved at all, so the printed threshold was decoration and the payoff was unconditional. It now reads the amount ACTUALLY dealt (after Amp, prevention and Arcane Barrier, which are exactly what push it past the printed number) and tests strictly GREATER THAN the printed value, which is how all 34 Surge cards are worded.\n\nTHE PRINTED GO AGAIN HAS TO BE WITHDRAWN. The card DB lists GoAgain unconditionally because it flattens the sentence, so without the card-level conditional_keywords declaration the gate is decoration and the card always has go again -- which, since go again on a non-attack action is an action point, is the difference between a card that costs a turn and one that does not.\n\nThe order matters: the DEAL runs first, so the gate reads the damage this card just dealt rather than a previous card's."
+}

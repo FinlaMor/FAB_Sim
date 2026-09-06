@@ -1,0 +1,30 @@
+{
+  "slug": "stonewall_confidence_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "_comment": "Was a plain STATIC, which nothing dispatches, and MODIFY_DEFENSE_VALUE wrote combat.total_defense, which _resolve_damage recomputes from sum(card.defense) immediately before damage -- so the value was discarded even when something did set it. WHILE_STATIC on RECALC_DEFENSE with MODIFY_DEFENSE moves the DEFENDING CARD's own {d}, which is what survives into the total. CONTROLS_ATTACK_ACTION with cost_gte asked whether the controller HAS such a card, not whether the DEFENDER is one.",
+      "conditions": [
+        {
+          "type": "DEFENDING_CARD_IS",
+          "cost_gte": 4,
+          "controlled_by": "SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE",
+          "mod": "add",
+          "amount": 4
+        }
+      ]
+    }
+  ],
+  "_substituted": {
+    "from": "3",
+    "to": "4"
+  },
+  "_derived_from": "stonewall_confidence_yellow",
+  "_comment": "Derived from stonewall_confidence_yellow, whose printed functional text is identical to this card's apart from ONE number (4 here, 3 there) -- the usual shape of a colour variant. That number appears exactly once in stonewall_confidence_yellow's abilities, and every number in those abilities also appears in its printed text, so which JSON value the text changed is not in doubt; it is substituted here and recorded in _substituted.\n\nTHE DERIVATION IS PINNED, not trusted: tests/test_number_substituted_copies.py re-applies the same substitution to stonewall_confidence_yellow's current abilities and asserts it still yields these, and that the two printed texts still differ in exactly that one number. An edit to either card that breaks the correspondence fails there rather than leaving the pair silently out of step -- the insult_to_injury failure, where three printings of one sentence got three implementations and the blue one was missing a gate."
+}

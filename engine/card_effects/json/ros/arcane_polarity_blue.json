@@ -1,0 +1,35 @@
+{
+  "slug": "arcane_polarity_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "EVENT_THIS_TURN",
+              "event": "damage_taken",
+              "qualifier": "arcane"
+            }
+          ],
+          "then": [
+            {
+              "type": "GAIN",
+              "asset": "HEALTH",
+              "amount": 2
+            }
+          ],
+          "else": [
+            {
+              "type": "GAIN",
+              "asset": "HEALTH",
+              "amount": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Gain 1{h} / If you've been dealt arcane damage this turn, INSTEAD gain 2{h}.'\n\n'INSTEAD' MEANS ONE GAIN, NOT TWO. Authored as an unconditional GAIN 1 followed by a conditional GAIN 2 the card would heal 3 -- so the whole thing is one CONDITIONAL_EFFECT with a then/else, and exactly one branch runs.\n\n'BEEN DEALT' IS THE VICTIM'S SIDE. effect_keywords records two separate markers on purpose: `damage` on the player who DEALT it and `damage_taken` on the one who received it. Asking the `damage` marker here would give the attacker's answer to the defender's question -- true whenever YOU had dealt arcane damage, which is the opposite card."
+}
