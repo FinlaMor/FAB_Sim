@@ -334,7 +334,7 @@ def _accepting_agent(state, options, context=""):
 
 
 def explains_as_choice(side, other, slug, theirs, played_from=None,
-                       with_effects=False):
+                       with_effects=False, chain_links=None):
     """Would ACCEPTING an optional have matched Talishar's number?
 
     Both directions genuinely occur -- 171 corpus attacks where the player paid
@@ -351,7 +351,8 @@ def explains_as_choice(side, other, slug, theirs, played_from=None,
     counterfactual built on a different board is not a counterfactual.
     """
     try:
-        alt_state = build_state(side, other, with_effects=with_effects)
+        alt_state = build_state(side, other, with_effects=with_effects,
+                                chain_links=chain_links)
         alt_state.player_agents = {1: _accepting_agent, 2: _accepting_agent}
         return our_power(alt_state, slug, played_from=played_from) == theirs
     except Exception:
@@ -642,7 +643,12 @@ def attack_states(db_path, limit, wide=False):
         played_from = "arsenal" if slug in (was_in_arsenal.get(side_key) or set()) else None
 
         yielded += 1
-        yield slug, power, side, other, played_from, skipped
+        # The prior chain links travel with the attack. Without them every
+        # "N or more <talent> chain links you control" card counts only the live
+        # attack and reads one threshold low -- phoenix_flame_red showed
+        # {-1: 108} here while the per-card verifier, which DID reconstruct
+        # them, read 480/480 on the same card. Two callers, one wired up.
+        yield slug, power, side, other, played_from, skipped, cc.get("chain_links")
 
 
 def main():
@@ -660,11 +666,11 @@ def main():
     skipped = collections.Counter()
     optional = collections.Counter()
 
-    for slug, theirs, side, other, played_from, skip in attack_states(
+    for slug, theirs, side, other, played_from, skip, links in attack_states(
             args.db, args.limit, args.wide):
         skipped = skip
         try:
-            st = build_state(side, other)
+            st = build_state(side, other, chain_links=links)
             ours = our_power(st, slug, played_from=played_from)
         except Exception as exc:
             errors[type(exc).__name__] += 1
@@ -672,7 +678,8 @@ def main():
         if ours is None:
             continue
         if ours != theirs and explains_as_choice(side, other, slug, theirs,
-                                                 played_from):
+                                                 played_from,
+                                                 chain_links=links):
             # A legal optional the player took and the feed does not record.
             # Counted, not scored: it is neither an agreement (we did not
             # predict it) nor a defect (nothing is wrong).

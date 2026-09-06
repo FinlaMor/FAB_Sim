@@ -909,7 +909,8 @@ def verify(slug, db_path, explain=False, refresh=False, with_effects=False,
         except Exception:
             continue
         if ours != theirs and explains_as_choice(side, other, slug, theirs,
-                                                 with_effects=with_effects):
+                                                 with_effects=with_effects,
+                                                 chain_links=cc.get("chain_links")):
             # An optional the player took ("you may banish ... if you do, this
             # gets +2{p}") that the feed does not record. Both directions occur
             # in the corpus, so neither answering yes nor answering no is a
