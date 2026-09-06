@@ -1,0 +1,5 @@
+{
+  "slug": "wounding_blow_red",
+  "_comment": "Derived from wounding_blow_blue, whose printed functional text is byte-identical. Colour variants differ only in {p} and pitch, and both come from card data rather than this file, so the abilities carry over unchanged. Verified against the corpus as its own card.",
+  "abilities": []
+}

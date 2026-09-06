@@ -67,7 +67,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, your next attack this turn gets +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blood_scent",
@@ -113,7 +113,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they put a card from their hand on top of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "boulder_drop_yellow",
@@ -136,7 +136,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they put a card from their hand on top of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "brevant_civic_protector",
@@ -201,7 +201,7 @@
     ],
     "specializations": [],
     "functional_text": "Whenever this defends, create a Vigor token under another hero's control.\n\n**Temper**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "civic_guide",
@@ -393,7 +393,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy this, then the next Guardian attack action card you play this turn costs {r} less to play and gets +5{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "earthlore_empowerment_yellow",
@@ -415,7 +415,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy this, then the next Guardian attack action card you play this turn costs {r} less to play and gets +4{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "encore_yellow",
@@ -460,7 +460,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: Gain {r}{r}",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fiddle_dee",
@@ -676,7 +676,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}{r}{r}: Target opposing hero chooses and creates a Might, Quicken, or Vigor token. You create a Copper token. **Go again**\n\n**Action** - 0: **Attack**. When this hits, destroy it.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mask_of_three_tails",
@@ -855,7 +855,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create a Quicken token under each other hero's control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "song_of_sweet_nectar_blue",
@@ -1075,5 +1075,1322 @@
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they can't draw cards during their next action phase",
     "status": "done"
+  },
+  {
+    "slug": "bittering_thorns_yellow",
+    "name": "Bittering Thorns",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, your next attack this turn gets +1{p}.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "blessing_of_qi_blue",
+    "name": "Blessing of Qi",
+    "type_text": "Ninja Action - Aura",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then create a Crouching Tiger in your banished zone. It gains +1{p} and you may play it this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "blessing_of_qi_red",
+    "name": "Blessing of Qi",
+    "type_text": "Ninja Action - Aura",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then create a Crouching Tiger in your banished zone. It gains +3{p} and you may play it this turn.",
+    "status": "done"
+  },
+  {
+    "slug": "chokeslam_blue",
+    "name": "Chokeslam",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, attack action cards they control can't gain {p} during their next action phase.",
+    "status": "done"
+  },
+  {
+    "slug": "chokeslam_yellow",
+    "name": "Chokeslam",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, attack action cards they control can't gain {p} during their next action phase.",
+    "status": "done"
+  },
+  {
+    "slug": "coax_a_commotion_red",
+    "name": "Coax a Commotion",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits, choose any number:\n\n- Each hero creates a Quicken token.\n- Each hero draws a card.\n- Each hero gains 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "colossal_bearing_red",
+    "name": "Colossal Bearing",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Tower"
+    ],
+    "specializations": [],
+    "functional_text": "**Tower** - If this has 13 or more {p}, it gets \"When this hits a hero, destroy an equipment they control with 1 or less {d}.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "copper",
+    "name": "Copper",
+    "type_text": "Generic Token - Item",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}{r}, destroy this: Draw a card. **Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "crazy_brew_blue",
+    "name": "Crazy Brew",
+    "type_text": "Generic Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Roll a 6 sided die. On;\n\n- 1 or 2 - Lose 2{h}. **Go again**\n- 3 or 4 - Gain 2{h}. **Go again**\n- 5 or 6 - Gain {r}{r}, gain 2 action points, and your next attack this turn gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "crouching_tiger",
+    "name": "Crouching Tiger",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": null,
+    "power": 0,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Ephemeral",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Ephemeral**\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "disable_blue",
+    "name": "Disable",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 3,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
+    "status": "done"
+  },
+  {
+    "slug": "disable_yellow",
+    "name": "Disable",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 2,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
+    "status": "done"
+  },
+  {
+    "slug": "edge_of_autumn",
+    "name": "Edge of Autumn",
+    "type_text": "Ninja Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_energy_matrix_blue",
+    "name": "Evo Energy Matrix",
+    "type_text": "Mechanologist Action Equipment - Evo Chest",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest",
+      "Evo",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base chest equipped, **transform** it into this, then equip this.\n\nYour Teklo Blaster costs {r} less to activate for each opposing hero.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_rapid_fire_blue",
+    "name": "Evo Rapid Fire",
+    "type_text": "Mechanologist Action Equipment - Evo Legs",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Evo",
+      "Legs",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base legs equipped, **transform** it into this, then equip this.\n\nYour Teklo Blaster attacks get **go again**.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_scatter_shot_blue",
+    "name": "Evo Scatter Shot",
+    "type_text": "Mechanologist Action Equipment - Evo Arms",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms",
+      "Evo",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base arms equipped, **transform** it into this, then equip this.\n\nYour Teklo Blaster gets +1{p} for each opposing hero.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "evo_tekloscope_blue",
+    "name": "Evo Tekloscope",
+    "type_text": "Mechanologist Action Equipment - Evo Head",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Evo",
+      "Head",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "Transform"
+    ],
+    "specializations": [],
+    "functional_text": "If you have a base head equipped, **transform** it into this, then equip this.\n\nYour Teklo Blaster attacks can target any opposing hero.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "firewall_blue",
+    "name": "Firewall",
+    "type_text": "Mechanologist Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, reveal the top card of your deck. If it's an Evo, put it on top of your deck. Otherwise, put it on the bottom.",
+    "status": "pending"
+  },
+  {
+    "slug": "firewall_red",
+    "name": "Firewall",
+    "type_text": "Mechanologist Block",
+    "cost": null,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, reveal the top card of your deck. If it's an Evo, put it on top of your deck. Otherwise, put it on the bottom.",
+    "status": "pending"
+  },
+  {
+    "slug": "firewall_yellow",
+    "name": "Firewall",
+    "type_text": "Mechanologist Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, reveal the top card of your deck. If it's an Evo, put it on top of your deck. Otherwise, put it on the bottom.",
+    "status": "pending"
+  },
+  {
+    "slug": "flex_claws_red",
+    "name": "Flex Claws",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "flex_claws_yellow",
+    "name": "Flex Claws",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "flying_kick_blue",
+    "name": "Flying Kick",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this was played as chain link 3 or higher, it gets +2{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "flying_kick_red",
+    "name": "Flying Kick",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this was played as chain link 3 or higher, it gets +2{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "healing_potion_blue",
+    "name": "Healing Potion",
+    "type_text": "Generic Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Gain 2{h}. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "ira_crimson_haze",
+    "name": "Ira, Crimson Haze",
+    "type_text": "Ninja Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your second attack each turn gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "lay_down_the_law_red",
+    "name": "Lay Down the Law",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Tower"
+    ],
+    "specializations": [],
+    "functional_text": "**Tower** - If this has 13 or more {p}, non-equipment cards get -1{d} while defending this.",
+    "status": "pending"
+  },
+  {
+    "slug": "leg_tap_red",
+    "name": "Leg Tap",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "leg_tap_yellow",
+    "name": "Leg Tap",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "life_of_the_party_red",
+    "name": "Life of the Party",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "You may discard or destroy a card you control named Crazy Brew rather than pay Life of the Party's {r} cost. If you do, choose all modes, otherwise choose 1 at random;\n\n- This gets \"When this hits, gain life 2{h}.\"\n- This gets +2{p}.\n- This gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "liquid_cooled_mayhem_blue",
+    "name": "Liquid-Cooled Mayhem",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - This costs {r} less to play for each Evo you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "liquid_cooled_mayhem_red",
+    "name": "Liquid-Cooled Mayhem",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - This costs {r} less to play for each Evo you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "mechanical_strength_blue",
+    "name": "Mechanical Strength",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - This gets +X{p}, where X is the number of Evos you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "mechanical_strength_red",
+    "name": "Mechanical Strength",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "EvoUpgrade"
+    ],
+    "specializations": [],
+    "functional_text": "**Evo Upgrade** - This gets +X{p}, where X is the number of Evos you have equipped.",
+    "status": "pending"
+  },
+  {
+    "slug": "might",
+    "name": "Might",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then your next attack this turn gets +1{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "over_loop_red",
+    "name": "Over Loop",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, put it on the bottom of its owner's deck.",
+    "status": "done"
+  },
+  {
+    "slug": "potion_of_strength_blue",
+    "name": "Potion of Strength",
+    "type_text": "Generic Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Your next attack this turn gains +2{p}. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "pouncing_qi_red",
+    "name": "Pouncing Qi",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Crouching Tiger was the last attack this combat chain, this gets +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "predatory_streak_blue",
+    "name": "Predatory Streak",
+    "type_text": "Ninja Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "predatory_streak_yellow",
+    "name": "Predatory Streak",
+    "type_text": "Ninja Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create 2 Crouching Tigers in your banished zone. You may play them this turn.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "proto_base_arms",
+    "name": "Proto Base Arms",
+    "type_text": "Mechanologist Equipment - Base Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms",
+      "Base"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "pending"
+  },
+  {
+    "slug": "proto_base_chest",
+    "name": "Proto Base Chest",
+    "type_text": "Mechanologist Equipment - Base Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Chest"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "done"
+  },
+  {
+    "slug": "proto_base_head",
+    "name": "Proto Base Head",
+    "type_text": "Mechanologist Equipment - Base Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Head"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "pending"
+  },
+  {
+    "slug": "proto_base_legs",
+    "name": "Proto Base Legs",
+    "type_text": "Mechanologist Equipment - Base Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Base",
+      "Legs"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "pending"
+  },
+  {
+    "slug": "qi_unleashed_red",
+    "name": "Qi Unleashed",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Crouching Tiger was the last attack this combat chain, this gets +4{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "quicken",
+    "name": "Quicken",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you play an attack action card or activate a weapon attack, destroy this and the attack gains **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "salt_the_wound_yellow",
+    "name": "Salt the Wound",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This gets +1{p} for each attack that has hit this combat chain.",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_solace_red",
+    "name": "Sigil of Solace",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Gain 3{h}",
+    "status": "done"
+  },
+  {
+    "slug": "smack_of_reality_red",
+    "name": "Smack of Reality",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 1,
+    "power": 9,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Tower"
+    ],
+    "specializations": [],
+    "functional_text": "**Tower** - If this has 13 or more {p}, it gets \"When this hits a hero, destroy all aura tokens they control.\"",
+    "status": "done"
+  },
+  {
+    "slug": "tearing_shuko",
+    "name": "Tearing Shuko",
+    "type_text": "Ninja Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: The next Crouching Tiger you play this turn gains +2{p}.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "throttle_blue",
+    "name": "Throttle",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "done"
+  },
+  {
+    "slug": "throttle_red",
+    "name": "Throttle",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "done"
+  },
+  {
+    "slug": "throttle_yellow",
+    "name": "Throttle",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "done"
+  },
+  {
+    "slug": "under_loop_red",
+    "name": "Under Loop",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, put it on the bottom of its owner's deck.",
+    "status": "done"
+  },
+  {
+    "slug": "vigor",
+    "name": "Vigor",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then gain {r}.",
+    "status": "done"
+  },
+  {
+    "slug": "zero_to_sixty_red",
+    "name": "Zero to Sixty",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "zipper_hit_red",
+    "name": "Zipper Hit",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "zipper_hit_yellow",
+    "name": "Zipper Hit",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**",
+    "status": "pending"
   }
 ]

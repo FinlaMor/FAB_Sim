@@ -63,5 +63,79 @@
     "specializations": [],
     "functional_text": "The first time each of your attacks wins a **wager**, create a Gold token.",
     "status": "pending"
+  },
+  {
+    "slug": "heads_up_red",
+    "name": "Heads Up",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +3{p} and \"When this attacks, if it wagered, it gets **dominate**.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "prizeworn_pathfinders",
+    "name": "Prizeworn Pathfinders",
+    "type_text": "Guardian / Warrior Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Guardian",
+      "Warrior"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you win a wager, you may pay {r}. If you do, remove a -1{d} counter from this.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "visit_the_prize_room_blue",
+    "name": "Visit the Prize Room",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Olympia"
+    ],
+    "functional_text": "**Olympia Specialization**\n\nYou may destroy a Gold you control. If you do, equip a Prized Galea from your inventory.\n\nCreate a Vigor and a Courage token. **Go again**",
+    "status": "pending"
   }
 ]

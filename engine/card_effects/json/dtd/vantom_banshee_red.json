@@ -1,0 +1,14 @@
+{
+  "slug": "vantom_banshee_red",
+  "_comment": "Derived from vantom_banshee_blue, whose printed functional text is byte-identical. Colour variants differ only in {p} and pitch, and both come from card data rather than this file, so the abilities carry over unchanged. Verified against the corpus as its own card. INHERITED NOTE FROM vantom_banshee_blue: Had NO abilities at all. Rune Gate (CR 8.3.27) is implemented as a DECLARED static -- play.rune_gate_available reads it off the CardDef -- so a card that prints the keyword but declares nothing gets no permission and the keyword does nothing. Blood Debt is a printed keyword read from card data, which is why this card looked complete.",
+  "abilities": [
+    {
+      "ability_type": "STATIC",
+      "effects": [
+        {
+          "type": "RUNE_GATE"
+        }
+      ]
+    }
+  ]
+}

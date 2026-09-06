@@ -1,28 +1,18 @@
 {
   "slug": "become_the_bottle_red",
+  "_comment": "\"When this attacks, choose a card on the combat chain. This gets the chosen card's name. Go again\" Was on test_invented_refs.py's KNOWN_UNFIXED with the diagnosis 'this gets the chosen card's name -- copying a name is not expressible': it read refs COMBAT_CHAIN and SELECTED_CARD, names nothing sets, and stored the result in a SET_FLAG that nothing reads. Two things were missing and both are now general. SELECT_FROM_ZONE could not reach the COMBAT CHAIN: the chain is a SHARED zone on the GameState, not a player zone, so the per-player fan-out could not see it -- this is the one selection that is not about anybody's zone. SET_NAME then copies the name. A name is a genuinely readable property, which is the whole point of the card: LAST_CHAIN_ATTACK's  form, 'cards named X' and the Combo family all match on it, so becoming a card's name really does turn on the combo cards that look for it. SET_NAME writes  and leaves  alone -- base_name is the PRINTED name and is what Zone.add's reset_to_base_state restores when the object changes zone and stops being the same object (CR 3.0.9), so the copied name correctly lasts exactly as long as this object does. Go again is printed and unconditional, so it stays a plain PLAY ability rather than anything gated; nothing here should strip it.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "effects": [
-        {
-          "type": "SELECT_FROM_REF",
-          "ref": "COMBAT_CHAIN",
-          "amount": 1,
-          "on_success": [
-            {
-              "type": "SET_FLAG",
-              "flag": "CHOOSEN_CARD_NAME",
-              "value": {
-                "type": "REFERENCE",
-                "ref": "SELECTED_CARD",
-                "property": "name"
-              }
-            }
-          ]
-        }
+        {"type": "SELECT_FROM_ZONE", "zone": "COMBAT_CHAIN", "amount": 1, "into": "copied"},
+        {"type": "SET_NAME", "ref": "copied"}
       ]
+    },
+    {
+      "ability_type": "PLAY",
+      "effects": [{"type": "GO_AGAIN"}]
     }
-  ],
-  "_comment": "NOT IMPLEMENTED: 'choose a card on the combat chain. This gets the chosen card's name'. Two gaps: SELECT_FROM_REF has no COMBAT_CHAIN source, and nothing in the engine changes an object's NAME -- which matters, because names are what Censor, Phantasmal Symbiosis and every 'cards with that name' effect read. Go again is printed and works."
+  ]
 }

@@ -1,0 +1,25 @@
+{
+  "slug": "flittering_charge_yellow",
+  "_comment": "Derived from flittering_charge_red, whose printed functional text is byte-identical. Colour variants differ only in {p} and pitch, and both come from card data rather than this file, so the abilities carry over unchanged. Verified against the corpus as its own card. INHERITED NOTE FROM flittering_charge_red: \"If you've played an instant card this chain link, this gets go again.\" PLAYED_THIS_CHAIN_LINK rather than EVENT_THIS_TURN, because a turn spans several chain links and an instant played during an earlier link must not switch this on. CR 7.0.3d bounds the window: a chain link starts when it becomes the ACTIVE chain link (the Attack Step) and ends when it stops being active (the Resolution Step) -- there is no active chain link during the Layer or Resolution Step, so an instant played in those windows belongs to no link at all. That is narrower than 'until the next attack becomes active' and falls out of combat.link_plays for free, since the CombatState is created per attack and replaced by the next one. The card is played as an attack, so its own play is not recorded against its own link -- it is not an instant either way. SOURCE_IS_ATTACK is what makes loader.conditional_keywords strip the printed GoAgain: the card DB lists it unconditionally, and without the strip the gate would be decoration and the card would always have go again. Corpus: 2494 attacks.",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "PLAYED_THIS_CHAIN_LINK",
+          "card_type": "Instant",
+          "player": "SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

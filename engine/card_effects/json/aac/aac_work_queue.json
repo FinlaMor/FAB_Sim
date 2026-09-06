@@ -21,7 +21,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this attacks, the next attack with stealth you play this combat chain gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "horrors_of_the_past_yellow",
@@ -44,7 +44,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this attacks, it gets the base abilities of the last attack action card with stealth you control on the combat chain.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "inverters_nightcowl",
@@ -115,7 +115,7 @@
     ],
     "specializations": [],
     "functional_text": "**Attack Reaction** - {r}, {t}: Target attack with stealth gets \"When this hits a hero, **mark** them.\"\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "arakni_5lp3d_7hru_7h3_cr4x",
@@ -275,7 +275,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a **marked** hero, they banish a card from their hand.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mark_of_the_black_widow_red",
@@ -497,7 +497,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\n**Instant** - Discard this: **Mark** target opposing hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scuttle_the_canal_red",

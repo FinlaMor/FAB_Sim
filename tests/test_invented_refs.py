@@ -237,13 +237,7 @@ KNOWN_UNFIXED = {
     # REVEAL_HAND_MARK_IF_TYPE reveals the whole hand and MARKS; it stores
     # nothing and ignores `amount`, so "reveal 2 cards ... choose one" has no
     # implementation to point a ref at.
-    "pulsewave_harpoon_red", "pry_yellow",
-    # "when this is put into your graveyard from anywhere" has no trigger.
-    "sirens_of_safe_harbor_red",
-    # "this gets the chosen card's name" -- copying a name is not expressible.
-    "become_the_bottle_red", "become_the_bottle_yellow",
-    # "destroy a RANDOM item in the arena" -- object targets prompt, never roll.
-    "smashing_performance_yellow",
+    "pulsewave_harpoon_red",
 }
 
 

@@ -327,6 +327,23 @@ class Zone:
                     _dsl_dispatch(_st, "ON_PUT_FACEUP_IN_ARSENAL", card.slug,
                                   card=card, event=None)
 
+            # "When this is put into your graveyard FROM ANYWHERE, ..."
+            # (sirens_of_safe_harbor). "From anywhere" is the whole point of the
+            # clause, so hooking the discard path, the destroy path and the
+            # combat-chain cleanup separately would be three chances to miss
+            # one -- the graveyard turn-marker above already makes the
+            # choke-point argument, and this is the trigger half of it.
+            #
+            # The card that needed this was authored as ON_ENTER_PLAY gated on a
+            # REF_EXISTS "GRAVEYARD" that nothing sets: a graveyard is not the
+            # arena, so it could never have fired.
+            if self.name == "graveyard":
+                _st = getattr(self, "state", None)
+                if _st is not None:
+                    from engine.card_effects.dsl import dispatch as _dsl_dispatch
+                    _dsl_dispatch(_st, "ON_PUT_INTO_GRAVEYARD", card.slug,
+                                  card=card, event=None)
+
             if (card.prev_zone == "deck" and next_is_public
                     and source == "effect" and self.name != "deck"):
                 _st = getattr(self, "state", None)

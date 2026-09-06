@@ -1,0 +1,53 @@
+{
+  "slug": "silver_talons_yellow",
+  "_comment": "Derived from silver_talons_red, whose printed functional text is byte-identical. Colour variants differ only in {p} and pitch, and both come from card data rather than this file, so the abilities carry over unchanged. Verified against the corpus as its own card. INHERITED NOTE FROM silver_talons_red: NOT IMPLEMENTED: 'if damage is dealt this way, the dagger HAS HIT'. 'Has hit' is the hit event, which the engine emits only for an attack that connects -- there is no way to say that an object which did not attack has hit, so a Dagger's own on-hit clauses cannot fire from here. The damage and the destroy are intact; the SET_FLAG between them is a placeholder nothing reads. The source's SET_FLAG for DAGGER_HAS_HIT was NOT copied: nothing reads that flag, so it is a clause authored to look finished while doing nothing, and tests/test_no_dead_flags.py exists to stop that spreading. The clause it stood for stays unimplemented here, as on the source.",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "AND",
+          "conditions": [
+            {
+              "type": "ATTACK_TARGET_IS_HERO"
+            },
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Draconic"
+              ]
+            }
+          ]
+        }
+      ],
+      "effects": [
+        {
+          "type": "MAY",
+          "effects": [
+            {
+              "type": "SELECT_FROM_REF",
+              "ref": "dagger",
+              "conditions": [
+                {
+                  "type": "CONTROLS_ATTACK_ACTION"
+                }
+              ],
+              "effects": [
+                {
+                  "type": "DEAL_GENERIC",
+                  "amount": 1,
+                  "target": "opponent"
+                },
+                {
+                  "type": "DESTROY_REF",
+                  "ref": "dagger"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

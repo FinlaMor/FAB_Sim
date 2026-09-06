@@ -3,6 +3,13 @@
 # JSON trigger name → engine event name
 TRIGGER_TO_EVENT: dict[str, str] = {
     "ON_PLAY":                  "ON_PLAY",
+    # "When this is put into your graveyard from anywhere". Dispatched from
+    # Zone.add, the one place every graveyard route funnels through -- which is
+    # what "from anywhere" requires. Aliases cover the spellings a card author
+    # reaches for; all three mean the same moment.
+    "ON_PUT_INTO_GRAVEYARD":    "ON_PUT_INTO_GRAVEYARD",
+    "ON_ENTER_GRAVEYARD":       "ON_PUT_INTO_GRAVEYARD",
+    "ON_PUT_INTO_GRAVEYARD_FROM_ANYWHERE": "ON_PUT_INTO_GRAVEYARD",
     # "When THIS hits" -- the object that hit. Dispatched ONLY to the attack
     # itself (and to injected triggers riding on it).
     "ON_HIT":                   "ON_HIT",

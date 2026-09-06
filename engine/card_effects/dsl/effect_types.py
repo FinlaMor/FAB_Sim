@@ -4047,6 +4047,33 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
                 compile_effect((spec.get("type") or "").upper(), spec)(card, event, state)
         return _fn
 
+    if etype in ("SET_NAME", "COPY_NAME"):
+        # "This gets the chosen card's name." A name change is a real, readable
+        # property: LAST_CHAIN_ATTACK's `name` form, "cards named X", and the
+        # Combo family all match on it, which is the whole point of the card.
+        #
+        # Writes `name` and leaves `base_name` alone -- base_name is the PRINTED
+        # name and is what Zone.add's reset_to_base_state restores when the
+        # object changes zone and stops being the same object (CR 3.0.9), so the
+        # copy correctly lasts only as long as this object does.
+        ref = _first(params, "ref", "from", "source", default="chosen")
+        literal = params.get("name")
+
+        def _fn(card, event, state, _r=ref, _lit=literal):
+            from engine.context import get_ref
+            if _lit:
+                card.name = str(_lit)
+                return
+            src = get_ref(_r)
+            if isinstance(src, list):
+                src = src[0] if src else None
+            if src is None:
+                return
+            new_name = getattr(src, "name", None) or getattr(src, "base_name", None)
+            if new_name:
+                card.name = new_name
+        return _fn
+
     if etype in ("SELECT_FROM_ZONE", "CHOOSE_FROM_ZONE"):
         # Choose cards in a zone and STORE them, without moving them.
         #
@@ -4069,12 +4096,23 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
         amount_raw = params.get("amount", 1)
         into = _first(params, "into", "record_as", "store_as", default="chosen")
         optional = bool(params.get("optional"))
+        # "destroy a RANDOM item in the arena" -- the controller does not choose,
+        # so prompting would hand them a decision the card denies them. Uses the
+        # module rng, the same source effect_discard's random discard uses, so a
+        # seeded game stays reproducible.
+        at_random = bool(params.get("random"))
+        # WHO PICKS. "Target hero REVEALS 2 cards from their hand" is the hand's
+        # owner choosing, not the card's controller -- the default here. Getting
+        # this wrong hands one player a decision that belongs to the other,
+        # which no assertion about the resulting board would catch.
+        chooser = str(params.get("chooser", "SOURCE")).upper()
         filter_raw = params.get("filter") or []
         if isinstance(filter_raw, dict):
             filter_raw = [filter_raw]
 
         def _fn(card, event, state, _z=zone_raw, _who=who, _a=amount_raw,
-                _into=into, _opt=optional, _f=filter_raw):
+                _into=into, _opt=optional, _f=filter_raw, _rand=at_random,
+                _chooser=chooser):
             from engine.card_effects.ability_keywords import (_ask_player,
                                                               _controller_id)
             from engine.card_effects.dsl.condition_types import compile_condition as _cc
@@ -4082,28 +4120,97 @@ def compile_effect(etype: str, params: dict[str, Any]) -> Callable:
             zones = {"GRAVEYARD": "graveyard", "DISCARD": "graveyard",
                      "BANISHED": "banished", "BANISH": "banished",
                      "HAND": "hand", "ARSENAL": "arsenal", "SOUL": "soul",
-                     "PITCH": "pitch", "DECK": "deck"}
+                     "PITCH": "pitch", "DECK": "deck",
+                     # Arena zones. "the arena" is the shared play area, so a
+                     # card naming it means both sides -- see the player fan-out
+                     # below rather than a single owner.
+                     "ITEMS": "items", "ITEM": "items", "AURAS": "auras",
+                     "AURA": "auras", "ALLIES": "allies", "ALLY": "allies",
+                     "PERMANENTS": "permanents", "ARENA": "permanents"}
             zone_name = zones.get(_z)
-            if zone_name is None:
-                return
             cid = _controller_id(card)
-            tid = cid if _who in ("SELF", "YOU", "") else (3 - cid)
-            if tid not in state.players:
+            _CHAIN = ("COMBAT_CHAIN", "CHAIN", "COMBATCHAIN")
+            # The combat chain is not in `zones` -- it is shared, not per-player
+            # -- and is handled in its own branch below, which needs the filter
+            # helper defined further down. So the unknown-zone bail-out has to
+            # let it through rather than returning first.
+            if zone_name is None and _z not in _CHAIN:
+                return
+            if _who in ("ANY", "EITHER", "BOTH", "ARENA"):
+                tids = [pid for pid in (cid, 3 - cid) if pid in state.players]
+            else:
+                tid = cid if _who in ("SELF", "YOU", "") else (3 - cid)
+                tids = [tid] if tid in state.players else []
+            if not tids and _z not in _CHAIN:
                 return
             checks = [_cc(str(f.get("type") or "").upper(), f) for f in _f]
 
             def _ok(c):
                 return all(fn is None or fn(c, event, state) for fn in checks)
 
-            want = int(_resolve_amount(_a, state, card) or 0)
+            # THE COMBAT CHAIN IS SHARED, not a player zone: it hangs off the
+            # GameState, so the per-player fan-out below cannot reach it.
+            # "choose a card on the combat chain" is the one selection that is
+            # not about anybody's zone.
+            if _z in ("COMBAT_CHAIN", "CHAIN", "COMBATCHAIN"):
+                shared = getattr(state, "combat_chain", None)
+                pool = [c for c in (getattr(shared, "cards", None) or []) if _ok(c)]
+                if not pool:
+                    return
+                want_n = 1 if not isinstance(_a, int) else max(1, _a)
+                chosen_cards = []
+                for _ in range(want_n):
+                    avail = [c for c in pool if c not in chosen_cards]
+                    if not avail:
+                        break
+                    if _rand:
+                        import random as _random
+                        chosen_cards.append(_random.choice(avail))
+                        continue
+                    opts = [c.slug for c in avail] + (["none"] if _opt else [])
+                    pick = _ask_player(state, cid, opts,
+                                       context="Choose a card on the combat chain")
+                    if pick == "none":
+                        break
+                    target = next((c for c in avail if c.slug == pick), None)
+                    if target is None:
+                        break
+                    chosen_cards.append(target)
+                if chosen_cards:
+                    set_ref(str(_into),
+                            chosen_cards[0] if len(chosen_cards) == 1 else chosen_cards)
+                return
+
+            # "reveal ALL cards in their hand" -- a word, not a number.
+            # _resolve_amount has no reading for it and returns 0, so the whole
+            # selection silently picked nothing: the effect ran, stored an empty
+            # ref, and every clause gated on it fell out looking like a declined
+            # choice rather than a broken one.
+            if isinstance(_a, str) and _a.strip().upper() in ("ALL", "EVERY", "EACH"):
+                want = sum(len(getattr(getattr(state.players[pid], zone_name, None),
+                                       "cards", None) or []) for pid in tids)
+            else:
+                want = int(_resolve_amount(_a, state, card) or 0)
             picked = []
             for _ in range(max(0, want)):
-                pool = [c for c in getattr(state.players[tid], zone_name).cards
-                        if _ok(c) and c not in picked]
+                pool = []
+                for pid in tids:
+                    zone = getattr(state.players[pid], zone_name, None)
+                    pool += [c for c in (getattr(zone, "cards", None) or [])
+                             if _ok(c) and c not in picked]
                 if not pool:
                     break
+                if _rand:
+                    import random as _random
+                    picked.append(_random.choice(pool))
+                    continue
                 options = [c.slug for c in pool] + (["none"] if _opt else [])
-                pick = _ask_player(state, cid, options,
+                asker = cid
+                if _chooser in ("OWNER", "ZONE_OWNER", "THEM", "TARGET"):
+                    asker = tids[0]
+                elif _chooser in ("OPPONENT", "THEIRS"):
+                    asker = 3 - cid
+                pick = _ask_player(state, asker, options,
                                    context="Choose a card in %s" % zone_name)
                 if pick == "none":
                     break

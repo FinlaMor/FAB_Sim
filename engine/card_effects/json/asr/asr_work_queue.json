@@ -20,7 +20,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, your next attack this turn gets +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ira_scarlet_revenger",
@@ -39,7 +39,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Your second attack each turn gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "iris_of_the_blossom",
@@ -199,7 +199,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Edge of Autumn was the last attack this combat chain, this gets **go again** and \"When this hits a hero, banish it. You may play it this turn.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bittering_thorns_red",
@@ -222,7 +222,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, your next attack this turn gets +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "enact_vengeance_red",
@@ -266,7 +266,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If this was played as chain link 3 or higher, it gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "flying_kick_red",
@@ -287,7 +287,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If this was played as chain link 3 or higher, it gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "give_and_take_red",
@@ -310,6 +310,296 @@
     ],
     "specializations": [],
     "functional_text": "Whenever an action card defends this, you may put an action card with cost less than this card's {p} from your graveyard on top of your deck.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "edge_of_autumn",
+    "name": "Edge of Autumn",
+    "type_text": "Ninja Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 1,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "energy_potion_blue",
+    "name": "Energy Potion",
+    "type_text": "Generic Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Gain {r}{r}",
+    "status": "done"
+  },
+  {
+    "slug": "flic_flak_red",
+    "name": "Flic Flak",
+    "type_text": "Ninja Defense Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If the next card you defend with this turn is a card with combo, it gains +2{d}.",
+    "status": "done"
+  },
+  {
+    "slug": "razor_reflex_red",
+    "name": "Razor Reflex",
+    "type_text": "Generic Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Choose 1;\n- Target dagger or sword weapon attack gets +3{p}.\n- Target attack action card with cost 1 or less gets +3{p} and \"When this hits, it gets **go again**.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "scar_for_a_scar_red",
+    "name": "Scar for a Scar",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "sink_below_red",
+    "name": "Sink Below",
+    "type_text": "Generic Defense Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may put a card from your hand on the bottom of your deck. If you do, draw a card.",
+    "status": "done"
+  },
+  {
+    "slug": "snapdragon_scalers",
+    "name": "Snapdragon Scalers",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - Destroy this: Target attack action card with cost 1 or less gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "snatch_red",
+    "name": "Snatch",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits, draw a card.",
+    "status": "done"
+  },
+  {
+    "slug": "soulbead_strike_blue",
+    "name": "Soulbead Strike",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "soulbead_strike_red",
+    "name": "Soulbead Strike",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "torrent_of_tempo_blue",
+    "name": "Torrent of Tempo",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "torrent_of_tempo_red",
+    "name": "Torrent of Tempo",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, it gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "whirling_mist_blossom_yellow",
+    "name": "Whirling Mist Blossom",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Specialization"
+    ],
+    "specializations": [
+      "Ira"
+    ],
+    "functional_text": "**Ira Specialization**\n\nWhen this hits and it's the second or higher chain link in a row to hit, draw 2 cards.\n\n**Go again**",
     "status": "pending"
   }
 ]

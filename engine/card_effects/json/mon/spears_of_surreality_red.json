@@ -1,0 +1,15 @@
+{
+  "slug": "spears_of_surreality_red",
+  "_comment": "Derived from spears_of_surreality_blue, whose printed functional text is byte-identical. Colour variants differ only in {p} and pitch, and both come from card data rather than this file, so the abilities carry over unchanged. Verified against the corpus as its own card.",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

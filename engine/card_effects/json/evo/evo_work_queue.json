@@ -66,7 +66,7 @@
     ],
     "specializations": [],
     "functional_text": "If you have 1 or more Evos equipped, this gets \"When this hits a hero, destroy all cards defending this,\"\n\n- 2 or more, this costs {r}{r}{r} less to play,\n- 3 or more, this gets **overpower**,\n- 4 or more, this gets +3{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "autosave_script_blue",
@@ -211,7 +211,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "big_bertha_red",
@@ -234,7 +234,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "big_bertha_yellow",
@@ -257,7 +257,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "big_shot_red",
@@ -528,7 +528,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this is equipped, put a steam counter on it.\n\n**Once per Turn Instant** - {r}, remove a steam counter from this: Your next Mechanologist attack this turn gets +1{p}. Activate this ability only if you've **boosted** this turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cogwerx_base_chest",
@@ -730,7 +730,7 @@
     ],
     "specializations": [],
     "functional_text": "**Evo Upgrade** - When this attacks a hero, remove all steam counters from up to X equipment, items, and/or weapons they control, where X is the number of Evos you have equipped.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "dissolving_shield_blue",
@@ -968,7 +968,7 @@
     ],
     "specializations": [],
     "functional_text": "**Material** - While this is under a permanent other than Cromai, that permanent has **phantasm**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "emboldened_blade_blue",
@@ -1245,7 +1245,7 @@
     ],
     "specializations": [],
     "functional_text": "If you have a base chest equipped, **transform** it into this, then equip this.\n\n**Once per Turn Instant** - Destroy a card under this: Your next weapon attack this turn costs {r} less to activate.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "evo_face_breaker_red",
@@ -1640,7 +1640,7 @@
     ],
     "specializations": [],
     "functional_text": "If you have a base legs equipped, **transform** it into this, then equip this.\n\n**Once per Turn Instant** - Destroy a card under this: You may attack an additional time with target weapon this turn.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "evo_whizz_bang_yellow",
@@ -1689,7 +1689,7 @@
     ],
     "specializations": [],
     "functional_text": "If you have a base legs equipped, **transform** it into this, then equip this.\n\nWhen this is equipped, up to 1 target attack gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "evo_zoom_call_yellow",
@@ -1736,7 +1736,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits, you may put an item with cost 0 or 1 from your hand into the arena.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "expedite_red",
@@ -1759,7 +1759,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits, you may put an item with cost 0 or 1 from your hand into the arena.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "expedite_yellow",
@@ -1782,7 +1782,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits, you may put an item with cost 0 or 1 from your hand into the arena.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fabricate_red",
@@ -1824,7 +1824,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nThis gets +X{p}, where X is the number of equipment defending it.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fender_bender_red",
@@ -1847,7 +1847,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nThis gets +X{p}, where X is the number of equipment defending it.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fender_bender_yellow",
@@ -1870,7 +1870,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nThis gets +X{p}, where X is the number of equipment defending it.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "firewall_blue",
@@ -1949,7 +1949,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Put this on the bottom of its owner's deck: Gain {r}",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "full_tilt_blue",
@@ -2041,7 +2041,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "gas_guzzler_red",
@@ -2064,7 +2064,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "gas_guzzler_yellow",
@@ -2087,7 +2087,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "gas_up_blue",
@@ -2179,7 +2179,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next Mechanologist attack this turn gets +2{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "gigawatt_red",
@@ -2344,7 +2344,7 @@
     ],
     "specializations": [],
     "functional_text": "**Evo Upgrade** - The defending hero can't defend this with attack action cards with cost less than X, where X is the number of Evos you have equipped.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "heavy_artillery_red",
@@ -2367,7 +2367,7 @@
     ],
     "specializations": [],
     "functional_text": "**Evo Upgrade** - The defending hero can't defend this with attack action cards with cost less than X, where X is the number of Evos you have equipped.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "heavy_artillery_yellow",
@@ -2390,7 +2390,7 @@
     ],
     "specializations": [],
     "functional_text": "**Evo Upgrade** - The defending hero can't defend this with attack action cards with cost less than X, where X is the number of Evos you have equipped.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "heist_red",
@@ -2437,7 +2437,7 @@
     ],
     "specializations": [],
     "functional_text": "**Scrap**\n\nWhen this attacks, if it scrapped a card, this gets **overpower**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hydraulic_press_red",
@@ -2461,7 +2461,7 @@
     ],
     "specializations": [],
     "functional_text": "**Scrap**\n\nWhen this attacks, if it scrapped a card, this gets **overpower**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hydraulic_press_yellow",
@@ -2485,7 +2485,7 @@
     ],
     "specializations": [],
     "functional_text": "**Scrap**\n\nWhen this attacks, if it scrapped a card, this gets **overpower**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hyper_scrapper_blue",
@@ -2552,7 +2552,7 @@
     ],
     "specializations": [],
     "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "infuse_alloy_red",
@@ -2575,7 +2575,7 @@
     ],
     "specializations": [],
     "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "infuse_alloy_yellow",
@@ -2598,7 +2598,7 @@
     ],
     "specializations": [],
     "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "infuse_titanium_blue",
@@ -2621,7 +2621,7 @@
     ],
     "specializations": [],
     "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "infuse_titanium_red",
@@ -2644,7 +2644,7 @@
     ],
     "specializations": [],
     "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "infuse_titanium_yellow",
@@ -2667,7 +2667,7 @@
     ],
     "specializations": [],
     "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "intoxicating_shot_blue",
@@ -2693,7 +2693,7 @@
       "Riptide"
     ],
     "functional_text": "**Riptide Specialization**\n\nWhen this hits a hero, they create a Courage and Quicken token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "junkyard_dogg_blue",
@@ -2785,7 +2785,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nThis can't be defended by equipment.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "lay_waste_red",
@@ -2808,7 +2808,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nThis can't be defended by equipment.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "lay_waste_yellow",
@@ -2831,7 +2831,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nThis can't be defended by equipment.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "liquid_cooled_mayhem_blue",
@@ -2923,7 +2923,7 @@
     ],
     "specializations": [],
     "functional_text": "**Legendary**\n\nWhen this is pitched, you may put a steam counter on an item you control with **crank**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "maxx_nitro",
@@ -2946,7 +2946,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}{r}: Create a Hyper Driver token with 2 steam counters.  Activate this ability only if you've boosted this turn.\n\nHyper Drivers you control get **crank**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "maxx_the_hype_nitro",
@@ -3125,7 +3125,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits, you may put an item with cost 0 or 1 from your hand into the arena.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "metex_red",
@@ -3148,7 +3148,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits, you may put an item with cost 0 or 1 from your hand into the arena.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "metex_yellow",
@@ -3171,7 +3171,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits, you may put an item with cost 0 or 1 from your hand into the arena.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mhz_script_yellow",
@@ -3317,7 +3317,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nThis can't be defended by equipment.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "out_pace_red",
@@ -3340,7 +3340,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nThis can't be defended by equipment.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "out_pace_yellow",
@@ -3363,7 +3363,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nThis can't be defended by equipment.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "overload_script_red",
@@ -3411,7 +3411,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nThis gets +X{p}, where X is the number of equipment defending it.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "panel_beater_red",
@@ -3434,7 +3434,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nThis gets +X{p}, where X is the number of equipment defending it.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "panel_beater_yellow",
@@ -3457,7 +3457,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nThis gets +X{p}, where X is the number of equipment defending it.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "penetration_script_yellow",
@@ -3529,7 +3529,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\nAction cards get -1{d} while defending your Mechanologist attack action cards.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "prismatic_lens_yellow",
@@ -3553,7 +3553,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.\n\n**Once per Turn Instant** - 0: Reveal the top card of your deck. Put a Mechanologist item of the same color from your banished zone on top of your deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "proto_base_arms",
@@ -3597,7 +3597,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "proto_base_head",
@@ -3734,7 +3734,7 @@
     ],
     "specializations": [],
     "functional_text": "This costs {r} less to play for each Hyper Driver you control.\n\nThe next attack you **boost** this turn gets +4{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "quickfire_yellow",
@@ -4056,7 +4056,7 @@
     ],
     "specializations": [],
     "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, you may play your next Evo this turn as though it were an instant.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scrap_compactor_red",
@@ -4079,7 +4079,7 @@
     ],
     "specializations": [],
     "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, you may play your next Evo this turn as though it were an instant.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scrap_compactor_yellow",
@@ -4102,7 +4102,7 @@
     ],
     "specializations": [],
     "functional_text": "**Scrap**\n\nWhen this attacks, if it **scrapped** a card, you may play your next Evo this turn as though it were an instant.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scrap_harvester_blue",
@@ -4263,7 +4263,7 @@
     ],
     "specializations": [],
     "functional_text": "**Scrap**\n\nWhen this attacks, if it scrapped a card, gain {r}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scrap_prospector_red",
@@ -4286,7 +4286,7 @@
     ],
     "specializations": [],
     "functional_text": "**Scrap**\n\nWhen this attacks, if it scrapped a card, gain {r}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scrap_prospector_yellow",
@@ -4309,7 +4309,7 @@
     ],
     "specializations": [],
     "functional_text": "**Scrap**\n\nWhen this attacks, if it scrapped a card, gain {r}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scrap_trader_red",
@@ -4468,7 +4468,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks draw a card, then discard a random card. If a card with 6 or more {p} is discarded this way, destroy a random item in the arena.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sonata_fantasmia_blue",
@@ -4517,7 +4517,7 @@
     ],
     "specializations": [],
     "functional_text": "If an item you control has been destroyed this turn, this gets **go again**.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "soup_up_red",
@@ -4541,7 +4541,7 @@
     ],
     "specializations": [],
     "functional_text": "If an item you control has been destroyed this turn, this gets **go again**.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "soup_up_yellow",
@@ -4565,7 +4565,7 @@
     ],
     "specializations": [],
     "functional_text": "If an item you control has been destroyed this turn, this gets **go again**.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spring_a_leak_blue",
@@ -4588,7 +4588,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits a hero, remove all steam counters from an equipment, item, or weapon they control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spring_a_leak_red",
@@ -4611,7 +4611,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits a hero, remove all steam counters from an equipment, item, or weapon they control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spring_a_leak_yellow",
@@ -4634,7 +4634,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits a hero, remove all steam counters from an equipment, item, or weapon they control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sprocket_rocket_blue",
@@ -4657,7 +4657,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n \nIf an item or equipment was banished from boosting this, this gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sprocket_rocket_red",
@@ -4680,7 +4680,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n \nIf an item or equipment was banished from boosting this, this gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sprocket_rocket_yellow",
@@ -4703,7 +4703,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n \nIf an item or equipment was banished from boosting this, this gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "stasis_cell_blue",
@@ -4841,7 +4841,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Remove all steam counters from target equipment, item, or weapon. If 2 or more steam counters are removed this way, deal 2 damage to its controler.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "system_reset_yellow",
@@ -4933,7 +4933,7 @@
     ],
     "specializations": [],
     "functional_text": "**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "teklo_base_head",
@@ -4957,7 +4957,7 @@
     ],
     "specializations": [],
     "functional_text": "**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "teklo_base_legs",
@@ -5024,7 +5024,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends an attack with **overpower**, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "teklonetic_force_field_red",
@@ -5043,7 +5043,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends an attack with **overpower**, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "teklonetic_force_field_yellow",
@@ -5062,7 +5062,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends an attack with **overpower**, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "teklovossen_esteemed_magnate",
@@ -5081,7 +5081,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "You may play Evos from your banished zone.\n\n**Once per Turn Instant** - {r}{r}{r}: You may play your next Evo this turn as though it were an instant. When you do, draw a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "terminator_tank_red",
@@ -5175,7 +5175,7 @@
     ],
     "specializations": [],
     "functional_text": "If an item you control has been destroyed this turn, this gets **overpower**.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "torque_tuned_red",
@@ -5199,7 +5199,7 @@
     ],
     "specializations": [],
     "functional_text": "If an item you control has been destroyed this turn, this gets **overpower**.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "torque_tuned_yellow",
@@ -5223,7 +5223,7 @@
     ],
     "specializations": [],
     "functional_text": "If an item you control has been destroyed this turn, this gets **overpower**.\n\n**Galvanize** - When this defends, you may destroy an item you control. If you do, this gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "twin_drive_red",
@@ -5269,7 +5269,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits, put it on the bottom of its owner's deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "under_loop_red",
@@ -5292,7 +5292,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits, put it on the bottom of its owner's deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "under_loop_yellow",
@@ -5315,7 +5315,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits, put it on the bottom of its owner's deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "war_machine_red",
@@ -5338,7 +5338,7 @@
     ],
     "specializations": [],
     "functional_text": "If you have 1 or more Evos equipped, this gets \"When this hits a hero, destroy all cards in their arsenal,\"\"\n\n- 2 or more, this costs {r}{r}{r} less to play,\n- 3 or more, this gets **overpower**,\n- 4 or more, this gets +3{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "warband_of_bellona",
@@ -5405,7 +5405,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "zero_to_fifty_red",
@@ -5428,7 +5428,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "zero_to_fifty_yellow",
@@ -5451,7 +5451,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hyper_driver",
@@ -5472,7 +5472,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this has no steam counters, destroy it.\n\nOnce per turn, when you boost a card, remove a steam counter from this and gain {r}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "teklovossen_the_mechropotent",
@@ -5496,7 +5496,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}{r}{r}, banish 2 cards from your soul: **Attack**\n\nWhenever this attacks a hero, they discard a card.\n\nYour Mechanologist attack action cards get **go again**.\n\nThis counts as having 4 Evos equipped.\n\n**Battleworn**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "dash_database",
@@ -5539,5 +5539,325 @@
     "specializations": [],
     "functional_text": "You may play Evos from your banished zone.\n\n**Once per Turn Instant** - {r}{r}{r}: You may play your next Evo this turn as though it were an instant. When you do, draw a card.",
     "status": "pending"
+  },
+  {
+    "slug": "crankshaft_blue",
+    "name": "Crankshaft",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
+    "status": "done"
+  },
+  {
+    "slug": "crankshaft_red",
+    "name": "Crankshaft",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
+    "status": "done"
+  },
+  {
+    "slug": "crankshaft_yellow",
+    "name": "Crankshaft",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
+    "status": "done"
+  },
+  {
+    "slug": "fyendals_spring_tunic",
+    "name": "Fyendal's Spring Tunic",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, if this has fewer than 3 energy counters, you may put an energy counter on it.\n\n**Instant** - Remove 3 energy counters from this: Gain {r}\n\n**Blade Break**",
+    "status": "done"
+  },
+  {
+    "slug": "hyper_driver_red",
+    "name": "Hyper Driver",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This enters the arena with 3 steam counters. When it has none, destroy it.\n\nOnce per turn, when you boost a card, remove a steam counter from this and gain {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "jump_start_blue",
+    "name": "Jump Start",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a Hyper Driver, this costs {r} less to play.\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "jump_start_red",
+    "name": "Jump Start",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a Hyper Driver, this costs {r} less to play.\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "jump_start_yellow",
+    "name": "Jump Start",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "If you control a Hyper Driver, this costs {r} less to play.\n\n**Boost**",
+    "status": "pending"
+  },
+  {
+    "slug": "maximum_velocity_red",
+    "name": "Maximum Velocity",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 10,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you've **boosted** 3 or more times this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "over_loop_blue",
+    "name": "Over Loop",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, put it on the bottom of its owner's deck.",
+    "status": "done"
+  },
+  {
+    "slug": "over_loop_red",
+    "name": "Over Loop",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, put it on the bottom of its owner's deck.",
+    "status": "done"
+  },
+  {
+    "slug": "over_loop_yellow",
+    "name": "Over Loop",
+    "type_text": "Mechanologist Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Boost"
+    ],
+    "specializations": [],
+    "functional_text": "**Boost**\n\nWhen this hits, put it on the bottom of its owner's deck.",
+    "status": "done"
+  },
+  {
+    "slug": "quicken",
+    "name": "Quicken",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you play an attack action card or activate a weapon attack, destroy this and the attack gains **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "teklo_foundry_heart",
+    "name": "Teklo Foundry Heart",
+    "type_text": "Mechanologist Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: Banish the top 2 cards of your deck. Gain {r} for each Mechanologist card banished this way. Activate this ability only if you've **boosted** this turn. **Go again**\n\n**Battleworn**",
+    "status": "done"
   }
 ]

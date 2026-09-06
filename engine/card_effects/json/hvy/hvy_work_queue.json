@@ -97,7 +97,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Create an Agility token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "agile_windup_red",
@@ -119,7 +119,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Create an Agility token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "agile_windup_yellow",
@@ -141,7 +141,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Create an Agility token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ancestral_harmony_blue",
@@ -459,7 +459,7 @@
       "Betsy"
     ],
     "functional_text": "**Betsy Specialization**\n\nWhen this attacks a hero, you may **wager** a Gold, Might, and Vigor token with them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "betsy",
@@ -503,7 +503,7 @@
     ],
     "specializations": [],
     "functional_text": "Whenever an attack you control **wagers**, you may pay {r}{r}. If you do, the attack gets +1{p} and **overpower**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "big_bop_blue",
@@ -647,7 +647,7 @@
     ],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy this, then your next Guardian attack this turn gets +4{p} and \"When this attacks a hero, you may **wager** a Might token with them.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blade_flurry_red",
@@ -756,7 +756,7 @@
     ],
     "specializations": [],
     "functional_text": "**Beat Chest**\n\nYour next Brute attack this turn gains +3{p}. If you've **beaten chest** this turn, instead it gains +5{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bonebreaker_bellow_yellow",
@@ -825,7 +825,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates an Agility token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clash_of_agility_red",
@@ -849,7 +849,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates an Agility token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clash_of_agility_yellow",
@@ -873,7 +873,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates an Agility token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clash_of_might_blue",
@@ -897,7 +897,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clash_of_might_red",
@@ -921,7 +921,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clash_of_might_yellow",
@@ -945,7 +945,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clash_of_vigor_blue",
@@ -969,7 +969,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clash_of_vigor_red",
@@ -993,7 +993,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clash_of_vigor_yellow",
@@ -1017,7 +1017,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "coercive_tendency_blue",
@@ -1481,7 +1481,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next Warrior attack this turn gets +3{p}.\n\nDraw a card.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "draw_swords_yellow",
@@ -1599,7 +1599,7 @@
     ],
     "specializations": [],
     "functional_text": "This may only defend an attack if the attack's controller has destroyed a Might token this turn.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "engaged_swiftblade_blue",
@@ -1693,7 +1693,7 @@
     ],
     "specializations": [],
     "functional_text": "If you have a base arms equipped, transform it into this, then equip this.\n\nWhen this defends, you may destroy a card under it. If you do, gain control of target item with cost 0 or 1 controlled by the attacking hero.\n\n**Temper**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "face_adversity",
@@ -1798,7 +1798,7 @@
     ],
     "specializations": [],
     "functional_text": "Action - Destroy this: Create an Agility token. **Go again**\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "gauntlet_of_might",
@@ -1890,7 +1890,7 @@
     ],
     "specializations": [],
     "functional_text": "Create an Agility and a Vigor token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "golden_glare",
@@ -1944,7 +1944,7 @@
       "Betsy"
     ],
     "functional_text": "**Betsy Specialization**\n\n**Action** - Destroy a Gold you control: Your next attack this turn gets \"When this attacks a hero, **wager** a Might and a Vigor token with them.\" **Go again**\n\n**Temper**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "grains_of_bloodspill",
@@ -1967,7 +1967,7 @@
     ],
     "specializations": [],
     "functional_text": "Whenever a weapon attack you control hits, you may pay {r}. If you do, create a Vigor token. \n\n**Temper**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "grandstand_legplates",
@@ -1990,7 +1990,7 @@
     ],
     "specializations": [],
     "functional_text": "Grandstand Legplates' {d} is equal to the number of opposing heroes with greater {h} than you.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "graven_call",
@@ -2080,7 +2080,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}{r}{r}: **Attack**\n\nIf you've drawn a card this turn, this gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hold_em_blue",
@@ -2104,7 +2104,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next Warrior attack this turn gets +1{p} and \"When this attacks a hero, you may **wager** a Vigor token with them.\"\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hold_em_red",
@@ -2386,7 +2386,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next Guardian or Warrior attack this turn gets +1{p}.\n\nCreate a Vigor token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "lead_with_heart_red",
@@ -2482,7 +2482,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next Brute or Guardian attack this turn gets +3{p}.\n\nCreate a Might token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "lead_with_power_yellow",
@@ -2578,7 +2578,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next Brute or Warrior attack this turn gets +2{p}.\n\nCreate an Agility token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "luminaris_angels_glow",
@@ -2624,7 +2624,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Create a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mighty_windup_red",
@@ -2646,7 +2646,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Create a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mighty_windup_yellow",
@@ -2668,7 +2668,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Create a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "millers_grindstone",
@@ -2813,7 +2813,7 @@
       "Rhinar"
     ],
     "functional_text": "**Rhinar Specialization**\n\n**Action** - Destroy this: Draw a card then discard a random card. **Go again**\n\n**Battleworn**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "nasty_surprise_blue",
@@ -2916,7 +2916,7 @@
     ],
     "specializations": [],
     "functional_text": "If this has {p} greater than its base, it gets **overpower**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "over_the_top_red",
@@ -2939,7 +2939,7 @@
     ],
     "specializations": [],
     "functional_text": "If this has {p} greater than its base, it gets **overpower**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "over_the_top_yellow",
@@ -2962,7 +2962,7 @@
     ],
     "specializations": [],
     "functional_text": "If this has {p} greater than its base, it gets **overpower**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "overcome_adversity",
@@ -2985,7 +2985,7 @@
     ],
     "specializations": [],
     "functional_text": "This may only defend an attack if the attack's controller has destroyed an Agility token this turn.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pack_call_blue",
@@ -3118,7 +3118,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, create a Gold token.\nIf this was played from arsenal, it gets **Go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "performance_bonus_red",
@@ -3141,7 +3141,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, create a Gold token.\nIf this was played from arsenal, it gets **Go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "performance_bonus_yellow",
@@ -3164,7 +3164,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, create a Gold token.\n\nIf this was played from arsenal, it gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pint_of_strong_and_stout_blue",
@@ -3210,7 +3210,7 @@
     ],
     "specializations": [],
     "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pound_town_red",
@@ -3233,7 +3233,7 @@
     ],
     "specializations": [],
     "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pound_town_yellow",
@@ -3256,7 +3256,7 @@
     ],
     "specializations": [],
     "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "primed_to_fight_red",
@@ -3329,7 +3329,7 @@
       "Kassai"
     ],
     "functional_text": "**Kassai Specialization**\n\nAs an additional cost to play this, destroy X Gold you control.\n\nCreate X Cintari Sellsword tokens.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "raw_meat",
@@ -3449,7 +3449,7 @@
       "Kayo"
     ],
     "functional_text": "**Kayo Specialization**\n\nRoll a 6 sided die. Gain action points equal to half the number rolled, rounded down.\n\nIf you've rolled a 6 on a die this turn, draw a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "reel_in_blue",
@@ -3470,7 +3470,7 @@
     ],
     "specializations": [],
     "functional_text": "Look at the top X+1 cards of your deck. Choose up to 4 traps, reveal them, put them into your hand, then shuffle.\n\n**Reload**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ripple_away_blue",
@@ -3579,7 +3579,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've drawn a card this turn, this gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rising_power_red",
@@ -3601,7 +3601,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've drawn a card this turn, this gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rising_power_yellow",
@@ -3623,7 +3623,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've drawn a card this turn, this gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rising_speed_blue",
@@ -3777,7 +3777,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks a hero, banish a card from their arsenal. When the chain link resolves, if this didn't hit, return the banished card to its owner's hand.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sheltered_cove",
@@ -3798,7 +3798,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - {r}{r}{r}, destroy this: The next time you would be dealt damage this turn, prevent 2 of that damage",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "shift_the_tide_of_battle_yellow",
@@ -3888,7 +3888,7 @@
     ],
     "specializations": [],
     "functional_text": "**Tower** - If this has 13 or more {p}, it gets \"When this hits a hero, destroy all aura tokens they control.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "smashback_alehorn_blue",
@@ -3934,7 +3934,7 @@
     ],
     "specializations": [],
     "functional_text": "This costs {r} less to play for each Runechant you control.\n\nSearch your deck for a Runeblade aura with cost X or less, put it into the arena, then shuffle.\n\nIf X is 2 or more, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "stacked_in_your_favor_blue",
@@ -3982,7 +3982,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nYour attack action cards get +3{d} while defending.\n\nAt the start of your turn, destroy this, draw a card, then put a card from your hand on top of your deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "stacked_in_your_favor_yellow",
@@ -4262,7 +4262,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates an Agility token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "test_of_might_red",
@@ -4327,7 +4327,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "the_golden_son_yellow",
@@ -4395,7 +4395,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you win a **clash** revealing this, create a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "thunk_yellow",
@@ -4416,7 +4416,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you win a **clash** revealing this, create a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ticket_puncher",
@@ -4591,7 +4591,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target Warrior attack gets +3{p}. If it's defended by an attack action card, create a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vigorous_engagement_yellow",
@@ -4610,7 +4610,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target Warrior attack gets +2{p}. If it's defended by an attack action card, create a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vigorous_windup_blue",
@@ -4654,7 +4654,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Create a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vigorous_windup_yellow",
@@ -4676,7 +4676,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Create a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wage_agility_blue",
@@ -4772,7 +4772,7 @@
     ],
     "specializations": [],
     "functional_text": "**Universal**\n\nWhen this attacks a hero, you may **wager** a Gold token with them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wage_gold_red",
@@ -4796,7 +4796,7 @@
     ],
     "specializations": [],
     "functional_text": "**Universal**\n\nWhen this attacks a hero, you may **wager** a Gold token with them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wage_gold_yellow",
@@ -4820,7 +4820,7 @@
     ],
     "specializations": [],
     "functional_text": "**Universal**\n\nWhen this attacks a hero, you may **wager** a Gold token with them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wage_might_blue",
@@ -4916,7 +4916,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks a hero, you may **wager** a Vigor token with them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wage_vigor_red",
@@ -4940,7 +4940,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks a hero, you may **wager** a Vigor token with them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wage_vigor_yellow",
@@ -4964,7 +4964,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks a hero, you may **wager** a Vigor token with them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wall_of_meat_and_muscle_red",
@@ -5005,7 +5005,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you win a **clash** revealing this, create a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wallop_red",
@@ -5026,7 +5026,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you win a **clash** revealing this, create a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wallop_yellow",
@@ -5047,7 +5047,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you win a **clash** revealing this, create a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "agility",
@@ -5093,7 +5093,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}: **Attack**. **Go again**\n\nCintari Sellsword can only attack if you've attacked with a weapon this turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "might",
@@ -5263,7 +5263,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard a card. If you do, draw a card.\n\nIf this was played from arsenal, it gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "trade_in_yellow",
@@ -5286,6 +5286,459 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard a card. If you do, draw a card.\n\nIf this was played from arsenal, it gains **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "bare_fangs_blue",
+    "name": "Bare Fangs",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, Bare Fangs gains +2{p}.",
     "status": "pending"
+  },
+  {
+    "slug": "bare_fangs_red",
+    "name": "Bare Fangs",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, Bare Fangs gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "bare_fangs_yellow",
+    "name": "Bare Fangs",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, Bare Fangs gains +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "cintari_saber",
+    "name": "Cintari Saber",
+    "type_text": "Warrior Weapon - Sword (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 2,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nWhenever Cintari Saber is defended by 1 or more attack action cards, it gains +1{p} until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "cracked_bauble_yellow",
+    "name": "Cracked Bauble",
+    "type_text": "Generic Resource",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "*(A player may add any number of Cracked Baubles to their card-pool in sealed deck or booster draft formats.)*",
+    "status": "pending"
+  },
+  {
+    "slug": "gold",
+    "name": "Gold",
+    "type_text": "Generic Token - Item",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}, destroy this: Draw a card. **Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "lunging_press_blue",
+    "name": "Lunging Press",
+    "type_text": "Generic Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack action card gains +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "mandible_claw",
+    "name": "Mandible Claw",
+    "type_text": "Brute Weapon - Claw (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Claw"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**\n\nIf you have discarded a card with 6 or more {p} this turn, this card's attacks **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "pack_hunt_blue",
+    "name": "Pack Hunt",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, **intimidate**.",
+    "status": "done"
+  },
+  {
+    "slug": "pack_hunt_red",
+    "name": "Pack Hunt",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, **intimidate**.",
+    "status": "done"
+  },
+  {
+    "slug": "pack_hunt_yellow",
+    "name": "Pack Hunt",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, **intimidate**.",
+    "status": "done"
+  },
+  {
+    "slug": "rally_the_rearguard_red",
+    "name": "Rally the Rearguard",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - Discard a card: This gets +3{d}. Activate this ability only while this is defending.",
+    "status": "pending"
+  },
+  {
+    "slug": "reinforce_the_line_blue",
+    "name": "Reinforce the Line",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target defending attack action card gets +2{d}.",
+    "status": "done"
+  },
+  {
+    "slug": "reinforce_the_line_red",
+    "name": "Reinforce the Line",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target defending attack action card gains +4{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "reinforce_the_line_yellow",
+    "name": "Reinforce the Line",
+    "type_text": "Generic Instant",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target defending attack action card gains +3{d}.",
+    "status": "pending"
+  },
+  {
+    "slug": "rhinar",
+    "name": "Rhinar",
+    "type_text": "Brute Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you discard a card with 6 or more {p} during your action phase, **intimidate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "rhinar_reckless_rampage",
+    "name": "Rhinar, Reckless Rampage",
+    "type_text": "Brute Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you discard a card with 6 or more {p} during your action phase, **intimidate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "trade_in_red",
+    "name": "Trade In",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may discard a card. If you do, draw a card.\n\nIf this was played from arsenal, it gains **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "wild_ride_blue",
+    "name": "Wild Ride",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 4,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "wild_ride_red",
+    "name": "Wild Ride",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "wild_ride_yellow",
+    "name": "Wild Ride",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 5,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **go again**.",
+    "status": "done"
   }
 ]

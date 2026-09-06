@@ -69,7 +69,7 @@
     ],
     "specializations": [],
     "functional_text": "Deal 3 arcane damage to target hero.\n\n**Surge** - If this deals more than 3 damage, it gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "aether_slash_blue",
@@ -333,7 +333,7 @@
     ],
     "specializations": [],
     "functional_text": "Until end of turn, whenever you discard a random card with 6 or more {p}, banish it. If you do, reveal the top card of your deck. If it has 6 or more {p}, draw a card.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bios_update_red",
@@ -425,7 +425,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy Blessing of Aether then if the next card you play this turn has an arcane damage effect, instead it deals that much arcane damage plus 1.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blessing_of_aether_red",
@@ -493,7 +493,7 @@
     ],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy Blessing of Focus then **opt 1** and reveal the top card of your deck. If it's an arrow, put it face up into your arsenal with an aim counter.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blessing_of_focus_red",
@@ -517,7 +517,7 @@
     ],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy Blessing of Focus then **opt 3** and reveal the top card of your deck. If it's an arrow, put it face up into your arsenal with an aim counter.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blessing_of_focus_yellow",
@@ -651,7 +651,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy Blessing of Occult then create 3 Runechant tokens.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blessing_of_occult_yellow",
@@ -673,7 +673,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy Blessing of Occult then create 2 Runechant tokens.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blessing_of_patience_blue",
@@ -783,7 +783,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy this, then create a Crouching Tiger in your banished zone. It gains +3{p} and you may play it this turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blessing_of_qi_yellow",
@@ -827,7 +827,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy Blessing of Savagery then your next attack with 6 or more base {p} this turn gains +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blessing_of_savagery_red",
@@ -1052,7 +1052,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next Guardian attack this turn gains +1{p}, **dominate**, and \"When this hits a hero, destroy an equipment they control with a -1{d} counter on it.\"\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "celestial_kimono",
@@ -1124,7 +1124,7 @@
     ],
     "specializations": [],
     "functional_text": "**Transform** target Mechanologist head, chest, arms, legs, weapon and 3 Hyper Drivers you control into Nitro Mechanoid. If you don't, **negate** this.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "crankshaft_blue",
@@ -1147,7 +1147,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "crankshaft_red",
@@ -1170,7 +1170,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "crankshaft_yellow",
@@ -1193,7 +1193,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this is banished from boosting, put a steam counter on a Hyper Driver you control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "crouching_tiger",
@@ -1217,7 +1217,7 @@
     ],
     "specializations": [],
     "functional_text": "**Ephemeral**\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "crown_of_dominion",
@@ -1278,7 +1278,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target Assassin attack action card with **contract** gains +1{p}.\n\nLook at the top card of the defending hero's deck. You may put it on the bottom.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cut_to_the_chase_red",
@@ -1316,7 +1316,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target Assassin attack action card with **contract** gains +2{p}.\n\nLook at the top card of the defending hero's deck. You may put it on the bottom.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "dead_eye_yellow",
@@ -1360,7 +1360,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When Deathly Duet attacks, if an attack action card was pitched to play it, it gains +2{p}. If a 'non-attack' action card was pitched to play it, create 2 Runechant tokens.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "deathly_duet_red",
@@ -1381,7 +1381,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When Deathly Duet attacks, if an attack action card was pitched to play it, it gains +2{p}. If a 'non-attack' action card was pitched to play it, create 2 Runechant tokens.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "deathly_duet_yellow",
@@ -1402,7 +1402,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When Deathly Duet attacks, if an attack action card was pitched to play it, it gains +2{p}. If a 'non-attack' action card was pitched to play it, create 2 Runechant tokens.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "diabolic_ultimatum_red",
@@ -1520,7 +1520,7 @@
     ],
     "specializations": [],
     "functional_text": "**Material** - While this is under a permanent other than Themai, that permanent has **phantasm**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "dust_from_the_red_desert_red",
@@ -1545,7 +1545,7 @@
     ],
     "specializations": [],
     "functional_text": "**Material** - While this is under a permanent other than Vynserakai, that permanent has **phantasm**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "dust_from_the_shadow_crypts_red",
@@ -1570,7 +1570,7 @@
     ],
     "specializations": [],
     "functional_text": "**Material** - While this is under a permanent other than Nekria, that permanent has **phantasm**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "emperor_dracai_of_aesir",
@@ -1615,7 +1615,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' yellow cards. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top X cards of their deck, where X is the damage dealt by Eradicate.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "felling_swing_blue",
@@ -1776,7 +1776,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "flex_claws_red",
@@ -1799,7 +1799,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "flex_claws_yellow",
@@ -1822,7 +1822,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "galvanic_bender",
@@ -1846,7 +1846,7 @@
     ],
     "specializations": [],
     "functional_text": "**Material** - While this is under a permanent, that permanent has +1{p}.\n\n**Battleworn**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hanabi_blaster",
@@ -1892,7 +1892,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, at the beginning of your end phase, put the top card of your deck face up into your arsenal.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hemorrhage_bore_blue",
@@ -2548,7 +2548,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}{r}{r}: **Atttack**\n\nWhenever Merciless Battleaxe attacks, if its {p} is greater than twice its base {p}, the attack gains **overpower**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mind_warp_yellow",
@@ -2705,7 +2705,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - {r}, destroy Ornate Tessen: Put a card from your hand on the bottom of your deck. If you do, draw a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pay_day_blue",
@@ -2749,7 +2749,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, name a card.  Cards with that name are Illusionist until end of turn.\n\n**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "plasma_mainline_red",
@@ -2794,7 +2794,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' cards with cost 1 or less. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "plunder_the_poor_red",
@@ -2817,7 +2817,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' cards with cost 1 or less. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "plunder_the_poor_yellow",
@@ -2840,7 +2840,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' cards with cost 1 or less. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "point_the_tip_blue",
@@ -3027,7 +3027,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next sword or dagger attack this turn has **go again** and **piercing 1**.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "precision_press_red",
@@ -3239,7 +3239,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks a hero, they reveal X cards from their hand, where X is the number of times you've **boosted** this combat chain. Choose an action card with {d} less than or equal to X, then add it to this chain link as a defending card.\n\n**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "puncture_blue",
@@ -3325,7 +3325,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Crouching Tiger was the last attack this combat chain, this gets +4{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "qi_unleashed_red",
@@ -3348,7 +3348,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Crouching Tiger was the last attack this combat chain, this gets +4{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "qi_unleashed_yellow",
@@ -3371,7 +3371,7 @@
     ],
     "specializations": [],
     "functional_text": "**Combo** - If Crouching Tiger was the last attack this combat chain, this gets +4{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "quicksilver_dagger",
@@ -3547,7 +3547,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Remove a -1{d} counter from a Guardian off-hand you control with 2 or less base {d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "roar_of_the_tiger_yellow",
@@ -3707,7 +3707,7 @@
     ],
     "specializations": [],
     "functional_text": "Play Rumble Grunting only if you've discarded a card with 6 or more {p} this turn.\n\nYour next Brute attack this turn gains +4{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rumble_grunting_yellow",
@@ -3730,7 +3730,7 @@
     ],
     "specializations": [],
     "functional_text": "Play Rumble Grunting only if you've discarded a card with 6 or more {p} this turn.\n\nYour next Brute attack this turn gains +3{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "runic_reaping_blue",
@@ -3822,7 +3822,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' cards with base **go again**. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sack_the_shifty_red",
@@ -3845,7 +3845,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' cards with base **go again**. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sack_the_shifty_yellow",
@@ -3868,7 +3868,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' cards with base **go again**. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sandscour_greatbow",
@@ -4005,7 +4005,7 @@
     ],
     "specializations": [],
     "functional_text": "Equipment have -1{d} while defending this combat chain.\n\n**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scramble_pulse_red",
@@ -4028,7 +4028,7 @@
     ],
     "specializations": [],
     "functional_text": "Equipment have -1{d} while defending this combat chain.\n\n**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scramble_pulse_yellow",
@@ -4051,7 +4051,7 @@
     ],
     "specializations": [],
     "functional_text": "Equipment have -1{d} while defending this combat chain.\n\n**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "seasoned_saviour",
@@ -4096,7 +4096,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Action** - {r}{r}{r}: Look at the top card of your deck. You may put it on the bottom. Create a Ponder token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "shield_bash_blue",
@@ -4115,7 +4115,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If a Guardian off-hand with 1 or more {d} is defending this chain link, deal 1 damage to the attacking hero unless they discard a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "shield_bash_red",
@@ -4134,7 +4134,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If a Guardian off-hand with 1 or more {d} is defending this chain link, deal 1 damage to the attacking hero unless they discard a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "shield_bash_yellow",
@@ -4153,7 +4153,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If a Guardian off-hand with 1 or more {d} is defending this chain link, deal 1 damage to the attacking hero unless they discard a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "shield_wall_blue",
@@ -4288,7 +4288,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When Skull Crack is discarded at random, gain {r}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sky_fire_lanterns_blue",
@@ -4311,7 +4311,7 @@
     ],
     "specializations": [],
     "functional_text": "Reveal the top card of your deck. If it's blue, create a Runechant token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sky_fire_lanterns_red",
@@ -4380,7 +4380,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' 'non-attack' action cards. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "slay_the_scholars_red",
@@ -4403,7 +4403,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' 'non-attack' action cards. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "slay_the_scholars_yellow",
@@ -4426,7 +4426,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' 'non-attack' action cards. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spectral_procession_red",
@@ -4545,7 +4545,7 @@
     ],
     "specializations": [],
     "functional_text": "When you play Spectral Rider, if you control a Spectral Shield, this gains **overpower**.\n\n**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spectral_rider_red",
@@ -4569,7 +4569,7 @@
     ],
     "specializations": [],
     "functional_text": "When you play Spectral Rider, if you control a Spectral Shield, this gains **overpower**.\n\n**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spectral_rider_yellow",
@@ -4593,7 +4593,7 @@
     ],
     "specializations": [],
     "functional_text": "When you play Spectral Rider, if you control a Spectral Shield, this gains **overpower**.\n\n**Phantasm**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spell_fray_cloak",
@@ -4616,7 +4616,7 @@
     ],
     "specializations": [],
     "functional_text": "**Spellvoid 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spell_fray_gloves",
@@ -4685,7 +4685,7 @@
     ],
     "specializations": [],
     "functional_text": "**Spellvoid 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spiders_bite",
@@ -4827,7 +4827,7 @@
     ],
     "specializations": [],
     "functional_text": "Deal 5 arcane damage to target hero.\n\n**Surge** - If this deals more than 5 damage, create a Ponder token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tearing_shuko",
@@ -4896,7 +4896,7 @@
     ],
     "specializations": [],
     "functional_text": "The next card you play this turn with cost 2 or less and an arcane damage effect, instead deals that much arcane damage plus 1.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tempest_aurora_yellow",
@@ -5060,7 +5060,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, you may put a Mechanologist item from your hand into the arena with cost less than or equal to the number of times you've **boosted** this combat chain.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "urgent_delivery_red",
@@ -5081,7 +5081,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, you may put a Mechanologist item from your hand into the arena with cost less than or equal to the number of times you've **boosted** this combat chain.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "urgent_delivery_yellow",
@@ -5102,7 +5102,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, you may put a Mechanologist item from your hand into the arena with cost less than or equal to the number of times you've **boosted** this combat chain.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "visit_the_imperial_forge_blue",
@@ -5391,7 +5391,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Banish a card from under Nitro Mechanoid: **Attack**\n\n**Overpower**\n\n**Temper**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ponder",
@@ -5435,7 +5435,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}{r}{r}, destroy Silver: Draw a card. **Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spellbane_aegis",
@@ -5458,7 +5458,7 @@
     ],
     "specializations": [],
     "functional_text": "**Spellvoid 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "suraya_archangel_of_knowledge",
@@ -5483,5 +5483,92 @@
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {p}{p}: **Attack**. Whenever Suraya attacks, you may banish a Light card from your hero's soul. If you do, Suraya deals 1 arcane damage to any target.\n\nWhenever Suraya deals damage, you gain that much {h}.\n\n**Ward 4**",
     "status": "pending"
+  },
+  {
+    "slug": "command_and_conquer_red",
+    "name": "Command and Conquer",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Defense reaction cards can't be played this chain link. When this hits a hero, destroy all cards in their arsenal.",
+    "status": "done"
+  },
+  {
+    "slug": "hyper_driver_red",
+    "name": "Hyper Driver",
+    "type_text": "Mechanologist Action - Item",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This enters the arena with 3 steam counters. When it has none, destroy it.\n\nOnce per turn, when you boost a card, remove a steam counter from this and gain {r}.",
+    "status": "pending"
+  },
+  {
+    "slug": "runechant",
+    "name": "Runechant",
+    "type_text": "Runeblade Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you play an attack action card or activate a weapon attack, destroy this and deal 1 arcane damage to target opposing hero.",
+    "status": "done"
+  },
+  {
+    "slug": "spectral_shield",
+    "name": "Spectral Shield",
+    "type_text": "Illusionist Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Ward 1**",
+    "status": "done"
   }
 ]

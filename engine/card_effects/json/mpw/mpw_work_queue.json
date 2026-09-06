@@ -42,7 +42,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nThe second time you attack with Dawnblade each turn, it gains +1{p} until end of turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "dorinthea_quicksilver_prodigy",
@@ -166,7 +166,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}{r}{r}, {t}: **Sharpen** target sword you control. **Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "run_through_blue",
@@ -229,7 +229,7 @@
     ],
     "specializations": [],
     "functional_text": "Target sword attack gains **go again**.\n\nYour next sword attack this turn gains +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sharpening_sparks_red",
@@ -250,7 +250,7 @@
     ],
     "specializations": [],
     "functional_text": "Target sword attack gets +2{p} and \"When this hits, **sharpen** this sword.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "shove_off_blue",
@@ -307,7 +307,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While this is defending a weapon attack, this gets +1{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "steel_on_steel_red",
@@ -326,7 +326,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While this is defending a weapon attack, this gets +1{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "steel_on_steel_yellow",
@@ -345,7 +345,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While this is defending a weapon attack, this gets +1{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "warriors_valor_red",
@@ -395,6 +395,2997 @@
       "Hala"
     ],
     "functional_text": "**Hala Specialization**\n\n**Once per Turn Action** - {r}: **Attack**\n\nIf this has been sharpened this turn, its first attack this turn gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "a_moments_peace_blue",
+    "name": "A Moment's Peace",
+    "type_text": "Warrior Block",
+    "cost": null,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends a sword attack, you can't be attacked by the sword again this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "all_in_red",
+    "name": "All In",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time a sword you control attacks this turn, destroy all Gold you control. The attack gets +2{p} for each Gold destroyed this way. When the chain link resolves, if the attack didn't hit, you lose the game.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "and_again_blue",
+    "name": "And Again...",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Attack** with target sword that has been sharpened and you've attacked with this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "backside_of_the_blade_blue",
+    "name": "Backside of the Blade",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +1{p}. If it has go again, you may attack an additional time with the weapon this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "below_the_belt_red",
+    "name": "Below the Belt",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +4{p} and \"When this hits a Warrior hero, destroy a card in their arsenal.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "big_blinder_blue",
+    "name": "Big Blinder",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Target sword attack gets +2{p} and **wagers** with the defending hero. The winner creates a Flurry token.",
+    "status": "pending"
+  },
+  {
+    "slug": "big_blinder_red",
+    "name": "Big Blinder",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Target sword attack gets +4{p} and **wagers** with the defending hero. The winner creates a Flurry token.",
+    "status": "pending"
+  },
+  {
+    "slug": "big_blinder_yellow",
+    "name": "Big Blinder",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Target sword attack gets +3{p} and **wagers** with the defending hero. The winner creates a Flurry token.",
+    "status": "pending"
+  },
+  {
+    "slug": "big_slick_blue",
+    "name": "Big Slick",
+    "type_text": "Warrior Action",
+    "cost": 3,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +3{p} and \"When this attacks, **wager** with the defending hero. The winner draws a card.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "big_slick_red",
+    "name": "Big Slick",
+    "type_text": "Warrior Action",
+    "cost": 3,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +5{p} and \"When this attacks, **wager** with the defending hero. The winner draws a card.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "big_slick_yellow",
+    "name": "Big Slick",
+    "type_text": "Warrior Action",
+    "cost": 3,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +3{p} and \"When this attacks, **wager** with the defending hero. The winner draws a card.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "blade_dance",
+    "name": "Blade Dance",
+    "type_text": "Warrior Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you activate a weapon attack, destroy this and the attack gets **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "blade_flurry_red",
+    "name": "Blade Flurry",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +2{p}.\n\nYour next weapon attack this turn gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "bluff_catcher_yellow",
+    "name": "Bluff Catcher",
+    "type_text": "Warrior Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "You may destroy a Gold you control rather than pay this card's {r} cost.\n\nYour next sword attack this turn gets +3{p} and \"When this attacks, **wager** with the defending hero. The winner gets +1{i} during their next end phase.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "blunt_retort",
+    "name": "Blunt Retort",
+    "type_text": "Warrior Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends a weapon attack, you may remove a +1{p} counter from the weapon.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "braveforge_bracers",
+    "name": "Braveforge Bracers",
+    "type_text": "Warrior Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per turn Action** - {r}: Your next weapon attack this turn gains +1{p}. Activate this ability only if a weapon you control has hit this turn. **Go again**\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "carve_up_yellow",
+    "name": "Carve Up",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets \"When this hits a hero, you may remove a +1{p} counter from this weapon. If you do, destroy a card in their arsenal.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "check_raise_blue",
+    "name": "Check-Raise",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time an attack you control wagers this turn, it gets +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "check_raise_red",
+    "name": "Check-Raise",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time an attack you control wagers this turn, it gets +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "check_raise_yellow",
+    "name": "Check-Raise",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next time an attack you control wagers this turn, it gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "clip_flexor",
+    "name": "Clip Flexor",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Defense Reaction** - Destroy this: You may add an attack reaction card from your hand to the active chain link as a defending card.",
+    "status": "pending"
+  },
+  {
+    "slug": "crimson_waltz_yellow",
+    "name": "Crimson Waltz",
+    "type_text": "Warrior Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +4{p}.\n\nThe next time you attack with a sword this turn, draw a card, then put a card from your hand on top of your deck.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dawnblade",
+    "name": "Dawnblade",
+    "type_text": "Warrior Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nThe second time this hits each turn, put a +1{p} counter on it.\n\nAt the beginning of your end phase, if this hasn't hit this turn, remove all +1{p} counters from it.",
+    "status": "pending"
+  },
+  {
+    "slug": "deadly_display_blue",
+    "name": "Deadly Display",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +1{p}. If the weapon has been sharpened this turn, the attack gets \"When this hits a hero, create a Flurry token.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "deadly_display_red",
+    "name": "Deadly Display",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +3{p}. If the weapon has been sharpened this turn, the attack gets \"When this hits a hero, create a Flurry token.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "deadly_display_yellow",
+    "name": "Deadly Display",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +2{p}. If the weapon has been sharpened this turn, the attack gets \"When this hits a hero, create a Flurry token.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "dealers_grip",
+    "name": "Dealer's Grip",
+    "type_text": "Warrior Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - {r}{r}, destroy this: Target attack that has wagered gets +1{p}.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "deep_blue",
+    "name": "Deep Blue",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Put a card from your hand on the bottom of your deck, destroy Deep Blue: Gain {r}{r}{r}. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "dice_up_blue",
+    "name": "Dice Up",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets \"When this hits a hero, you may remove a +1{p} counter from this weapon. If you do, destroy an aura they control.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "display_of_artistry_blue",
+    "name": "Display of Artistry",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +1{p}. If the weapon has been sharpened this turn, the attack gets \"Reaction cards get -1{d} while defending this.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "display_of_artistry_red",
+    "name": "Display of Artistry",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +3{p}. If the weapon has been sharpened this turn, the attack gets \"Reaction cards get -1{d} while defending this.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "display_of_artistry_yellow",
+    "name": "Display of Artistry",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +2{p}. If the weapon has been sharpened this turn, the attack gets \"Reaction cards get -1{d} while defending this.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "donkey_blue",
+    "name": "Donkey",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Target sword attack gets +1{p} and **wagers** with the defending hero. The winner destroys a card in their own arsenal.",
+    "status": "done"
+  },
+  {
+    "slug": "dorinthea",
+    "name": "Dorinthea",
+    "type_text": "Warrior Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per turn Effect** - When a weapon you control hits, you may attack an additional time with that weapon this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "downswing_red",
+    "name": "Downswing",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Target sword attack gets +1{p} and **wagers** with the defending hero. The winner loses 1{h}.",
+    "status": "done"
+  },
+  {
+    "slug": "drawing_dead_yellow",
+    "name": "Drawing Dead",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Target sword attack gets +1{p} and **wagers** with the defending hero. The winner discards a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "drawn_to_the_blade_yellow",
+    "name": "Drawn to the Blade",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 2 or more +1{p} counters, the next time it hits this turn, draw a card.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "driving_blade_red",
+    "name": "Driving Blade",
+    "type_text": "Warrior Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +3{p} and **go again**.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "duelist_gauntlets",
+    "name": "Duelist Gauntlets",
+    "type_text": "Warrior Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - {r}, destroy this: Target sword attack gets \"Reaction cards get -1{d} while defending this.\"\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "durendal",
+    "name": "Durendal",
+    "type_text": "Warrior Weapon - Sword (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Sword"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: **Attack**\n\nIf this has a +1{p} counter, reaction cards get -1{d} while defending it.",
+    "status": "pending"
+  },
+  {
+    "slug": "dusk_path_pilgrimage_red",
+    "name": "Dusk Path Pilgrimage",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gets +3{p} and \"When this hits, you may attack an additional time with this weapon this turn.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "edge_laden_plate",
+    "name": "Edge Laden Plate",
+    "type_text": "Warrior Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Gain {r}. Activate this only if you've sharpened a sword this turn.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "edict_of_steel_blue",
+    "name": "Edict of Steel",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 3 or more +1{p} counters, create a Flurry token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "edict_of_steel_red",
+    "name": "Edict of Steel",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 1 or more +1{p} counters, create a Flurry token.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "edict_of_steel_yellow",
+    "name": "Edict of Steel",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 2 or more +1{p} counters, create a Flurry token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "energy_potion_blue",
+    "name": "Energy Potion",
+    "type_text": "Generic Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Gain {r}{r}",
+    "status": "done"
+  },
+  {
+    "slug": "engage_steel_blue",
+    "name": "Engage Steel",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +3{p} and \"If this is defended by a Warrior card, this gets +1{p}.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "engage_steel_red",
+    "name": "Engage Steel",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +3{p} and \"If this is defended by a Warrior card, this gets +1{p}.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "engage_steel_yellow",
+    "name": "Engage Steel",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +3{p} and \"If this is defended by a Warrior card, this gets +1{p}.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "flurry",
+    "name": "Flurry",
+    "type_text": "Warrior Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you activate a weapon attack, destroy this and you may attack with the weapon twice this turn.",
+    "status": "done"
+  },
+  {
+    "slug": "gleam_of_the_blade_red",
+    "name": "Gleam of the Blade",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +3{p}.\n\n**Instant** - Discard this: Create a Flurry token.",
+    "status": "pending"
+  },
+  {
+    "slug": "glint_the_quicksilver_blue",
+    "name": "Glint the Quicksilver",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Reprise"
+    ],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets **go again**.\n\n**Reprise** - If the defending hero has defended with a card from their hand this chain link, draw a card.",
+    "status": "done"
+  },
+  {
+    "slug": "gold",
+    "name": "Gold",
+    "type_text": "Generic Token - Item",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}, destroy this: Draw a card. **Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "grains_of_bloodspill",
+    "name": "Grains of Bloodspill",
+    "type_text": "Warrior Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever a weapon attack you control hits, you may pay {r}. If you do, create a Vigor token. \n\n**Temper**",
+    "status": "done"
+  },
+  {
+    "slug": "gutshot_blue",
+    "name": "Gutshot",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +3{p} and \"When this attacks, **wager** with the defending hero. The winner creates a Blade Dance token.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "gutshot_red",
+    "name": "Gutshot",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +3{p} and \"When this attacks, **wager** with the defending hero. The winner creates a Blade Dance token.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "gutshot_yellow",
+    "name": "Gutshot",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +3{p} and \"When this attacks, **wager** with the defending hero. The winner creates a Blade Dance token.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hala_bladesaint_of_the_vow",
+    "name": "Hala, Bladesaint of the Vow",
+    "type_text": "Warrior Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}, {t}: **Sharpen** target sword you control. **Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "heart_of_bladehold",
+    "name": "Heart of Bladehold",
+    "type_text": "Warrior Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: You may activate your second sword attack this turn without paying its {r} cost. **Go again**\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "heavy_swing_red",
+    "name": "Heavy Swing",
+    "type_text": "Warrior Action - Aura",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this and your next sword attack this turn gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "hit_and_run_blue",
+    "name": "Hit and Run",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains **go again**.\n\nIf you have attacked with a weapon this turn, your next attack this turn gains +1{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hit_and_run_red",
+    "name": "Hit and Run",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains **go again**.\n\nIf you have attacked with a weapon this turn, your next attack this turn gains +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hit_and_run_yellow",
+    "name": "Hit and Run",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains **go again**.\n\nIf you have attacked with a weapon this turn, your next attack this turn gains +2{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "honed_for_honor_blue",
+    "name": "Honed for Honor",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 3 or more +1{p} counters, you may put an attack reaction card from your graveyard on top of your deck.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "hope_merchants_hood",
+    "name": "Hope Merchant's Hood",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Shuffle any number of cards from your hand into your deck, then draw that many cards.",
+    "status": "pending"
+  },
+  {
+    "slug": "hot_top",
+    "name": "Hot Top",
+    "type_text": "Warrior Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends a weapon attack, you may put an attack reaction card from your graveyard on top of your deck.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "in_the_swing_red",
+    "name": "In the Swing",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you've attacked 2 or more times with weapons this turn.\n\nTarget weapon attack gains +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "into_the_muck_red",
+    "name": "Into the Muck",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you've wagered this chain link.\n\nBanish a non-equipment defending card on the active chain link.",
+    "status": "pending"
+  },
+  {
+    "slug": "ironsong_response_red",
+    "name": "Ironsong Response",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Reprise"
+    ],
+    "specializations": [],
+    "functional_text": "**Reprise** - If the defending hero has defended with a card from their hand this chain link, target weapon attack gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "jive_blue",
+    "name": "Jive",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create a Blade Dance token.",
+    "status": "pending"
+  },
+  {
+    "slug": "lessons_learned_blue",
+    "name": "Lessons Learned",
+    "type_text": "Warrior Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Shuffle up to 3 attack reaction cards with different names from your graveyard into your deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "longsword_leggings",
+    "name": "Longsword Leggings",
+    "type_text": "Warrior Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Create a Blade Dance or Flurry token.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "money_where_ya_mouth_is_red",
+    "name": "Money Where Ya Mouth Is",
+    "type_text": "Generic Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack this turn gets +3{p} and \"When this attacks a hero, you may **wager** a Gold token with them.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "natures_path_pilgrimage_red",
+    "name": "Nature's Path Pilgrimage",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +3{p} and \"If this hits and you have no cards in your arsenal, reveal the top card of your deck. If it's an action card, put it face down into your arsenal.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "nip_at_the_heels_blue",
+    "name": "Nip at the Heels",
+    "type_text": "Generic Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target attack with 3 or less base {p} gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "off_beat_blue",
+    "name": "Off Beat",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "Destroy up to 1 Blade Dance and/or Flurry token. **Sharpen** target sword you control for each token destroyed this way.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "olde_leather_boots",
+    "name": "Olde Leather Boots",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If you've been attacked 2 or more times this turn, this gets +2{d}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "olde_leather_gloves",
+    "name": "Olde Leather Gloves",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If you've been attacked 2 or more times this turn, this gets +2{d}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "olde_leather_helm",
+    "name": "Olde Leather Helm",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If you've been attacked 2 or more times this turn, this gets +2{d}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "olde_leather_plate",
+    "name": "Olde Leather Plate",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "If you've been attacked 2 or more times this turn, this gets +2{d}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "ole_blue",
+    "name": "Olé",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Remove a +1{p} counter from target attacking weapon. If you do, create a Flurry token and draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "olympia",
+    "name": "Olympia",
+    "type_text": "Warrior Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The first time each of your attacks wins a wager, create a Gold token.",
+    "status": "pending"
+  },
+  {
+    "slug": "overbear_red",
+    "name": "Overbear",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gets **dominate**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "overwhelming_swing_yellow",
+    "name": "Overwhelming Swing",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This costs an additional {r} to play for each card defending on the active chain link.\n\nTarget weapon attack gets +X{p}, where X is twice the number of cards defending it plus 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "paragon_plate",
+    "name": "Paragon Plate",
+    "type_text": "Warrior Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Attack Reaction** - {t}, remove a +1{p} counter from an attacking sword you control: Gain {r}\n\n**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "peaceful_sanctuary_red",
+    "name": "Peaceful Sanctuary",
+    "type_text": "Generic Action - Aura",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Heroes can't create aura tokens.\n\nAt the start of your action phase, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "point_of_escalation_yellow",
+    "name": "Point of Escalation",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target sword attack gets +2{p} for each time you've attacked with the sword this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "push_forward_red",
+    "name": "Push Forward",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +3{p}.\n\nIf you have attacked with a weapon this turn, your next attack this turn gains **dominate**.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "put_in_context_blue",
+    "name": "Put in Context",
+    "type_text": "Generic Defense Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This can only defend an attack with 3 or less base {p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "quicksilver_dance_blue",
+    "name": "Quicksilver Dance",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Remove a +1{p} counter from target attacking weapon. If you do, create a Blade Dance token and draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "raise_blades_red",
+    "name": "Raise Blades",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Draw a card. Put a card from your hand on top of your deck.\n\nYour next sword attack this turn gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "rake_back_blue",
+    "name": "Rake Back",
+    "type_text": "Warrior Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "You may destroy a Gold you control rather than pay this card's {r} cost.\n\nYour next sword attack this turn gets +2{p} and \"When this attacks, **wager** with the defending hero. The winner may equip an equipment card from their graveyard.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "refraction_bolters",
+    "name": "Refraction Bolters",
+    "type_text": "Warrior Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Battleworn",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When a weapon attack you control hits, you may destroy this. If you do, the attack gets **go again**.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "rest_before_battle_yellow",
+    "name": "Rest Before Battle",
+    "type_text": "Warrior Action - Aura",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you've attacked with a weapon this turn.\n\nAt the start of your turn, destroy this and draw a card.",
+    "status": "pending"
+  },
+  {
+    "slug": "second_swing_red",
+    "name": "Second Swing",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you have attacked with a weapon this turn, your next attack this turn gains +4{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sharp_incline_blue",
+    "name": "Sharp Incline",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 1 or more +1{p} counters, your next attack with it this turn costs {r} less to activate.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "sharp_incline_red",
+    "name": "Sharp Incline",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 1 or more +1{p} counters, your next attack with it this turn costs {r} less to activate.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "sharp_incline_yellow",
+    "name": "Sharp Incline",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 2 or more +1{p} counters, your next attack with it this turn costs {r} less to activate.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sharp_n_shine_blue",
+    "name": "Sharp 'n Shine",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 3 or more +1{p} counters, create a Blade Dance token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sharp_n_shine_red",
+    "name": "Sharp 'n Shine",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 1 or more +1{p} counters, create a Blade Dance token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sharp_n_shine_yellow",
+    "name": "Sharp 'n Shine",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "**Sharpen** target sword you control.\n\nIf it has 2 or more +1{p} counters, create a Blade Dance token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "sharpen_steel_red",
+    "name": "Sharpen Steel",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gains +3{p}.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "shatter_the_weakpoint_red",
+    "name": "Shatter the Weakpoint",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +4{p} and \"When this hits a Warrior hero, destroy an equipment they control with 0{d}.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "shimmer_of_the_blade_red",
+    "name": "Shimmer of the Blade",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +3{p}.\n\n**Instant** - Discard this: Create a Blade Dance token.",
+    "status": "pending"
+  },
+  {
+    "slug": "showdown_blue",
+    "name": "Showdown",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +1{p} and \"When this attacks, **wager** with the defending hero. The winner creates a Flurry token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "showdown_red",
+    "name": "Showdown",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +3{p} and \"When this attacks, **wager** with the defending hero. The winner creates a Flurry token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "showdown_yellow",
+    "name": "Showdown",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +2{p} and \"When this attacks, **wager** with the defending hero. The winner creates a Flurry token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "shuck_blue",
+    "name": "Shuck",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Create a Flurry token.",
+    "status": "pending"
+  },
+  {
+    "slug": "silverdrop_downpour_blue",
+    "name": "Silverdrop Downpour",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +2{p}.\n\nIf the weapon has been sharpened this turn, this costs {r} less to play.",
+    "status": "pending"
+  },
+  {
+    "slug": "silverdrop_downpour_red",
+    "name": "Silverdrop Downpour",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +4{p}.\n\nIf the weapon has been sharpened this turn, this costs {r} less to play.",
+    "status": "pending"
+  },
+  {
+    "slug": "silverdrop_downpour_yellow",
+    "name": "Silverdrop Downpour",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets +3{p}.\n\nIf the weapon has been sharpened this turn, this costs {r} less to play.",
+    "status": "pending"
+  },
+  {
+    "slug": "slice_and_dice_red",
+    "name": "Slice and Dice",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your first sword or dagger attack this turn gets +1{p}.\n\nYour second sword or dagger attack this turn gets +3{p}.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "slice_up_red",
+    "name": "Slice Up",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Target weapon attack gets \"When this hits a hero, you may remove a +1{p} counter from this weapon. If you do, they discard a card.\"",
+    "status": "pending"
+  },
+  {
+    "slug": "small_blinder_blue",
+    "name": "Small Blinder",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Target sword attack gets +2{p} and **wagers** with the defending hero. The winner creates a Blade Dance token.",
+    "status": "pending"
+  },
+  {
+    "slug": "small_blinder_red",
+    "name": "Small Blinder",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Target sword attack gets +4{p} and **wagers** with the defending hero. The winner creates a Blade Dance token.",
+    "status": "pending"
+  },
+  {
+    "slug": "small_blinder_yellow",
+    "name": "Small Blinder",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Wager"
+    ],
+    "specializations": [],
+    "functional_text": "Target sword attack gets +3{p} and **wagers** with the defending hero. The winner creates a Blade Dance token.",
+    "status": "pending"
+  },
+  {
+    "slug": "starting_stake_yellow",
+    "name": "Starting Stake",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you control no Gold tokens, create a Gold token.",
+    "status": "pending"
+  },
+  {
+    "slug": "steel_to_the_dome_red",
+    "name": "Steel to the Dome",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +4{p} and \"When this hits a Warrior hero, they discard a card.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "steelblade_shunt_blue",
+    "name": "Steelblade Shunt",
+    "type_text": "Warrior Defense Reaction",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this defends a weapon attack, deal 1 damage to the attacking hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "steelblade_shunt_red",
+    "name": "Steelblade Shunt",
+    "type_text": "Warrior Defense Reaction",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 6,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this defends a weapon attack, deal 1 damage to the attacking hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "steelblade_shunt_yellow",
+    "name": "Steelblade Shunt",
+    "type_text": "Warrior Defense Reaction",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 5,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If this defends a weapon attack, deal 1 damage to the attacking hero.",
+    "status": "pending"
+  },
+  {
+    "slug": "swordmasters_path_blue",
+    "name": "Swordmaster's Path",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +1{p}.\n\nThe next time you would sharpen a sword this turn, instead **sharpen** it an additional time.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "swordmasters_path_red",
+    "name": "Swordmaster's Path",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +3{p}.\n\nThe next time you would sharpen a sword this turn, instead **sharpen** it an additional time.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "swordmasters_path_yellow",
+    "name": "Swordmaster's Path",
+    "type_text": "Warrior Action",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +2{p}.\n\nThe next time you would sharpen a sword this turn, instead **sharpen** it an additional time.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "take_the_lead_red",
+    "name": "Take the Lead",
+    "type_text": "Warrior Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt damage this turn, prevent 2 of that damage. If you prevent damage this way, create a Blade Dance token.",
+    "status": "pending"
+  },
+  {
+    "slug": "take_the_upper_hand_blue",
+    "name": "Take the Upper Hand",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you've wagered this chain link.\n\nTarget attack gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "take_the_upper_hand_red",
+    "name": "Take the Upper Hand",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you've wagered this chain link.\n\nTarget attack gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "take_the_upper_hand_yellow",
+    "name": "Take the Upper Hand",
+    "type_text": "Warrior Attack Reaction",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Play this only if you've wagered this chain link.\n\nTarget attack gets +2{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "terms_of_combat_red",
+    "name": "Terms of Combat",
+    "type_text": "Warrior Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next weapon attack this turn gets +4{p} and \"Whenever a defense reaction is played or activated this chain link, draw a card.\"\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "thwart_yellow",
+    "name": "Thwart",
+    "type_text": "Generic Block",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this defends, remove all +1{p} counters from the attacking card.",
+    "status": "pending"
+  },
+  {
+    "slug": "timesnap_potion_blue",
+    "name": "Timesnap Potion",
+    "type_text": "Generic Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Gain 2 action points.",
+    "status": "pending"
+  },
+  {
+    "slug": "toe_the_line_red",
+    "name": "Toe the Line",
+    "type_text": "Warrior Instant",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "The next time you would be dealt damage this turn, prevent 2 of that damage. If you prevent damage this way, create a Flurry token.",
+    "status": "pending"
+  },
+  {
+    "slug": "trot_along_blue",
+    "name": "Trot Along",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next attack with 3 or less base {p} this turn gets **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "unsheathed_red",
+    "name": "Unsheathed",
+    "type_text": "Warrior Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Your next sword attack this turn gets +3{p} and \"When this attacks, if its {p} is greater than twice its base, it gets **go again**.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "valiant_dynamo",
+    "name": "Valiant Dynamo",
+    "type_text": "Warrior Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "At the beginning of your end phase, if you've attacked 2 or more times with weapons this turn, you may remove a -1{d} counter from this.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "vigilant_dodgers",
+    "name": "Vigilant Dodgers",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Prevent the next 1 damage that would be dealt to you this turn. Activate this only if a weapon has attacked this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "visit_the_dawnsmith_blue",
+    "name": "Visit the Dawnsmith",
+    "type_text": "Warrior Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [
+      "Sharpen"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this and **sharpen** all swords you control.",
     "status": "pending"
   }
 ]

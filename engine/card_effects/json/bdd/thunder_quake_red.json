@@ -1,0 +1,5 @@
+{
+  "slug": "thunder_quake_red",
+  "_comment": "Derived from thunder_quake_blue, whose printed functional text is byte-identical. Its only text is a KEYWORD, which comes from card data rather than from this file, so an empty abilities list is the correct implementation -- the source card is authored the same way. Colour variants differ only in {p} and pitch, both of which come from card data too.",
+  "abilities": []
+}

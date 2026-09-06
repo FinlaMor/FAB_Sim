@@ -1,0 +1,33 @@
+{
+  "slug": "bonds_of_ancestry_blue",
+  "_comment": "Derived from bonds_of_ancestry_red, whose printed functional text is byte-identical. Colour variants differ only in {p} and pitch, and both come from card data rather than this file, so the abilities carry over unchanged. Verified against the corpus as its own card. INHERITED NOTE FROM bonds_of_ancestry_red: '**Combo** - If a card with Gustwave in its name was the last attack this combat chain, this costs {r}{r} less to play, and HAS go again and \"When this attacks, you may banish a card with combo from your graveyard. If you do, search your deck for a card with the same name, banish it, then shuffle. You may play it this combat chain.\"'\n\nFour things were wrong before the parts that are still missing.\n\nGO AGAIN IS GATED AND WAS UNCONDITIONAL. The card DB grants every printed keyword, and conditional_keywords reported nothing for this card, so it had go again whether or not the combo was live -- the exact class the gated-keyword sweeps were about, still present here. Now granted from a WHILE_STATIC on SOURCE_IS_ATTACK plus the combo gate, which is the shape conditional_keywords infers from.\n\nAN ADDITIONAL COST OF PAY_LIFE 2 WAS INVENTED. The card says nothing about life. Costs block play legality, so it made the card unplayable at 2 life or less.\n\n'COSTS {r}{r} LESS TO PLAY' WAS A GAIN OF 2 RESOURCE POINTS ON RESOLUTION. That is a different thing in both directions: the reduction has to apply when the cost is CHECKED, so it affects what you can afford to play, while a resolution-time gain leaves you paying full price and then hands you 2 resources to spend on something else. It is now a cost_modifier, evaluated at play time (the same hook Stains of the Redback uses).\n\nNOT IMPLEMENTED, and deliberately left out rather than approximated: the granted trigger, 'when this attacks, you may banish a card with combo from your graveyard. If you do, search your deck for a card with THE SAME NAME, banish it, then shuffle. You may play it this combat chain.' Two pieces are missing and neither is a small one. SAME_NAME matches a LITERAL name list and cannot compare against a card a preceding effect stored -- SAME_COLOR_AS does exactly that for colour, so the shape exists, but not for names. And SEARCH_DECK reads a nested `filter` only to pull a subtype out of it; it never evaluates conditions per candidate. What was there instead searched for cards named 'Gustwave' -- the COMBO card's name, not the banished card's -- so it fetched the wrong card by construction, then handed it to PLAY_ACTIVATE_ATTACK with an unread `target`. Definition of done: a ref-comparing SAME_NAME, and a per-candidate condition filter on SEARCH_DECK.",
+  "cost_modifiers": [
+    {
+      "condition": {
+        "type": "COMBO_CONTAINS",
+        "card_name": "Gustwave"
+      },
+      "delta": -2
+    }
+  ],
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "COMBO_CONTAINS",
+          "card_name": "Gustwave"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ]
+}

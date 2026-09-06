@@ -270,7 +270,7 @@
     ],
     "specializations": [],
     "functional_text": "High Tide - If there are 2 or more blue cards in your pitch zone, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "battalion_barque_red",
@@ -293,7 +293,7 @@
     ],
     "specializations": [],
     "functional_text": "High Tide - If there are 2 or more blue cards in your pitch zone, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "battalion_barque_yellow",
@@ -316,7 +316,7 @@
     ],
     "specializations": [],
     "functional_text": "High Tide - If there are 2 or more blue cards in your pitch zone, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "big_game_trophy_shot_yellow",
@@ -383,7 +383,7 @@
     ],
     "specializations": [],
     "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.\n\nWhen this hits, deal 1 damage to any target.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blue_fin_harpoon_blue",
@@ -504,7 +504,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets **overpower**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "burly_bones_red",
@@ -528,7 +528,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets **overpower**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "burly_bones_yellow",
@@ -552,7 +552,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets **overpower**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "burn_bare",
@@ -619,7 +619,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next arrow attack this turn gets +3{p}.\n\nYou may put an arrow from your hand face-up into your arsenal.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "call_in_the_big_guns_yellow",
@@ -665,7 +665,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Destroy this: Gain {r}. Activate this only if you've drawn a card this turn. **Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "chart_a_course_blue",
@@ -734,7 +734,7 @@
     ],
     "specializations": [],
     "functional_text": "Your second attack this turn gets +3{p}.\n\nYou may put a gold counter on Treasure Island.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "chart_the_high_seas_blue",
@@ -942,7 +942,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Instant** - {t} a cog you control: This gets +1{p} or go again.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cloud_skiff_red",
@@ -965,7 +965,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Instant** - {t} a cog you control: This gets +1{p} or go again.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cloud_skiff_yellow",
@@ -988,7 +988,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Instant** - {t} a cog you control: This gets +1{p} or go again.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cog_in_the_machine_red",
@@ -1054,7 +1054,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits a hero, {u} all cogs you control.\n\n**Thrice per Turn Instant** - {t} a cog you control: This gets +1{p} or **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cogwerx_tinker_rings",
@@ -1077,7 +1077,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, create a Golden Cog token.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cogwerx_workshop_blue",
@@ -1547,7 +1547,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Whenever a hero draws a card during an action phase, they lose 1{h}.\n\nAt the beginning of each hero's action phase, they draw a card.\n\nAt the beginning of each hero's end phase, if a weapon did not attack this turn, destroy this.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "everbloom__life_blue",
@@ -1592,7 +1592,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, you may put a gold counter on Treasure Island.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "expedition_to_blackwater_strait_red",
@@ -1613,7 +1613,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, you may put a gold counter on Treasure Island.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "expedition_to_dreadfall_reach_red",
@@ -1634,7 +1634,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, you may put a gold counter on Treasure Island.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "expedition_to_horizons_mantle_red",
@@ -1655,7 +1655,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, you may put a gold counter on Treasure Island.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fiddlers_green_blue",
@@ -1693,7 +1693,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this is put into your graveyard from anywhere, gain 3{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fiddlers_green_yellow",
@@ -1735,7 +1735,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next arrow attack this turn gets +3{p}.\n\nYou may {u} a bow you control.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fish_fingers",
@@ -1847,7 +1847,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this is discarded, create a Gold token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "give_no_quarter_blue",
@@ -1961,7 +1961,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, if you control less Gold than an opponent, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "gold_hunter_longboat_yellow",
@@ -2076,7 +2076,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard a yellow card. If you do, draw a card and create a Gold token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "golden_tipple_red",
@@ -2099,7 +2099,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard a yellow card. If you do, draw a card and create a Gold token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "golden_tipple_yellow",
@@ -2122,7 +2122,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard a yellow card. If you do, draw a card and create a Gold token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "goldfin_harpoon",
@@ -2145,7 +2145,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If this would be put into a graveyard, instead remove it from the game.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "goldwing_turbine_blue",
@@ -2166,7 +2166,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Your next Mechanologist attack this turn gets +1{p}.\n\nCreate a Golden Cog token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "goldwing_turbine_red",
@@ -2208,7 +2208,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Your next Mechanologist attack this turn gets +2{p}.\n\nCreate a Golden Cog token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "gravy_bones",
@@ -2348,7 +2348,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, look at the top card of your deck.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "herald_of_sekem_red",
@@ -2463,7 +2463,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends, you may {t} an ally you control. If you do, this gets +1{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hook_blue",
@@ -2803,7 +2803,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nWhen this enters the arena, create 2 Gold tokens.\n\nAt the beginning of your end phase, if you haven't created or stolen a Gold this turn, destroy this, then lose 2{h} unless you discard a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "lost_in_transit_yellow",
@@ -2887,7 +2887,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {t}, destroy a Gold you control: Create a Goldfin Harpoon in your hand. **Go again**\n\nWhenever you draw a card during your action phase, you may put an arrow from your hand face-up into your arsenal.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "midas_touch_yellow",
@@ -3182,7 +3182,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, you may search your deck for a Nimblism, reveal it, put it into your hand, then shuffle.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "nimby_yellow",
@@ -3203,7 +3203,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, you may search your deck for a Nimblism, reveal it, put it into your hand, then shuffle.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "not_so_fast_yellow",
@@ -3268,7 +3268,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends, look at the top card of your deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "on_the_horizon_red",
@@ -3287,7 +3287,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends, look at the top card of your deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "on_the_horizon_yellow",
@@ -3306,7 +3306,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends, look at the top card of your deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "onyx_amulet_blue",
@@ -3449,7 +3449,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: Return a card from your arsenal to your hand.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pearl_amulet_blue",
@@ -3629,7 +3629,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: Target defending card gets +1{d} until end of turn.\n\n**Legend of the Watery Grave**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "polly_cranka",
@@ -3766,7 +3766,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Action** - {t}, destroy a Gold you control: Create a Golden Cog token.\n\nThe second time you crank each turn, draw a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "quartermasters_boots",
@@ -3813,7 +3813,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Destroy this: Your next attack this turn gets **go again**. Activate this only if you've played a Nimblism this turn. **Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rally_the_coast_guard_blue",
@@ -4182,7 +4182,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "saltwater_swell_blue",
@@ -4348,7 +4348,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this is put face-up into your arsenal, you may look at the top card of your deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scrub_the_deck_blue",
@@ -4371,7 +4371,7 @@
     ],
     "specializations": [],
     "functional_text": "Destroy the top card of target hero's deck. If it's yellow, create a Gold token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scurv_stowaway",
@@ -4395,7 +4395,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {t}, destroy a Gold you control: Create a Goldkiss Rum token. **Go again**\n\nWhenever you activate a Goldkiss Rum, gain {r}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sea_floor_salvage_blue",
@@ -4578,7 +4578,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this is put into your graveyard from anywhere, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sirens_of_safe_harbor_yellow",
@@ -4869,7 +4869,7 @@
     ],
     "specializations": [],
     "functional_text": "When this is put face-up into your arsenal, it gets **go again** this turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "swiftstrike_bracers",
@@ -4915,7 +4915,7 @@
     ],
     "specializations": [],
     "functional_text": "High Tide - If there are 2 or more blue cards in your pitch zone, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "swiftwater_sloop_red",
@@ -4938,7 +4938,7 @@
     ],
     "specializations": [],
     "functional_text": "High Tide - If there are 2 or more blue cards in your pitch zone, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "swiftwater_sloop_yellow",
@@ -4961,7 +4961,7 @@
     ],
     "specializations": [],
     "functional_text": "High Tide - If there are 2 or more blue cards in your pitch zone, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "swindlers_grift_blue",
@@ -5047,7 +5047,7 @@
     ],
     "specializations": [],
     "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, create a Golden Cog token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "teeth_of_the_cog_red",
@@ -5070,7 +5070,7 @@
     ],
     "specializations": [],
     "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, create a Golden Cog token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "teeth_of_the_cog_yellow",
@@ -5093,7 +5093,7 @@
     ],
     "specializations": [],
     "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, create a Golden Cog token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "thievn_varmints_red",
@@ -5225,7 +5225,7 @@
     ],
     "specializations": [],
     "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, create a Golden Cog token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tough_old_wrench_red",
@@ -5248,7 +5248,7 @@
     ],
     "specializations": [],
     "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, create a Golden Cog token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tough_old_wrench_yellow",
@@ -5271,7 +5271,7 @@
     ],
     "specializations": [],
     "functional_text": "**Galvanize** - When this defends, you may destroy an item you control. If you do, create a Golden Cog token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "treasure_island",
@@ -5339,7 +5339,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this: {u} a cog you control.\n\n**Battleworn**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wailer_humperdinck_yellow",
@@ -5385,7 +5385,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits a Pirate hero, {t} them or an ally they control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "walk_the_plank_red",
@@ -5406,7 +5406,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits a Pirate hero, {t} them or an ally they control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "walk_the_plank_yellow",
@@ -5427,7 +5427,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits a Pirate hero, {t} them or an ally they control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "washed_up_wave",
@@ -5523,7 +5523,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crank**\n\nThis enters the arena with a steam counter. At the start of your turn, destroy this unless you remove a steam counter from it.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "goldkiss_rum",
@@ -5546,6 +5546,483 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - {t} your hero, destroy this: Your next action this turn gets **go again**. Your hero can't {u} this turn unless they're a Pirate.",
+    "status": "done"
+  },
+  {
+    "slug": "codex_of_frailty_yellow",
+    "name": "Codex of Frailty",
+    "type_text": "Assassin / Ranger Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Assassin",
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Each hero puts an attack action card from their graveyard face down into their arsenal. Each hero that does, discards a card.\n\nCreate a Ponder token under your control and a Frailty token under each opponent's control.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "cracked_bauble_yellow",
+    "name": "Cracked Bauble",
+    "type_text": "Generic Resource",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "*(A player may add any number of Cracked Baubles to their card-pool in sealed deck or booster draft formats.)*",
     "status": "pending"
+  },
+  {
+    "slug": "gold",
+    "name": "Gold",
+    "type_text": "Generic Token - Item",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}, destroy this: Draw a card. **Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "head_shot_blue",
+    "name": "Head Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this is put into your arsenal face up, it gains +2{p} until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "head_shot_red",
+    "name": "Head Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this is put into your arsenal face up, it gains +2{p} until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "head_shot_yellow",
+    "name": "Head Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this is put into your arsenal face up, it gains +2{p} until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "life_for_a_life_red",
+    "name": "Life for a Life",
+    "type_text": "Generic Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.\n\nWhen this hits, gain 1{h}.",
+    "status": "pending"
+  },
+  {
+    "slug": "nimblism_blue",
+    "name": "Nimblism",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card with cost 1 or less you play this turn gains +1{p}.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "nimblism_red",
+    "name": "Nimblism",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card with cost 1 or less you play this turn gains +3{p}.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "nimblism_yellow",
+    "name": "Nimblism",
+    "type_text": "Generic Action",
+    "cost": 0,
+    "pitch": 2,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "The next attack action card with cost 1 or less you play this turn gains +2{p}.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "ravenous_rabble_red",
+    "name": "Ravenous Rabble",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, reveal the top card of your deck. This gets -X{p}, where X is the pitch value of the card revealed this way.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "salvage_shot_blue",
+    "name": "Salvage Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits, put it on the bottom of its owner's deck.",
+    "status": "done"
+  },
+  {
+    "slug": "salvage_shot_red",
+    "name": "Salvage Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits, put it on the bottom of its owner's deck.",
+    "status": "done"
+  },
+  {
+    "slug": "salvage_shot_yellow",
+    "name": "Salvage Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When this hits, put it on the bottom of its owner's deck.",
+    "status": "done"
+  },
+  {
+    "slug": "scar_for_a_scar_red",
+    "name": "Scar for a Scar",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "sic_em_shot_blue",
+    "name": "Sic 'Em Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "sic_em_shot_red",
+    "name": "Sic 'Em Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "sic_em_shot_yellow",
+    "name": "Sic 'Em Shot",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "trade_in_blue",
+    "name": "Trade In",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may discard a card. If you do, draw a card.\n\nIf this was played from arsenal, it gains **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "trade_in_red",
+    "name": "Trade In",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may discard a card. If you do, draw a card.\n\nIf this was played from arsenal, it gains **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "trade_in_yellow",
+    "name": "Trade In",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, you may discard a card. If you do, draw a card.\n\nIf this was played from arsenal, it gains **go again**.",
+    "status": "done"
   }
 ]

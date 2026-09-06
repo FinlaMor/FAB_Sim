@@ -298,7 +298,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Infecting Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create a Bloodrot Pox token under their control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "infecting_shot_red",
@@ -320,7 +320,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Infecting Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create a Bloodrot Pox token under their control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "lace_with_bloodrot_red",
@@ -366,7 +366,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next arrow attack this turn gains +3{p} and \"When this hits a hero, create a Frailty token under their control.\"\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "lace_with_inertia_red",
@@ -455,7 +455,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next arrow attack this turn gains +3{p}.\n\n**Opt 1**\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "read_the_glide_path_yellow",
@@ -502,7 +502,7 @@
     ],
     "specializations": [],
     "functional_text": "Look at the top card of target hero's deck.\n\nThe next attack action card you play from arsenal this turn gains +3{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sedation_shot_red",
@@ -524,7 +524,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Sedation Shot has an aim counter, it has +1{p}.\n\nWhen this hits a hero, create an Inertia token under their control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spire_sniping_blue",
@@ -546,7 +546,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When Spire Sniping is put or turned face up in arsenal, look at the top 2 cards of your deck, then put them back in any order.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spire_sniping_yellow",
@@ -568,6 +568,171 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When Spire Sniping is put or turned face up in arsenal, look at the top 2 cards of your deck, then put them back in any order.",
+    "status": "done"
+  },
+  {
+    "slug": "azalea_ace_in_the_hole",
+    "name": "Azalea, Ace in the Hole",
+    "type_text": "Ranger Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - 0: Put a card from your arsenal on the bottom of your deck. If you do, put the top card of your deck face up into your arsenal. If it's an arrow card, it gains **dominate** until end of turn. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "bloodrot_pox",
+    "name": "Bloodrot Pox",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your end phase, destroy Bloodrot Pox, then it deals 2 damage to you unless you pay {r}{r}{r}.",
+    "status": "done"
+  },
+  {
+    "slug": "death_dealer",
+    "name": "Death Dealer",
+    "type_text": "Ranger Weapon - Bow (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Bow"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}: If you have no cards in your arsenal, you may put an arrow card from your hand face up into your arsenal. If you do, draw a card. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "nock_the_deathwhistle_blue",
+    "name": "Nock the Deathwhistle",
+    "type_text": "Ranger Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Reload",
+      "Specialization"
+    ],
+    "specializations": [
+      "Azalea"
+    ],
+    "functional_text": "**Azalea Specialization**\n\nSearch your deck for an arrow card, reveal it, then shuffle your deck and put it on top of your deck.\n\n**Reload**\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "ravenous_rabble_red",
+    "name": "Ravenous Rabble",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 5,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, reveal the top card of your deck. This gets -X{p}, where X is the pitch value of the card revealed this way.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "red_in_the_ledger_red",
+    "name": "Red in the Ledger",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Specialization"
+    ],
+    "specializations": [
+      "Azalea"
+    ],
+    "functional_text": "**Azalea Specialization**\n\nIf Red in the Ledger hits a hero, they can't play or activate more than 1 action during their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "sleep_dart_red",
+    "name": "Sleep Dart",
+    "type_text": "Ranger Action - Arrow Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arrow",
+      "Attack"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Sleep Dart hits a hero, they lose all hero card effects and activated abilities until the end of their next turn.",
     "status": "pending"
   }
 ]

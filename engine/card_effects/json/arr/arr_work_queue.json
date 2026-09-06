@@ -116,7 +116,7 @@
     ],
     "specializations": [],
     "functional_text": "**Intimidate**\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "echo_casque",
@@ -329,7 +329,7 @@
     ],
     "specializations": [],
     "functional_text": "**Beat Chest**\n\nYour next Brute attack this turn gains +3{p}. If you've **beaten chest** this turn, instead it gains +5{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "buckwild_yellow",
@@ -352,7 +352,7 @@
     ],
     "specializations": [],
     "functional_text": "If there is a card with 6 or more {p} in your pitch zone, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pound_town_red",
@@ -375,7 +375,7 @@
     ],
     "specializations": [],
     "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pound_town_yellow",
@@ -398,7 +398,7 @@
     ],
     "specializations": [],
     "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rawhide_rumble_red",
@@ -492,6 +492,205 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits a hero, they discard a card unless they reveal a card from their hand with {p} greater than the damage dealt this way.",
+    "status": "pending"
+  },
+  {
+    "slug": "agility",
+    "name": "Agility",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then your next attack this turn gets **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "barraging_beatdown_blue",
+    "name": "Barraging Beatdown",
+    "type_text": "Brute Action",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain",
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "Your next Brute attack this turn gains \"While this attack is defended by less than 2 non-equipment cards, it has +2{p}.\"\n\n**Intimidate**\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "beast_within_yellow",
+    "name": "Beast Within",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If Beast Within is put into a graveyard from anywhere other than the combat chain, banish the top card of your deck and lose 1{h}. If it has 6 or more {p}, put it into your hand, otherwise, repeat this process.",
+    "status": "done"
+  },
+  {
+    "slug": "goliath_gauntlet",
+    "name": "Goliath Gauntlet",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: The next attack action card with cost 2 or more you play this turn gets +2{p}. **Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "massacre_red",
+    "name": "Massacre",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "When you attack with Massacre, if you have discarded a card with 6 or more {p} this turn, Massacre gains +2{p} and **intimidate**.\n\nIf Massacre is discarded to pay the cost of a Brute attack action card, **intimidate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "might",
+    "name": "Might",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then your next attack this turn gets +1{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "rhinar_reckless_rampage",
+    "name": "Rhinar, Reckless Rampage",
+    "type_text": "Brute Hero",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 40,
+    "intellect": 4,
+    "subtypes": [],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you discard a card with 6 or more {p} during your action phase, **intimidate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "romping_club",
+    "name": "Romping Club",
+    "type_text": "Brute Weapon - Club (2H)",
+    "cost": null,
+    "pitch": null,
+    "power": 4,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "TwoHanded",
+      "Club"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**\n\n**Once per Turn Effect** - When you discard a card with 6 or more {p}, Romping Club gains +1{p} until end of turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "wrecker_romp_blue",
+    "name": "Wrecker Romp",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "As an additional cost to play this, discard a random card.",
     "status": "pending"
   }
 ]

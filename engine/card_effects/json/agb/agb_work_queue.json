@@ -69,7 +69,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, you may discard a card with watery grave. If you do, draw a card.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "anka_drag_under_yellow",
@@ -139,7 +139,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If an activated ability or action card effect puts Back Alley Breakline face up into a zone from your deck, gain 1 action point.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "barnacle_yellow",
@@ -187,7 +187,7 @@
     ],
     "specializations": [],
     "functional_text": "High Tide - If there are 2 or more blue cards in your pitch zone, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "call_to_the_grave_blue",
@@ -253,7 +253,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this is put into your graveyard from anywhere, gain 3{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "gold",
@@ -299,7 +299,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard a yellow card. If you do, draw a card and create a Gold token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "gravy_bones",
@@ -463,7 +463,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next Pirate ally attack this turn gets \"When this hits a hero, they discard a card. If they do, create a Gold token.\"\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "murderous_rabble_blue",
@@ -680,6 +680,51 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, you may discard a card or destroy the top card of your deck. If that card has watery grave, this gets +2{d}.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "scar_for_a_scar_red",
+    "name": "Scar for a Scar",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this is played, if you have less {h} than an opposing hero, it gets **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "timesnap_potion_blue",
+    "name": "Timesnap Potion",
+    "type_text": "Generic Action - Item",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item",
+      "NonAttack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Gain 2 action points.",
     "status": "pending"
   }
 ]

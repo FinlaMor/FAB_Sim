@@ -109,8 +109,8 @@ def test_dead_flag_count_does_not_grow():
     """
     dead = _dead_flags()
     cards = sorted({s for v in dead.values() for s in v})
-    assert len(cards) <= 8, (
-        f"{len(cards)} cards set a flag nothing reads (was 8):\n  "
+    assert len(cards) <= 6, (
+        f"{len(cards)} cards set a flag nothing reads (was 6):\n  "
         + "\n  ".join(f"{f}: {', '.join(s)}" for f, s in sorted(dead.items()))
         + "\n\nA clause the DSL cannot express should be left OUT with a "
           "_comment saying so, not written as a flag nobody reads."
@@ -149,8 +149,11 @@ def test_the_known_dead_flags_are_the_ones_we_think():
     """
     dead = _dead_flags()
     cards = {s for v in dead.values() for s in v}
+    # become_the_bottle_red/yellow left this list when their SET_FLAG
+    # ("this gets the chosen card's name", stored where nothing read it) was
+    # replaced by a real SELECT_FROM_ZONE over the combat chain plus SET_NAME.
     for expected in ("cartilage_crush_blue", "chokeslam_yellow",
-                     "become_the_bottle_red", "silver_talons_red"):
+                     "silver_talons_red"):
         assert expected in cards, (
             f"{expected} was a known dead-flag card; if it was fixed, remove "
             f"it here and lower the ceiling")

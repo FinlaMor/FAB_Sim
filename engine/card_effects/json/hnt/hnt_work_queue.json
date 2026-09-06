@@ -4338,7 +4338,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks a hero, if it is Draconic, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "silver_talons_red",
@@ -4380,7 +4380,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks a hero, if it is Draconic, you may have target dagger you control deal 1 damage to them. If damage is dealt this way, the dagger has hit. Destroy the dagger.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sisters_of_fire_red",

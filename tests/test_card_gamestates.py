@@ -225,13 +225,31 @@ class TestSerialization:
 _XFAIL_SLUGS: set[str] = set()
 
 
-def test_factory_creates_valid_state(card_slug):
+@pytest.fixture(scope="session")
+def shared_factory():
+    """ONE factory for the whole parametrized sweep.
+
+    This test is parametrized over every slug in slug_index.json -- ~4,950 of
+    them -- and it used to build a GameStateFactory inside the test body. Each
+    construction builds a CardDB, whose cost scales with the card pool, so the
+    suite's runtime was (slugs x implemented cards): every card added to the
+    corpus made all 4,950 iterations slower, and the whole thing quietly
+    degraded as cards were integrated.
+
+    Measured: 0.0930s per call with a fresh factory (~460s for the sweep)
+    against 0.0001s reusing one. The factory is only read by create_gamestate,
+    which builds a new GameState each call, so sharing it carries no state
+    between parametrizations.
+    """
+    return GameStateFactory()
+
+
+def test_factory_creates_valid_state(card_slug, shared_factory):
     """Parametrized over every slug via conftest.pytest_generate_tests."""
     if card_slug in _XFAIL_SLUGS:
         pytest.xfail(f"Known unsupported slug: {card_slug}")
 
-    factory = GameStateFactory()
-    state = factory.create_gamestate(card_slug)
+    state = shared_factory.create_gamestate(card_slug)
 
     # Basic structural checks
     assert len(state.players) == 2, "State must have 2 players"

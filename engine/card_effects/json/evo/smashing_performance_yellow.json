@@ -1,28 +1,26 @@
 {
   "slug": "smashing_performance_yellow",
+  "_comment": "\"When this attacks draw a card, then discard a random card. If a card with 6 or more {p} is discarded this way, destroy a random item in the arena.\" Was on test_invented_refs.py's KNOWN_UNFIXED with the diagnosis 'destroy a RANDOM item in the arena -- object targets prompt, never roll': the DESTROY_REF read ref 'ITEM', a name nothing sets, so the destroy silently did nothing and the whole payoff clause was dead. SELECT_FROM_ZONE now takes random:true and reaches the arena zones, so the item is PICKED rather than prompted -- prompting would hand the controller a choice the card explicitly denies them. player:ANY because 'the arena' is the shared play area, not just your own items; the selection fans out over both players' item zones. The random pick uses the module rng, the same source effect_discard's random discard already uses, so a seeded game stays reproducible. The gate is DISCARDED_CARD_POWER_GTE, which reads what the discard actually took rather than what was merely in hand, and CONDITIONAL scopes the destroy to it so 'if a card with 6 or more {p} is discarded this way' is real. Nothing is stored when no item qualifies, so DESTROY_REF finds no target and does nothing rather than erroring.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
       "trigger": "ON_ATTACK",
       "effects": [
+        {"type": "DRAW", "amount": 1},
+        {"type": "DISCARD_RANDOM", "amount": 1, "player": "SELF"},
         {
-          "type": "DRAW",
-          "amount": 1
-        },
-        {
-          "type": "DISCARD_RANDOM"
-        },
-        {
-          "type": "DESTROY_REF",
-          "conditions": [
+          "type": "CONDITIONAL",
+          "when": [{"type": "DISCARDED_CARD_POWER_GTE", "amount": 6}],
+          "then": [
             {
-              "type": "DISCARDED_CARD_POWER_GTE",
-              "amount": 6
+              "type": "SELECT_FROM_ZONE",
+              "zone": "ITEMS",
+              "player": "ANY",
+              "amount": 1,
+              "random": true,
+              "into": "doomed_item"
             },
-            {
-              "type": "REF_EXISTS",
-              "ref": "ITEM"
-            }
+            {"type": "DESTROY_REF", "ref": "doomed_item"}
           ]
         }
       ]

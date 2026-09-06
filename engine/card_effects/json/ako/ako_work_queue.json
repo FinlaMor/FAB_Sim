@@ -84,7 +84,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Create an Agility token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "agility",
@@ -240,7 +240,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates an Agility token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "humble_red",
@@ -261,7 +261,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits a hero, they lose all hero card abilities until the end of their next turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "kayo_armed_and_dangerous",
@@ -349,7 +349,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Discard this: Create a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pound_town_blue",
@@ -372,7 +372,7 @@
     ],
     "specializations": [],
     "functional_text": "**Beat Chest**\n\nWhen this attacks, if you've **beaten chest** this turn, create a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pulping_red",
@@ -506,7 +506,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wreck_havoc_red",
@@ -527,6 +527,95 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Defense reactions can't be played to this chain link.\n\nWhen this hits a hero, you may turn a card in their arsenal face up, then destroy a defense reaction in their arsenal.",
+    "status": "done"
+  },
+  {
+    "slug": "mandible_claw",
+    "name": "Mandible Claw",
+    "type_text": "Brute Weapon - Claw (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Claw"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**\n\nIf you have discarded a card with 6 or more {p} this turn, this card's attacks **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "riled_up_blue",
+    "name": "Riled Up",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "If you've discarded a card with 6 or more {p} this turn, this gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "smash_instinct_blue",
+    "name": "Smash Instinct",
+    "type_text": "Brute Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "When this attacks, **intimidate**.",
+    "status": "done"
+  },
+  {
+    "slug": "wrecker_romp_blue",
+    "name": "Wrecker Romp",
+    "type_text": "Brute Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "As an additional cost to play this, discard a random card.",
     "status": "pending"
   }
 ]

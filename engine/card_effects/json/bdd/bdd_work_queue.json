@@ -67,7 +67,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on an equipment they control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clash_of_mountains_blue",
@@ -90,7 +90,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends a Guardian attack, **clash** with the attacking hero. The winner creates a Seismic Surge token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cracker_jax",
@@ -177,7 +177,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy a Seismic Surge token they control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "grind_them_down_blue",
@@ -200,7 +200,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy the top card of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "reinforce_the_line_blue",
@@ -219,7 +219,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target defending attack action card gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "thunder_quake_red",
@@ -242,6 +242,165 @@
     ],
     "specializations": [],
     "functional_text": "**Heave 3**",
+    "status": "done"
+  },
+  {
+    "slug": "blossom_of_spring",
+    "name": "Blossom of Spring",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: Gain {r}. **Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "debilitate_red",
+    "name": "Debilitate",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "disable_blue",
+    "name": "Disable",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 3,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
+    "status": "done"
+  },
+  {
+    "slug": "ironrot_helm",
+    "name": "Ironrot Helm",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Blade Break**",
     "status": "pending"
+  },
+  {
+    "slug": "ironrot_legs",
+    "name": "Ironrot Legs",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "macho_grande_blue",
+    "name": "Macho Grande",
+    "type_text": "Guardian Action - Attack",
+    "cost": 7,
+    "pitch": 3,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "**Dominate**",
+    "status": "done"
+  },
+  {
+    "slug": "seismic_surge",
+    "name": "Seismic Surge",
+    "type_text": "Guardian Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn costs {r} less to play.",
+    "status": "done"
   }
 ]

@@ -44,7 +44,7 @@
     ],
     "specializations": [],
     "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +4{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "act_of_glory_red",
@@ -136,7 +136,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they put a card from their hand on top of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "boulder_drop_red",
@@ -182,7 +182,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks a hero, if you have less {h} than them, **the crowd cheers** you.\n\nIf you've been cheered this turn, this gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "confidence",
@@ -203,7 +203,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the start of your turn, destroy this, then the next attack card you play this turn can't be defended by more than 2 non-block cards.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "edge_of_their_seats_blue",
@@ -360,7 +360,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - {t}, remove a suspense counter from an aura you control: You may put a suspense counter on an aura of suspense you control.\n\nWhenever the crowd cheers you, create a Confidence token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pleiades_superstar",
@@ -379,7 +379,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - {t}, remove a suspense counter from an aura you control: You may put a suspense counter on an aura of suspense you control.\n\nWhenever the crowd cheers you, create a Confidence token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "standing_ovation_blue",
@@ -470,7 +470,7 @@
     ],
     "specializations": [],
     "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +4{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "the_suspense_is_killing_me_blue",
@@ -581,7 +581,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "At the start of your opponent's turn, destroy this, then the next action card you defend with this turn gets +1{d} this chain link.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "turning_point_blue",
@@ -693,5 +693,28 @@
     "specializations": [],
     "functional_text": "**Suspense**\n\nThe first card with cost 1 or more you play each turn costs {r} less to play.",
     "status": "pending"
+  },
+  {
+    "slug": "spinal_crush_red",
+    "name": "Spinal Crush",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 1,
+    "power": 9,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - If Spinal Crush deals 4 or more damage to a hero, action cards, activated abilities, and attacks they control lose and can't gain **go again** during their next action phase.",
+    "status": "done"
   }
 ]

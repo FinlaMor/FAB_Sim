@@ -328,7 +328,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, you may pay up to {r}{r}{r}. Create that many Might tokens.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bask_in_your_own_greatness_red",
@@ -370,7 +370,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, you may pay up to {r}{r}{r}. Create that many Might tokens.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "battered_beaten_and_broken_yellow",
@@ -597,7 +597,7 @@
     ],
     "specializations": [],
     "functional_text": "If there is a card with 6 or more {p} in your pitch zone, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "buckwild_red",
@@ -620,7 +620,7 @@
     ],
     "specializations": [],
     "functional_text": "If there is a card with 6 or more {p} in your pitch zone, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "buckwild_yellow",
@@ -848,7 +848,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks or defends, if you have less {h} than each other hero, **the crowd boos** you.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clench_the_upper_hand_red",
@@ -871,7 +871,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks or defends, if you have less {h} than each other hero, **the crowd boos** you.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clench_the_upper_hand_yellow",
@@ -963,7 +963,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks a hero, if you have less {h} than them, **the crowd cheers** you.\n\nIf you've been cheered this turn, this gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "concealed_object_blue",
@@ -1466,7 +1466,7 @@
     ],
     "specializations": [],
     "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +4{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "empowering_ruckus_yellow",
@@ -1657,7 +1657,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks or defends, if you have less {h} than each other hero, **the crowd cheers** you.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fight_from_behind_red",
@@ -1703,7 +1703,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks or defends, if you have less {h} than each other hero, **the crowd cheers** you.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fix_the_match_yellow",
@@ -1858,7 +1858,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If this has 6 or more {p}, it gets +3{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "full_of_bravado_blue",
@@ -1879,7 +1879,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks or defends, if you control an aura of suspense, create a Confidence token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "full_of_bravado_red",
@@ -1900,7 +1900,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks or defends, if you control an aura of suspense, create a Confidence token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "full_of_bravado_yellow",
@@ -1992,7 +1992,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Destroy this: Gain {r}. **Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "gauntlets_of_tyrannical_rex",
@@ -2058,7 +2058,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "give_em_a_piece_of_your_mind_yellow",
@@ -2079,7 +2079,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "golden_gait",
@@ -2187,7 +2187,7 @@
       "Olympia"
     ],
     "functional_text": "**Legendary Olympia Specialization**\n\nThis counts as a Gold.\n\n**Temper**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "good_natured_brutality_yellow",
@@ -2436,7 +2436,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, if there is a card with 6 or more {p} in your pitch zone, create a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "high_pitched_howl_red",
@@ -2457,7 +2457,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, if there is a card with 6 or more {p} in your pitch zone, create a Vigor token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "high_pitched_howl_yellow",
@@ -2664,7 +2664,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks a hero, **intimidate** them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "instill_fear_red",
@@ -2710,7 +2710,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks a hero, **intimidate** them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ironfist_revelation",
@@ -2929,7 +2929,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, it gets -1{p} unless you pay {r}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "low_blow_red",
@@ -3516,7 +3516,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If this was played from arsenal, it gets +5{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "power_play_red",
@@ -3558,7 +3558,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If this was played from arsenal, it gets +5{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "prime_the_crowd_blue",
@@ -3916,7 +3916,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends together with another card from hand, this gets +1{d} and you may look at the top card of your deck. You may put it on the bottom.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rip_up_their_virtues_blue",
@@ -3956,7 +3956,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, if there is a card with 6 or more {p} in your pitch zone, this gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rough_up_red",
@@ -3977,7 +3977,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, if there is a card with 6 or more {p} in your pitch zone, this gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rough_up_yellow",
@@ -4493,7 +4493,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "take_that_red",
@@ -4535,7 +4535,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Might token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "take_the_bait_red",
@@ -4675,7 +4675,7 @@
     ],
     "specializations": [],
     "functional_text": "**Suspense**\n\nWhen this leaves the arena, your next attack this turn gets +4{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tension_in_the_air_yellow",
@@ -4924,7 +4924,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Toughness token. You may put your revealed card on the bottom of its owner's deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tough_smashup_yellow",
@@ -4947,7 +4947,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, **clash** with the attacking hero. The winner creates a Toughness token. You may put your revealed card on the bottom of its owner's deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "truth_or_trickery_yellow",
@@ -5235,7 +5235,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you win a clash revealing this, deal 1 damage to the other hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "unexpected_backhand_red",
@@ -5277,7 +5277,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you win a clash revealing this, deal 1 damage to the other hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "unwavering_resolve_red",
@@ -5640,7 +5640,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Toughness token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "whos_the_tough_guy_red",
@@ -5661,7 +5661,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When the combat chain closes, if this didn't hit, the defending hero creates a Toughness token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "whos_the_tough_guy_yellow",
@@ -5850,7 +5850,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends, you may pay {r}. If you do, it gets +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cracked_bauble_yellow",
@@ -5911,7 +5911,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If this is defended by an action card, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "feisty_locals_yellow",
@@ -5932,7 +5932,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If this is defended by an action card, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "felling_of_the_crown_red",
@@ -6046,7 +6046,7 @@
     ],
     "specializations": [],
     "functional_text": "If there are 4 or more Earth cards in your banished zone, this gets +4{p}.\n\n**Decompose** - When this attacks, you may banish 2 Earth cards and an action card from your graveyard. If you do, each hero puts a card from their arsenal on the bottom of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "snag_blue",

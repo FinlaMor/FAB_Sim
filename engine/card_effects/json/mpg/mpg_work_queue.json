@@ -18,7 +18,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, if you've controlled a Seismic Surge token this turn, create a Seismic Surge token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "aftershock_red",
@@ -39,7 +39,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, if you've controlled a Seismic Surge token this turn, create a Seismic Surge token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "aftershock_yellow",
@@ -60,7 +60,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, if you've controlled a Seismic Surge token this turn, create a Seismic Surge token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "annexation_of_all_things_known_yellow",
@@ -241,7 +241,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While this is defending, cards with {p} greater than the attack they are defending get +1{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clash_of_arms_yellow",
@@ -371,7 +371,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends a Guardian attack, **clash** with the attacking hero. The winner creates a Seismic Surge token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clash_of_mountains_red",
@@ -394,7 +394,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends a Guardian attack, **clash** with the attacking hero. The winner creates a Seismic Surge token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clash_of_mountains_yellow",
@@ -417,7 +417,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends a Guardian attack, **clash** with the attacking hero. The winner creates a Seismic Surge token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clash_of_shields_yellow",
@@ -659,7 +659,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy a Seismic Surge token they control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "flatten_the_field_red",
@@ -682,7 +682,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy a Seismic Surge token they control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "flatten_the_field_yellow",
@@ -705,7 +705,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy a Seismic Surge token they control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "gauntlet_of_boulderhold",
@@ -753,7 +753,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nThis enters the arena with an energy counter. When it has none, destroy it.\n\nAt the beginning of your end phase, remove an energy counter from this and create a Seismic Surge token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "geyser_of_seismic_stirrings_red",
@@ -824,7 +824,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy the top card of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "grind_them_down_red",
@@ -847,7 +847,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy the top card of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "grind_them_down_yellow",
@@ -870,7 +870,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy the top card of their deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "headbutt_blue",
@@ -1049,7 +1049,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If there are two or more cards with cost 3 or more in your pitch zone, this gets +6{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "little_big_foot_yellow",
@@ -1094,7 +1094,7 @@
     ],
     "specializations": [],
     "functional_text": "The next Guardian attack action card you play this turn gets +1{p}.\n\n**Go again**\n\n**Heave 2**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "overswing_red",
@@ -1261,7 +1261,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Destroy this: Create 2 Seismic Surge tokens.\n\n**Battleworn**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rubble_raiser_blue",
@@ -1284,7 +1284,7 @@
     ],
     "specializations": [],
     "functional_text": "**Heave 2**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rubble_raiser_red",
@@ -1307,7 +1307,7 @@
     ],
     "specializations": [],
     "functional_text": "**Heave 2**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rubble_raiser_yellow",
@@ -1330,7 +1330,7 @@
     ],
     "specializations": [],
     "functional_text": "**Heave 2**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "seismic_eruption_yellow",
@@ -1373,7 +1373,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAttack action cards you control get +X{d} while defending, where X is the number of Seismic Surge tokens you control.\n\nAt the start of your turn, destroy this.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "smelting_of_the_old_ones_red",
@@ -1397,7 +1397,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a Guardian hero, destroy all equipment they control with -1{d} counters.\n\n**Heave 2**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "solid_ground_blue",
@@ -1439,7 +1439,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, put a face-up card from your arsenal on the bottom of your deck. If you do, draw a card and this gets +1{d} until end of turn.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sunkwater_lookout",
@@ -1462,7 +1462,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, put a face-up card from your arsenal on the bottom of your deck. If you do, draw a card and this gets +1{d} until end of turn.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sunkwater_pincers",
@@ -1485,7 +1485,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, put a face-up card from your arsenal on the bottom of your deck. If you do, draw a card and this gets +1{d} until end of turn.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sunkwater_scalers",
@@ -1508,7 +1508,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, put a face-up card from your arsenal on the bottom of your deck. If you do, draw a card and this gets +1{d} until end of turn.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tectonic_instability_blue",
@@ -1575,7 +1575,7 @@
     ],
     "specializations": [],
     "functional_text": "If you control three or more Seismic Surge tokens, this gets +2{d}. If you control six or more, instead this gets +4{d}.\n\n**Guardwell**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tremor_of_resistance",
@@ -1664,6 +1664,1296 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +1{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "bravo",
+    "name": "Bravo",
+    "type_text": "Guardian Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}: Until end of turn, your attack action cards with cost 3 or more get **dominate**. **Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "buckling_blow_blue",
+    "name": "Buckling Blow",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on an equipment they control.",
+    "status": "done"
+  },
+  {
+    "slug": "buckling_blow_red",
+    "name": "Buckling Blow",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on an equipment they control.",
+    "status": "done"
+  },
+  {
+    "slug": "buckling_blow_yellow",
+    "name": "Buckling Blow",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on an equipment they control.",
+    "status": "done"
+  },
+  {
+    "slug": "cartilage_crush_blue",
+    "name": "Cartilage Crush",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first action during their next turn costs an additional {r} to play or activate.",
+    "status": "done"
+  },
+  {
+    "slug": "cartilage_crush_red",
+    "name": "Cartilage Crush",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first action during their next turn costs an additional {r} to play or activate.",
+    "status": "done"
+  },
+  {
+    "slug": "cartilage_crush_yellow",
+    "name": "Cartilage Crush",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first action during their next turn costs an additional {r} to play or activate.",
+    "status": "done"
+  },
+  {
+    "slug": "chokeslam_blue",
+    "name": "Chokeslam",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, attack action cards they control can't gain {p} during their next action phase.",
+    "status": "done"
+  },
+  {
+    "slug": "chokeslam_red",
+    "name": "Chokeslam",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, attack action cards they control can't gain {p} during their next action phase.",
+    "status": "done"
+  },
+  {
+    "slug": "chokeslam_yellow",
+    "name": "Chokeslam",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, attack action cards they control can't gain {p} during their next action phase.",
+    "status": "done"
+  },
+  {
+    "slug": "crush_confidence_blue",
+    "name": "Crush Confidence",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they lose all hero card abilities until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "crush_confidence_red",
+    "name": "Crush Confidence",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they lose all hero card abilities until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "crush_confidence_yellow",
+    "name": "Crush Confidence",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they lose all hero card abilities until the end of their next turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "crush_the_weak_blue",
+    "name": "Crush the Weak",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they can't play attack action cards with 3 or less base {p} during their next action phase.",
+    "status": "pending"
+  },
+  {
+    "slug": "crush_the_weak_red",
+    "name": "Crush the Weak",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they can't play attack action cards with 3 or less base {p} during their next action phase.",
+    "status": "pending"
+  },
+  {
+    "slug": "crush_the_weak_yellow",
+    "name": "Crush the Weak",
+    "type_text": "Guardian Action - Attack",
+    "cost": 3,
+    "pitch": 2,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, they can't play attack action cards with 3 or less base {p} during their next action phase.",
+    "status": "pending"
+  },
+  {
+    "slug": "debilitate_blue",
+    "name": "Debilitate",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "debilitate_red",
+    "name": "Debilitate",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "debilitate_yellow",
+    "name": "Debilitate",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first attack during their next turn gets -2{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "disable_blue",
+    "name": "Disable",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 3,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
+    "status": "done"
+  },
+  {
+    "slug": "disable_red",
+    "name": "Disable",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 1,
+    "power": 9,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
+    "status": "done"
+  },
+  {
+    "slug": "disable_yellow",
+    "name": "Disable",
+    "type_text": "Guardian Action - Attack",
+    "cost": 5,
+    "pitch": 2,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a card from their arsenal on the bottom of their deck.",
+    "status": "done"
+  },
+  {
+    "slug": "embolden_blue",
+    "name": "Embolden",
+    "type_text": "Guardian Action - Aura",
+    "cost": 4,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nWhen this enters the arena, if you control another non-token aura, draw a card.\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +3{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "embolden_red",
+    "name": "Embolden",
+    "type_text": "Guardian Action - Aura",
+    "cost": 4,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nWhen this enters the arena, if you control another non-token aura, draw a card.\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +5{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "embolden_yellow",
+    "name": "Embolden",
+    "type_text": "Guardian Action - Aura",
+    "cost": 4,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nWhen this enters the arena, if you control another non-token aura, draw a card.\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +4{p}.",
+    "status": "pending"
+  },
+  {
+    "slug": "emerging_power_red",
+    "name": "Emerging Power",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +3{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "emerging_power_yellow",
+    "name": "Emerging Power",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn gets +2{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "goliath_gauntlet",
+    "name": "Goliath Gauntlet",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: The next attack action card with cost 2 or more you play this turn gets +2{p}. **Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "heartened_cross_strap",
+    "name": "Heartened Cross Strap",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - Destroy this: The next attack action card you play this turn costs {r}{r} less to play. **Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "helm_of_isens_peak",
+    "name": "Helm of Isen's Peak",
+    "type_text": "Guardian Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}, destroy this: Your hero gains +1{i} this turn.\n\n**Battleworn**",
+    "status": "done"
+  },
+  {
+    "slug": "high_riser",
+    "name": "High Riser",
+    "type_text": "Guardian Weapon - Hammer (1H)",
+    "cost": null,
+    "pitch": null,
+    "power": 3,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OneHanded",
+      "Hammer"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - {r}{r}{r}: **Attack**\n\nIf you've drawn a card this turn, this gets +1{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "hope_merchants_hood",
+    "name": "Hope Merchant's Hood",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Shuffle any number of cards from your hand into your deck, then draw that many cards.",
+    "status": "pending"
+  },
+  {
+    "slug": "ironrot_gauntlet",
+    "name": "Ironrot Gauntlet",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "ironrot_helm",
+    "name": "Ironrot Helm",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "ironrot_legs",
+    "name": "Ironrot Legs",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "ironrot_plate",
+    "name": "Ironrot Plate",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "macho_grande_blue",
+    "name": "Macho Grande",
+    "type_text": "Guardian Action - Attack",
+    "cost": 7,
+    "pitch": 3,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "**Dominate**",
+    "status": "done"
+  },
+  {
+    "slug": "macho_grande_red",
+    "name": "Macho Grande",
+    "type_text": "Guardian Action - Attack",
+    "cost": 7,
+    "pitch": 1,
+    "power": 10,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "**Dominate**",
+    "status": "done"
+  },
+  {
+    "slug": "macho_grande_yellow",
+    "name": "Macho Grande",
+    "type_text": "Guardian Action - Attack",
+    "cost": 7,
+    "pitch": 2,
+    "power": 9,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "**Dominate**",
+    "status": "done"
+  },
+  {
+    "slug": "rotten_old_buckler",
+    "name": "Rotten Old Buckler",
+    "type_text": "Guardian Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "seismic_stir_blue",
+    "name": "Seismic Stir",
+    "type_text": "Guardian Action",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create a Seismic Surge token.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "seismic_stir_red",
+    "name": "Seismic Stir",
+    "type_text": "Guardian Action",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create 3 Seismic Surge tokens.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "seismic_stir_yellow",
+    "name": "Seismic Stir",
+    "type_text": "Guardian Action",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Create 2 Seismic Surge tokens.\n\n**Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "seismic_surge",
+    "name": "Seismic Surge",
+    "type_text": "Guardian Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn costs {r} less to play.",
+    "status": "done"
+  },
+  {
+    "slug": "steelbraid_buckler",
+    "name": "Steelbraid Buckler",
+    "type_text": "Guardian Equipment - Off-Hand",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "OffHand"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Temper"
+    ],
+    "specializations": [],
+    "functional_text": "**Temper**",
+    "status": "pending"
+  },
+  {
+    "slug": "stonewall_confidence_blue",
+    "name": "Stonewall Confidence",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nCards you control with cost 3 or more get +2{d} while defending.\n\nAt the beginning of your action phase, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "stonewall_confidence_red",
+    "name": "Stonewall Confidence",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nCards you control with cost 3 or more get +4{d} while defending.\n\nAt the beginning of your action phase, destroy this.",
+    "status": "pending"
+  },
+  {
+    "slug": "stonewall_confidence_yellow",
+    "name": "Stonewall Confidence",
+    "type_text": "Guardian Action - Aura",
+    "cost": 2,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Go again**\n\nCards you control with cost 3 or more get +3{d} while defending.\n\nAt the beginning of your action phase, destroy this.",
+    "status": "done"
+  },
+  {
+    "slug": "thump_blue",
+    "name": "Thump",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 3,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "While Thump's {p} is greater than its base {p}, it gains **dominate** and \"If this hits a hero, they discard a card.\"",
+    "status": "done"
+  },
+  {
+    "slug": "thump_red",
+    "name": "Thump",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "While Thump's {p} is greater than its base {p}, it gains **dominate** and \"If this hits a hero, they discard a card.\"",
+    "status": "done"
+  },
+  {
+    "slug": "thump_yellow",
+    "name": "Thump",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 2,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "While Thump's {p} is greater than its base {p}, it gains **dominate** and \"If this hits a hero, they discard a card.\"",
+    "status": "done"
+  },
+  {
+    "slug": "thunder_quake_blue",
+    "name": "Thunder Quake",
+    "type_text": "Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 3,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Heave"
+    ],
+    "specializations": [],
+    "functional_text": "**Heave 3**",
+    "status": "done"
+  },
+  {
+    "slug": "thunder_quake_red",
+    "name": "Thunder Quake",
+    "type_text": "Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 1,
+    "power": 10,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Heave"
+    ],
+    "specializations": [],
+    "functional_text": "**Heave 3**",
+    "status": "done"
+  },
+  {
+    "slug": "thunder_quake_yellow",
+    "name": "Thunder Quake",
+    "type_text": "Guardian Action - Attack",
+    "cost": 6,
+    "pitch": 2,
+    "power": 9,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Heave"
+    ],
+    "specializations": [],
+    "functional_text": "**Heave 3**",
+    "status": "done"
+  },
+  {
+    "slug": "time_skippers",
+    "name": "Time Skippers",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}, destroy this: Gain 2 action points.",
+    "status": "pending"
+  },
+  {
+    "slug": "valda_brightaxe",
+    "name": "Valda Brightaxe",
+    "type_text": "Guardian Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 21,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever an opponent draws a card during an action phase, create a Seismic Surge token for each card drawn this way.\n\nAt the start of your turn, if you control 3 or more Seismic Surge tokens, cards you own with **crush** gain **dominate** this turn.",
     "status": "pending"
   }
 ]

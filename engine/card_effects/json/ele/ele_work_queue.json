@@ -180,7 +180,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "autumns_touch_yellow",
@@ -201,7 +201,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "awakening_blue",
@@ -4075,7 +4075,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 1 arcane damage to the attacking hero.\n\nIf you have dealt arcane damage this turn, Sigil of Suffering gains +1{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sigil_of_suffering_red",
@@ -4113,7 +4113,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 1 arcane damage to the attacking hero.\n\nIf you have dealt arcane damage this turn, Sigil of Suffering gains +1{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "singeing_steelblade_blue",

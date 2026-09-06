@@ -166,7 +166,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends together with an Earth card, create a Seismic Surge token.\n\n**Temper**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "unforgetting_unforgiving_red",
@@ -234,7 +234,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": null,
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "buckling_blow_red",
@@ -257,7 +257,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, put a -1{d} counter on an equipment they control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "earth_form_red",
@@ -278,7 +278,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, create an Embodiment of Earth token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "embodiment_of_earth",
@@ -299,7 +299,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "'Non-attack' action cards you control have +1{d} while defending.\n\nAt the beginning of your action phase, destroy Embodiment of Earth.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "emerging_avalanche_blue",
@@ -366,7 +366,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Cards and abilities cost you an additional {r} to play or activate.\n\nAt the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "glacial_footsteps_blue",
@@ -411,7 +411,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Icy Encounter hits a hero, create a Frostbite token under their control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "jarl_vetreidi",
@@ -503,7 +503,7 @@
     ],
     "specializations": [],
     "functional_text": "**Ice Fusion**\n\nIf Snow Under was **fused**, it gains \"If this hits a hero, create a Frostbite token under their control.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "steelbraid_buckler",
@@ -575,7 +575,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAt the beginning of your action phase, destroy this, then your next attack this turn gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "summit_the_unforgiving",
@@ -644,5 +644,49 @@
     "specializations": [],
     "functional_text": null,
     "status": "pending"
+  },
+  {
+    "slug": "mangle_red",
+    "name": "Mangle",
+    "type_text": "Guardian Action - Attack",
+    "cost": 4,
+    "pitch": 1,
+    "power": 8,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Crush"
+    ],
+    "specializations": [],
+    "functional_text": "**Crush** - When this deals 4 or more damage to a hero, destroy target equipment they control with a -1{d} counter.",
+    "status": "pending"
+  },
+  {
+    "slug": "seismic_surge",
+    "name": "Seismic Surge",
+    "type_text": "Guardian Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn costs {r} less to play.",
+    "status": "done"
   }
 ]

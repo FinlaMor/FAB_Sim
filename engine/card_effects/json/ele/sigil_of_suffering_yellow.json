@@ -1,0 +1,38 @@
+{
+  "slug": "sigil_of_suffering_yellow",
+  "_comment": "Derived from sigil_of_suffering_red, whose printed functional text is byte-identical. Colour variants differ only in {p} and pitch, and both come from card data rather than this file, so the abilities carry over unchanged. Verified against the corpus as its own card. INHERITED NOTE FROM sigil_of_suffering_red: The DEFENSE_REACTION carried a SET_FLAG SIGIL_OF_SUFFERING_ARCANE_DEALT that nothing read. Its job -- remembering 'you have dealt arcane damage this turn' -- is already done generically by effect_keywords.deal_damage, which records did_this_turn:damage:arcane for EVERY source. The WHILE_STATIC below reads that marker, so the private flag was a second, broken copy of a record that was already being kept correctly.",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "trigger": "ON_DEFEND",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1
+        }
+      ]
+    },
+    {
+      "ability_type": "WHILE_STATIC",
+      "trigger": "RECALC_DEFENSE",
+      "_comment": "Was a plain STATIC, which nothing dispatches, and MODIFY_DEFENSE_VALUE wrote combat.total_defense, which _resolve_damage recomputes from sum(card.defense) immediately before damage -- so the value was discarded even when something did set it. WHILE_STATIC on RECALC_DEFENSE with MODIFY_DEFENSE moves the DEFENDING CARD's own {d}, which is what survives into the total. The condition was FLAG_SET on a private flag nothing ever set.",
+      "conditions": [
+        {
+          "type": "IS_DEFENDING_CARD"
+        },
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "damage",
+          "qualifier": "arcane"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_DEFENSE",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ]
+}

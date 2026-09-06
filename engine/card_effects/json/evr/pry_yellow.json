@@ -1,57 +1,31 @@
 {
   "slug": "pry_yellow",
+  "_comment": "\"Target hero reveals 2 cards from their hand. If Pry is played during an opponent's turn, instead they reveal all cards in their hand. You may choose a card revealed this way. If you do, that hero puts it on the bottom of their deck then draws a card.\" Was on test_invented_refs.py's KNOWN_UNFIXED: it read refs REVEALED_CARDS and SELECTED_CARD, names nothing sets, via REVEAL_HAND_MARK_IF_TYPE, which reveals the whole hand and MARKS -- it stores nothing and ignores `amount`. So neither the count nor the follow-up choice worked. Rebuilt on SELECT_FROM_ZONE, which stores what it picked. chooser:OWNER is the load-bearing detail: the hand's owner decides WHICH cards to reveal, not Pry's controller -- defaulting to the source's controller would hand one player a decision belonging to the other, and no assertion about the resulting board would catch it. The reveal count branches on whose turn it is, so the two SELECT_FROM_ZONE nodes are gated on IS_ACTIVE_PLAYER; amount ALL resolves to the whole hand. The follow-up choice IS Pry's controller's (SELECT_FROM_REF, optional via min 0), and 'if you do' falls out of REF_EXISTS -- declining stores nothing, so neither the bottom-of-deck nor the draw happens. The draw is the REVEALING hero's, not ours. KNOWN GAP, stated rather than faked: the cards are selected and tracked but not flipped public, so the revelation is not observable to the other player as information -- the board outcome (bottom + draw) is correct, the information leak is not modelled.",
   "abilities": [
     {
       "ability_type": "PLAY",
       "effects": [
         {
-          "type": "REVEAL_HAND_MARK_IF_TYPE",
-          "amount": 2,
-          "conditions": [
-            {
-              "type": "IS_ACTIVE_PLAYER",
-              "value": true
-            }
+          "type": "CONDITIONAL",
+          "when": [{"type": "IS_ACTIVE_PLAYER", "value": true}],
+          "then": [
+            {"type": "SELECT_FROM_ZONE", "zone": "HAND", "player": "OPPONENT",
+             "amount": 2, "chooser": "OWNER", "into": "revealed"}
+          ],
+          "else": [
+            {"type": "SELECT_FROM_ZONE", "zone": "HAND", "player": "OPPONENT",
+             "amount": "ALL", "chooser": "OWNER", "into": "revealed"}
           ]
         },
+        {"type": "SELECT_FROM_REF", "ref": "revealed", "mode": "ANY",
+         "min": 0, "max": 1, "into": "taken"},
         {
-          "type": "REVEAL_HAND_MARK_IF_TYPE",
-          "amount": "ALL",
-          "conditions": [
-            {
-              "type": "IS_ACTIVE_PLAYER",
-              "value": false
-            }
-          ]
-        },
-        {
-          "type": "OPT",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "REF_EXISTS",
-              "ref": "REVEALED_CARDS"
-            }
-          ]
-        },
-        {
-          "type": "PUT_CARDS_BOTTOM",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "REF_EXISTS",
-              "ref": "SELECTED_CARD"
-            }
-          ]
-        },
-        {
-          "type": "DRAW",
-          "amount": 1,
-          "conditions": [
-            {
-              "type": "REF_EXISTS",
-              "ref": "SELECTED_CARD"
-            }
+          "type": "CONDITIONAL",
+          "when": [{"type": "REF_EXISTS", "ref": "taken"}],
+          "then": [
+            {"type": "MOVE_REF", "ref": "taken", "to_zone": "deck",
+             "position": "bottom", "player": "OWNER"},
+            {"type": "DRAW", "amount": 1, "player": "OPPONENT"}
           ]
         }
       ]

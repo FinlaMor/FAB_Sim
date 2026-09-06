@@ -86,5 +86,97 @@
     "specializations": [],
     "functional_text": "**Instant** - {t}: Choose an opponent. The first card they reveal for their next clash this turn gets +1{p}. When they win that clash, you create a Gold token.\n\nWhenever you attack, you may destroy 3 Gold you control. If you do, the attack gets +3{p} and **dominate**.",
     "status": "pending"
+  },
+  {
+    "slug": "bravo_flattering_showman",
+    "name": "Bravo, Flattering Showman",
+    "type_text": "Guardian Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}, {t}: Turn a face-down card in your arsenal face-up. If it has crush, it gets +2{p} and **dominate** this turn. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "gold",
+    "name": "Gold",
+    "type_text": "Generic Token - Item",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}, destroy this: Draw a card. **Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "groundbreaker_crix",
+    "name": "Groundbreaker Crix",
+    "type_text": "Guardian Hero - Pit-Fighter",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "PitFighter"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Clash",
+      "Protect"
+    ],
+    "specializations": [],
+    "functional_text": "Your attacks get +1{p} while attacking a hero who controls a Seismic Surge token.\n\nWhenever you attack a Guardian hero, **clash** with them. The winner creates a Seismic Surge token.",
+    "status": "pending"
+  },
+  {
+    "slug": "seismic_surge",
+    "name": "Seismic Surge",
+    "type_text": "Guardian Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn costs {r} less to play.",
+    "status": "done"
   }
 ]

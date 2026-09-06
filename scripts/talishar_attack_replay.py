@@ -317,8 +317,14 @@ def _replay_agent(state, options, context=""):
     branch: there the board is built, so the choice can be made deliberately
     instead of guessed.
     """
-    from engine.card_effects.ability_keywords import NO, DECLINE
-    for opt in (NO, DECLINE):
+    # ALL FOUR opt-out sentinels, not just the binary one. STOP ends a bounded
+    # multi-select ("you MAY choose a card revealed this way", SELECT_FROM_REF
+    # with min 0) and FAIL_TO_FIND declines a search (CR 8.5.19). Knowing only
+    # NO and DECLINE meant the agent took the first CARD on those prompts -- it
+    # accepted, silently, in exactly the shapes it exists to decline.
+    from engine.card_effects.ability_keywords import (DECLINE, FAIL_TO_FIND,
+                                                      NO, STOP)
+    for opt in (NO, DECLINE, STOP, FAIL_TO_FIND):
         if opt in options:
             return opt
     return options[0]

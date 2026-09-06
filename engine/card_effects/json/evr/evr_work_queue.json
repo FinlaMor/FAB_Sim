@@ -521,7 +521,7 @@
     ],
     "specializations": [],
     "functional_text": "As an additional cost to play Cash Out, you may destroy any number of weapons, equipment and/or non-token items you control.\n\nCreate a Silver token for each permanent destroyed this way.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "clarity_potion_blue",
@@ -817,7 +817,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 4 arcane damage to target hero. If Emeritus Scolding is played during an opponents turn, instead deal 6 arcane damage to them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "emeritus_scolding_yellow",
@@ -838,7 +838,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 3 arcane damage to target hero. If Emeritus Scolding is played during an opponents turn, instead deal 5 arcane damage to them.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "even_bigger_than_that_blue",
@@ -923,7 +923,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When Fatigue Shot hits a hero, the base {p} of the first attack action card they play during their next turn is halved, rounded up.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fatigue_shot_red",
@@ -945,7 +945,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When Fatigue Shot hits a hero, the base {p} of the first attack action card they play during their next turn is halved, rounded up.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fatigue_shot_yellow",
@@ -967,7 +967,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When Fatigue Shot hits a hero, the base {p} of the first attack action card they play during their next turn is halved, rounded up.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "firebreathing_red",
@@ -1198,7 +1198,7 @@
     ],
     "specializations": [],
     "functional_text": "**Intimidate**\n\nIf you have rolled a 5 or 6 on a die this turn, instead **intimidate** twice.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "high_striker_blue",
@@ -1362,7 +1362,7 @@
     ],
     "specializations": [],
     "functional_text": "Search your deck for an aura card with cost X or less, put it into the arena, then shuffle your deck.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "in_the_swing_blue",
@@ -1381,7 +1381,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Play In the Swing only if you have attacked 2 or more times with weapons this turn.\n\nTarget weapon attack gains +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "in_the_swing_red",
@@ -1600,7 +1600,7 @@
     ],
     "specializations": [],
     "functional_text": "**Dominate**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "macho_grande_yellow",
@@ -1623,7 +1623,7 @@
     ],
     "specializations": [],
     "functional_text": "**Dominate**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mask_of_the_pouncing_lynx",
@@ -1926,7 +1926,7 @@
     ],
     "specializations": [],
     "functional_text": "**Phantasm**\n\nWhen Phantasmal Haze is destroyed, create a Spectral Shield token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "phantasmal_haze_red",
@@ -1949,7 +1949,7 @@
     ],
     "specializations": [],
     "functional_text": "**Phantasm**\n\nWhen Phantasmal Haze is destroyed, create a Spectral Shield token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "phantasmal_haze_yellow",
@@ -1972,7 +1972,7 @@
     ],
     "specializations": [],
     "functional_text": "**Phantasm**\n\nWhen Phantasmal Haze is destroyed, create a Spectral Shield token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pick_a_card_any_card_blue",
@@ -2087,7 +2087,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Instant** - Destroy Potion of Déjà Vu: Put all cards from your pitch zone on top of your deck in any order.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "potion_of_ironhide_blue",
@@ -2216,7 +2216,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target hero reveals 2 cards from their hand. If Pry is played during an opponents turn, instead they reveal all cards in their hand.\n\nYou may choose a card revealed this way. If you do, that hero puts it on the bottom of their deck then draws a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pulverize_red",
@@ -2283,7 +2283,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If your hero would be dealt arcane damage, prevent 3 arcane damage that source would deal.\n\nAt the beginning of your action phase, destroy Pyroglyphic Protection.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pyroglyphic_protection_yellow",
@@ -2372,7 +2372,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next arrow attack this turn gains +3{p}.\n\n**Opt 1**\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "read_the_glide_path_yellow",
@@ -2600,7 +2600,7 @@
     ],
     "specializations": [],
     "functional_text": "When Ride the Tailwind hits, the next attack action card with 2 or less base {p} you play this combat chain gains **go again**.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ride_the_tailwind_red",
@@ -2623,7 +2623,7 @@
     ],
     "specializations": [],
     "functional_text": "When Ride the Tailwind hits, the next attack action card with 2 or less base {p} you play this combat chain gains **go again**.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ride_the_tailwind_yellow",
@@ -2646,7 +2646,7 @@
     ],
     "specializations": [],
     "functional_text": "When Ride the Tailwind hits, the next attack action card with 2 or less base {p} you play this combat chain gains **go again**.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rolling_thunder_red",
@@ -3091,7 +3091,7 @@
     ],
     "specializations": [],
     "functional_text": "At the start of each other hero's turn, if they have less {h} than you, they may draw a card. If they do, you create a Silver token.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "skull_crushers",
@@ -3206,7 +3206,7 @@
     ],
     "specializations": [],
     "functional_text": "The next time an attack action card hits a hero this turn, you may destroy an item they control with cost 2 or less.\n\nIf Smashing Good Time is played from arsenal, the next attack action card you play this turn gains +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "smashing_good_time_red",
@@ -3320,7 +3320,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Prevent the next 4 damage that would be dealt to your hero this turn by a source of your choice.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "steadfast_red",
@@ -3339,7 +3339,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Prevent the next 6 damage that would be dealt to your hero this turn by a source of your choice.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "steadfast_yellow",
@@ -3543,7 +3543,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nWhen an attack you control gains exactly +1{p} from an effect during the reaction step, destroy Talisman of Featherfoot and the attack gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "talisman_of_recompense_yellow",
@@ -3660,7 +3660,7 @@
     ],
     "specializations": [],
     "functional_text": "Each hero draws a card.\n\nUntil the start of your next turn, attacks that target you have -1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "thunder_quake_blue",
@@ -3706,7 +3706,7 @@
     ],
     "specializations": [],
     "functional_text": "**Heave 3**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "thunder_quake_yellow",
@@ -3729,7 +3729,7 @@
     ],
     "specializations": [],
     "functional_text": "**Heave 3**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "timekeepers_whim_blue",
@@ -3750,7 +3750,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 3 arcane damage to target hero.\n\nIf Timekeeper's Whim is played during an opponent's turn, put it on the bottom of its owner's deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "timekeepers_whim_red",
@@ -4085,7 +4085,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Wax On is defending an attack action card with cost 0, it gains +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wax_on_red",
@@ -4104,7 +4104,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Wax On is defending an attack action card with cost 0, it gains +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wax_on_yellow",
@@ -4123,7 +4123,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "While Wax On is defending an attack action card with cost 0, it gains +2{d}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wild_ride_blue",
@@ -4146,7 +4146,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wild_ride_red",
@@ -4169,7 +4169,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wild_ride_yellow",
@@ -4192,7 +4192,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, draw a card then discard a random card. If a card with 6 or more {p} is discarded this way, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "winds_of_eternity_blue",
@@ -4288,5 +4288,184 @@
     "specializations": [],
     "functional_text": "When you attack with Zoom in, **opt X**, where X is the number of times you have **boosted** this combat chain.\n\n**Boost**",
     "status": "pending"
+  },
+  {
+    "slug": "arcanite_skullcap",
+    "name": "Arcanite Skullcap",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "ArcaneBarrier",
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "If you have less {h} than your opponent, Arcanite Skullcap gains +1{d} and **Arcane Barrier 3**.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "copper",
+    "name": "Copper",
+    "type_text": "Generic Token - Item",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}{r}, destroy this: Draw a card. **Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "frostbite",
+    "name": "Frostbite",
+    "type_text": "Elemental Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Cards and abilities cost you an additional {r} to play or activate.\n\nAt the beginning of your end phase or when you play a card or activate an ability, destroy Frostbite.",
+    "status": "done"
+  },
+  {
+    "slug": "quicken",
+    "name": "Quicken",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you play an attack action card or activate a weapon attack, destroy this and the attack gains **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "runechant",
+    "name": "Runechant",
+    "type_text": "Runeblade Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "When you play an attack action card or activate a weapon attack, destroy this and deal 1 arcane damage to target opposing hero.",
+    "status": "done"
+  },
+  {
+    "slug": "seismic_surge",
+    "name": "Seismic Surge",
+    "type_text": "Guardian Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your action phase, destroy this, then the next Guardian attack action card you play this turn costs {r} less to play.",
+    "status": "done"
+  },
+  {
+    "slug": "silver",
+    "name": "Silver",
+    "type_text": "Generic Token - Item",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Item"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Action** - {r}{r}{r}, destroy Silver: Draw a card. **Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "spectral_shield",
+    "name": "Spectral Shield",
+    "type_text": "Illusionist Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Ward 1**",
+    "status": "done"
   }
 ]

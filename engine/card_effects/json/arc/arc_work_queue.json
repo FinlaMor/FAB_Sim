@@ -16,7 +16,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "The next card you play this turn with an effect that deals arcane damage, instead deals that much arcane damage plus 2.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "absorb_in_aether_red",
@@ -35,7 +35,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "The next card you play this turn with an effect that deals arcane damage, instead deals that much arcane damage plus 2.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "absorb_in_aether_yellow",
@@ -54,7 +54,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "The next card you play this turn with an effect that deals arcane damage, instead deals that much arcane damage plus 2.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "achilles_accelerator",
@@ -98,7 +98,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 1 arcane damage to target opposing hero.\n\nThe next card you play this turn with an effect that deals arcane damage, instead deals that much arcane damage plus X, where X is the damage dealt by Aether Flare.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "aether_flare_red",
@@ -188,7 +188,7 @@
     ],
     "specializations": [],
     "functional_text": "Deal 2 arcane damage to target opposing hero.\n\n**Opt X**, where X is the damage dealt by Aether Spindle.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "aether_spindle_red",
@@ -433,7 +433,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If an activated ability or action card effect puts Back Alley Breakline face up into a zone from your deck, gain 1 action point.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "back_alley_breakline_red",
@@ -454,7 +454,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If an activated ability or action card effect puts Back Alley Breakline face up into a zone from your deck, gain 1 action point.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "back_alley_breakline_yellow",
@@ -475,7 +475,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If an activated ability or action card effect puts Back Alley Breakline face up into a zone from your deck, gain 1 action point.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "become_the_arknight_blue",
@@ -501,7 +501,7 @@
       "Viserai"
     ],
     "functional_text": "**Viserai Specialization**\n\nYou may discard an action card. If you discard an attack action card this way, search your deck for a Runeblade non-attack action card, reveal it, and put it into your hand. If you discard a non-attack action card this way, search your deck for a Runeblade attack action card, reveal it, and put it into your hand. Shuffle. **Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blazing_aether_red",
@@ -1023,7 +1023,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Drawn to the Dark Dimension costs {r} less to play for each Runechant you control.\n\nDraw a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "drawn_to_the_dark_dimension_red",
@@ -1065,7 +1065,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Drawn to the Dark Dimension costs {r} less to play for each Runechant you control.\n\nDraw a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "eirinas_prayer_blue",
@@ -1240,7 +1240,7 @@
     ],
     "specializations": [],
     "functional_text": "**Legendary**\n\nWhen you pitch Eye of Ophidia, **opt 2**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fate_foreseen_blue",
@@ -1261,7 +1261,7 @@
     ],
     "specializations": [],
     "functional_text": "**Opt 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fate_foreseen_red",
@@ -1282,7 +1282,7 @@
     ],
     "specializations": [],
     "functional_text": "**Opt 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fate_foreseen_yellow",
@@ -1303,7 +1303,7 @@
     ],
     "specializations": [],
     "functional_text": "**Opt 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fervent_forerunner_blue",
@@ -1327,7 +1327,7 @@
     ],
     "specializations": [],
     "functional_text": "If Fervent Forerunner hits, **opt 2**.\n\nIf Fervent Forerunner is played from arsenal, it gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fervent_forerunner_red",
@@ -1351,7 +1351,7 @@
     ],
     "specializations": [],
     "functional_text": "If Fervent Forerunner hits, **opt 2**.\n\nIf Fervent Forerunner is played from arsenal, it gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fervent_forerunner_yellow",
@@ -1375,7 +1375,7 @@
     ],
     "specializations": [],
     "functional_text": "If Fervent Forerunner hits, **opt 2**.\n\nIf Fervent Forerunner is played from arsenal, it gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "force_sight_blue",
@@ -1423,7 +1423,7 @@
     ],
     "specializations": [],
     "functional_text": "The next attack action card you play this turn gains +3{p}.\n\nIf Force Sight is played from arsenal, **opt 2**.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "force_sight_yellow",
@@ -1514,7 +1514,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Hamstring Shot hits a hero, their first attack during their next turn costs an additional {r}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hamstring_shot_red",
@@ -1536,7 +1536,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Hamstring Shot hits a hero, their first attack during their next turn costs an additional {r}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "hamstring_shot_yellow",
@@ -1558,7 +1558,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If Hamstring Shot hits a hero, their first attack during their next turn costs an additional {r}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "head_shot_blue",
@@ -1890,7 +1890,7 @@
       "Kano"
     ],
     "functional_text": "**Kano Specialization**\n\nDeal 3 arcane damage to target opposing hero.\n\nIf Lesson in Lava deals damage, you may search your deck for a Wizard card with {r} cost equal to or less than the damage dealt by Lesson in Lava, reveal it, then shuffle your deck and put it on top of your deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "life_for_a_life_blue",
@@ -2054,7 +2054,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}, destroy this: The next non-attack action card you play this turn gets **go again**. **Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "maximum_velocity_red",
@@ -2231,7 +2231,7 @@
       "Azalea"
     ],
     "functional_text": "**Azalea Specialization**\n\nSearch your deck for an arrow card, reveal it, then shuffle your deck and put it on top of your deck.\n\n**Reload**\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "nullrune_boots",
@@ -2277,7 +2277,7 @@
     ],
     "specializations": [],
     "functional_text": "**Arcane Barrier 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "nullrune_hood",
@@ -2440,7 +2440,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits, put it on the bottom of its owner's deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "over_loop_red",
@@ -2463,7 +2463,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits, put it on the bottom of its owner's deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "over_loop_yellow",
@@ -2486,7 +2486,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**\n\nWhen this hits, put it on the bottom of its owner's deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pedal_to_the_metal_blue",
@@ -2581,7 +2581,7 @@
     ],
     "specializations": [],
     "functional_text": "The next time an attack action card you control hits this turn, draw a card.\n\nIf Plunder Run is played from arsenal, the next attack action card you play this turn gains +1{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "plunder_run_red",
@@ -2650,7 +2650,7 @@
     ],
     "specializations": [],
     "functional_text": "Put a Mechanologist item with cost 0 from your hand into the arena.\n\nIf you have **boosted** this turn, put a steam counter on it.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pour_the_mold_red",
@@ -2738,7 +2738,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If the last attack on this combat chain hit, Push the Point gains +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "push_the_point_red",
@@ -2759,7 +2759,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If the last attack on this combat chain hit, Push the Point gains +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "push_the_point_yellow",
@@ -2780,7 +2780,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If the last attack on this combat chain hit, Push the Point gains +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rapid_fire_yellow",
@@ -2894,7 +2894,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create a Runechant token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "read_the_runes_red",
@@ -3355,7 +3355,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, put it on the bottom of its owner's deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "salvage_shot_red",
@@ -3377,7 +3377,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, put it on the bottom of its owner's deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "salvage_shot_yellow",
@@ -3399,7 +3399,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits, put it on the bottom of its owner's deck.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scalding_rain_blue",
@@ -3420,7 +3420,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 2 arcane damage to target hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "scalding_rain_red",
@@ -3552,7 +3552,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sic_em_shot_red",
@@ -3576,7 +3576,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sic_em_shot_yellow",
@@ -3600,7 +3600,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "silver_the_tip_blue",
@@ -3825,7 +3825,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create a Runechant token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spellblade_strike_red",
@@ -3846,7 +3846,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create a Runechant token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spellblade_strike_yellow",
@@ -3867,7 +3867,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create a Runechant token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "stir_the_aetherwinds_blue",
@@ -4115,7 +4115,7 @@
     ],
     "specializations": [],
     "functional_text": "**Reload**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "take_cover_red",
@@ -4136,7 +4136,7 @@
     ],
     "specializations": [],
     "functional_text": "**Reload**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "take_cover_yellow",
@@ -4157,7 +4157,7 @@
     ],
     "specializations": [],
     "functional_text": "**Reload**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "talismanic_lens",
@@ -4206,7 +4206,7 @@
       "Dash"
     ],
     "functional_text": "**Dash Specialization**\n\nTeklo Core enters the arena with 2 steam counters on it. When Teklo Core has no steam counters on it, destroy it.\n\nAt the beginning of your action phase, remove a steam counter from Teklo Core and gain {r}{r}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "teklo_foundry_heart",
@@ -4230,7 +4230,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}: Banish the top 2 cards of your deck. Gain {r} for each Mechanologist card banished this way. Activate this ability only if you've **boosted** this turn. **Go again**\n\n**Battleworn**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "teklo_plasma_pistol",
@@ -4254,7 +4254,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Remove a steam counter from Teklo Plasma Pistol: **Attack**\n\n**Action** - {r}: If there are no steam counters on Teklo Plasma Pistol, put a steam counter on it. **Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "three_of_a_kind_red",
@@ -4277,7 +4277,7 @@
     ],
     "specializations": [],
     "functional_text": "Draw 3 cards. Until end of turn, you may only play cards from arsenal.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "throttle_blue",
@@ -4300,7 +4300,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "throttle_red",
@@ -4323,7 +4323,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "throttle_yellow",
@@ -4346,7 +4346,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tome_of_aetherwind_red",
@@ -4390,7 +4390,7 @@
     ],
     "specializations": [],
     "functional_text": "Reveal the top 2 cards of your deck. If you reveal an attack action card and a non-attack action card this way, put them into your hand.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vest_of_the_first_fist",
@@ -4411,7 +4411,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When an attack action card you control hits, you may destroy Vest of the First Fist. If you do, gain {r}{r}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vigor_rush_blue",
@@ -4434,7 +4434,7 @@
     ],
     "specializations": [],
     "functional_text": "If you have played a 'non-attack' action card this turn, Vigor Rush gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vigor_rush_red",
@@ -4457,7 +4457,7 @@
     ],
     "specializations": [],
     "functional_text": "If you have played a 'non-attack' action card this turn, Vigor Rush gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vigor_rush_yellow",
@@ -4480,7 +4480,7 @@
     ],
     "specializations": [],
     "functional_text": "If you have played a 'non-attack' action card this turn, Vigor Rush gains **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "viserai",
@@ -4631,7 +4631,7 @@
     ],
     "specializations": [],
     "functional_text": "**Opt 4**\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "whisper_of_the_oracle_yellow",
@@ -4676,7 +4676,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 1 arcane damage to target hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "zap_red",
@@ -4718,7 +4718,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 2 arcane damage to target hero.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "zero_to_sixty_blue",

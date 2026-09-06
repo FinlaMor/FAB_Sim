@@ -20,7 +20,7 @@
     ],
     "specializations": [],
     "functional_text": "When a sword attack you control hits, you may remove a +1{p} counter from the sword. If you do, destroy this and draw a card.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "backside_of_the_blade_blue",
@@ -63,7 +63,7 @@
     ],
     "specializations": [],
     "functional_text": "**Sharpen** target sword you control twice.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "deadly_display_blue",
@@ -149,7 +149,7 @@
     ],
     "specializations": [],
     "functional_text": "**Sharpen** target sword you control.\n\nIf it has 1 or more +1{p} counters, create a Flurry token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "edict_of_steel_yellow",
@@ -233,7 +233,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {r}{r}{r}, {t}: **Sharpen** target sword you control. **Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "indefensibly_honed_blue",
@@ -366,7 +366,7 @@
     ],
     "specializations": [],
     "functional_text": "**Sharpen** target sword you control.\n\nIf it has 1 or more +1{p} counters, your next attack with it this turn costs {r} less to activate.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sharp_incline_yellow",
@@ -477,7 +477,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next sword attack this turn gets +1{p}.\n\nThe next time you would sharpen a sword this turn, instead **sharpen** it an additional time.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "swordmasters_path_red",
@@ -565,7 +565,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When you activate a weapon attack, destroy this and you may attack with the weapon twice this turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "zenith_blade",

@@ -1,21 +1,12 @@
 {
   "slug": "sirens_of_safe_harbor_red",
+  "_comment": "\"When this is put into your graveyard from anywhere, gain 1{h}.\" Was on test_invented_refs.py's KNOWN_UNFIXED with the diagnosis 'when this is put into your graveyard from anywhere has no trigger': it was authored as ON_ENTER_PLAY gated on REF_EXISTS 'GRAVEYARD', a ref nothing sets, and a graveyard is not the arena -- so the trigger could never fire on either count. ON_PUT_INTO_GRAVEYARD is dispatched from Zone.add, which is the one place every graveyard route funnels through; that is what 'FROM ANYWHERE' requires, and it is the same choke-point argument the graveyard turn-marker beside it already makes. Hooking the discard, destroy and combat-chain-cleanup paths separately would have been three chances to miss one. The trigger fires on the card that entered, so no self-targeting condition is needed. player SELF on the gain because the clause says 'YOUR graveyard' and the card's controller is the one who gains.",
   "abilities": [
     {
       "ability_type": "TRIGGERED",
-      "trigger": "ON_ENTER_PLAY",
-      "conditions": [
-        {
-          "type": "REF_EXISTS",
-          "ref": "GRAVEYARD"
-        }
-      ],
+      "trigger": "ON_PUT_INTO_GRAVEYARD",
       "effects": [
-        {
-          "type": "GAIN",
-          "asset": "HEALTH",
-          "amount": 1
-        }
+        {"type": "GAIN", "asset": "LIFE_POINTS", "amount": 1, "player": "SELF"}
       ]
     }
   ]

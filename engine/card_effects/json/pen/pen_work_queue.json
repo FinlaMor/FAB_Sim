@@ -20,7 +20,7 @@
     ],
     "specializations": [],
     "functional_text": "**Arcane Barrier 2**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "aggressive_pounce_blue",
@@ -43,7 +43,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've intimidated an opponent this turn, this gets **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "aggressive_pounce_red",
@@ -66,7 +66,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've intimidated an opponent this turn, this gets **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "aggressive_pounce_yellow",
@@ -89,7 +89,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've intimidated an opponent this turn, this gets **go again**.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "arc_bending_red",
@@ -114,7 +114,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if a Lightning or Elemental attack would deal damage this combat chain, instead it deals that much damage plus 1.\n\n**Lightning Bond** - If a Lightning card was pitched to play this, this gets **go again**.",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "art_of_the_phoenix_war_red",
@@ -133,7 +133,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "As an additional cost to play this, discard a Phoenix Flame.\n\nDraconic attack action cards you control get +1{p} this turn.\n\nDraw 2 card.",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "assembly_module_blue",
@@ -178,7 +178,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, you may discard an instant card. If you do, draw a card and create an Embodiment of Lightning token.",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "bad_breath_blue",
@@ -202,7 +202,7 @@
     ],
     "specializations": [],
     "functional_text": "**Intimidate** target hero.\n\nThe next time an attack you control hits this turn, create a Might token.\n\n**Go again**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "bad_breath_red",
@@ -226,7 +226,7 @@
     ],
     "specializations": [],
     "functional_text": "**Intimidate** target hero.\n\nThe next time an attack you control hits this turn, create 3 Might tokens.\n\n**Go again**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "bad_breath_yellow",
@@ -250,7 +250,7 @@
     ],
     "specializations": [],
     "functional_text": "**Intimidate** target hero.\n\nThe next time an attack you control hits this turn, create 2 Might tokens.\n\n**Go again**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "basalt_boots",
@@ -273,7 +273,7 @@
     ],
     "specializations": [],
     "functional_text": "If you control a Seismic Surge token, this gets +1{d}.\n\n**Temper**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "bear_hug_blue",
@@ -359,7 +359,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {x}{x}{r}, destroy this: Return target aura with cost X from your graveyard to your hand.\n\n**Guardwell**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "become_the_bottle_blue",
@@ -405,7 +405,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, choose a card on the combat chain. This gets the chosen card's name.\n\n**Go again**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "become_the_bottle_yellow",
@@ -428,7 +428,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, choose a card on the combat chain. This gets the chosen card's name.\n\n**Go again**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "become_the_cup_blue",
@@ -451,7 +451,7 @@
     ],
     "specializations": [],
     "functional_text": "As you play this, choose a color. This gets the chosen color.\n\n**Go again**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "become_the_cup_red",
@@ -474,7 +474,7 @@
     ],
     "specializations": [],
     "functional_text": "As you play this, choose a color. This gets the chosen color.\n\n**Go again**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "become_the_cup_yellow",
@@ -519,7 +519,7 @@
     ],
     "specializations": [],
     "functional_text": "**Watery Grave**\n\nWhile this is defending, when it's put into your graveyard from the arena, turn it face-down.",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "billowing_mist_blue",
@@ -542,7 +542,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next attack this turn gets +1{p}.\n\nThe next time you would create a card with ephemeral this turn, instead create that many plus 1.\n\n**Go again**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "blackstone_greaves",
@@ -565,7 +565,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've dealt arcane damage this turn, this gets +1{d}.\n\n**Temper**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "blast_rig_red",
@@ -589,7 +589,7 @@
     ],
     "specializations": [],
     "functional_text": "**Evo Upgrade** - This gets +1{p} for each Evo you have equipped.\n\n**Boost**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "blessing_of_bellona_yellow",
@@ -613,7 +613,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nWhenever a card is put into your soul, create a Courage token.\n\nAt the start of your turn, put this into your soul.",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "blessing_of_themis_yellow",
@@ -637,7 +637,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nWhen this enters the arena, name a card. Turn all cards with that name in banished zones face-down. Whenever a card with that name is banished while this is in the arena, turn that card face-down.\n\nAt the start of your turn, put this into your soul.",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "blunten_yellow",
@@ -656,7 +656,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends a weapon attack, the attacking hero discards a card.",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "boltn_boots",
@@ -680,7 +680,7 @@
     ],
     "specializations": [],
     "functional_text": "**Attack Reaction** - {r}, destroy this: Target arrow attack with {p} greater than its base gets **go again**.\n\n**Battleworn**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "bone_puppetry",
@@ -703,7 +703,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, you may return an ally from your graveyard to the arena. If you do, at the beginning of the end phase, destroy it and discard your hand.\n\n**Blade Break**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "boo_resident_spook_yellow",
@@ -729,7 +729,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - {t}: **Attack**\n\nIf this is untapped, it gets **spellvoid 2**.\n\n**Watery Grave**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "break_open_the_chests_yellow",
@@ -752,7 +752,7 @@
     ],
     "specializations": [],
     "functional_text": "Turn all cards in all arsenals face-up. Then if there's a face-up yellow card in any arsenal, create 2 Gold tokens.\n\n**Go again**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "bubba_lubba_run_aground_yellow",
@@ -778,7 +778,7 @@
     ],
     "specializations": [],
     "functional_text": "This enters the arena with a +1{p} counter.\n\n**Action** - {r}, {t}: **Attack**\n\n**Action** - Remove a +1{p} counter from an ally you control: Destroy an aura token. **Go again**\n\n**Watery Grave**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "burnished_bunkerplate",
@@ -799,7 +799,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "**Defense Reaction** - Destroy this: You may add an action card from your arsenal to the active chain link as a defending card.",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "buzzard_helm",
@@ -844,7 +844,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you have less {h} than each other hero, you may play this as though it were an instant.\n\nHeroes can't draw cards during action phases.\n\nAt the beginning of your action phase, destroy this.",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "carrion_crown",
@@ -868,7 +868,7 @@
     ],
     "specializations": [],
     "functional_text": "**Action** - Discard an ally, destroy this: Draw a card. **Go again**\n\n**Blade Break**",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "chain_of_brutality_red",
@@ -942,7 +942,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nCards in opponents' arsenals are **frozen** while they control a Frostbite or a frozen permanent.\n\n**Channel Ice** - At the beginning of your end phase, put a flow counter on this, then destroy it unless you put an Ice card from your pitch zone on the bottom of your deck for each flow counter on it.",
-    "status": "candidate"
+    "status": "done"
   },
   {
     "slug": "channel_the_skybreaker_yellow",
@@ -1037,7 +1037,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next attack this turn gets +3{p}.\n\nYou may destroy a Bloodrot Pox token you control. If you do, gain 1{h}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cloud_cover_blue",
@@ -1056,7 +1056,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "The next time you would be dealt damage this turn, prevent 1 of that damage.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cloud_cover_red",
@@ -1138,7 +1138,7 @@
     ],
     "specializations": [],
     "functional_text": "Whenever the crowd cheers you, if you have less {h} than each other hero, you may destroy this. If you do, gain 1 action point.\n\n**Battleworn**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "concealed_nerve_gas",
@@ -1533,7 +1533,7 @@
     ],
     "specializations": [],
     "functional_text": "**Rune Gate**\n\nWhen the combat chain closes, you may banish this face-down. If you do, for each hero who has lost {h} this turn, banish a card from their graveyard.\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "depths_of_despair_blue",
@@ -1556,7 +1556,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, banish it when the combat chain closes.\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "depths_of_despair_red",
@@ -1579,7 +1579,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, banish it when the combat chain closes.\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "depths_of_despair_yellow",
@@ -1602,7 +1602,7 @@
     ],
     "specializations": [],
     "functional_text": "When this defends, banish it when the combat chain closes.\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "descend_into_madness_blue",
@@ -1787,7 +1787,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**\n\nAt the beginning of your end phase, put a doom counter on this, then each hero destroys X auras they control, where X is the number of doom counters on this.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "double_cross_strap",
@@ -2336,7 +2336,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' red cards. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck. If it's red, repeat this process once.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "excessive_bloodloss_red",
@@ -2359,7 +2359,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' red cards. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck. If it's red, repeat this process once.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "excessive_bloodloss_yellow",
@@ -2382,7 +2382,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' red cards. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a hero, banish the top card of their deck. If it's red, repeat this process once.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "farflight_longbow",
@@ -2428,7 +2428,7 @@
     ],
     "specializations": [],
     "functional_text": "The next blue action card you play this turn gets **go again**.\n\n**Go again**\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fasting_carcass_red",
@@ -2476,7 +2476,7 @@
     ],
     "specializations": [],
     "functional_text": "The next yellow action card you play this turn gets **go again**.\n\n**Go again**\n\n**Blood Debt**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "feign_vengeance_blue",
@@ -2590,7 +2590,7 @@
     ],
     "specializations": [],
     "functional_text": "Create a Frailty token under target hero's control.\n\n**Go again**\n\nWhen this defends an attack with {p} less than its base, its controller discards a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "frost_spike_blue",
@@ -2630,7 +2630,7 @@
     ],
     "specializations": [],
     "functional_text": "**Ice Bond** - If an Ice card was pitched to play this, create a Frostbite token under the attacking hero's control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "future_sight_blue",
@@ -2828,7 +2828,7 @@
     ],
     "specializations": [],
     "functional_text": "**Arcane Barrier 1**\n\n**High Tide** - If there are 2 or more blue cards in your pitch zone, this gets +3{d} and **blade break**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "gloves_of_erasure",
@@ -2916,7 +2916,7 @@
     ],
     "specializations": [],
     "functional_text": "While this is in your graveyard, at the start of your turn, you may destroy 2 Silver you control. If you do, equip this.\n\nWhen this is equipped from anywhere other than your graveyard, put a -1{d} counter on it.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "graven_gaslight",
@@ -2962,7 +2962,7 @@
     ],
     "specializations": [],
     "functional_text": "While this is in your graveyard, at the start of your turn, you may destroy 2 Silver you control. If you do, equip this.\n\nWhen this is equipped from anywhere other than your graveyard, put a -1{d} counter on it.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "graven_vestment",
@@ -2985,7 +2985,7 @@
     ],
     "specializations": [],
     "functional_text": "While this is in your graveyard, at the start of your turn, you may destroy 2 Silver you control. If you do, equip this.\n\nWhen this is equipped from anywhere other than your graveyard, put a -1{d} counter on it.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "graven_walkers",
@@ -3008,7 +3008,7 @@
     ],
     "specializations": [],
     "functional_text": "While this is in your graveyard, at the start of your turn, you may destroy 2 Silver you control. If you do, equip this.\n\nWhen this is equipped from anywhere other than your graveyard, put a -1{d} counter on it.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "grimoire_of_fellingsong",
@@ -3101,7 +3101,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "heart_wrencher_red",
@@ -3125,7 +3125,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "heart_wrencher_yellow",
@@ -3149,7 +3149,7 @@
     ],
     "specializations": [],
     "functional_text": "**Boost**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "heavy_metal_hardcore_blue",
@@ -3511,7 +3511,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks a hero, if you have more {h} than them, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "insult_to_injury_yellow",
@@ -3534,7 +3534,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks a hero, if you have more {h} than them, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ion_charged_yellow",
@@ -3672,7 +3672,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next attack this turn gets +3{p}.\n\n**Earth Bond** - If an Earth card was pitched to play this, create an Embodiment of Earth token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "laden_with_frost_red",
@@ -3696,7 +3696,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next attack this turn gets +3{p}.\n\n**Ice Bond** - If an Ice card was pitched to play this, create a Frostbite token under target hero's control.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "laden_with_lightning_red",
@@ -3879,7 +3879,7 @@
     ],
     "specializations": [],
     "functional_text": "If there are 4 or more Earth cards in your banished zone, this gets +1{d}.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "line_crossers",
@@ -4019,7 +4019,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard an ally. If you do, this gets +1{p} and **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "man_overboard_red",
@@ -4043,7 +4043,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard an ally. If you do, this gets +1{p} and **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "man_overboard_yellow",
@@ -4067,7 +4067,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, you may discard an ally. If you do, this gets +1{p} and **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "manifest_muscle_blue",
@@ -4254,7 +4254,7 @@
     ],
     "specializations": [],
     "functional_text": "**Contract** - You are contracted to banish opponents' blue cards. Whenever you complete this contract, create a Silver token.\n\nWhen this hits a Mystic hero, search their deck for any number of Inner Chi and banish them. Then shuffle.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mistborn_protector_blue",
@@ -4404,7 +4404,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create 2 Embodiment of Earth tokens.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "overcharge_blue",
@@ -4494,7 +4494,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Deal 1 arcane damage to any target.\n\nIf this deals damage, create a Sigil of Fate token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "painful_premonition_red",
@@ -4608,7 +4608,7 @@
     ],
     "specializations": [],
     "functional_text": "**Legendary**\n\nSearch your deck for a Phoenix Flame, reveal it, put it into your hand, then shuffle.\n\nCreate a Ponder token.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "phoenix_bannerman_legs_red",
@@ -4651,7 +4651,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Choose 1 or both;\n\n- Banish target instant from an opposing hero's graveyard.\n- Banish target yellow card from an opposing hero's graveyard.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pillar_of_unity",
@@ -4745,7 +4745,7 @@
     ],
     "specializations": [],
     "functional_text": "This gets +1{p} for each card with 6 or more {p} defending it.\n\n**Mirage**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "power_of_make_believe_red",
@@ -4768,7 +4768,7 @@
     ],
     "specializations": [],
     "functional_text": "This gets +1{p} for each card with 6 or more {p} defending it.\n\n**Mirage**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "power_of_make_believe_yellow",
@@ -4791,7 +4791,7 @@
     ],
     "specializations": [],
     "functional_text": "This gets +1{p} for each card with 6 or more {p} defending it.\n\n**Mirage**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "predatory_plating",
@@ -4910,7 +4910,7 @@
     ],
     "specializations": [],
     "functional_text": "Create a Quicken token under target hero's control.\n\n**Go again**\n\nWhen this defends an attack with go again, {t} target hero or ally.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rainbow_goo_trap_red",
@@ -4931,7 +4931,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this defends an attack with {p} greater than its base, dominate, and go again, the attack gets -2{p} and loses and can't gain abilities.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "ransack_and_raze_blue",
@@ -5155,7 +5155,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this enters the arena, create a Seismic Surge token.\n\nAt the start of your turn, destroy this, then the next Guardian attack action card you play this turn gets +3{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rites_of_earthlore_yellow",
@@ -5221,7 +5221,7 @@
     ],
     "specializations": [],
     "functional_text": "When this leaves the arena, gain {r}{r}.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rockyard_rodeo_blue",
@@ -5289,7 +5289,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this and a Runechant you control: Prevent the next 1 arcane damage that would be dealt to you this turn.\n\n**Arcane Barrier 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "runic_fellingsong_blue",
@@ -5580,7 +5580,7 @@
     ],
     "specializations": [],
     "functional_text": "**Arcane Barrier 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "shapeless_form_blue",
@@ -5714,7 +5714,7 @@
     ],
     "specializations": [],
     "functional_text": "While this is attacking or defending, when this leaves the arena, create a Spectral Shield token.\n\n**Mirage**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "shimmering_specter_red",
@@ -5737,7 +5737,7 @@
     ],
     "specializations": [],
     "functional_text": "While this is attacking or defending, when this leaves the arena, create a Spectral Shield token.\n\n**Mirage**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "shimmering_specter_yellow",
@@ -5760,7 +5760,7 @@
     ],
     "specializations": [],
     "functional_text": "While this is attacking or defending, when this leaves the arena, create a Spectral Shield token.\n\n**Mirage**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "shroud_of_the_fate_watcher",
@@ -5944,7 +5944,7 @@
     ],
     "specializations": [],
     "functional_text": "When this is destroyed, create a Might token.\n\n**Ward 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "skera_strapping",
@@ -6122,7 +6122,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Create a Frostbite token under each other hero's control.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "soul_bond_belief_blue",
@@ -6143,7 +6143,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, reveal the top card of your deck. If it's yellow, put it into your soul and this gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "soul_bond_belief_red",
@@ -6164,7 +6164,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, reveal the top card of your deck. If it's yellow, put it into your soul and this gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "soul_bond_belief_yellow",
@@ -6185,7 +6185,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this attacks, reveal the top card of your deck. If it's yellow, put it into your soul and this gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sowing_thorns_red",
@@ -6231,7 +6231,7 @@
     ],
     "specializations": [],
     "functional_text": "**Scrap**\n\nIf you control a Hyper Driver, this gets +1{p}.\n\nWhen this attacks, if it scrapped a Hyper Driver, create a Hyper Driver token with 2 steam counters.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spellbane_trap_blue",
@@ -6279,7 +6279,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next arrow attack this turn gets +3{p}.\n\n**Go again**\n\nWhen this defends and the attacking hero has dealt arcane damage this turn, create a Spellbane Aegis token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spellbane_trap_yellow",
@@ -6508,7 +6508,7 @@
     ],
     "specializations": [],
     "functional_text": "**Lightning Bond** - If a Lightning card was pitched to play this, create an Embodiment of Lightning token.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "strike_twice_red",
@@ -6794,7 +6794,7 @@
     ],
     "specializations": [],
     "functional_text": "Turn up to 3 ally cards in your graveyard face-down, then create that many Gold tokens.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tentacular_toll_yellow",
@@ -6818,7 +6818,7 @@
     ],
     "specializations": [],
     "functional_text": "Turn up to 2 ally cards in your graveyard face-down, then create that many Gold tokens.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tiger_trap_red",
@@ -6953,7 +6953,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you have less {h} than each other hero, this card's base {p} is 6, otherwise it's 0.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "trench_of_watery_depths",
@@ -7157,7 +7157,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've created a Seismic Surge this turn, this gets **spellvoid 3**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "voltic_vanguard",
@@ -7363,6 +7363,492 @@
     ],
     "specializations": [],
     "functional_text": "When this leaves the arena, **opt 1**.\n\nAt the beginning of your action phase, destroy this.",
+    "status": "done"
+  },
+  {
+    "slug": "azalea",
+    "name": "Azalea",
+    "type_text": "Ranger Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Dominate",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - 0: Put a card from your arsenal on the bottom of your deck. If you do, put the top card of your deck face up into your arsenal. If it's an arrow card, it gains **dominate** until end of turn. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "balance_of_justice",
+    "name": "Balance of Justice",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "Guardwell"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Draw a card. Activate this only if an opponent has drawn 2 or more cards this turn.\n\n**Guardwell**",
+    "status": "pending"
+  },
+  {
+    "slug": "benji_the_piercing_wind",
+    "name": "Benji, the Piercing Wind",
+    "type_text": "Ninja Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 17,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your attack action cards with 2 or less {p} can't be defended by cards from hand.\n\nThe first time an attack action card you control hits each turn, your next attack gains +1{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "chane",
+    "name": "Chane",
+    "type_text": "Shadow Runeblade Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Runeblade"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Once per Turn Action** - Create a Soul Shackle token: Your next Runeblade or Shadow action this turn gains **go again. Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "command_and_conquer_red",
+    "name": "Command and Conquer",
+    "type_text": "Generic Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Defense reaction cards can't be played this chain link. When this hits a hero, destroy all cards in their arsenal.",
+    "status": "done"
+  },
+  {
+    "slug": "crown_of_providence",
+    "name": "Crown of Providence",
+    "type_text": "Generic Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When you defend with Crown of Providence, you may put a card from your hand or arsenal on the bottom of your deck. If you do, draw a card.\n\n**Blade Break**",
+    "status": "pending"
+  },
+  {
+    "slug": "dash",
+    "name": "Dash",
+    "type_text": "Mechanologist Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Mechanologist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may start the game with a Mechanologist item with cost 2 or less in the arena.",
+    "status": "pending"
+  },
+  {
+    "slug": "dromai",
+    "name": "Dromai",
+    "type_text": "Draconic Illusionist Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you pitch a red card, create an Ash Token.\n\nIf you've played a red card this turn, dragons you control have **go again** while attacking.",
+    "status": "pending"
+  },
+  {
+    "slug": "enlightened_strike_red",
+    "name": "Enlightened Strike",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "As an additional cost to play Enlightened Strike, put a card from your hand on the bottom of your deck.\n\nChoose 1;\n- When you attack with Enlightened Strike, draw a card.\n- Enlightened Strike gains +2{p}.\n- Enlightened Strike gains **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "fai",
+    "name": "Fai",
+    "type_text": "Draconic Ninja Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "You may start the game with a Phoenix Flame in your graveyard.\n\n**Once per Turn Instant** - {r}{r}{r}: Return a Phoenix Flame from your graveyard to your hand. This ability costs {r} less for each Draconic chain link you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "fyendals_spring_tunic",
+    "name": "Fyendal's Spring Tunic",
+    "type_text": "Generic Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "At the start of your turn, if this has fewer than 3 energy counters, you may put an energy counter on it.\n\n**Instant** - Remove 3 energy counters from this: Gain {r}\n\n**Blade Break**",
+    "status": "done"
+  },
+  {
+    "slug": "kano",
+    "name": "Kano",
+    "type_text": "Wizard Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 15,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Wizard"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}{r}{r}: Look at the top card of your deck. If it's a 'non-attack' action card, you may banish it. If you do, you may play it this turn as though it were an instant.",
+    "status": "pending"
+  },
+  {
+    "slug": "kassai_cintari_sellsword",
+    "name": "Kassai, Cintari Sellsword",
+    "type_text": "Warrior Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Warrior"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Your second sword attack each turn costs {r} less.\n\nAt the beginning of your end phase, if you have attacked 2 or more times with weapons this turn, create a Copper token for each weapon attack that hit.",
+    "status": "done"
+  },
+  {
+    "slug": "lexi",
+    "name": "Lexi",
+    "type_text": "Elemental Ranger Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [
+      "Essence",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Essence of Ice and Lightning**\n\n**Once per Turn Action** - Turn a face down card in your arsenal face up: If it's a Lightning card, your next attack this turn gains **go again**. If it's an Ice card, create a Frostbite token under target hero's control. **Go again**",
+    "status": "pending"
+  },
+  {
+    "slug": "oldhim",
+    "name": "Oldhim",
+    "type_text": "Elemental Guardian Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Guardian"
+    ],
+    "keywords": [
+      "Essence"
+    ],
+    "specializations": [],
+    "functional_text": "**Essence of Earth and Ice**\n\n**Once per Turn Defense Reaction** - {r}{r}{r}: If an Earth card is pitched this way, prevent the next 2 damage that would be dealt to Oldhim this turn. If an Ice card is pitched this way, the attacking hero puts a card from their hand on top of their deck.",
+    "status": "pending"
+  },
+  {
+    "slug": "phoenix_flame_red",
+    "name": "Phoenix Flame",
+    "type_text": "Draconic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 0,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "If you control 2 or more Draconic chain links, this gets +1{p}.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "prism",
+    "name": "Prism",
+    "type_text": "Light Illusionist Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Once per Turn Instant** - {r}{r}, banish a card from Prism's soul: Create a Spectral Shield token.",
+    "status": "pending"
+  },
+  {
+    "slug": "quickdodge_flexors",
+    "name": "Quickdodge Flexors",
+    "type_text": "Generic Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Defense Reaction** - {r}: Add this to the active chain link as a defending card. It has 2 base {d} this chain link.\n\nAt the beginning of the end phase, if this defendend this turn, destroy it.",
+    "status": "done"
+  },
+  {
+    "slug": "rhinar",
+    "name": "Rhinar",
+    "type_text": "Brute Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 20,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Brute"
+    ],
+    "keywords": [
+      "Intimidate"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever you discard a card with 6 or more {p} during your action phase, **intimidate**.",
+    "status": "pending"
+  },
+  {
+    "slug": "riptide",
+    "name": "Riptide",
+    "type_text": "Ranger Hero - Young",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": 19,
+    "intellect": 4,
+    "subtypes": [
+      "Young"
+    ],
+    "classes": [
+      "Ranger"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Whenever you play a card from hand, you may put a card from hand face down into your arsenal.\n\nWhenever a trap you control triggers, deal 1 damage to the attacking hero.",
+    "status": "done"
+  },
+  {
+    "slug": "shelter_from_the_storm_red",
+    "name": "Shelter from the Storm",
+    "type_text": "Generic Defense Reaction",
+    "cost": 0,
+    "pitch": 1,
+    "power": null,
+    "defense": 4,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Instant** - Discard this: The next 3 times you would be dealt damage this turn, prevent 1 of that damage.",
+    "status": "pending"
+  },
+  {
+    "slug": "stonewall_gauntlet",
+    "name": "Stonewall Gauntlet",
+    "type_text": "Generic Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "When this defends an attack with {p} greater than its base, opposing attacks get -1{p} this combat chain.\n\n**Blade Break**",
     "status": "pending"
   }
 ]

@@ -21,7 +21,7 @@
     ],
     "specializations": [],
     "functional_text": "You may remove three +1{p} counters from among auras you control rather than pay 10,000 Year Reunion's {r} cost.\n\n**Ward 10**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "a_drop_in_the_ocean_blue",
@@ -43,7 +43,7 @@
     ],
     "specializations": [],
     "functional_text": "**Legendary**\n\nTarget attack gets -1{p}.\n\nIf you've played another blue card this turn, **transcend**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "aqua_laps",
@@ -159,7 +159,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a blue card, draw a card and gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "art_of_desire_soul_yellow",
@@ -275,7 +275,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Put a +1{p} counter on target aura with **ward** you control.\n\nIf you control a Spectral Shield, you may play this as though it were an instant.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "astral_etchings_red",
@@ -425,7 +425,7 @@
     ],
     "specializations": [],
     "functional_text": "**Once per Turn Action** - {r}{r}: **Attack**. **Go again**\n\nWhen this hits, your next blue attack this turn gets +1{p} and **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "big_blue_sky_blue",
@@ -467,7 +467,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "biting_breeze_red",
@@ -490,7 +490,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "biting_breeze_yellow",
@@ -513,7 +513,7 @@
     ],
     "specializations": [],
     "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blanch_blue",
@@ -534,7 +534,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits a hero, cards they own lose all colors until the end of their next turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blanch_red",
@@ -555,7 +555,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits a hero, cards they own lose all colors until the end of their next turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "blanch_yellow",
@@ -576,7 +576,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits a hero, cards they own lose all colors until the end of their next turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bonds_of_agony_blue",
@@ -622,7 +622,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck, then banish a card from their graveyard.\n\nWhenever this banishes a card and this has banished another card with the same color, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bonds_of_attraction_red",
@@ -645,7 +645,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck, then banish a card from their graveyard.\n\nWhenever this banishes a card and this has banished another card with the same color, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bonds_of_attraction_yellow",
@@ -668,7 +668,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck, then banish a card from their graveyard.\n\nWhenever this banishes a card and this has banished another card with the same color, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bonds_of_memory_blue",
@@ -691,7 +691,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck, then banish a card from their graveyard.\n\nWhenever this banishes a card and this has banished another card with the same name, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bonds_of_memory_red",
@@ -714,7 +714,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck, then banish a card from their graveyard.\n\nWhenever this banishes a card and this has banished another card with the same name, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "bonds_of_memory_yellow",
@@ -737,7 +737,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck, then banish a card from their graveyard.\n\nWhenever this banishes a card and this has banished another card with the same name, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "breed_anger_blue",
@@ -855,7 +855,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "companion_of_the_claw_red",
@@ -878,7 +878,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "companion_of_the_claw_yellow",
@@ -901,7 +901,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "cosmic_awakening_blue",
@@ -986,7 +986,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Attacks that target you this turn get -1{p}.\n\nIf a Chi was pitched to play this, effects don't trigger if an attack hits you this turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "desires_of_flesh_blue",
@@ -1078,7 +1078,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nIf you've played or activated 2 or more attack reactions this chain link, this gets +2{p} and \"When this hits a hero, banish the top 2 cards of their deck.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "double_trouble_red",
@@ -1101,7 +1101,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nIf you've played or activated 2 or more attack reactions this chain link, this gets +2{p} and \"When this hits a hero, banish the top 2 cards of their deck.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "double_trouble_yellow",
@@ -1124,7 +1124,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nIf you've played or activated 2 or more attack reactions this chain link, this gets +2{p} and \"When this hits a hero, banish the top 2 cards of their deck.\"",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "droplet_blue",
@@ -1145,7 +1145,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've played another blue card this turn, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "dust_from_stillwater_shrine_red",
@@ -1170,7 +1170,7 @@
     ],
     "specializations": [],
     "functional_text": "**Material** - While this is under a permanent other than Miragai, that permanent has **phantasm**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "eloquent_eulogy_red",
@@ -1299,7 +1299,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Your first Spectral Shield attack each turn costs {r} less to activate.\n\n**Once per Turn Instant** - {c}{c}{c}: Create a Spectral Shield token with a +1{p} counter.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "enigma_new_moon",
@@ -1413,7 +1413,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "evasive_leap_red",
@@ -1432,7 +1432,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "evasive_leap_yellow",
@@ -1451,7 +1451,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "evo_heartdrive_blue",
@@ -1499,7 +1499,7 @@
     ],
     "specializations": [],
     "functional_text": "If you have a base head equipped, transform it into this, then equip this.\n\nWhen this is equipped, put up to 1 Mechanologist action card from your banished zone on top of your deck.\n\n**Arcane Barrier 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "evo_shortcircuit_blue",
@@ -1548,7 +1548,7 @@
     ],
     "specializations": [],
     "functional_text": "If you have a base legs equipped, **transform** it into this, then equip this.\n\nWhen this is equipped, the next attack action card you play this turn gets **boost**.\n\n**Arcane Barrier 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fact_finding_mission_blue",
@@ -1632,7 +1632,7 @@
     ],
     "specializations": [],
     "functional_text": "**Ephemeral**\n\nTarget attack action card gets +1{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "first_tenet_of_chi_moon_blue",
@@ -1655,7 +1655,7 @@
     ],
     "specializations": [],
     "functional_text": "Your next blue attack this turn gets \"When this attacks, draw a card.\"\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "first_tenet_of_chi_tide_blue",
@@ -1806,7 +1806,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "harmony_of_the_hunt_red",
@@ -1829,7 +1829,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "harmony_of_the_hunt_yellow",
@@ -1852,7 +1852,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, if you've pitched a blue card this turn, create a Crouching Tiger in your hand.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "haunting_specter_blue",
@@ -1876,7 +1876,7 @@
     ],
     "specializations": [],
     "functional_text": "When this leaves the arena, create a Spectral Shield token, then if you control no other Illusionist auras, put a +1{p} counter on it.\n\n**Ward 2**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "haunting_specter_red",
@@ -1900,7 +1900,7 @@
     ],
     "specializations": [],
     "functional_text": "When this leaves the arena, create a Spectral Shield token, then if you control no other Illusionist auras, put a +1{p} counter on it.\n\n**Ward 4**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "haunting_specter_yellow",
@@ -1993,7 +1993,7 @@
     ],
     "specializations": [],
     "functional_text": "**Ward X**, where X is 3 if you've pitched a blue card this turn, otherwise X is 1.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "heirloom_of_rabbit_hide",
@@ -2167,7 +2167,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a reaction or instant card, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "impulsive_desire_red",
@@ -2190,7 +2190,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a reaction or instant card, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "impulsive_desire_yellow",
@@ -2213,7 +2213,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a reaction or instant card, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "intimate_inducement_blue",
@@ -2356,7 +2356,7 @@
     ],
     "specializations": [],
     "functional_text": "When this attacks, choose 1 for each blue card you've pitched this turn;\n- Draw a card.\n- This gets +2{p}.\n- This gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "longdraw_half_glove",
@@ -2379,7 +2379,7 @@
     ],
     "specializations": [],
     "functional_text": "**Instant** - Destroy this, put 2 cards from your hand and/or arsenal on the bottom of your deck: Your next arrow attack this turn gets +4{p}.\n\n**Battleworn**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "manifestation_of_miragai_blue",
@@ -2513,7 +2513,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a non-attack action card, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "minds_desire_red",
@@ -2536,7 +2536,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a non-attack action card, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "minds_desire_yellow",
@@ -2559,7 +2559,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck.\n\nWhenever this banishes a non-attack action card, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "mistcloak_gully",
@@ -2621,7 +2621,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "The next time you would be dealt damage this turn, prevent 3 of that damage. If you've **transcended** this turn, instead prevent 5.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "moon_chakra_yellow",
@@ -2819,7 +2819,7 @@
     ],
     "specializations": [],
     "functional_text": "**Legendary**\n\nBanish target card from an opposing hero's graveyard.\n\nIf you've played another blue card this turn, **transcend**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "path_well_traveled_blue",
@@ -2865,7 +2865,7 @@
     ],
     "specializations": [],
     "functional_text": "**Stealth**\n\nWhen this hits a hero, banish the top card of their deck. Then look at their hand and banish a card with the same color as the banished card.\n\nWhenever this banishes an action card, gain 1{h}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "pick_to_pieces_blue",
@@ -3069,7 +3069,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've played another blue card this turn, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "rowdy_locals_blue",
@@ -3316,7 +3316,7 @@
     ],
     "specializations": [],
     "functional_text": "At the start of your turn, if you control another Illusionist aura, destroy this.\n\n**Ward 4**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "sigil_of_solitude_yellow",
@@ -3388,7 +3388,7 @@
     ],
     "specializations": [],
     "functional_text": "When this enters the arena, if you control no other Illusionist auras, put three +1{p} counters on this.\n\n**Ward 2**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "single_minded_determination_yellow",
@@ -3685,7 +3685,7 @@
     ],
     "specializations": [],
     "functional_text": "Create a Spectral Shield token, then if you control no other Illusionist auras, put two +1{p} counters on it.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "spillover_blue",
@@ -3706,7 +3706,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've played another blue card this turn, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "stir_the_pot_blue",
@@ -3857,7 +3857,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "When this hits a hero, look at their hand and choose a card without base {d}. If you do, they discard it and you draw a card.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "three_visits_red",
@@ -3901,7 +3901,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "If you've played another blue card this turn, this gets +2{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tide_chakra_blue",
@@ -3958,7 +3958,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target Assassin or Mystic attack action card gets +2{p}. If you've **transcended** this turn, instead it gets +4{p}.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "tiger_form_incantation_blue",
@@ -4144,7 +4144,7 @@
     ],
     "specializations": [],
     "functional_text": "Whenever you **transcend**, you may gain {r}.\n\n**Instant** - {c}{c}{c}, destroy this: Create a Zen State token.\n\n**Blade Break**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "undertow_stilettos",
@@ -4303,7 +4303,7 @@
     ],
     "specializations": [],
     "functional_text": "When this leaves the arena, if you control no Illusionist auras, you may play your next aura with cost 0 this turn as though it were an instant. If you do, it enters the arena with a +1{p} counter.\n\n**Ward 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "vengeful_apparition_red",
@@ -4351,7 +4351,7 @@
     ],
     "specializations": [],
     "functional_text": "When this leaves the arena, if you control no Illusionist auras, you may play your next aura with cost 1 or less this turn as though it were an instant. If you do, it enters the arena with a +1{p} counter.\n\n**Ward 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "venomous_bite_blue",
@@ -4482,7 +4482,7 @@
     ],
     "specializations": [],
     "functional_text": "When this leaves the arena, if you've pitched a blue card this turn, create a Spectral Shield token.\n\n**Ward 1**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "waning_vengeance_red",
@@ -4708,7 +4708,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've pitched a blue card this turn, this enters the arena with a +1{p} counter.\n\n**Ward 2**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wide_blue_yonder_blue",
@@ -4727,7 +4727,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "Target attack gets +1{p} for each blue card you've pitched this turn.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wind_chakra_blue",
@@ -4773,7 +4773,7 @@
     ],
     "specializations": [],
     "functional_text": "The next Crouching Tiger you play this turn gets +3{p}. If you've **transcended** this turn, instead it gets +5{p}.\n\n**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "wind_chakra_yellow",
@@ -4857,7 +4857,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "nimble_strike_blue",
@@ -4941,6 +4941,411 @@
     "keywords": [],
     "specializations": [],
     "functional_text": null,
+    "status": "done"
+  },
+  {
+    "slug": "blessing_of_qi_blue",
+    "name": "Blessing of Qi",
+    "type_text": "Ninja Action - Aura",
+    "cost": 1,
+    "pitch": 3,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then create a Crouching Tiger in your banished zone. It gains +1{p} and you may play it this turn.",
     "status": "pending"
+  },
+  {
+    "slug": "blessing_of_qi_red",
+    "name": "Blessing of Qi",
+    "type_text": "Ninja Action - Aura",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then create a Crouching Tiger in your banished zone. It gains +3{p} and you may play it this turn.",
+    "status": "done"
+  },
+  {
+    "slug": "blessing_of_qi_yellow",
+    "name": "Blessing of Qi",
+    "type_text": "Ninja Action - Aura",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the start of your turn, destroy this, then create a Crouching Tiger in your banished zone. It gains +2{p} and you may play it this turn.",
+    "status": "pending"
+  },
+  {
+    "slug": "cracked_bauble_yellow",
+    "name": "Cracked Bauble",
+    "type_text": "Generic Resource",
+    "cost": null,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "*(A player may add any number of Cracked Baubles to their card-pool in sealed deck or booster draft formats.)*",
+    "status": "pending"
+  },
+  {
+    "slug": "crouching_tiger",
+    "name": "Crouching Tiger",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": null,
+    "power": 0,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Ephemeral",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Ephemeral**\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "flex_claws_blue",
+    "name": "Flex Claws",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 3,
+    "power": 2,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "flex_claws_red",
+    "name": "Flex Claws",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "flex_claws_yellow",
+    "name": "Flex Claws",
+    "type_text": "Ninja Action - Attack",
+    "cost": 1,
+    "pitch": 2,
+    "power": 3,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits, create a Crouching Tiger in your banished zone. You may play it this turn.\n\n**Go again**",
+    "status": "done"
+  },
+  {
+    "slug": "pouncing_qi_blue",
+    "name": "Pouncing Qi",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Crouching Tiger was the last attack this combat chain, this gets +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "pouncing_qi_red",
+    "name": "Pouncing Qi",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Crouching Tiger was the last attack this combat chain, this gets +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "pouncing_qi_yellow",
+    "name": "Pouncing Qi",
+    "type_text": "Ninja Action - Attack",
+    "cost": 0,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Crouching Tiger was the last attack this combat chain, this gets +1{p} and **go again**.",
+    "status": "pending"
+  },
+  {
+    "slug": "qi_unleashed_blue",
+    "name": "Qi Unleashed",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 1,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Crouching Tiger was the last attack this combat chain, this gets +4{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "qi_unleashed_red",
+    "name": "Qi Unleashed",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Crouching Tiger was the last attack this combat chain, this gets +4{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "qi_unleashed_yellow",
+    "name": "Qi Unleashed",
+    "type_text": "Ninja Action - Attack",
+    "cost": 2,
+    "pitch": 2,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [
+      "Combo"
+    ],
+    "specializations": [],
+    "functional_text": "**Combo** - If Crouching Tiger was the last attack this combat chain, this gets +4{p}.",
+    "status": "done"
+  },
+  {
+    "slug": "spectral_shield",
+    "name": "Spectral Shield",
+    "type_text": "Illusionist Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "**Ward 1**",
+    "status": "done"
+  },
+  {
+    "slug": "wounding_blow_blue",
+    "name": "Wounding Blow",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 2,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "done"
+  },
+  {
+    "slug": "wounding_blow_red",
+    "name": "Wounding Blow",
+    "type_text": "Generic Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": null,
+    "status": "done"
+  },
+  {
+    "slug": "zen_state",
+    "name": "Zen State",
+    "type_text": "Ninja Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Ninja"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "This enters the arena with a balance counter. At the beginning of your action phase, destroy this unless you remove a balance counter from it.\n\nIf you would be dealt damage, prevent 1 of that damage.",
+    "status": "done"
   }
 ]

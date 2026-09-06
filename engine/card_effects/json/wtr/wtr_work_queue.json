@@ -429,7 +429,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first action during their next turn costs an additional {r} to play or activate.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "cartilage_crush_yellow",
@@ -452,7 +452,7 @@
     ],
     "specializations": [],
     "functional_text": "**Crush** - When this deals 4 or more damage to a hero, their first action during their next turn costs an additional {r} to play or activate.",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "cracked_bauble_yellow",
@@ -1346,7 +1346,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "head_jab_red",
@@ -1392,7 +1392,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "heart_of_fyendal_blue",
@@ -2006,7 +2006,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "raging_onslaught_red",
@@ -2048,7 +2048,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "razor_reflex_blue",
@@ -2708,7 +2708,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "surging_strike_red",
@@ -2731,7 +2731,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "surging_strike_yellow",
@@ -2897,7 +2897,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "wounding_blow_yellow",
@@ -2918,7 +2918,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": "",
-    "status": "needs_review"
+    "status": "done"
   },
   {
     "slug": "ancestral_empowerment_red",

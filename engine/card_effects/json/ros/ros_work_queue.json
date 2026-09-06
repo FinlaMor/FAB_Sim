@@ -1768,7 +1768,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've played an instant card this chain link, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "flittering_charge_red",
@@ -1814,7 +1814,7 @@
     ],
     "specializations": [],
     "functional_text": "If you've played an instant card this chain link, this gets **go again**.",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "florian",
@@ -1988,7 +1988,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "fry_red",
@@ -2034,7 +2034,7 @@
     ],
     "specializations": [],
     "functional_text": "**Go again**",
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "germinate_blue",
@@ -5012,7 +5012,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": null,
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "autumns_touch_yellow",
@@ -5033,7 +5033,7 @@
     "keywords": [],
     "specializations": [],
     "functional_text": null,
-    "status": "pending"
+    "status": "done"
   },
   {
     "slug": "briar",

@@ -63,5 +63,620 @@
     "specializations": [],
     "functional_text": "**Instant** - {r}{r}, {t}, destroy a Lightning Flow you control, banish another Lightning aura permanent you control with no holo counters: Return the banished aura to the arena with a holo counter.",
     "status": "pending"
+  },
+  {
+    "slug": "auric_shards_red",
+    "name": "Auric Shards",
+    "type_text": "Lightning Illusionist Instant - Aura",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, up to 1 target attack with fragment gets +1{p}. If this has a holo counter, instead the attack gets +4{p}.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "blink_of_an_eye_red",
+    "name": "Blink of an Eye",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Fragment"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever this fragments, you may banish a Lightning aura permanent you control with no holo counters, then return it to the arena with a holo counter.\n\n**Fragment**",
+    "status": "pending"
+  },
+  {
+    "slug": "blitz_kicks",
+    "name": "Blitz Kicks",
+    "type_text": "Lightning Equipment - Legs",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 0,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Legs"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "ArcaneBarrier"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, destroy this: Create an Embodiment of Lightning token. Activate this only if you've played an instant card this turn.\n\n**Arcane Barrier 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "blur_reality_blue",
+    "name": "Blur Reality",
+    "type_text": "Lightning, Illusionist, Instant",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "Banish a Lightning aura permanent you control with no holo counters, then return it to the arena with a holo counter.",
+    "status": "pending"
+  },
+  {
+    "slug": "circular_flowtide_yellow",
+    "name": "Circular Flowtide",
+    "type_text": "Lightning Illusionist Instant - Aura",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, create a Lightning Flow token.\n\n**Ward 2**",
+    "status": "done"
+  },
+  {
+    "slug": "clear_conscience_blue",
+    "name": "Clear Conscience",
+    "type_text": "Illusionist Action - Attack",
+    "cost": 3,
+    "pitch": 3,
+    "power": 6,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Fragment"
+    ],
+    "specializations": [],
+    "functional_text": "When this hits a hero, each hero puts a card from their hand on the bottom of their deck and creates a Ponder token.\n\n**Fragment**",
+    "status": "pending"
+  },
+  {
+    "slug": "corrosive_space_dust_red",
+    "name": "Corrosive Space Dust",
+    "type_text": "Lightning Illusionist Instant - Aura",
+    "cost": 1,
+    "pitch": 1,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, deal 1 arcane damage to target hero.\n\n**Ward X**, where X is 4 if this has a holo counter. Otherwise, X is 1.",
+    "status": "pending"
+  },
+  {
+    "slug": "cosmic_duality_blue",
+    "name": "Cosmic Duality",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 3,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Fragment"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, discard this: Deal 1 arcane damage to target hero. Create a Lightning Flow token.\n\n**Fragment**",
+    "status": "done"
+  },
+  {
+    "slug": "crackle_from_afar_blue",
+    "name": "Crackle from Afar",
+    "type_text": "Lightning Illusionist Instant - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, up to 1 target attack gets +1{p}.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "ebbing_arcstride_blue",
+    "name": "Ebbing Arcstride",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Fragment",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever this fragments, it gets **go again**.\n\n**Fragment**",
+    "status": "done"
+  },
+  {
+    "slug": "ebbing_arcstride_red",
+    "name": "Ebbing Arcstride",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Fragment",
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever this fragments, it gets **go again**.\n\n**Fragment**",
+    "status": "done"
+  },
+  {
+    "slug": "elliptical_conflux_yellow",
+    "name": "Elliptical Conflux",
+    "type_text": "Lightning Illusionist Instant - Aura",
+    "cost": 1,
+    "pitch": 2,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this leaves the arena, create an Embodiment of Lightning token.\n\n**Ward 2**",
+    "status": "pending"
+  },
+  {
+    "slug": "embodiment_of_lightning",
+    "name": "Embodiment of Lightning",
+    "type_text": "Elemental Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [
+      "GoAgain"
+    ],
+    "specializations": [],
+    "functional_text": "When you play an attack action card, destroy this, then the attack gets **go again**.",
+    "status": "done"
+  },
+  {
+    "slug": "fleeing_starbreeze_blue",
+    "name": "Fleeing Starbreeze",
+    "type_text": "Lightning Illusionist Instant - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Ward"
+    ],
+    "specializations": [],
+    "functional_text": "When this enters the arena, up to 1 target attack gets **go again**.\n\n**Ward 1**",
+    "status": "pending"
+  },
+  {
+    "slug": "flowing_stormstrike_red",
+    "name": "Flowing Stormstrike",
+    "type_text": "Lightning Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 4,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "**Twice per Turn Instant** - {r}: This gets +1{p}.\n\nWhen this hits, create a Lightning Flow token.",
+    "status": "done"
+  },
+  {
+    "slug": "miraging_metamorph_red",
+    "name": "Miraging Metamorph",
+    "type_text": "Illusionist Action - Attack",
+    "cost": 1,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Phantasm"
+    ],
+    "specializations": [],
+    "functional_text": "**Phantasm**\n\nWhen Miraging Metamorph is destroyed, create a token that's a copy of an aura you control.",
+    "status": "pending"
+  },
+  {
+    "slug": "pierce_reality_blue",
+    "name": "Pierce Reality",
+    "type_text": "Illusionist Action - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura",
+      "NonAttack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Spectra"
+    ],
+    "specializations": [],
+    "functional_text": "Your first Illusionist attack action card you play each turn gets +2{p}.\n\n**Spectra**",
+    "status": "pending"
+  },
+  {
+    "slug": "polarus_pulse_ray_red",
+    "name": "Polarus Pulse Ray",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Fragment"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever this fragments, deal 1 arcane damage to the defending hero.\n\n**Fragment**",
+    "status": "pending"
+  },
+  {
+    "slug": "ponder",
+    "name": "Ponder",
+    "type_text": "Generic Token - Aura",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "Generic"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your end phase, destroy Ponder and draw a card.",
+    "status": "done"
+  },
+  {
+    "slug": "scattering_conflux_red",
+    "name": "Scattering Conflux",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 2,
+    "pitch": 1,
+    "power": 7,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Fragment"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever this fragments, create an Embodiment of Lightning token.\n\n**Fragment**",
+    "status": "pending"
+  },
+  {
+    "slug": "shattering_flowtide_blue",
+    "name": "Shattering Flowtide",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 0,
+    "pitch": 3,
+    "power": 3,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Fragment"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever this fragments, create a Lightning Flow token.\n\n**Fragment**",
+    "status": "done"
+  },
+  {
+    "slug": "shattering_flowtide_red",
+    "name": "Shattering Flowtide",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Fragment"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever this fragments, create a Lightning Flow token.\n\n**Fragment**",
+    "status": "done"
+  },
+  {
+    "slug": "shattering_stardust_red",
+    "name": "Shattering Stardust",
+    "type_text": "Lightning Illusionist Action - Attack",
+    "cost": 0,
+    "pitch": 1,
+    "power": 5,
+    "defense": 3,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Attack"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Amp",
+      "Fragment"
+    ],
+    "specializations": [],
+    "functional_text": "Whenever this fragments, **amp 1**.\n\nWhen this hits a hero, you may banish a lightning aura permanent you control with no holo counters, then return it to the arena with a holo counter.\n\n**Fragment**",
+    "status": "pending"
+  },
+  {
+    "slug": "sigil_of_astral_flow_blue",
+    "name": "Sigil of Astral Flow",
+    "type_text": "Lightning Instant - Aura",
+    "cost": 0,
+    "pitch": 3,
+    "power": null,
+    "defense": null,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Aura"
+    ],
+    "classes": [
+      "NotClassed"
+    ],
+    "keywords": [],
+    "specializations": [],
+    "functional_text": "At the beginning of your action phase, destroy this.\n\nWhen this leaves the arena, create a Lightning Flow token.",
+    "status": "pending"
+  },
+  {
+    "slug": "starfield_carapace",
+    "name": "Starfield Carapace",
+    "type_text": "Lightning Illusionist Equipment - Chest",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Chest"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "BladeBreak"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: Until end of turn, an Aphrodias you control costs {r} less to activate and gets \"Whenever this deals damage to an opposing hero, create a Lightning Flow token.\"\n\n**Blade Break**",
+    "status": "done"
+  },
+  {
+    "slug": "starfield_touch",
+    "name": "Starfield Touch",
+    "type_text": "Lightning Illusionist Equipment - Arms",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 1,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Arms"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Battleworn"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - {r}, destroy this: {u} an Aphrodias you control.\n\n**Battleworn**",
+    "status": "pending"
+  },
+  {
+    "slug": "starfield_veil",
+    "name": "Starfield Veil",
+    "type_text": "Lightning Illusionist Equipment - Head",
+    "cost": null,
+    "pitch": null,
+    "power": null,
+    "defense": 2,
+    "life": null,
+    "intellect": null,
+    "subtypes": [
+      "Head"
+    ],
+    "classes": [
+      "Illusionist"
+    ],
+    "keywords": [
+      "Guardwell"
+    ],
+    "specializations": [],
+    "functional_text": "**Instant** - Destroy this: The next aura you play this turn enters the arena with a holo counter. Activate this only if an attack has fragmented this turn.\n\n**Guardwell**",
+    "status": "pending"
   }
 ]

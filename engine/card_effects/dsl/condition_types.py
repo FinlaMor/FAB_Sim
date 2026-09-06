@@ -1160,12 +1160,32 @@ def compile_condition(ctype: str, params: dict[str, Any]) -> Callable | None:
         amount = params.get("amount", 0)
 
         def _dcpg(c, e, s, _amt=amount):
-            power = getattr(e, 'power', None) or getattr(e, 'base_power', None) or 0
-            if (power or 0) >= _amt:
+            def _pow(obj):
+                return (getattr(obj, 'power', None)
+                        or getattr(obj, 'base_power', None) or 0)
+
+            # THREE sources, because a discard reaches this condition three
+            # ways and each card means the one it was written with.
+            #   the EVENT          an on-discard trigger, where the discarded
+            #                      card IS the event
+            #   discarded_for_this a discard paid as an additional COST, stamped
+            #                      on the card being played by cost_types
+            #   the "discarded" REF  a discard performed as an EFFECT
+            #
+            # The third was missing, so "then discard a random card. If a card
+            # with 6 or more {p} is discarded THIS WAY, ..." could never see its
+            # own discard -- the clause was dead on any card whose discard is an
+            # effect rather than a cost. smashing_performance_yellow is the one
+            # that surfaced it.
+            if _pow(e) >= _amt:
                 return True
             for card in (getattr(c, 'discarded_for_this', None) or []):
-                if (getattr(card, 'power', None)
-                        or getattr(card, 'base_power', None) or 0) >= _amt:
+                if _pow(card) >= _amt:
+                    return True
+            from engine.context import get_ref
+            ref = get_ref("discarded")
+            for card in (ref if isinstance(ref, list) else [ref] if ref else []):
+                if _pow(card) >= _amt:
                     return True
             return False
         return _dcpg
