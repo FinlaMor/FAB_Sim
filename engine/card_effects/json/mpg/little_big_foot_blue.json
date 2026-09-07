@@ -1,0 +1,28 @@
+{
+  "slug": "little_big_foot_blue",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "pitch",
+          "player": "SELF",
+          "cost_gte": 3,
+          "count_gte": 2
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 4
+        }
+      ]
+    }
+  ],
+  "_comment": "'If there are TWO OR MORE cards with cost 3 or more in your pitch zone, this gets +4{p}.'\n\nBoth numbers are gates and both are easy to lose: `cost_gte` is the 'cost 3 or more' half and `count_gte` is the 'two or more' half. With count_gte omitted it defaults to one and the card pumps off a single expensive pitch -- strictly stronger than printed, and invisible unless a test pitches exactly one."
+}

@@ -1,0 +1,28 @@
+{
+  "slug": "deadwood_dirge_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "subtype": "Aura",
+          "player": "SELF"
+        },
+        {
+          "type": "CREATE_TOKEN",
+          "token": "runechant",
+          "token_type": "Runechant",
+          "amount": 3,
+          "conditions": [
+            {
+              "type": "REF_EXISTS",
+              "ref": "destroyed"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Destroy an aura you control. IF YOU DO, create 3 Runechant tokens. / Go again' -- Go again is printed and fires from the card DB.\n\n'IF YOU DO' IS A REAL GATE: a controller with no aura destroys nothing and must not get the Runechants. DESTROY_PERMANENT publishes what it took under the `destroyed` ref by itself -- it takes no `record_as`, and naming one is a parameter the compiler never reads (audit_params caught exactly that here). REF_EXISTS treats the empty list an unsuccessful destroy leaves as false, which is the gate.\n\nAsking the ARENA again afterwards would answer a different question: destroying the only aura leaves the same empty board as never having had one."
+}

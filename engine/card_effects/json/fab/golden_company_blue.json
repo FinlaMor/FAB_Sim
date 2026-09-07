@@ -1,0 +1,17 @@
+{
+  "slug": "golden_company_blue",
+  "abilities": [
+    {
+      "ability_type": "DEFENSE_REACTION",
+      "alternative_cost": [
+        {
+          "type": "DESTROY_PERMANENT",
+          "slug": "gold",
+          "player": "SELF"
+        }
+      ],
+      "effects": []
+    }
+  ],
+  "_comment": "'You may destroy a Gold you control RATHER THAN PAY this card's {r} cost.'\n\nAn ALTERNATIVE cost, not an additional one: it REPLACES the resource cost, so a controller with a Gold can play the card for no resources at all. As an additional_cost it would be charged on top of the {r}, which is the opposite of what the card does.\n\nThe ability has no effects on purpose -- the card's whole text IS the alternative cost, and its {d} comes from the card DB. tests/test_card_json_hygiene.py exempts an effect-less ability that carries one, for exactly this shape."
+}

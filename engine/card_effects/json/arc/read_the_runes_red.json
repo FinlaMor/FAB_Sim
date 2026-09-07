@@ -1,0 +1,17 @@
+{
+  "slug": "read_the_runes_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "runechant",
+          "token_type": "Runechant",
+          "amount": 3
+        }
+      ]
+    }
+  ],
+  "_comment": "'Create 3 Runechant tokens.'\n\n`amount` is read under both `amount` and `count`; a CREATE_TOKEN that names neither creates ONE, so 'create 3' silently becomes 'create 1'."
+}

@@ -1,0 +1,17 @@
+{
+  "slug": "seismic_stir_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "seismic_surge",
+          "token_type": "Seismic Surge",
+          "amount": 3
+        }
+      ]
+    }
+  ],
+  "_comment": "'Create 3 Seismic Surge tokens.' Go again is printed and fires from the card DB.\n\n`amount` is read under both `amount` and `count`; a CREATE_TOKEN that names neither creates ONE, so 'create 3' silently becomes 'create 1'."
+}

@@ -1,0 +1,17 @@
+{
+  "slug": "prismatic_shield_red",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "spectral_shield",
+          "token_type": "Spectral Shield",
+          "amount": 3
+        }
+      ]
+    }
+  ],
+  "_comment": "'Create 3 Spectral Shield tokens.'\n\n`amount` is read under both `amount` and `count`; a CREATE_TOKEN that names neither creates ONE, so 'create 3' silently becomes 'create 1'."
+}

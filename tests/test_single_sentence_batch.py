@@ -470,3 +470,78 @@ def test_the_cost_only_cards_have_no_abilities(slug):
     card = get_card(slug)
     assert not card.abilities
     assert getattr(card, "play_cost", None) or getattr(card, "cost_modifiers", None)
+
+
+# =========================================================== fourth batch
+
+
+@pytest.mark.parametrize("slug,token,n", [
+    ("seismic_stir_red", "seismic_surge", 3),
+    ("read_the_runes_red", "runechant", 3),
+    ("prismatic_shield_red", "spectral_shield", 3),
+])
+def test_a_create_n_card_creates_n(slug, token, n):
+    """`amount` is read under both `amount` and `count`, and a CREATE_TOKEN
+    that names neither creates ONE -- so "create 3" silently becomes "create
+    1", which every other assertion about the card would still pass."""
+    st = _state()
+    _fire(st, slug)
+    assert _tokens(st, 1).count(token) == n
+
+
+def test_deadwood_dirge_pays_out_only_if_it_destroyed_something():
+    st = _state()
+    aura = _card("runechant")
+    st.players[1].permanents.add(aura)
+    _fire(st, "deadwood_dirge_red")
+    assert _tokens(st, 1).count("runechant") == 3, (
+        "destroyed the aura but paid nothing, or paid the wrong number")
+
+
+def test_deadwood_dirge_pays_nothing_with_no_aura():
+    """"If you do" is a real gate. Asking the ARENA afterwards cannot answer
+    it: destroying the only aura leaves the same empty board as never having
+    had one."""
+    st = _state()
+    _fire(st, "deadwood_dirge_red")
+    assert _tokens(st, 1).count("runechant") == 0
+
+
+def test_little_big_foot_needs_two_expensive_pitches():
+    """Both numbers are gates. With the count omitted it defaults to one and
+    the card pumps off a single expensive pitch -- stronger than printed, and
+    invisible unless a test pitches exactly one."""
+    import io, json
+    from pathlib import Path
+    root = Path(__file__).resolve().parent.parent
+    idx = json.load(io.open(root / "card_data" / "slug_index.json",
+                            encoding="utf-8"))["by_slug"]
+    dear = next(s for s, e in idx.items()
+                if isinstance(e.get("cost"), int) and e["cost"] >= 3 and DB.get(s))
+    cheap = next(s for s, e in idx.items() if e.get("cost") == 0 and DB.get(s))
+
+    st = _state()
+    attacker = attack_with(st, _card("little_big_foot_blue"))
+    E._register_card_continuous_effects(st, attacker)
+    st.players[1].pitch.add(_card(dear))
+    assert recalculate_attack(st) == (attacker.base_power or 0), "one was enough"
+    st.players[1].pitch.add(_card(dear))
+    assert recalculate_attack(st) == (attacker.base_power or 0) + 4
+
+    st2 = _state()
+    other = attack_with(st2, _card("little_big_foot_blue"))
+    E._register_card_continuous_effects(st2, other)
+    st2.players[1].pitch.add(_card(cheap))
+    st2.players[1].pitch.add(_card(cheap))
+    assert recalculate_attack(st2) == (other.base_power or 0), (
+        "two CHEAP pitches satisfied it, so the cost bound is not being read")
+
+
+def test_golden_company_replaces_its_cost_rather_than_adding_to_it():
+    """An ALTERNATIVE cost, not an additional one. As an additional_cost the
+    Gold would be charged on top of the {r} -- the opposite of the card."""
+    card = get_card("golden_company_blue")
+    ability = card.abilities[0]
+    assert getattr(ability, "alternative_costs", None), "no alternative cost"
+    assert not getattr(ability, "additional_costs", None), (
+        "an additional cost would be charged ON TOP of the resource cost")

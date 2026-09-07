@@ -1,0 +1,25 @@
+{
+  "slug": "strong_wood_red",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "PITCHED_FOR_THIS",
+          "talent": "Earth"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'Earth Bond - If an EARTH card was pitched to play THIS, this gets +1{p}.'\n\nPITCHED_FOR_THIS is the cards pitched to pay for this card, which play._pitch_for_cost stamps on it -- not the pitch ZONE, which holds everything pitched this turn and would stay true for every later attack. Earth is a TALENT, and the condition reads class and talent together, which is what the Bond keywords name."
+}
