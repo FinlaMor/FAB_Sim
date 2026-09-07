@@ -1,0 +1,26 @@
+{
+  "slug": "trailblazing_aether_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1,
+          "target": "OPPONENT"
+        },
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN",
+          "conditions": [
+            {
+              "type": "SURGE",
+              "more_than": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Deal 1 arcane damage to target hero. / Surge - If this deals more than 1 damage, it gets go again.'\n\nSurge (CR 8.4.8) reads the damage this card ACTUALLY dealt -- after Amp, prevention and Arcane Barrier, which are exactly what push it past the printed number -- and tests strictly GREATER THAN, which is how every printed Surge is worded. The DEAL runs first so the gate sees this card's damage rather than a previous card's.\n\nNO conditional_keywords DECLARATION HERE, unlike aether_quickening, which reads the same sentence. That card PRINTS GoAgain -- the card DB flattens the clause into an unconditional keyword -- so its printed copy has to be withdrawn. This one prints only Surge, so the go again exists solely because the gate granted it, and a withdrawal would take away something the card never had. That difference is also why the copier held this card back from aether_quickening rather than deriving it: 'printed keywords differ' is exactly this."
+}

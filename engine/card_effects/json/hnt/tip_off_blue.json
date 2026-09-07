@@ -1,0 +1,20 @@
+{
+  "slug": "tip_off_blue",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DISCARD_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MARK"
+        }
+      ]
+    }
+  ],
+  "_comment": "'Instant - Discard this: Mark target opposing hero.'\n\nThe discard is a COST, so it is paid before the ability resolves and the card leaves the hand whether or not the mark lands. MARK targets the opponent by default (CR 9.3: marking always lands on an opposing hero), which is why the nine cards saying 'mark target opposing hero' need no target.\n\nMark is in the card DB `keywords` because the printed text names it, but it is this ability's EFFECT and happens only when the ability is activated -- nothing grants it unconditionally."
+}

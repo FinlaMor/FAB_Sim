@@ -1,0 +1,25 @@
+{
+  "slug": "perennial_aetherbloom_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1,
+          "target": "OPPONENT"
+        },
+        {
+          "type": "PUT_SELF_BOTTOM_DECK",
+          "conditions": [
+            {
+              "type": "SURGE",
+              "more_than": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Deal 1 arcane damage to target hero. / Surge - If this deals more than 1 damage, put it on the bottom of its owner's deck.'\n\nSurge (CR 8.4.8) reads the damage this card ACTUALLY dealt -- after Amp, prevention and Arcane Barrier, which are exactly what push it past the printed number -- and tests strictly GREATER THAN, which is how every printed Surge is worded. The DEAL runs first so the gate sees this card's damage rather than a previous card's.\n\n'PUT IT on the bottom' is THIS card, not the damaged hero and not a card in a zone -- PUT_SELF_BOTTOM_DECK. A non-attack action would otherwise go to the graveyard on resolution, so the clause is the card's whole recursion and getting the referent wrong loses it silently."
+}

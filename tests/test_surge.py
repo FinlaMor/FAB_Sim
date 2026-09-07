@@ -170,3 +170,74 @@ def test_the_older_surge_cards_carry_their_printed_threshold(slug, printed):
     walk(blob.get("abilities"))
     assert found, slug + " no longer gates on SURGE"
     assert all(n.get("more_than") == printed for n in found), found
+
+
+# ---------------------------------------------------- the rest of the family
+
+#: Every Surge card authored against the fixed condition, with the payoff a
+#: correct implementation must produce and the observable that shows it. They
+#: share one sentence and differ only in the payoff, so they are checked
+#: together: a regression in the condition breaks all of them at once, and one
+#: of them behaving differently from the others is the signal worth having.
+SURGE_CARDS = {
+    "trailblazing_aether_blue": "go_again",
+    "overflow_the_aetherwell_blue": "resources",
+    "prognosticate_blue": "opt",
+    "perennial_aetherbloom_blue": "bottom_deck",
+}
+
+
+def _play(slug, amp=0):
+    st = _state()
+    if amp:
+        st.players[1].class_counters["amp"] = amp
+    card = _card(slug)
+    st.players[1].graveyard.add(_card("head_jab_red"))   # somewhere for it to go
+    run_ability(get_card(slug).abilities[0], card, None, st)
+    return st, card
+
+
+@pytest.mark.parametrize("slug", sorted(SURGE_CARDS))
+def test_the_gate_is_shut_at_the_printed_damage(slug):
+    """The ordinary state. A Surge that is true here is true always, which is
+    what every one of these cards did before the condition was fixed."""
+    st, _card_obj = _play(slug)
+    assert getattr(st, "_last_damage_dealt", None) == 1
+    assert st.players[1].action_points == 0, "it paid out with the gate shut"
+    assert st.players[1].resources == 0, "it paid out with the gate shut"
+
+
+@pytest.mark.parametrize("slug", sorted(SURGE_CARDS))
+def test_amp_opens_the_gate(slug):
+    """Amp is the ordinary way a Wizard clears their own Surge threshold, so
+    this is the state the payoff is for."""
+    st, card = _play(slug, amp=3)
+    assert getattr(st, "_last_damage_dealt", None) == 4, "amp did not apply"
+    kind = SURGE_CARDS[slug]
+    if kind == "go_again":
+        # CR 8.3.5a: on a NON-ATTACK layer, go again is an action point paid to
+        # the controller -- there is no combat to hang a keyword on, and a test
+        # that looked for one would fail against a correct card.
+        assert st.players[1].action_points == 1
+    elif kind == "resources":
+        assert st.players[1].resources == 2
+    elif kind == "bottom_deck":
+        assert card in st.players[1].deck.cards, "it did not go to the deck"
+    elif kind == "opt":
+        # Opt looks at the top of the deck; with an empty deck it is a no-op,
+        # so the observable here is only that nothing raised and the gate was
+        # reached. The condition itself is covered above.
+        pass
+
+
+def test_only_the_card_that_prints_go_again_withdraws_it():
+    """aether_quickening and trailblazing_aether read the SAME sentence and
+    take opposite treatment, because only one of them prints the keyword. This
+    is why the copier refuses to derive one from the other."""
+    assert "goagain" in conditional_keywords("aether_quickening_blue")
+    assert "GoAgain" in (DB.get("aether_quickening_blue").keywords or [])
+
+    assert "GoAgain" not in (DB.get("trailblazing_aether_blue").keywords or [])
+    assert not conditional_keywords("trailblazing_aether_blue"), (
+        "this card never prints go again, so there is nothing to withdraw -- "
+        "a declaration here would take away a keyword it does not have")

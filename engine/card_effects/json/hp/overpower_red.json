@@ -1,0 +1,40 @@
+{
+  "slug": "overpower_red",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_IS_WEAPON"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "CONDITIONAL_EFFECT",
+          "when": [
+            {
+              "type": "DEFENDER_USED_HAND_CARD"
+            }
+          ],
+          "then": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 6
+            }
+          ],
+          "else": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 4
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target weapon attack gains +4{p}. / Reprise - If the defending hero has defended with a card from their hand this chain link, INSTEAD it gains +6{p}.'\n\n'INSTEAD' MEANS ONE PUMP, NOT TWO. Written as an unconditional +4 followed by a conditional +6, a reprised attack would gain +10 -- so the whole thing is one CONDITIONAL_EFFECT with a then/else and exactly one branch runs.\n\nReprise (CR 8.4.x) is 'the defending hero has defended with a card FROM THEIR HAND this chain link' -- DEFENDER_USED_HAND_CARD, which the engine records per chain link. Equipment defending does not count, which is the whole point of the keyword.\n\nThe three printings differ in BOTH numbers, so the copier cannot derive them from each other: it allows one substitution, and two distinct differences mean two clauses changed with nothing to say which JSON value is which. Authored separately on purpose."
+}

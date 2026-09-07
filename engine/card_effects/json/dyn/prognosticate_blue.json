@@ -1,0 +1,26 @@
+{
+  "slug": "prognosticate_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1,
+          "target": "OPPONENT"
+        },
+        {
+          "type": "OPT",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "SURGE",
+              "more_than": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Deal 1 arcane damage to target hero. / Surge - If this deals more than 1 damage, opt 1.'\n\nSurge (CR 8.4.8) reads the damage this card ACTUALLY dealt -- after Amp, prevention and Arcane Barrier, which are exactly what push it past the printed number -- and tests strictly GREATER THAN, which is how every printed Surge is worded. The DEAL runs first so the gate sees this card's damage rather than a previous card's.\n\nOpt is authored rather than left to the card DB: it is in `keywords` because the printed text names it, but here it is the Surge PAYOFF and happens only when the gate holds -- a keyword the engine granted unconditionally would opt on every resolution."
+}

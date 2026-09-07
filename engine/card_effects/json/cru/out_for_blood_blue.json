@@ -1,0 +1,33 @@
+{
+  "slug": "out_for_blood_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_IS_WEAPON"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "conditions": [
+            {
+              "type": "DEFENDER_USED_HAND_CARD"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target weapon attack gains +1{p}. / Reprise - If the defending hero has defended with a card from their hand this chain link, your next attack this turn gains +1{p}.'\n\nUnlike Overpower, the Reprise clause here ADDS a separate effect rather than replacing the pump -- there is no 'instead' -- so the +1{p} is unconditional and the queued bonus is gated. MODIFY_NEXT_ATTACK queues a one-shot on the controller, consumed by the first attack that follows; MODIFY_ATTACK would move THIS attack twice.\n\nReprise (CR 8.4.x) is 'the defending hero has defended with a card FROM THEIR HAND this chain link' -- DEFENDER_USED_HAND_CARD, which the engine records per chain link. Equipment defending does not count, which is the whole point of the keyword."
+}

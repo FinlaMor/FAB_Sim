@@ -1,0 +1,25 @@
+{
+  "slug": "valiant_thrust_blue",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "charge"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 3
+        }
+      ]
+    }
+  ],
+  "_comment": "'If you've charged this turn, this gains +3{p}.' A continuous property of the card, not a trigger -- 'if you've X, this GAINS' describes the attack's power rather than an event. SOURCE_IS_ATTACK confines it to this card's own attack; without it the static would pump every attack its controller made after charging."
+}

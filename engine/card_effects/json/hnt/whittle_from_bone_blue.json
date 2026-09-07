@@ -1,0 +1,25 @@
+{
+  "slug": "whittle_from_bone_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        },
+        {
+          "type": "OPPONENT_IS_MARKED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "graphene_chelicera",
+          "destination": "weapon_slot"
+        }
+      ]
+    }
+  ],
+  "_comment": "'Stealth / When this attacks a marked hero, EQUIP a Graphene Chelicera token.'\n\nStealth is a printed keyword and fires from the card DB; deliberately not authored.\n\n'EQUIP' is `destination: weapon_slot`, the spelling orb_weaver_spinneret_red uses. A Graphene Chelicera is a Weapon-Dagger, and a token whose zone is left to be inferred lands in the arena as a permanent instead of in a weapon zone, where it can never be activated to attack.\n\n'A MARKED HERO' is OPPONENT_IS_MARKED (CR 9.3): marking always lands on an opposing hero, so the condition needs no target. ATTACK_TARGET_IS_HERO is the other half -- an attack can be declared against a permanent, and combat.attack_target is set only then, so a hero attack leaves it None."
+}

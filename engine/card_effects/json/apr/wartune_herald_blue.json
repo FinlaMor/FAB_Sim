@@ -1,0 +1,16 @@
+{
+  "slug": "wartune_herald_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "PUT_SELF_IN_ZONE",
+          "zone": "soul"
+        }
+      ]
+    }
+  ],
+  "_comment": "'Phantasm / When this hits, put IT into your soul.' Phantasm is printed and fires from the card DB.\n\n'IT' is this card, and the destination is the SOUL, not the graveyard it would otherwise reach on resolution -- the whole point is to fuel soul-count effects. PUT_SELF_BOTTOM_DECK is the other spelling of the same handler and defaults to the deck, which would put the card back to be drawn again."
+}

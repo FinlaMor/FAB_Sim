@@ -1,0 +1,23 @@
+{
+  "slug": "sedate_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "inertia",
+          "token_type": "Inertia",
+          "player": "OPPONENT"
+        }
+      ]
+    }
+  ],
+  "_comment": "'Stealth / When this hits a hero, create an Inertia token UNDER THEIR CONTROL.'\n\nStealth is a printed keyword and fires from the card DB; deliberately not authored.\n\n`player: OPPONENT` is the whole clause: Inertia is a downside token, and created under the CONTROLLER by default it would punish the wrong hero -- a card that reads as removal and plays as self-harm."
+}

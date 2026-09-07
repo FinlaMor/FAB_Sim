@@ -1,0 +1,27 @@
+{
+  "slug": "overflow_the_aetherwell_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1,
+          "target": "OPPONENT"
+        },
+        {
+          "type": "GAIN",
+          "asset": "RESOURCE_POINTS",
+          "amount": 2,
+          "conditions": [
+            {
+              "type": "SURGE",
+              "more_than": 1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'Deal 1 arcane damage to target hero. / Surge - If this deals more than 1 damage, gain {r}{r}.'\n\nSurge (CR 8.4.8) reads the damage this card ACTUALLY dealt -- after Amp, prevention and Arcane Barrier, which are exactly what push it past the printed number -- and tests strictly GREATER THAN, which is how every printed Surge is worded. The DEAL runs first so the gate sees this card's damage rather than a previous card's."
+}

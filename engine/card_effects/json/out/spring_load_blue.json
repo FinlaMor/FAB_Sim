@@ -1,0 +1,23 @@
+{
+  "slug": "spring_load_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "HAND_SIZE_LTE",
+          "amount": 0
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, if you have no cards in hand, it gains +1{p}.' The gate is checked WHEN THE ATTACK IS DECLARED, which is what 'when this attacks, IF' means -- a WHILE_STATIC would re-check it continuously and take the bonus back the moment a card reached the hand."
+}

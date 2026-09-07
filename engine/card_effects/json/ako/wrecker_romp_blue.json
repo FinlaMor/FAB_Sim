@@ -1,0 +1,8 @@
+{
+  "slug": "wrecker_romp_blue",
+  "cost": {
+    "type": "DISCARD_RANDOM"
+  },
+  "abilities": [],
+  "_comment": "'As an additional cost to play this, discard a random card.' That is the card's entire text.\n\nA CARD-LEVEL `cost`, which play.py checks for legality and pays once. Never an ON_PLAY effect: a cost has to BLOCK the play, and as an effect the card would be playable with an empty hand and simply discard nothing. There is deliberately no ability at all -- an empty PLAY ability to hold the cost is a no-op the hygiene tests reject, and the cost is not an effect."
+}

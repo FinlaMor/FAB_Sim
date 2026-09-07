@@ -1,0 +1,18 @@
+{
+  "slug": "spellblade_assault_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "CREATE_TOKEN",
+          "token": "runechant",
+          "token_type": "Runechant",
+          "amount": 2
+        }
+      ]
+    }
+  ],
+  "_comment": "'When you attack with this, create 2 Runechant tokens.' ON_ATTACK, not ON_HIT: the tokens arrive when the attack is declared, so they exist whether or not it is blocked."
+}

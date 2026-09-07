@@ -1,0 +1,17 @@
+{
+  "slug": "singeing_steelblade_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "DEAL_ARCANE",
+          "amount": 1,
+          "target": "OPPONENT"
+        }
+      ]
+    }
+  ],
+  "_comment": "'When you attack with this, deal 1 arcane damage to target hero.' ON_ATTACK, so the arcane damage happens on declaration and lands even if the attack is fully blocked."
+}

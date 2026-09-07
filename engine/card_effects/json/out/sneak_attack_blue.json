@@ -1,0 +1,25 @@
+{
+  "slug": "sneak_attack_blue",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "PLAYED_THIS_CHAIN_LINK",
+          "card_type": "AttackReaction"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 4
+        }
+      ]
+    }
+  ],
+  "_comment": "'If you've played or activated an attack reaction THIS CHAIN LINK, this has +4{p}.'\n\nTHE WINDOW IS A CHAIN LINK, not a turn: a turn holds several links, and a per-turn record would keep the bonus alive for the rest of the combat. combat.link_plays is the per-link record (CR 7.0.3e records a play against the ACTIVE chain link)."
+}

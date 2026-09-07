@@ -1,0 +1,27 @@
+{
+  "slug": "scuttle_the_canal_blue",
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        },
+        {
+          "type": "OPPONENT_IS_MARKED"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ],
+  "_comment": "'Stealth / When this attacks a marked hero, this gets go again.'\n\nStealth is a printed keyword and fires from the card DB; deliberately not authored.\n\nTHE PRINTED GO AGAIN IS WITHDRAWN: the card DB lists it unconditionally because it flattens the sentence, so without the card-level declaration the gate is decoration and the attack has go again whether or not the hero is marked.\n\n'A MARKED HERO' is OPPONENT_IS_MARKED (CR 9.3): marking always lands on an opposing hero, so the condition needs no target. ATTACK_TARGET_IS_HERO is the other half -- an attack can be declared against a permanent, and combat.attack_target is set only then, so a hero attack leaves it None."
+}

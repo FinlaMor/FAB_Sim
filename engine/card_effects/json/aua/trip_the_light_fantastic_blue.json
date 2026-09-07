@@ -1,0 +1,21 @@
+{
+  "slug": "trip_the_light_fantastic_blue",
+  "abilities": [
+    {
+      "ability_type": "INSTANT",
+      "activation_cost": 0,
+      "cost": [
+        {
+          "type": "DISCARD_SELF"
+        }
+      ],
+      "effects": [
+        {
+          "type": "PREVENT_DAMAGE",
+          "amount": 2
+        }
+      ]
+    }
+  ],
+  "_comment": "'Instant - Discard this: Prevent the next 2 damage that would be dealt to you this turn.'\n\nPREVENT_DAMAGE with no damage_type is correct: the printed text names no type, so the shield absorbs any (tests/test_prevention_damage_type.py guards the opposite mistake, a card whose text NAMES a type and whose shield does not)."
+}
