@@ -1,0 +1,25 @@
+{
+  "slug": "overcharge_blue",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "PLAYED_THIS_CHAIN_LINK",
+          "card_type": "Instant"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'If you've played an instant card THIS CHAIN LINK, this gets +1{p}.'\n\nTHE WINDOW IS A CHAIN LINK, not a turn: a turn holds several links and a per-turn record would keep the bonus alive for the rest of the combat. combat.link_plays is the per-link record (CR 7.0.3e: a layer is played on the ACTIVE chain link).\n\nGo again is printed here and UNCONDITIONAL -- the gate is on the +1{p} only -- so it is deliberately not declared conditional; doing so would take away a keyword the card has."
+}

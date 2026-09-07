@@ -1,0 +1,27 @@
+{
+  "slug": "rising_speed_blue",
+  "conditional_keywords": [
+    "GO_AGAIN"
+  ],
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "EVENT_THIS_TURN",
+          "event": "draw"
+        }
+      ],
+      "effects": [
+        {
+          "type": "GAIN",
+          "keyword": "GO_AGAIN"
+        }
+      ]
+    }
+  ],
+  "_comment": "'If you've drawn a card this turn, this gets go again.'\n\nThe card DB lists Go Again unconditionally because it flattens the sentence, so the card-level `conditional_keywords` declaration is what lets the gate take it away. Without it the gate is decoration and the attack has go again in every state.\n\nThe draw marker is recorded by the canonical draw keyword, so any route to a draw answers -- an effect, an arsenal refill, or the normal end-of-turn draw."
+}

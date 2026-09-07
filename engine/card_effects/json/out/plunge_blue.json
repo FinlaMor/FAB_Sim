@@ -1,0 +1,25 @@
+{
+  "slug": "plunge_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "filter": [
+            {
+              "type": "ATTACK_SUBTYPE_IN",
+              "subtypes": [
+                "Dagger"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this hits, your next DAGGER attack this turn gains +1{p}.'\n\nThe filter is the clause: an unfiltered MODIFY_NEXT_ATTACK would pay the next attack of any kind, which is strictly stronger than printed and invisible to a test that only ever attacks with a dagger.\n\nGo again is printed and unconditional, so it is not authored and not declared conditional."
+}

@@ -203,3 +203,270 @@ def test_wrecker_romp_has_a_cost_and_no_abilities():
     card = get_card("wrecker_romp_blue")
     assert not card.abilities
     assert getattr(card, "play_cost", None), "the cost is not compiled"
+
+
+# =========================================================== second batch
+# Eight more one-liners. Same discipline: each sits on a fork where the wrong
+# branch still produces a working card.
+
+
+def _an_instant():
+    import io, json
+    from pathlib import Path
+    root = Path(__file__).resolve().parent.parent
+    idx = json.load(io.open(root / "card_data" / "slug_index.json",
+                            encoding="utf-8"))["by_slug"]
+    return next(s for s, e in idx.items()
+                if "Instant" in (e.get("types") or []) and DB.get(s))
+
+
+def test_searing_shot_makes_them_lose_life_rather_than_dealing_damage():
+    """Losing life is not being dealt damage: it cannot be prevented and fires
+    no on-damage trigger. A shield up and the loss still lands."""
+    from engine.card_effects.dsl.effect_types import compile_effect
+    st = _state()
+    compile_effect("PREVENT_DAMAGE", {"amount": 5})(_card("searing_shot_blue", 2), None, st)
+    attacker = attack_with(st, _card("searing_shot_blue"))
+    st.combat.hit = True
+    before = st.players[2].life
+    _fire(st, "searing_shot_blue", attacker)
+    assert st.players[2].life == before - 1, (
+        "the shield absorbed it, so it was authored as damage")
+
+
+def test_searing_shot_needs_a_hero():
+    st = _state()
+    attacker = attack_with(st, _card("searing_shot_blue"))
+    st.combat.hit = True
+    st.combat.attack_target = _card("searing_shot_blue", 2)   # a permanent
+    before = st.players[2].life
+    _fire(st, "searing_shot_blue", attacker)
+    assert st.players[2].life == before
+
+
+def test_searing_ray_reads_the_pitch_zone_colour():
+    st = _state()
+    attacker = attack_with(st, _card("searing_ray_blue"))
+    E._register_card_continuous_effects(st, attacker)
+    assert recalculate_attack(st) == (attacker.base_power or 0)
+
+    # A REAL yellow card, not one whose pitch was patched after construction:
+    # the colour is derived at build time, so assigning raw_pitch afterwards
+    # leaves the card blue and the test fails against a correct implementation.
+    st.players[1].pitch.add(_card(_a_card_of_pitch(2)))
+    assert recalculate_attack(st) == (attacker.base_power or 0) + 2
+
+    st2 = _state()
+    other = attack_with(st2, _card("searing_ray_blue"))
+    E._register_card_continuous_effects(st2, other)
+    st2.players[1].pitch.add(_card(_a_card_of_pitch(3)))     # blue
+    assert recalculate_attack(st2) == (other.base_power or 0), (
+        "any pitched card satisfied it, so the colour is not being read")
+
+
+def _a_card_of_pitch(pitch):
+    import io, json
+    from pathlib import Path as _P
+    root = _P(__file__).resolve().parent.parent
+    idx = json.load(io.open(root / "card_data" / "slug_index.json",
+                            encoding="utf-8"))["by_slug"]
+    return next(s for s, e in idx.items()
+                if e.get("pitch") == pitch and DB.get(s))
+
+
+def test_rising_speed_gets_go_again_only_after_a_draw():
+    from engine.effect_keywords import _record_turn_event
+    st = _state()
+    attacker = attack_with(st, _card("rising_speed_blue"))
+    E._register_card_continuous_effects(st, attacker)
+    recalculate_attack(st)
+    assert "goagain" not in {str(k).lower().replace(" ", "").replace("_", "")
+                             for k in (st.combat.keywords or [])}
+
+    st2 = _state()
+    _record_turn_event(st2, 1, "draw")
+    attacker2 = attack_with(st2, _card("rising_speed_blue"))
+    E._register_card_continuous_effects(st2, attacker2)
+    recalculate_attack(st2)
+    assert "goagain" in {str(k).lower().replace(" ", "").replace("_", "")
+                         for k in (st2.combat.keywords or [])}
+
+
+def test_rising_speeds_printed_go_again_is_withdrawn():
+    from engine.card_effects.dsl.loader import conditional_keywords
+    assert "GoAgain" in (DB.get("rising_speed_blue").keywords or [])
+    assert "goagain" in conditional_keywords("rising_speed_blue")
+
+
+def test_overcharges_printed_go_again_is_left_alone():
+    """Its gate is on the +1{p} only. A withdrawal here would take away a
+    keyword the card unconditionally has -- the same bug inverted."""
+    from engine.card_effects.dsl.loader import conditional_keywords
+    assert "GoAgain" in (DB.get("overcharge_blue").keywords or [])
+    assert not conditional_keywords("overcharge_blue")
+
+
+def test_overcharge_pumps_after_an_instant_this_chain_link():
+    st = _state()
+    attacker = attack_with(st, _card("overcharge_blue"))
+    played = _card(_an_instant())
+    st.event_manager.emit(
+        Event(type="on_play", card=played.slug, data={"card": played}), st)
+    E._register_card_continuous_effects(st, attacker)
+    assert recalculate_attack(st) == (attacker.base_power or 0) + 1
+
+
+def test_overcharge_does_not_pump_on_a_quiet_link():
+    st = _state()
+    attacker = attack_with(st, _card("overcharge_blue"))
+    E._register_card_continuous_effects(st, attacker)
+    assert recalculate_attack(st) == (attacker.base_power or 0)
+
+
+def test_plunge_pays_only_a_dagger():
+    """The filter IS the clause. An unfiltered queue would pay the next attack
+    of any kind, which no dagger-only test would notice."""
+    st = _state()
+    attacker = attack_with(st, _card("plunge_blue"))
+    st.combat.hit = True
+    _fire(st, "plunge_blue", attacker)
+    st.combat = None
+    plain = attack_with(st, _card("strike_gold_blue"))    # not a dagger
+    assert recalculate_attack(st) == (plain.base_power or 0)
+
+
+def test_rising_energy_is_a_cost_reduction_not_an_effect():
+    """A reduction applied as an effect happens after the price is paid. It is
+    card-level so play.py can charge less in the first place."""
+    card = get_card("rising_energy_blue")
+    assert not card.abilities
+    assert getattr(card, "cost_modifiers", None), "no cost modifier compiled"
+
+
+def test_savage_swing_has_a_cost_and_no_abilities():
+    card = get_card("savage_swing_blue")
+    assert not card.abilities
+    assert getattr(card, "play_cost", None)
+
+
+# =========================================================== third batch
+
+
+def test_wounded_bull_pumps_only_while_behind_on_life():
+    st = _state()
+    st.players[1].life = 10
+    st.players[2].life = 20
+    attacker = attack_with(st, _card("wounded_bull_blue"))
+    _fire(st, "wounded_bull_blue", attacker)
+    assert recalculate_attack(st) == (attacker.base_power or 0) + 1
+
+    st = _state()
+    st.players[1].life = 20
+    st.players[2].life = 10
+    attacker = attack_with(st, _card("wounded_bull_blue"))
+    _fire(st, "wounded_bull_blue", attacker)
+    assert recalculate_attack(st) == (attacker.base_power or 0)
+
+
+def test_punch_above_your_weight_charges_for_the_pump():
+    st = _state()
+    st.players[1].resources = 3
+    attacker = attack_with(st, _card("punch_above_your_weight_blue"))
+    _fire(st, "punch_above_your_weight_blue", attacker)
+    assert recalculate_attack(st) == (attacker.base_power or 0) + 3
+    assert st.players[1].resources == 0, "the {r}{r}{r} was not paid"
+
+
+def test_punch_above_your_weight_pays_nothing_when_it_cannot():
+    """The payment is the MAY's COST. A controller who cannot pay must not be
+    charged, and must not get the pump either."""
+    st = _state()
+    st.players[1].resources = 1
+    attacker = attack_with(st, _card("punch_above_your_weight_blue"))
+    _fire(st, "punch_above_your_weight_blue", attacker)
+    assert recalculate_attack(st) == (attacker.base_power or 0)
+    assert st.players[1].resources == 1
+
+
+def test_puncture_takes_a_sword_or_a_dagger_and_grants_piercing():
+    """"sword OR dagger" is one subtype filter with two entries; two separate
+    conditions would be an AND and the reaction could never be played."""
+    import io, json
+    from pathlib import Path
+    root = Path(__file__).resolve().parent.parent
+    idx = json.load(io.open(root / "card_data" / "slug_index.json",
+                            encoding="utf-8"))["by_slug"]
+    # A SWORD is a weapon and a DAGGER can be either a weapon or an attack
+    # action card, so "sword or dagger attack" spans both shapes. A first
+    # version looked for subtypes Sword+Attack together, which no card has --
+    # it raised StopIteration instead of testing the card.
+    for want in ("Sword", "Dagger"):
+        slug = next(s for s, e in idx.items()
+                    if want in (e.get("subtypes") or [])
+                    and (e.get("power") or 0) > 0 and DB.get(s))
+        st = _state()
+        attacker = attack_with(st, _card(slug))
+        _fire(st, "puncture_blue", attacker)
+        assert recalculate_attack(st) == (attacker.base_power or 0) + 1, want
+        kws = {str(k).lower().replace(" ", "") for k in (st.combat.keywords or [])}
+        assert "piercing" in kws, want
+
+
+def test_take_aim_pays_a_ranger_attack_action_and_nothing_else():
+    """MODIFY_NEXT_CARD has no power grant at all -- `power_mod` there is a
+    parameter nothing reads, so the clause would compile and do nothing.
+    audit_params caught that; this pins the working shape."""
+    import io, json
+    from pathlib import Path
+    root = Path(__file__).resolve().parent.parent
+    idx = json.load(io.open(root / "card_data" / "slug_index.json",
+                            encoding="utf-8"))["by_slug"]
+    ranger = next(s for s, e in idx.items()
+                  if "Ranger" in (e.get("classes") or [])
+                  and "Attack" in (e.get("subtypes") or [])
+                  and "Action" in (e.get("types") or []) and DB.get(s))
+    other = next(s for s, e in idx.items()
+                 if "Ranger" not in (e.get("classes") or [])
+                 and "Attack" in (e.get("subtypes") or [])
+                 and "Action" in (e.get("types") or []) and DB.get(s))
+
+    st = _state()
+    _fire(st, "take_aim_blue")
+    a = attack_with(st, _card(ranger))
+    assert recalculate_attack(st) == (a.base_power or 0) + 1
+
+    st = _state()
+    _fire(st, "take_aim_blue")
+    b = attack_with(st, _card(other))
+    assert recalculate_attack(st) == (b.base_power or 0), (
+        "it paid a non-Ranger attack")
+
+
+def test_shaden_swing_banishes_rather_than_discards():
+    """A discarded card goes to the graveyard and a banished one does not, so
+    the two differ for every graveyard-recursion card. Both spellings resolve,
+    and only one puts the card in the right zone."""
+    st = _state()
+    st.players[1].hand.add(_card("strike_gold_blue"))
+    card = get_card("shaden_swing_blue")
+    assert getattr(card, "play_cost", None)
+    assert not card.abilities
+    import json as _json
+    blob = _json.dumps(_raw("shaden_swing_blue").get("cost"))
+    assert "BANISH_FROM_HAND" in blob and "DISCARD" not in blob
+
+
+def _raw(slug):
+    import json as _json
+    from pathlib import Path
+    from tests.conftest import _card_json
+    root = Path(__file__).resolve().parent.parent / "engine/card_effects/json"
+    return _json.loads(_card_json(root, slug + ".json").read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("slug", ["swing_fist_think_later_blue",
+                                  "shaden_swing_blue", "rev_up_blue"])
+def test_the_cost_only_cards_have_no_abilities(slug):
+    card = get_card(slug)
+    assert not card.abilities
+    assert getattr(card, "play_cost", None) or getattr(card, "cost_modifiers", None)

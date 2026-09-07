@@ -1,0 +1,8 @@
+{
+  "slug": "savage_swing_blue",
+  "cost": {
+    "type": "DISCARD_RANDOM"
+  },
+  "abilities": [],
+  "_comment": "'As an additional cost to play this, discard a random card.' The card's entire text. A CARD-LEVEL cost, which play.py checks for legality and pays once -- as an ON_PLAY effect it would block nothing and an empty hand could play the card for free. No abilities at all: an empty PLAY ability to hold the cost is a no-op the hygiene tests reject."
+}

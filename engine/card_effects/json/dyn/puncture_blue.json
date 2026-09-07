@@ -1,0 +1,31 @@
+{
+  "slug": "puncture_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_SUBTYPE_IN",
+            "subtypes": [
+              "Sword",
+              "Dagger"
+            ]
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        },
+        {
+          "type": "GAIN",
+          "keyword": "Piercing"
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target SWORD OR DAGGER attack gains +1{p} and piercing 1.'\n\nATTACK_SUBTYPE_IN is an OR over the list, which is what 'sword or dagger' means; two separate conditions would be an AND and the reaction could never be played.\n\nPiercing is in the card DB `keywords` because the printed text names it, but it is GRANTED TO THE TARGET here rather than carried by this card -- Puncture is a reaction and never attacks, so the printed keyword is inert on it and the grant is the whole clause."
+}

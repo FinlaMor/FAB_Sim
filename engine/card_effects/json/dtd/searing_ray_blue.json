@@ -1,0 +1,28 @@
+{
+  "slug": "searing_ray_blue",
+  "abilities": [
+    {
+      "ability_type": "WHILE_STATIC",
+      "conditions": [
+        {
+          "type": "SOURCE_IS_ATTACK"
+        },
+        {
+          "type": "CARD_IN_ZONE",
+          "zone": "pitch",
+          "player": "SELF",
+          "color": "yellow",
+          "count_gte": 1
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 2
+        }
+      ]
+    }
+  ],
+  "_comment": "'If you have a YELLOW card in your pitch zone, this gets +2{p}.'\n\nThe pitch ZONE, not the cards pitched to play this card: the zone holds everything pitched this turn, which is what the text asks about. A continuous property re-evaluated on every attack-power recalculation, so pitching a yellow card mid-combat turns it on. SOURCE_IS_ATTACK confines it to this card's own attack."
+}

@@ -1,0 +1,22 @@
+{
+  "slug": "searing_shot_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_HIT",
+      "conditions": [
+        {
+          "type": "ATTACK_TARGET_IS_HERO"
+        }
+      ],
+      "effects": [
+        {
+          "type": "LOSE_LIFE",
+          "player": "OPPONENT",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'If this hits a hero, they LOSE 1{h}.'\n\nLOSE_LIFE, not damage. Losing life is not being dealt damage (CR 8.5.x): it cannot be prevented, does not trigger on-damage abilities, and is not reduced by Arcane Barrier or a prevention shield. Authoring it as DEAL_PHYSICAL would make the clause blockable and would fire every 'when you are dealt damage' trigger the opponent controls."
+}

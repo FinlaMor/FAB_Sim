@@ -1,0 +1,30 @@
+{
+  "slug": "razors_edge_blue",
+  "abilities": [
+    {
+      "ability_type": "ATTACK_REACTION",
+      "target": {
+        "filter": [
+          {
+            "type": "ATTACK_TYPE_IN",
+            "types": [
+              "Action"
+            ]
+          },
+          {
+            "type": "ATTACK_HAS_KEYWORD",
+            "keyword": "stealth"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'Target attack action CARD with stealth gets +1{p}.'\n\nTwo restrictions, both printed: the attack must be an action CARD (not a weapon activation) and it must have stealth. Dropping either widens the card, and a filter that matches nothing is indistinguishable from a board with no legal target -- so both are asserted rather than assumed."
+}

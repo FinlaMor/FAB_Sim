@@ -1,0 +1,14 @@
+{
+  "slug": "rising_energy_blue",
+  "cost_modifiers": [
+    {
+      "condition": {
+        "type": "EVENT_THIS_TURN",
+        "event": "draw"
+      },
+      "delta": -1
+    }
+  ],
+  "abilities": [],
+  "_comment": "'If you've drawn a card this turn, this costs {r} less to play.'\n\nA COST REDUCTION IS A COST, so it lives in card-level `cost_modifiers`, which play.py consults when deciding what is legal and what it costs. Written as an ON_PLAY effect it would apply after the price had already been paid -- the card would look implemented and never be cheaper."
+}

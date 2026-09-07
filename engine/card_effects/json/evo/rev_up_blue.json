@@ -1,0 +1,14 @@
+{
+  "slug": "rev_up_blue",
+  "cost_modifiers": [
+    {
+      "condition": {
+        "type": "CONTROLS_TOKEN_TYPE",
+        "token": "hyper_driver"
+      },
+      "delta": -1
+    }
+  ],
+  "abilities": [],
+  "_comment": "'If you control a Hyper Driver, this costs {r} less to play. / Boost' -- Boost is printed and fires from the card DB.\n\nA COST REDUCTION IS A COST, so it lives in card-level `cost_modifiers`, which play.py consults when deciding legality and price; as an ON_PLAY effect it would apply after the price was already paid. CONTROLS_TOKEN_TYPE takes `token` SINGULAR -- the plural spelling is unread and the condition would be false in every state."
+}

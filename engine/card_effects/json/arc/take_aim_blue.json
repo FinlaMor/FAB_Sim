@@ -1,0 +1,30 @@
+{
+  "slug": "take_aim_blue",
+  "abilities": [
+    {
+      "ability_type": "PLAY",
+      "effects": [
+        {
+          "type": "MODIFY_NEXT_ATTACK",
+          "mod": "add",
+          "amount": 1,
+          "filter": [
+            {
+              "type": "ATTACK_TYPE_IN",
+              "types": [
+                "Action"
+              ]
+            },
+            {
+              "type": "ATTACK_CLASS_IN",
+              "classes": [
+                "Ranger"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'The next RANGER ATTACK ACTION CARD you play this turn gains +1{p}. / Reload / Go again' -- both keywords are printed and fire from the card DB.\n\nMODIFY_NEXT_CARD LOOKS RIGHT AND IS NOT. It queues cost reductions, keyword grants and granted abilities; it has no power grant at all, so `power_mod` there is a parameter nothing reads -- the clause would compile, resolve, and do nothing. audit_params is what caught it.\n\nMODIFY_NEXT_ATTACK carries the power, and the two filters close the gap that made the card queue look wrong for it: ATTACK_TYPE_IN Action excludes a weapon activation, which is the only way the attack queue could be consumed by something that was not played as a card, and ATTACK_CLASS_IN is the Ranger half. Dropping either widens the card."
+}

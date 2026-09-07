@@ -1,0 +1,22 @@
+{
+  "slug": "wounded_bull_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "conditions": [
+        {
+          "type": "HEALTH_LT_OPP"
+        }
+      ],
+      "effects": [
+        {
+          "type": "MODIFY_ATTACK",
+          "mod": "add",
+          "amount": 1
+        }
+      ]
+    }
+  ],
+  "_comment": "'When you play this, if you have less {h} than an opposing hero, this gains +1{p}.'\n\nChecked ONCE, when the attack goes on the chain -- 'when you play this, IF' is a trigger with a gate, not a continuous property. A WHILE_STATIC would re-check it on every power recalculation and take the bonus back the moment the life totals crossed back over mid-combat, which the printed text does not say."
+}

@@ -1,0 +1,10 @@
+{
+  "slug": "shaden_swing_blue",
+  "cost": {
+    "type": "BANISH_FROM_HAND",
+    "amount": 1,
+    "random": true
+  },
+  "abilities": [],
+  "_comment": "'As an additional cost to play this, BANISH a random card from your hand. / Blood Debt' -- Blood Debt is printed and fires from the card DB.\n\nBANISH, NOT DISCARD. A discarded card goes to the graveyard and a banished one does not, so the two differ for every graveyard-recursion card and for anything counting a graveyard. Writing DISCARD_RANDOM here would put the card in the wrong zone while the ability still resolved.\n\nA CARD-LEVEL `cost`, which play.py checks for legality and pays once. Never an ON_PLAY effect: a cost must BLOCK the play, and as an effect the card would be playable with an empty hand and simply pay nothing. No abilities at all -- an empty PLAY ability to hold the cost is a no-op the hygiene tests reject."
+}

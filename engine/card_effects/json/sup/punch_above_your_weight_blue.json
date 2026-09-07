@@ -1,0 +1,29 @@
+{
+  "slug": "punch_above_your_weight_blue",
+  "abilities": [
+    {
+      "ability_type": "TRIGGERED",
+      "trigger": "ON_ATTACK",
+      "effects": [
+        {
+          "type": "MAY",
+          "prompt": "Pay {r}{r}{r} to give this +3{p}?",
+          "cost": [
+            {
+              "type": "PAY_RESOURCES",
+              "amount": 3
+            }
+          ],
+          "effects": [
+            {
+              "type": "MODIFY_ATTACK",
+              "mod": "add",
+              "amount": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "_comment": "'When this attacks, you MAY pay {r}{r}{r}. IF YOU DO, this gets +3{p}.'\n\nThe payment is the MAY's COST, so declining runs nothing and the +3 is reachable only by paying -- 'if you do' needs no separate plumbing. Authored as an effect the resources would be spent even when the player declined, and a controller who cannot pay would be charged anyway."
+}

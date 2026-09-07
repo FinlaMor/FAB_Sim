@@ -1,0 +1,8 @@
+{
+  "slug": "swing_fist_think_later_blue",
+  "cost": {
+    "type": "DISCARD_RANDOM"
+  },
+  "abilities": [],
+  "_comment": "'As an additional cost to play this, discard a random card. / Go again' -- Go again is printed and unconditional, so it fires from the card DB and is deliberately not authored.\n\nA CARD-LEVEL `cost`, which play.py checks for legality and pays once. Never an ON_PLAY effect: a cost must BLOCK the play, and as an effect the card would be playable with an empty hand and simply pay nothing. No abilities at all -- an empty PLAY ability to hold the cost is a no-op the hygiene tests reject."
+}
